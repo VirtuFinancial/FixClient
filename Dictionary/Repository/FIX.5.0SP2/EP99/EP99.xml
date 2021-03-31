@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?altova_sps ..\..\tools\EP\EP.sps?>
+<fixRepository xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.fixprotocol.org/extensionpack ..\..\schema\extensionpack.xsd" xmlns="http://www.fixprotocol.org/extensionpack" version="FIX.5.0SP2">
+	<extensionPack id="99" approved="2009-04-27T00:00:00" desc="Matching Instructions Extension" tempIntermediatePath="../EP98/">
+		<Fields>
+			<Inserts>
+				<Field Tag="1624">
+					<Name>NoMatchInst</Name>
+					<Type>NumInGroup</Type>
+					<Description>Number of Instructions in the &lt;MatchingInstructions&gt; repeating group.</Description>
+					<NotReqXML>1</NotReqXML>
+				</Field>
+				<Field Tag="1625">
+					<Name>MatchInst</Name>
+					<Type>int</Type>
+					<Description>Matching Instruction for the order.</Description>
+					<AbbrName>Inst</AbbrName>
+					<NotReqXML>0</NotReqXML>
+				</Field>
+				<Field Tag="1626">
+					<Name>MatchAttribTagID</Name>
+					<Type>TagNum</Type>
+					<Description>Existing FIX field to be applied as a Matching Criteria to the Instruction, bilaterally agreed between parties.</Description>
+					<AbbrName>ID</AbbrName>
+					<NotReqXML>0</NotReqXML>
+				</Field>
+				<Field Tag="1627">
+					<Name>MatchAttribValue</Name>
+					<Type>String</Type>
+					<Description>Enumeration value of the MatchAttribField to be applied as a Matching Criteria to the Instruction.</Description>
+					<AbbrName>Valu</AbbrName>
+					<NotReqXML>0</NotReqXML>
+				</Field>
+			</Inserts>
+		</Fields>
+		<Enums>
+			<Inserts>
+				<Enum Value="1" Tag="1625">
+					<SymbolicName>Match</SymbolicName>
+					<Sort>1</Sort>
+					<Description>Match</Description>
+				</Enum>
+				<Enum Value="2" Tag="1625">
+					<SymbolicName>DoNotMatch</SymbolicName>
+					<Sort>2</Sort>
+					<Description>Do Not Match</Description>
+				</Enum>
+			</Inserts>
+		</Enums>
+		<Components>
+			<Inserts>
+				<Component ComponentID="1064">
+					<ComponentType>BlockRepeating</ComponentType>
+					<CategoryID>Common</CategoryID>
+					<Name>MatchingInstructions</Name>
+					<AbbrName>MtchgInst</AbbrName>
+					<NotReqXML>0</NotReqXML>
+				</Component>
+			</Inserts>
+		</Components>
+		<MsgContents>
+			<Inserts>
+				<MsgContent ComponentID="1064" TagText="1624">
+					<Indent>0</Indent>
+					<Position>1</Position>
+					<Reqd>0</Reqd>
+				</MsgContent>
+				<MsgContent ComponentID="1064" TagText="1625">
+					<Indent>1</Indent>
+					<Position>2</Position>
+					<Reqd>0</Reqd>
+					<Description>Required if NoMatchInst &gt; 0.</Description>
+				</MsgContent>
+				<MsgContent ComponentID="1064" TagText="1301">
+					<Indent>1</Indent>
+					<Position>3</Position>
+					<Reqd>0</Reqd>
+					<Description/>
+				</MsgContent>
+				<MsgContent ComponentID="1064" TagText="1626">
+					<Indent>1</Indent>
+					<Position>4</Position>
+					<Reqd>0</Reqd>
+					<Description>Required if NoMatchInst &gt; 0.</Description>
+				</MsgContent>
+				<MsgContent ComponentID="1064" TagText="1627">
+					<Indent>1</Indent>
+					<Position>5</Position>
+					<Reqd>0</Reqd>
+					<Description>Required if NoMatchInst &gt; 0.</Description>
+				</MsgContent>
+				<MsgContent ComponentID="14" TagText="MatchingInstructions">
+					<Indent>0</Indent>
+					<Position>28.21</Position>
+					<Reqd>0</Reqd>
+				</MsgContent>
+				<MsgContent ComponentID="17" TagText="MatchingInstructions">
+					<Indent>0</Indent>
+					<Position>32.21</Position>
+					<Reqd>0</Reqd>
+				</MsgContent>
+				<MsgContent ComponentID="61" TagText="MatchingInstructions">
+					<Indent>0</Indent>
+					<Position>28.21</Position>
+					<Reqd>0</Reqd>
+				</MsgContent>
+				<MsgContent ComponentID="62" TagText="MatchingInstructions">
+					<Indent>0</Indent>
+					<Position>31.21</Position>
+					<Reqd>0</Reqd>
+				</MsgContent>
+				<MsgContent ComponentID="9" TagText="MatchingInstructions">
+					<Indent>0</Indent>
+					<Position>119.21</Position>
+					<Reqd>0</Reqd>
+				</MsgContent>
+			</Inserts>
+		</MsgContents>
+	</extensionPack>
+</fixRepository>

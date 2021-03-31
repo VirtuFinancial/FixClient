@@ -1,0 +1,135 @@
+20120622-05:47:05 (OrderSingle)
+{
+     BeginString    (8) - FIX.4.2
+      BodyLength    (9) - 224
+         MsgType   (35) - D
+    SenderCompID   (49) - DEVGATE
+    TargetCompID   (56) - GEHQJ
+     SenderSubID   (50) - smart
+     TargetSubID   (57) - smart
+OnBehalfOfCompID  (115) - 
+       MsgSeqNum   (34) - 1566
+     SendingTime   (52) - 20120622-05:47:05
+         ClOrdID   (11) - bla00167
+        OrderQty   (38) - 5714
+   ExDestination  (100) - CHIA
+       HandlInst   (21) - 1 - Automated execution order, private, no Broker intervention
+           Price   (44) - 10.000000
+         OrdType   (40) - 2 - Limit
+     TimeInForce   (59) - 0 - Day
+            Side   (54) - 1 - Buy
+       SymbolSfx   (65) - CHA
+          Symbol   (55) - BHP
+         Rule80A   (47) - A - Agency single order
+        ClientID  (109) - GT40Da7SMRT
+            7050 (7050) - GEHMCFIXSOR01DEV
+          MinQty  (110) - 50
+    TransactTime   (60) - 20120622-05:47:05
+        CheckSum   (10) - 071
+}
+20120622-05:47:05 (ExecutionReport)
+{
+  BeginString    (8) - FIX.4.2
+   BodyLength    (9) - 0
+      MsgType   (35) - 8
+ SenderCompID   (49) - GEHQJ
+ TargetCompID   (56) - DEVGATE
+    MsgSeqNum   (34) - 1657
+  SendingTime   (52) - 20120622-05:47:05
+ExecTransType   (20) - 0 - New
+    OrdStatus   (39) - 0 - New
+      ClOrdID   (11) - bla00167
+      OrderID   (37) - DEVGATE-GEHQJ-bla00167
+       ExecID   (17) - 246
+     ExecType  (150) - 0 - New
+    LeavesQty  (151) - 5714
+       Symbol   (55) - BHP
+         Side   (54) - 1 - Buy
+     OrderQty   (38) - 5714
+        Price   (44) - 10
+   LastShares   (32) - 0
+       LastPx   (31) - 0
+       CumQty   (14) - 0
+        AvgPx    (6) - 0
+}
+20120622-05:48:32 (OrderCancelReplaceRequest)
+{
+     BeginString    (8) - FIX.4.2
+      BodyLength    (9) - 214
+         MsgType   (35) - G
+    SenderCompID   (49) - DEVGATE
+    TargetCompID   (56) - GEHQJ
+     SenderSubID   (50) - smart
+     TargetSubID   (57) - smart
+OnBehalfOfCompID  (115) - 
+       MsgSeqNum   (34) - 1571
+     SendingTime   (52) - 20120622-05:48:32
+   ExDestination  (100) - CHIA
+       HandlInst   (21) - 1 - Automated execution order, private, no Broker intervention
+           Price   (44) - 10.000000
+         OrdType   (40) - 2 - Limit
+     TimeInForce   (59) - 0 - Day
+            Side   (54) - 1 - Buy
+       SymbolSfx   (65) - CHA
+          Symbol   (55) - BHP
+         Rule80A   (47) - A - Agency single order
+        ClientID  (109) - GT40Da7SMRT
+          MinQty  (110) - 50
+    TransactTime   (60) - 20120622-05:48:32
+     OrigClOrdID   (41) - bla00167
+         ClOrdID   (11) - bla00170
+        OrderQty   (38) - 2286
+        CheckSum   (10) - 137
+}
+20120622-05:48:32 (ExecutionReport)
+{
+  BeginString    (8) - FIX.4.2
+   BodyLength    (9) - 0
+      MsgType   (35) - 8
+ SenderCompID   (49) - GEHQJ
+ TargetCompID   (56) - DEVGATE
+    MsgSeqNum   (34) - 1665
+  SendingTime   (52) - 20120622-05:48:32
+ExecTransType   (20) - 0 - New
+    OrdStatus   (39) - 6 - Pending Cancel Replace
+      ClOrdID   (11) - bla00170
+      OrderID   (37) - DEVGATE-GEHQJ-bla00167
+       ExecID   (17) - 251
+     ExecType  (150) - 6 - Pending Cancel Replace
+    LeavesQty  (151) - 5714
+  OrigClOrdID   (41) - bla00167
+       Symbol   (55) - BHP
+         Side   (54) - 1 - Buy
+     OrderQty   (38) - 5714
+        Price   (44) - 10
+   LastShares   (32) - 0
+       LastPx   (31) - 0
+       CumQty   (14) - 0
+        AvgPx    (6) - 0
+}
+20120622-05:48:32 (ExecutionReport)
+{
+  BeginString    (8) - FIX.4.2
+   BodyLength    (9) - 0
+      MsgType   (35) - 8
+ SenderCompID   (49) - GEHQJ
+ TargetCompID   (56) - DEVGATE
+    MsgSeqNum   (34) - 1666
+  SendingTime   (52) - 20120622-05:48:32
+ExecTransType   (20) - 0 - New
+    OrdStatus   (39) - 5 - Replaced
+      ClOrdID   (11) - bla00167
+      OrderID   (37) - DEVGATE-GEHQJ-bla00170
+       ExecID   (17) - 252
+     ExecType  (150) - 5 - Replace
+    LeavesQty  (151) - 0
+  OrigClOrdID   (41) - bla00167
+       Symbol   (55) - BHP
+         Side   (54) - 1 - Buy
+     OrderQty   (38) - 2286
+        Price   (44) - 10
+   LastShares   (32) - 0
+       LastPx   (31) - 0
+       CumQty   (14) - 0
+        AvgPx    (6) - 0
+}

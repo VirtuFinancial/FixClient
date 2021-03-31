@@ -1,0 +1,1514 @@
+00:12:42 GEHCI          Message     Logging started on gateDEV-p01 with the pid 20701, (@@)[Gate V1.0 Prod Handoff #94HK (US H94a)] Tue Oct 31 17:17:44 PST 2006.
+00:12:42 GEHCI          Message     Set shutdown event for Thu Dec 14 00:00:00 2006
+00:12:42 GEHCI          Message     Sybase: Logged into the Database Master.
+00:12:43 GEHCI          Message     Sybase: Servers gateDEV-db01 and NONE were sent by the Database Master.
+00:12:43 GEHCI          Message     Sybase: Started a session on server gateDEV-db01 with server pid of 67.
+00:12:43 GEHCI          Message     Sybase: No backup server has been specified.
+00:12:43 GEHCI          Message     Sybase: Received a continue message from the Database Master, creating event
+00:12:43 GEHCI          Message     Sybase: Received the continue event, resuming normal operations
+00:12:43 GEHCI          Detail      Client master channel indicates new DB Master channel: 11
+00:12:43 GEHCI          Message     Monitor data is being written to /home/gateHK/logs/2006/12.13/users/monitor/GEHCI.mon
+00:12:43 GEHCI          Message     Reading data from /export/gate/MMFdata/node1
+00:12:43 GEHCI          Detail      Table gate                  : alloc=    2, count=    1, max id=    1, inode= 3146451, statSz= 24, elemSz=1480 (0.0002 sec)
+00:12:43 GEHCI          Detail      Table server                : alloc=    2, count=    2, max id=    1, inode= 3146647, statSz= 24, elemSz= 736 (0.0001 sec)
+00:12:43 GEHCI          Detail      Table frontends             : alloc=   13, count=    5, max id=   12, inode= 3146448, statSz= 24, elemSz= 112 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table symbols               : alloc=    0, count=    0, inode= 3146668, statSz= 24, elemSz=  96 (0.0001 sec)
+00:12:43 GEHCI          Detail      Table client_interfaces     : alloc=   55, count=   29, max id=   54, inode= 3146392, statSz= 24, elemSz= 352 (0.0001 sec)
+00:12:43 GEHCI          Detail      Table ci_lines              : alloc=   28, count=   28, inode= 3146390, statSz= 24, elemSz=  72 (0.0003 sec)
+00:12:43 GEHCI          Detail      Table fix_ci_params         : alloc=   26, count=   26, inode= 3146427, statSz= 24, elemSz= 216 (0.0001 sec)
+00:12:43 GEHCI          Detail      Table users                 : alloc=  185, count=   92, max id=  184, inode= 3146693, statSz= 24, elemSz= 216 (0.0001 sec)
+00:12:43 GEHCI          Message     The user geh (Gary's test user) (id 25) has a login of .
+00:12:43 GEHCI          Detail      There are 1 users defined for CI GEHCI
+00:12:43 GEHCI          Detail      Table dc_user_ci            : alloc=    0, count=    0, inode= 3146407, statSz= 24, elemSz=  16 (0.0001 sec)
+00:12:43 GEHCI          Detail      Table drivers               : alloc=   34, count=    6, max id=   33, inode= 3146420, statSz= 24, elemSz= 224 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table cms_driver_defs       : alloc=    0, count=    0, inode= 3146396, statSz= 24, elemSz= 120 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table dest_definitions      : alloc=  151, count=   23, max id=  150, inode= 3146409, statSz= 24, elemSz= 136 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table ecn_definitions       : alloc=    0, count=    0, inode= 3146421, statSz= 24, elemSz=  64 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table user_dest_order_types : alloc=    0, count=    0, inode= 3146675, statSz= 24, elemSz=  16 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table destinations          : alloc=  151, count=   23, max id=  150, inode= 3146414, statSz= 24, elemSz= 120 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table attributes            : alloc=  104, count=  104, inode= 3146388, statSz= 24, elemSz= 136 (0.0004 sec)
+00:12:43 GEHCI          Detail      14 Attributes relevant (out of 104)
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ GLUE R80A R80A stat ] = 4 [ Force  OFF ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ GLUE AKMON UnackMon ] = 0 [ OFF ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ GLUE ATDLM AttribDlm ] = 2 [ OldDlm(^A) ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ GLUE ATREJ AttReject ] = 1 [ NoReject ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ GLUE DBLOG DB Logging ] = 10 [ Minutes ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ GLUE DBPER DB persist ] = 1 [ Use DB ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ GLUE KPEXC ChgExecId ] = 1 [ ON ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ GLUE RSNDL ResyncDly ] = 5 [ Seconds ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ GLUE SMRES SymResynch ] = 1 [ ON ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ PERF OMLOG CI OM LOG ] = 1 [ ON ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ ROUTE EXSEQ EXSEQ ] = 1 [ 1 Extra ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ ROUTE LISTE NoListExec ] = 1 [ ON ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ ROUTE OMEMO OMEMO ] = 1 [ 40_Chars ] 
+00:12:43 GEHCI          Detail      ATTRIBUTE:LOADED: [ ROUTE SYMBO SYMBO ] = 2 [ Required ] 
+00:12:43 GEHCI          Message     Alerts will be generated when order 'net' exceeds 10 seconds
+00:12:43 GEHCI          Detail      Dollar Cap warning message only turned OFF, orders violating dollar cap limit will be rejected.
+00:12:43 GEHCI          Detail      ATDLM=2: Order attribute delimiter is ^A.
+00:12:43 GEHCI          Detail      ATREJ=1: Orders with invalid generic attributes will NOT be rejected.
+00:12:43 GEHCI          Detail      Currency Validation mode changed to ON.
+00:12:43 GEHCI          Message     Installed DB Access timing event for 600 seconds
+00:12:43 GEHCI          Detail      Table user_destinations     : alloc=   69, count=   69, inode= 3146676, statSz= 24, elemSz=  96 (0.0002 sec)
+00:12:43 GEHCI          Detail      Table user_monikers         : alloc=  185, count=   96, max id=  184, inode= 3146679, statSz= 24, elemSz= 112 (0.0001 sec)
+00:12:43 GEHCI          Detail      Table user_positids         : alloc=  130, count=   63, max id=  129, inode= 3146686, statSz= 24, elemSz=  16 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table firms                 : alloc=    1, count=    0, max id=    0, inode= 3146426, statSz= 24, elemSz=  64 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table user_firms            : alloc=    0, count=    0, inode= 3146677, statSz= 24, elemSz=  32 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table custodians            : alloc=    3, count=    2, max id=    2, inode= 3146406, statSz= 24, elemSz=  32 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table user_custodians       : alloc=   14, count=   14, inode= 3146673, statSz= 24, elemSz=  16 (0.0002 sec)
+00:12:43 GEHCI          Message     User geh has no default custodian, may not be allowed to send Sell Short orders
+00:12:43 GEHCI          Detail      Table symbol_destinations   : alloc=    0, count=    0, inode= 3146663, statSz= 24, elemSz=  24 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table cms_dest_defs         : alloc=    0, count=    0, inode= 3146395, statSz= 24, elemSz=  48 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table special_symbol_dest   : alloc=    0, count=    0, inode= 3146652, statSz= 24, elemSz=  32 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table symbol_lists          : alloc=    0, count=    0, inode= 3146664, statSz= 24, elemSz=  16 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table symbol_lists_defs     : alloc=    0, count=    0, inode= 3146667, statSz= 24, elemSz=  32 (0.0000 sec)
+00:12:43 GEHCI          Message     Stocks exempt from the Regulation NMS Sub-Penny Rule are defined in symbol list 0.
+00:12:43 GEHCI          Detail      No destination is configured with circuit_brkr_allowed set.
+00:12:43 GEHCI          Detail      Table user_symbols          : alloc=    0, count=    0, inode= 3146691, statSz= 24, elemSz=  24 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table dest_order_types      : alloc=    1, count=    0, max id=    0, inode= 3146413, statSz= 24, elemSz=  24 (0.0000 sec)
+00:12:43 GEHCI          Message     Previous closing prices were not loaded because no users configured with dollar cap are permitted for a destination checking dollar cap.
+00:12:43 GEHCI          Detail      Table dest_name_mapping     : alloc=    0, count=    0, inode= 3146411, statSz= 24, elemSz=  16 (0.0001 sec)
+00:12:43 GEHCI          Detail      Table mapping_defs          : alloc=    0, count=    0, inode= 3146616, statSz= 24, elemSz=  16 (0.0001 sec)
+00:12:43 GEHCI          Detail      Table user_dest_name_mapping: alloc=    0, count=    0, inode= 3146674, statSz= 24, elemSz=   8 (0.0000 sec)
+00:12:43 GEHCI          Detail      Table order_attributes      : alloc=   58, count=   58, inode= 3146627, statSz= 24, elemSz=  88 (0.0001 sec)
+00:12:43 GEHCI          Detail      Table branches              : alloc=   91, count=   91, inode= 3146389, statSz= 24, elemSz=  24 (0.0001 sec)
+00:12:43 GEHCI          Message     geh - Last seqnum: 0, no outstanding GTC/GTND orders,  last dest order: geh 0
+00:12:43 GEHCI          Detail      SYMBOLOGY: SYMBOLOGY_LOAD_DEFAULT option Configured
+00:12:43 GEHCI          Detail      SYMBOLOGY: No Users Configured for Symbol Conversion
+00:12:43 GEHCI          Detail      Table lip_params            : alloc=    1, count=    1, inode= 3146583, statSz= 24, elemSz= 120 (0.0001 sec)
+00:12:43 GEHCI          Message     Started the persisted report ACK time event.
+00:12:43 GEHCI          Detail      fe_start: c_breaker 	 port 11003
+00:12:43 GEHCI          Message     Cache directory is /home/gateHK/logs/2006/12.13/users/Cache/GEHCI
+00:12:43 GEHCI          Message     FeUserMgr instanciated
+00:12:43 GEHCI          Detail      Loading Attributes...
+00:12:43 GEHCI          Detail      FIX 4.2 Order Processor instantiated.
+00:12:43 GEHCI          Detail      FIX 4.2 Report Processor instantiated.
+00:12:43 GEHCI          Detail      Table nasd_firms            : alloc=    0, count=    0, inode= 3146624, statSz= 24, elemSz=  16 (0.0014 sec)
+00:12:43 GEHCI          Detail      Table user_passwords        : alloc=    9, count=    9, inode= 3146681, statSz= 24, elemSz=  56 (0.0001 sec)
+00:12:43 GEHCI          Message     FeUserMgr initUsers
+00:12:43 GEHCI          Message     FeUserMgr got ciid 10
+00:12:43 GEHCI          Message     FeUser 25
+00:12:43 GEHCI          Detail      no dynamic subids from db for userId 25.
+00:12:43 GEHCI          Detail      getUserPassword: NO DATA FOUND for userId 25
+00:12:43 GEHCI          Message     FeUser::init geh (25): 0 firms, 0 FirmMnemonics, 0 SubIds, 1 Destinations, 0 Custodians, 0 user firms
+00:12:43 GEHCI          Detail      Last Execution Id: 0, Last Received Report Num: 0, Last portfolio id: 0
+00:12:43 GEHCI          Detail      Initialized 1 users
+00:12:43 GEHCI          Detail      Table fix_to_glue_dest      : alloc=    7, count=    7, inode= 3146444, statSz= 24, elemSz=  16 (0.0001 sec)
+00:12:43 GEHCI          Detail      Table ssl_info              : alloc=    1, count=    0, max id=    0, inode= 3146658, statSz= 24, elemSz= 128 (0.0000 sec)
+00:12:43 GEHCI          Detail      SYMBOLOGY: SYMBOLOGY_LOAD_ALL option Configured
+00:12:43 GEHCI          Detail      Table security_type_names   : alloc=   10, count=   10, inode= 3146644, statSz= 24, elemSz=  40 (0.0014 sec)
+00:12:43 GEHCI          Detail      Table stock_mapping         : alloc=72844, count=72843, max id=72843, inode= 3146662, statSz= 24, elemSz=  56 (0.0001 sec)
+00:12:45 GEHCI          Detail      SYMBOLOGY: 72843 Stock Mappings for `All stock types' loaded (0 ignored)
+00:12:45 GEHCI          Detail      Table fix_symbology         : alloc=    5, count=    5, inode= 3146443, statSz= 24, elemSz=  48 (0.0002 sec)
+00:12:45 GEHCI          Detail      Table exchange_info         : alloc=    0, count=    0, inode= 3146422, statSz= 24, elemSz=  40 (0.0001 sec)
+00:12:45 GEHCI          Detail      CM:addConnection GEH
+00:12:45 GEHCI          Detail      Connection t:GEH  s:DEVGATE line:1 Server to listen on port:53510
+00:12:45 GEHCI          Detail      added user 25 to connection GEH
+00:12:45 GEHCI          Detail      set up 1 connection
+00:12:45 GEHCI          Detail      --------------------------------------------------------------------------------
+00:12:45 GEHCI          Detail      		Configuration Information for fix_ci_params
+00:12:45 GEHCI          Detail      --------------------------------------------------------------------------------
+00:12:45 GEHCI          Detail      Default Destination: 10 - GEH
+00:12:45 GEHCI          Detail      Multiple clients: No
+00:12:45 GEHCI          Detail      Server: DEVGATE
+00:12:45 GEHCI          Detail      Client: GEH
+00:12:45 GEHCI          Detail      FIX Version: FIX.4.2
+00:12:45 GEHCI          Detail      Encryption method: NONE
+00:12:45 GEHCI          Detail      Display FIX messages: 1 - Restricted Display. Certain administrative messages will not be displayed.
+00:12:45 GEHCI          Detail      Use text for portfolio: No
+00:12:45 GEHCI          Detail      Nothing Done flavor: 0 - Send Nothing Done as FIX Done for Day.
+00:12:45 GEHCI          Detail      Summary type: 0 - Default
+00:12:45 GEHCI          Detail      Heartbeat interval: 30
+00:12:45 GEHCI          Detail      Test request interval: 45
+00:12:45 GEHCI          Detail      Forward destination messages: 1 - Regular.
+00:12:45 GEHCI          Detail      Correction type: 0 - Default
+00:12:45 GEHCI          Detail      ExecBroker type: 0 - Default. Ignores value of ExecBroker in FIX orders and the order is reported to the default giveup broker if any.
+00:12:45 GEHCI          Detail      Cache reset: Not allowed
+00:12:45 GEHCI          Detail      Auto connect: No
+00:12:45 GEHCI          Detail      Use SymbolSfx tag 65 in reports for preferred symbols: No
+00:12:45 GEHCI          Detail      Drop copy interval: 0
+00:12:45 GEHCI          Detail      Client supports summaries: Yes
+00:12:45 GEHCI          Detail      ECN Supported: No
+00:12:45 GEHCI          Detail      --------------------------------------------------------------------------------
+00:12:45 GEHCI          Detail      		Configuration Information for client_interfaces
+00:12:45 GEHCI          Detail      --------------------------------------------------------------------------------
+00:12:45 GEHCI          Detail      Correction quantity type: 3 - Remaining and executed shares (FIX-Style)
+00:12:45 GEHCI          Detail      Allocate new sequence number: Yes
+00:12:45 GEHCI          Detail      Symbol conversion:  Case insensitive.
+00:12:45 GEHCI          Detail      Correction behavior:  post-correction
+00:12:45 GEHCI          Detail      --------------------------------------------------------------------------------
+00:12:45 GEHCI          Detail      		Configuration Information for ci_lines
+00:12:45 GEHCI          Detail      --------------------------------------------------------------------------------
+00:12:45 GEHCI          Detail       Accepting connection on port:53510
+00:12:45 GEHCI          Detail      --------------------------------------------------------------------------------
+00:12:45 GEHCI          Detail      		Configuration Information - debug flags.
+00:12:45 GEHCI          Detail      --------------------------------------------------------------------------------
+00:12:45 GEHCI          Detail      Expecting Extra 1 FIX Messages after peer resend (EXSEQ)
+00:12:45 GEHCI          Detail      Symbology is Required.  Must convert to native symbol from SecurityID (48) and IDSource (22). (SYMBO)
+00:12:45 GEHCI          Detail      Send contents of Text(58), up to 40 chars, to destination as order-memo (OMEMO)
+00:12:45 GEHCI          Detail      Do not require ListExecute following bundled List-Orders (LISTE)
+00:12:45 GEHCI          Detail      --------------------------------------------------------------------------------
+00:12:45 GEHCI          Detail      GEH S:1 sender DEVGATE  sci DEVGATE
+00:12:45 GEHCI          Detail      started listening on port 53510
+00:12:45 GEHCI          Detail      init'ed the FIX engine
+00:12:45 GEHCI          Message     Using input event #18, period 30 seconds for Unacked Orders Check
+00:12:45 GEHCI          Message     Started the Unack check event for 30 seconds.
+00:13:16 GEHCI          Message     The driver GEHTEST has the new status OK.
+07:00:00 GEHCI          Detail      Not connecting to LIP because no user is configured for it
+09:32:53 GEHCI          Message     The destination GEH has the new status OK.
+09:59:10 GEHCI          Message     The destination GEH has the new status Problem.
+10:00:14 GEHCI          Message     The destination GEH has the new status OK.
+10:07:10 GEHCI          Message     The destination GEH has the new status Problem.
+10:08:14 GEHCI          Message     The destination GEH has the new status OK.
+10:25:07 GEHCI          Message     The destination GEH has the new status Problem.
+10:26:11 GEHCI          Message     The destination GEH has the new status OK.
+10:44:46 GEHCI          Message     The destination GEH has the new status Problem.
+10:45:50 GEHCI          Message     The destination GEH has the new status OK.
+11:26:48 GEHCI          Message     <Sender:DEVGATE,Target:> SessionInitHandler::notifyTransportAccept() session accepted transport connection.
+11:26:48 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyExit() exiting state Start
+11:26:48 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyTransition() source state = Start dest state = AcceptingLogon
+11:26:49 GEHCI          Message     CFixSessionManager::registerSession() session <Sender:DEVGATE,Target:GEH> is new.
+11:26:49 GEHCI          Message     <DEVGATE:GEH> Incoming LOGON:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 61
+				                     MsgType(  35): A
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 1
+				                 SendingTime(  52): 20061213-00:26:49
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+11:26:49 GEHCI          Message     <DEVGATE:GEH> Outgoing LOGON:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): A
+				                   MsgSeqNum(  34): 1
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-00:26:49
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+11:26:49 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state AcceptingLogon
+11:26:49 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = AcceptingLogon dest state = CompleteLogonAcceptance
+11:26:49 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state CompleteLogonAcceptance
+11:26:49 GEHCI          ** Alert ** session GEH connected
+11:26:59 GEHCI          Message     <DEVGATE:GEH> Outgoing TEST_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 1
+				                   MsgSeqNum(  34): 2
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-00:26:59
+				                   TestReqID( 112): 20061213112659
+				    
+11:26:59 GEHCI          Message     <DEVGATE:GEH> Incoming HEARTBEAT: SeqNo:2 Time:20061213-00:26:59
+11:26:59 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = CompleteLogonAcceptance dest state = Processing
+11:26:59 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Processing
+11:26:59 GEHCI          Detail      CM:readyReceived setting connection GEH in sync
+11:26:59 GEHCI          Detail      Connection GEH is ready
+11:26:59 GEHCI          Detail      DC:connectionReady for connection : GEH
+11:26:59 GEHCI          Message     User geh(25) Status Registered
+11:26:59 GEHCI          Message     <DEVGATE:GEH> Incoming HEARTBEAT: SeqNo:2 Time:20061213-00:26:59
+11:27:00 GEHCI          Message     <DEVGATE:GEH> Incoming ORDER_LIST:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 245
+				                     MsgType(  35): E
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 3
+				                 SendingTime(  52): 20061213-00:27:00
+				            OnBehalfOfCompID( 115): test
+				                      ListID(  66): 1
+				                     BidType( 394): 1
+				            ListExecInstType( 433): 1
+				                  ListNoOrds(  68): 2
+				                    NoOrders(  73): 2
+				    Group 0 :
+				                     ClOrdID(  11): 1
+				                   ListSeqNo(  67): 1
+				               ExDestination( 100): GEHT
+				                      Symbol(  55): WOW
+				                  SecurityID(  48): WOW.AX
+				                    IDSource(  22): 5
+				                        Side(  54): 1
+				                TransactTime(  60): 20061213-00:26:59
+				                    OrderQty(  38): 1000
+				                     OrdType(  40): 1
+				    Group 1 :
+				                     ClOrdID(  11): 2
+				                   ListSeqNo(  67): 2
+				               ExDestination( 100): GEHT
+				                      Symbol(  55): RIO
+				                  SecurityID(  48): RIO.AX
+				                    IDSource(  22): 5
+				                        Side(  54): 1
+				                TransactTime(  60): 20061213-00:26:59
+				                    OrderQty(  38): 1000
+				                     OrdType(  40): 1
+				    
+11:27:00 GEHCI          Detail      Adding user OnBehalfOfCompID: test;  (single user CI)
+11:27:00 GEHCI          Detail      Security ID WOW.AX, security RIC, currency .
+11:27:00 GEHCI          Message     SecurityID WOW.AX (RIC), currency  mapped to WOW.AX.
+11:27:00 GEHCI          Detail      Creating new portfolio 1 for user geh(25)
+11:27:00 GEHCI          Detail      2 GEH Execution orders for geh, wave 1, portfolio 1.
+11:27:00 GEHCI          Detail      Security ID RIO.AX, security RIC, currency .
+11:27:00 GEHCI          Message     SecurityID RIO.AX (RIC), currency  mapped to RIO.AX.
+11:27:00 GEHCI          Detail      ListExecute message from client is not required
+11:27:00 GEHCI          Message     geh GEH/GEH execution 1(1 1)1(geh 1): Buy 1000 WOW.AX mkt A+
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:27:00 GEHCI          Message     geh GEH/GEH execution 2(2 1)2(geh 2): Buy 1000 RIO.AX mkt A+
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:27:00 GEHCI          Detail      Updated the wave 1 with 2 defined orders.
+11:27:00 GEHCI          Message     Executing list_wave for 'geh' wave 1
+11:27:00 GEHCI          Message     Sent geh Execution wave 1 to GEH.
+11:27:01 GEHCI          Message     GEHCI/geh GEH/GEH report 1(1 1)1(geh 1) 1 GEH: Ack 0 Buy WOW.AX mkt for $0 total 0 lvs 1000 11:27:01
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:27:01 GEHCI          Message     Report Sort Enabled: Check every 1 secs, Stale after 5 secs, MaxHeld #25.
+11:27:01 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 8
+				             DeliverToCompID( 128): test
+				                   MsgSeqNum(  34): 3
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-00:27:01
+				                     OrderID(  37): 25-1
+				                      ExecID(  17): 10025
+				                    ExecType( 150): 0
+				               ExecTransType(  20): 0
+				                   OrdStatus(  39): 0
+				                      Symbol(  55): WOW
+				                        Side(  54): 1
+				                    OrderQty(  38): 1000
+				                  LastShares(  32): 0
+				                      LastPx(  31): 0.000000
+				                   LeavesQty( 151): 1000
+				                      CumQty(  14): 0
+				                       AvgPx(   6): 0.000000
+				                     ClOrdID(  11): 1
+				                    IDSource(  22): 5
+				                  SecurityID(  48): WOW.AX
+				                TransactTime(  60): 20061213-00:27:01
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                      ListID(  66): 1
+				    
+11:27:01 GEHCI          Message     GEHCI/geh GEH/GEH report 2(2 1)2(geh 2) 2 GEH: Ack 0 Buy RIO.AX mkt for $0 total 0 lvs 1000 11:27:01
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:27:01 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 8
+				             DeliverToCompID( 128): test
+				                   MsgSeqNum(  34): 4
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-00:27:01
+				                     OrderID(  37): 25-2
+				                      ExecID(  17): 20025
+				                    ExecType( 150): 0
+				               ExecTransType(  20): 0
+				                   OrdStatus(  39): 0
+				                      Symbol(  55): RIO
+				                        Side(  54): 1
+				                    OrderQty(  38): 1000
+				                  LastShares(  32): 0
+				                      LastPx(  31): 0.000000
+				                   LeavesQty( 151): 1000
+				                      CumQty(  14): 0
+				                       AvgPx(   6): 0.000000
+				                     ClOrdID(  11): 2
+				                    IDSource(  22): 5
+				                  SecurityID(  48): RIO.AX
+				                TransactTime(  60): 20061213-00:27:01
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                      ListID(  66): 1
+				    
+11:27:25 GEHCI          Message     <DEVGATE:GEH> Incoming ORDER_CANCEL_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 134
+				                     MsgType(  35): F
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 4
+				                 SendingTime(  52): 20061213-00:27:25
+				            OnBehalfOfCompID( 115): test
+				                 OrigClOrdID(  41): 1
+				                     ClOrdID(  11): 3
+				                      Symbol(  55): WOW
+				                        Side(  54): 1
+				                TransactTime(  60): 20061213-00:27:24
+				                     OrderID(  37): 2
+				                      ListID(  66): 1
+				                  SecurityID(  48): WOW.AX
+				                    IDSource(  22): 5
+				                    OrderQty(  38): 1000
+				    
+11:27:25 GEHCI          Detail      Security ID WOW.AX, security RIC, currency .
+11:27:25 GEHCI          Message     SecurityID WOW.AX (RIC), currency  mapped to WOW.AX.
+11:27:25 GEHCI          Detail      1  Cancel orders for geh, wave 2.
+11:27:25 GEHCI          Message     geh GEH/GEH cancel 1(3 1)3(geh 3): for WOW.AX on old (1 1)1(geh 1): Buy 1000 mkt A+
+11:27:25 GEHCI          Detail      Updated the wave 2 with 1 defined orders.
+11:27:25 GEHCI          Detail      Wave #2 refers to the original wave #1.
+11:27:25 GEHCI          Message     Sent geh Cancel wave 2 to GEH.
+11:27:25 GEHCI          Message     GEHCI/geh GEH/GEH report 1(3 1)3(geh 3) 3 GEH: Ack 0 Buy WOW.AX mkt for $0 total 0 lvs 1000 11:27:25
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:27:25 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 8
+				             DeliverToCompID( 128): test
+				                   MsgSeqNum(  34): 5
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-00:27:25
+				                     OrderID(  37): 25-1
+				                      ExecID(  17): 30025
+				                    ExecType( 150): 6
+				               ExecTransType(  20): 0
+				                   OrdStatus(  39): 6
+				                      Symbol(  55): WOW
+				                        Side(  54): 1
+				                    OrderQty(  38): 1000
+				                  LastShares(  32): 0
+				                      LastPx(  31): 0.000000
+				                   LeavesQty( 151): 1000
+				                      CumQty(  14): 0
+				                       AvgPx(   6): 0.000000
+				                     ClOrdID(  11): 3
+				                    IDSource(  22): 5
+				                  SecurityID(  48): WOW.AX
+				                TransactTime(  60): 20061213-00:27:25
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                 OrigClOrdID(  41): 1
+				    
+11:27:25 GEHCI          ** Alert ** geh order 1 (3 1)3(geh 3) for symbol WOW.AX was unexpectedly cancelled.
+11:27:25 GEHCI          Message     GEHCI/geh GEH/GEH report 1(3 1)3(geh 3) 4 GEH: Cancelled -1000 Buy WOW.AX mkt for $0 total 0 lvs 0 11:27:25
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:27:25 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 8
+				             DeliverToCompID( 128): test
+				                   MsgSeqNum(  34): 6
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-00:27:25
+				                     OrderID(  37): 25-1
+				                      ExecID(  17): 40025
+				                    ExecType( 150): 4
+				               ExecTransType(  20): 0
+				                   OrdStatus(  39): 4
+				                      Symbol(  55): WOW
+				                        Side(  54): 1
+				                    OrderQty(  38): 1000
+				                  LastShares(  32): 0
+				                      LastPx(  31): 0.000000
+				                   LeavesQty( 151): 0
+				                      CumQty(  14): 0
+				                       AvgPx(   6): 0.000000
+				                 OrigClOrdID(  41): 3
+				                     ClOrdID(  11): 3
+				                    IDSource(  22): 5
+				                  SecurityID(  48): WOW.AX
+				                TransactTime(  60): 20061213-00:27:25
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				       ExecRestatementReason( 378): 2
+				               SolicitedFlag( 377): N
+				    
+11:27:42 GEHCI          Message     <DEVGATE:GEH> Incoming HEARTBEAT: SeqNo:5 Time:20061213-00:27:42
+11:27:48 GEHCI          Message     <DEVGATE:GEH> Incoming ORDER_CANCEL_REPLACE_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 148
+				                     MsgType(  35): G
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 6
+				                 SendingTime(  52): 20061213-00:27:48
+				            OnBehalfOfCompID( 115): test
+				                 OrigClOrdID(  41): 2
+				                     ClOrdID(  11): 4
+				                   HandlInst(  21): 1
+				                      Symbol(  55): RIO
+				                        Side(  54): 1
+				                TransactTime(  60): 20061213-00:27:47
+				                     OrdType(  40): 1
+				                      ListID(  66): 1
+				               ExDestination( 100): GEHT
+				                  SecurityID(  48): RIO.AX
+				                    IDSource(  22): 5
+				                    OrderQty(  38): 2000
+				    
+11:27:48 GEHCI          Detail      Security ID RIO.AX, security RIC, currency .
+11:27:48 GEHCI          Message     SecurityID RIO.AX (RIC), currency  mapped to RIO.AX.
+11:27:48 GEHCI          Detail      1  Correction orders for geh, wave 3.
+11:27:48 GEHCI          Message     geh GEH/GEH correction 2 for RIO.AX:
+				      from (2 1)2(geh 2): Buy 1000 mkt 
+				        to(4 1)4(geh 4): Buy 2000 mkt
+11:27:48 GEHCI          Message     GEHCI/geh GEH/GEH report 2(4 1)4(geh 4) 5 GEH: Ack 0 Buy RIO.AX mkt for $0 total 0 lvs 1000 11:27:48
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:27:48 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 8
+				             DeliverToCompID( 128): test
+				                   MsgSeqNum(  34): 7
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-00:27:48
+				                     OrderID(  37): 25-2
+				                      ExecID(  17): 50025
+				                    ExecType( 150): E
+				               ExecTransType(  20): 0
+				                   OrdStatus(  39): E
+				                      Symbol(  55): RIO
+				                        Side(  54): 1
+				                    OrderQty(  38): 1000
+				                  LastShares(  32): 0
+				                      LastPx(  31): 0.000000
+				                   LeavesQty( 151): 1000
+				                      CumQty(  14): 0
+				                       AvgPx(   6): 0.000000
+				                     ClOrdID(  11): 4
+				                    IDSource(  22): 5
+				                  SecurityID(  48): RIO.AX
+				                TransactTime(  60): 20061213-00:27:48
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                 OrigClOrdID(  41): 2
+				    
+11:27:48 GEHCI          Message     GEHCI/geh GEH/GEH report 2(4 1)4(geh 2) 6 GEH: Corrected 1000 Buy RIO.AX mkt for $0 total 0 lvs 2000 11:27:48
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:27:48 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 8
+				             DeliverToCompID( 128): test
+				                   MsgSeqNum(  34): 8
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-00:27:48
+				                     OrderID(  37): 25-2
+				                      ExecID(  17): 60025
+				                    ExecType( 150): 5
+				               ExecTransType(  20): 0
+				                   OrdStatus(  39): 5
+				                      Symbol(  55): RIO
+				                        Side(  54): 1
+				                    OrderQty(  38): 2000
+				                  LastShares(  32): 0
+				                      LastPx(  31): 0.000000
+				                   LeavesQty( 151): 2000
+				                      CumQty(  14): 0
+				                       AvgPx(   6): 0.000000
+				                 OrigClOrdID(  41): 2
+				                     ClOrdID(  11): 4
+				                    IDSource(  22): 5
+				                  SecurityID(  48): RIO.AX
+				                TransactTime(  60): 20061213-00:27:48
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                      ListID(  66): 1
+				    
+11:28:23 GEHCI          Message     AEhTransport::EhReadCallback() error reading from socket: Connection reset by peer
+11:28:23 GEHCI          Message     <Sender:DEVGATE,Target:GEH> CProcessing::notifyError() transport error: AEhTransport::handleError() got error: Connection reset by peer
+11:28:23 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state Processing
+11:28:23 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Processing dest state = Disconnected
+11:28:23 GEHCI          Message     <Sender:DEVGATE,Target:GEH>SessionInitHandler::notifyTransportClose() session transport closed.
+11:28:23 GEHCI          Detail      Setting session GEH to 0
+11:28:23 GEHCI          ** Alert ** session GEH disconnected
+11:28:23 GEHCI          Message     User geh(25) Status Unregistered
+11:28:23 GEHCI          Message     CFixSessionManager::registerSessionDisconnected() session <Sender:DEVGATE,Target:GEH> registered as disconnected.
+11:28:23 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Disconnected
+11:28:44 GEHCI          Message     Sending ACKS to 1 drivers needing ACK
+11:39:09 GEHCI          Message     <Sender:DEVGATE,Target:> SessionInitHandler::notifyTransportAccept() session accepted transport connection.
+11:39:09 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyExit() exiting state Start
+11:39:09 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyTransition() source state = Start dest state = AcceptingLogon
+11:39:09 GEHCI          Message     CFixSessionManager::registerSession() session <Sender:DEVGATE,Target:GEH> is replacing disconnected session <Sender:DEVGATE,Target:GEH>
+11:39:09 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state Disconnected
+11:39:09 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Disconnected dest state = Stop
+11:39:09 GEHCI          Message     CFixSessionManager::unregisterSession() session <Sender:DEVGATE,Target:GEH> unregistered.
+11:39:09 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Stop
+11:39:09 GEHCI          Message     <DEVGATE:GEH> Incoming LOGON:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 63
+				                     MsgType(  35): A
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 140
+				                 SendingTime(  52): 20061213-00:39:09
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+11:39:09 GEHCI          Message     <DEVGATE:GEH> Outgoing LOGON:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): A
+				                   MsgSeqNum(  34): 9
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-00:39:09
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+11:39:09 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state AcceptingLogon
+11:39:09 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = AcceptingLogon dest state = Resynching
+11:39:09 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Resynching
+11:39:09 GEHCI          Message     <DEVGATE:GEH> Outgoing RESEND_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 2
+				                   MsgSeqNum(  34): 10
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-00:39:09
+				                  BeginSeqNo(   7): 7
+				                    EndSeqNo(  16): 0
+				    
+11:39:09 GEHCI          Message     <DEVGATE:GEH> Incoming LOGOUT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 135
+				                     MsgType(  35): 5
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 141
+				                 SendingTime(  52): 20061213-00:39:09
+				                        Text(  58): fatal message sequence error, incoming MsgSeqNum [9] is less than expected [145]
+				    
+11:39:09 GEHCI          ** Warn! ** <Sender:DEVGATE,Target:GEH> Received message with high sequence number: 141 expected: 7.
+11:39:09 GEHCI          Message     
+				    Invalid Message Contents:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 135
+				                     MsgType(  35): 5
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 141
+				                 SendingTime(  52): 20061213-00:39:09
+				                        Text(  58): fatal message sequence error, incoming MsgSeqNum [9] is less than expected [145]
+				    
+11:39:09 GEHCI          Message     <DEVGATE:GEH> Outgoing RESEND_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 2
+				                   MsgSeqNum(  34): 11
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-00:39:09
+				                  BeginSeqNo(   7): 7
+				                    EndSeqNo(  16): 0
+				    
+11:39:25 GEHCI          Message     AEhTransport::EhReadCallback() error reading from socket: Connection reset by peer
+11:39:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> CResynching::notifyError() transport error: AEhTransport::handleError() got error: Connection reset by peer
+11:39:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Resynching dest state = Disconnected
+11:39:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH>SessionInitHandler::notifyTransportClose() session transport closed.
+11:39:25 GEHCI          Message     CFixSessionManager::registerSessionDisconnected() session <Sender:DEVGATE,Target:GEH> registered as disconnected.
+11:39:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Disconnected
+14:00:38 GEHCI          Message     The destination GEH has the new status Problem.
+14:01:19 GEHCI          Message     <Sender:DEVGATE,Target:> SessionInitHandler::notifyTransportAccept() session accepted transport connection.
+14:01:19 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyExit() exiting state Start
+14:01:19 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyTransition() source state = Start dest state = AcceptingLogon
+14:01:19 GEHCI          Message     CFixSessionManager::registerSession() session <Sender:DEVGATE,Target:GEH> is replacing disconnected session <Sender:DEVGATE,Target:GEH>
+14:01:19 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state Disconnected
+14:01:19 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Disconnected dest state = Stop
+14:01:19 GEHCI          Message     CFixSessionManager::unregisterSession() session <Sender:DEVGATE,Target:GEH> unregistered.
+14:01:19 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Stop
+14:01:19 GEHCI          Message     <DEVGATE:GEH> Incoming LOGON:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 63
+				                     MsgType(  35): A
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 142
+				                 SendingTime(  52): 20061213-03:01:19
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+14:01:19 GEHCI          Message     <DEVGATE:GEH> Outgoing LOGON:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): A
+				                   MsgSeqNum(  34): 12
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:01:19
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+14:01:19 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state AcceptingLogon
+14:01:19 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = AcceptingLogon dest state = Resynching
+14:01:19 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Resynching
+14:01:19 GEHCI          Message     <DEVGATE:GEH> Outgoing RESEND_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 2
+				                   MsgSeqNum(  34): 13
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:01:19
+				                  BeginSeqNo(   7): 7
+				                    EndSeqNo(  16): 0
+				    
+14:01:19 GEHCI          Message     <DEVGATE:GEH> Incoming LOGOUT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 136
+				                     MsgType(  35): 5
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 143
+				                 SendingTime(  52): 20061213-03:01:19
+				                        Text(  58): fatal message sequence error, incoming MsgSeqNum [12] is less than expected [145]
+				    
+14:01:19 GEHCI          ** Warn! ** <Sender:DEVGATE,Target:GEH> Received message with high sequence number: 143 expected: 7.
+14:01:19 GEHCI          Message     
+				    Invalid Message Contents:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 136
+				                     MsgType(  35): 5
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 143
+				                 SendingTime(  52): 20061213-03:01:19
+				                        Text(  58): fatal message sequence error, incoming MsgSeqNum [12] is less than expected [145]
+				    
+14:01:19 GEHCI          Message     <DEVGATE:GEH> Outgoing RESEND_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 2
+				                   MsgSeqNum(  34): 14
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:01:19
+				                  BeginSeqNo(   7): 7
+				                    EndSeqNo(  16): 0
+				    
+14:01:25 GEHCI          Message     AEhTransport::EhReadCallback() error reading from socket: Connection reset by peer
+14:01:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> CResynching::notifyError() transport error: AEhTransport::handleError() got error: Connection reset by peer
+14:01:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Resynching dest state = Disconnected
+14:01:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH>SessionInitHandler::notifyTransportClose() session transport closed.
+14:01:25 GEHCI          Message     CFixSessionManager::registerSessionDisconnected() session <Sender:DEVGATE,Target:GEH> registered as disconnected.
+14:01:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Disconnected
+14:01:31 GEHCI          Message     <Sender:DEVGATE,Target:> SessionInitHandler::notifyTransportAccept() session accepted transport connection.
+14:01:31 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyExit() exiting state Start
+14:01:31 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyTransition() source state = Start dest state = AcceptingLogon
+14:01:31 GEHCI          Message     CFixSessionManager::registerSession() session <Sender:DEVGATE,Target:GEH> is replacing disconnected session <Sender:DEVGATE,Target:GEH>
+14:01:31 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state Disconnected
+14:01:31 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Disconnected dest state = Stop
+14:01:31 GEHCI          Message     CFixSessionManager::unregisterSession() session <Sender:DEVGATE,Target:GEH> unregistered.
+14:01:31 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Stop
+14:01:31 GEHCI          Message     <DEVGATE:GEH> Incoming LOGON:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 63
+				                     MsgType(  35): A
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 145
+				                 SendingTime(  52): 20061213-03:01:31
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+14:01:31 GEHCI          Message     <DEVGATE:GEH> Outgoing LOGON:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): A
+				                   MsgSeqNum(  34): 15
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:01:31
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+14:01:31 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state AcceptingLogon
+14:01:31 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = AcceptingLogon dest state = Resynching
+14:01:31 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Resynching
+14:01:31 GEHCI          Message     <DEVGATE:GEH> Outgoing RESEND_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 2
+				                   MsgSeqNum(  34): 16
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:01:31
+				                  BeginSeqNo(   7): 7
+				                    EndSeqNo(  16): 0
+				    
+14:01:31 GEHCI          Message     <DEVGATE:GEH> Incoming LOGOUT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 136
+				                     MsgType(  35): 5
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 146
+				                 SendingTime(  52): 20061213-03:01:31
+				                        Text(  58): fatal message sequence error, incoming MsgSeqNum [15] is less than expected [145]
+				    
+14:01:31 GEHCI          ** Warn! ** <Sender:DEVGATE,Target:GEH> Received message with high sequence number: 146 expected: 7.
+14:01:31 GEHCI          Message     
+				    Invalid Message Contents:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 136
+				                     MsgType(  35): 5
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 146
+				                 SendingTime(  52): 20061213-03:01:31
+				                        Text(  58): fatal message sequence error, incoming MsgSeqNum [15] is less than expected [145]
+				    
+14:01:31 GEHCI          Message     <DEVGATE:GEH> Outgoing RESEND_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 2
+				                   MsgSeqNum(  34): 17
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:01:31
+				                  BeginSeqNo(   7): 7
+				                    EndSeqNo(  16): 0
+				    
+14:01:43 GEHCI          Message     AEhTransport::EhReadCallback() error reading from socket: Connection reset by peer
+14:01:43 GEHCI          Message     <Sender:DEVGATE,Target:GEH> CResynching::notifyError() transport error: AEhTransport::handleError() got error: Connection reset by peer
+14:01:43 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Resynching dest state = Disconnected
+14:01:43 GEHCI          Message     <Sender:DEVGATE,Target:GEH>SessionInitHandler::notifyTransportClose() session transport closed.
+14:01:43 GEHCI          Message     CFixSessionManager::registerSessionDisconnected() session <Sender:DEVGATE,Target:GEH> registered as disconnected.
+14:01:43 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Disconnected
+14:01:45 GEHCI          Message     The destination GEH has the new status OK.
+14:02:01 GEHCI          Message     <Sender:DEVGATE,Target:> SessionInitHandler::notifyTransportAccept() session accepted transport connection.
+14:02:01 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyExit() exiting state Start
+14:02:01 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyTransition() source state = Start dest state = AcceptingLogon
+14:02:01 GEHCI          Message     CFixSessionManager::registerSession() session <Sender:DEVGATE,Target:GEH> is replacing disconnected session <Sender:DEVGATE,Target:GEH>
+14:02:01 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state Disconnected
+14:02:01 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Disconnected dest state = Stop
+14:02:01 GEHCI          Message     CFixSessionManager::unregisterSession() session <Sender:DEVGATE,Target:GEH> unregistered.
+14:02:01 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Stop
+14:02:01 GEHCI          Message     <DEVGATE:GEH> Incoming LOGON:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 63
+				                     MsgType(  35): A
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 145
+				                 SendingTime(  52): 20061213-03:02:01
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+14:02:01 GEHCI          Message     <DEVGATE:GEH> Outgoing LOGON:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): A
+				                   MsgSeqNum(  34): 18
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:02:01
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+14:02:01 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state AcceptingLogon
+14:02:01 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = AcceptingLogon dest state = Resynching
+14:02:01 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Resynching
+14:02:01 GEHCI          Message     <DEVGATE:GEH> Outgoing RESEND_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 2
+				                   MsgSeqNum(  34): 19
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:02:01
+				                  BeginSeqNo(   7): 7
+				                    EndSeqNo(  16): 0
+				    
+14:02:01 GEHCI          Message     <DEVGATE:GEH> Incoming LOGOUT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 136
+				                     MsgType(  35): 5
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 146
+				                 SendingTime(  52): 20061213-03:02:01
+				                        Text(  58): fatal message sequence error, incoming MsgSeqNum [18] is less than expected [145]
+				    
+14:02:01 GEHCI          ** Warn! ** <Sender:DEVGATE,Target:GEH> Received message with high sequence number: 146 expected: 7.
+14:02:01 GEHCI          Message     
+				    Invalid Message Contents:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 136
+				                     MsgType(  35): 5
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 146
+				                 SendingTime(  52): 20061213-03:02:01
+				                        Text(  58): fatal message sequence error, incoming MsgSeqNum [18] is less than expected [145]
+				    
+14:02:01 GEHCI          Message     <DEVGATE:GEH> Outgoing RESEND_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 2
+				                   MsgSeqNum(  34): 20
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:02:01
+				                  BeginSeqNo(   7): 7
+				                    EndSeqNo(  16): 0
+				    
+14:02:07 GEHCI          Message     AEhTransport::EhReadCallback() error reading from socket: Connection reset by peer
+14:02:07 GEHCI          Message     <Sender:DEVGATE,Target:GEH> CResynching::notifyError() transport error: AEhTransport::handleError() got error: Connection reset by peer
+14:02:07 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Resynching dest state = Disconnected
+14:02:07 GEHCI          Message     <Sender:DEVGATE,Target:GEH>SessionInitHandler::notifyTransportClose() session transport closed.
+14:02:07 GEHCI          Message     CFixSessionManager::registerSessionDisconnected() session <Sender:DEVGATE,Target:GEH> registered as disconnected.
+14:02:07 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Disconnected
+14:02:11 GEHCI          Message     <Sender:DEVGATE,Target:> SessionInitHandler::notifyTransportAccept() session accepted transport connection.
+14:02:11 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyExit() exiting state Start
+14:02:11 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyTransition() source state = Start dest state = AcceptingLogon
+14:02:11 GEHCI          Message     CFixSessionManager::registerSession() session <Sender:DEVGATE,Target:GEH> is replacing disconnected session <Sender:DEVGATE,Target:GEH>
+14:02:11 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state Disconnected
+14:02:11 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Disconnected dest state = Stop
+14:02:11 GEHCI          Message     CFixSessionManager::unregisterSession() session <Sender:DEVGATE,Target:GEH> unregistered.
+14:02:11 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Stop
+14:02:11 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state AcceptingLogon
+14:02:11 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = AcceptingLogon dest state = AbnormalLogout
+14:02:11 GEHCI          Message     <DEVGATE:GEH> Outgoing LOGOUT:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 5
+				                   MsgSeqNum(  34): 21
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:02:11
+				                        Text(  58): Reason=3^JExpectedSeqNum=7^JActualSeqNum=1^J
+				    
+14:02:12 GEHCI          Message     <Sender:DEVGATE,Target:GEH>SessionInitHandler::notifyTransportClose() session transport closed.
+14:02:12 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state AbnormalLogout
+14:02:12 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state AbnormalLogout
+14:02:12 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = AbnormalLogout dest state = Disconnected
+14:02:12 GEHCI          Message     CFixSessionManager::registerSessionDisconnected() session <Sender:DEVGATE,Target:GEH> registered as disconnected.
+14:02:12 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Disconnected
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:> SessionInitHandler::notifyTransportAccept() session accepted transport connection.
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyExit() exiting state Start
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyTransition() source state = Start dest state = AcceptingLogon
+14:02:25 GEHCI          Message     CFixSessionManager::registerSession() session <Sender:DEVGATE,Target:GEH> is replacing disconnected session <Sender:DEVGATE,Target:GEH>
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state Disconnected
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Disconnected dest state = Stop
+14:02:25 GEHCI          Message     CFixSessionManager::unregisterSession() session <Sender:DEVGATE,Target:GEH> unregistered.
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Stop
+14:02:25 GEHCI          Message     <DEVGATE:GEH> Incoming LOGON:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 61
+				                     MsgType(  35): A
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 7
+				                 SendingTime(  52): 20061213-03:02:25
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+14:02:25 GEHCI          Message     <DEVGATE:GEH> Outgoing LOGON:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): A
+				                   MsgSeqNum(  34): 22
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:02:25
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state AcceptingLogon
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = AcceptingLogon dest state = CompleteLogonAcceptance
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state CompleteLogonAcceptance
+14:02:25 GEHCI          ** Alert ** session GEH connected
+14:02:25 GEHCI          Message     <DEVGATE:GEH> Incoming RESEND_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 59
+				                     MsgType(  35): 2
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 8
+				                 SendingTime(  52): 20061213-03:02:25
+				                  BeginSeqNo(   7): 1
+				                    EndSeqNo(  16): 21
+				    
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = CompleteLogonAcceptance dest state = Resending
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Resending
+14:02:25 GEHCI          Message     <DEVGATE:GEH> Outgoing SEQUENCE_RESET:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 4
+				                   MsgSeqNum(  34): 1
+				                 PossDupFlag(  43): Y
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				             OrigSendingTime( 122): 20061213-03:02:25
+				                 SendingTime(  52): 20061213-03:02:25
+				                    NewSeqNo(  36): 3
+				                 GapFillFlag( 123): Y
+				    
+14:02:25 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 209
+				                   MsgSeqNum(  34): 3
+				                     MsgType(  35): 8
+				                SenderCompID(  49): DEVGATE
+				                 SendingTime(  52): 20061213-03:02:25
+				                TargetCompID(  56): GEH
+				             DeliverToCompID( 128): test
+				                 PossDupFlag(  43): Y
+				             OrigSendingTime( 122): 20061213-00:27:01
+				                       AvgPx(   6): 0.000000
+				                     ClOrdID(  11): 1
+				                      CumQty(  14): 0
+				                      ExecID(  17): 10025
+				               ExecTransType(  20): 0
+				                    IDSource(  22): 5
+				                      LastPx(  31): 0.000000
+				                  LastShares(  32): 0
+				                     OrderID(  37): 25-1
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 0
+				                     Rule80A(  47): A
+				                  SecurityID(  48): WOW.AX
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                 TimeInForce(  59): 0
+				                TransactTime(  60): 20061213-00:27:01
+				                      ListID(  66): 1
+				                    ExecType( 150): 0
+				                   LeavesQty( 151): 1000
+				    
+14:02:25 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 209
+				                   MsgSeqNum(  34): 4
+				                     MsgType(  35): 8
+				                SenderCompID(  49): DEVGATE
+				                 SendingTime(  52): 20061213-03:02:25
+				                TargetCompID(  56): GEH
+				             DeliverToCompID( 128): test
+				                 PossDupFlag(  43): Y
+				             OrigSendingTime( 122): 20061213-00:27:01
+				                       AvgPx(   6): 0.000000
+				                     ClOrdID(  11): 2
+				                      CumQty(  14): 0
+				                      ExecID(  17): 20025
+				               ExecTransType(  20): 0
+				                    IDSource(  22): 5
+				                      LastPx(  31): 0.000000
+				                  LastShares(  32): 0
+				                     OrderID(  37): 25-2
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 0
+				                     Rule80A(  47): A
+				                  SecurityID(  48): RIO.AX
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                 TimeInForce(  59): 0
+				                TransactTime(  60): 20061213-00:27:01
+				                      ListID(  66): 1
+				                    ExecType( 150): 0
+				                   LeavesQty( 151): 1000
+				    
+14:02:25 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 209
+				                   MsgSeqNum(  34): 5
+				                     MsgType(  35): 8
+				                SenderCompID(  49): DEVGATE
+				                 SendingTime(  52): 20061213-03:02:25
+				                TargetCompID(  56): GEH
+				             DeliverToCompID( 128): test
+				                 PossDupFlag(  43): Y
+				             OrigSendingTime( 122): 20061213-00:27:25
+				                       AvgPx(   6): 0.000000
+				                     ClOrdID(  11): 3
+				                      CumQty(  14): 0
+				                      ExecID(  17): 30025
+				               ExecTransType(  20): 0
+				                    IDSource(  22): 5
+				                      LastPx(  31): 0.000000
+				                  LastShares(  32): 0
+				                     OrderID(  37): 25-1
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 6
+				                 OrigClOrdID(  41): 1
+				                     Rule80A(  47): A
+				                  SecurityID(  48): WOW.AX
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                 TimeInForce(  59): 0
+				                TransactTime(  60): 20061213-00:27:25
+				                    ExecType( 150): 6
+				                   LeavesQty( 151): 1000
+				    
+14:02:25 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 218
+				                   MsgSeqNum(  34): 6
+				                     MsgType(  35): 8
+				                SenderCompID(  49): DEVGATE
+				                 SendingTime(  52): 20061213-03:02:25
+				                TargetCompID(  56): GEH
+				             DeliverToCompID( 128): test
+				                 PossDupFlag(  43): Y
+				             OrigSendingTime( 122): 20061213-00:27:25
+				                       AvgPx(   6): 0.000000
+				                     ClOrdID(  11): 3
+				                      CumQty(  14): 0
+				                      ExecID(  17): 40025
+				               ExecTransType(  20): 0
+				                    IDSource(  22): 5
+				                      LastPx(  31): 0.000000
+				                  LastShares(  32): 0
+				                     OrderID(  37): 25-1
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 4
+				                 OrigClOrdID(  41): 3
+				                     Rule80A(  47): A
+				                  SecurityID(  48): WOW.AX
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                 TimeInForce(  59): 0
+				                TransactTime(  60): 20061213-00:27:25
+				                    ExecType( 150): 4
+				                   LeavesQty( 151): 0
+				               SolicitedFlag( 377): N
+				       ExecRestatementReason( 378): 2
+				    
+14:02:25 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 209
+				                   MsgSeqNum(  34): 7
+				                     MsgType(  35): 8
+				                SenderCompID(  49): DEVGATE
+				                 SendingTime(  52): 20061213-03:02:25
+				                TargetCompID(  56): GEH
+				             DeliverToCompID( 128): test
+				                 PossDupFlag(  43): Y
+				             OrigSendingTime( 122): 20061213-00:27:48
+				                       AvgPx(   6): 0.000000
+				                     ClOrdID(  11): 4
+				                      CumQty(  14): 0
+				                      ExecID(  17): 50025
+				               ExecTransType(  20): 0
+				                    IDSource(  22): 5
+				                      LastPx(  31): 0.000000
+				                  LastShares(  32): 0
+				                     OrderID(  37): 25-2
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): E
+				                 OrigClOrdID(  41): 2
+				                     Rule80A(  47): A
+				                  SecurityID(  48): RIO.AX
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                 TimeInForce(  59): 0
+				                TransactTime(  60): 20061213-00:27:48
+				                    ExecType( 150): E
+				                   LeavesQty( 151): 1000
+				    
+14:02:25 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 214
+				                   MsgSeqNum(  34): 8
+				                     MsgType(  35): 8
+				                SenderCompID(  49): DEVGATE
+				                 SendingTime(  52): 20061213-03:02:25
+				                TargetCompID(  56): GEH
+				             DeliverToCompID( 128): test
+				                 PossDupFlag(  43): Y
+				             OrigSendingTime( 122): 20061213-00:27:48
+				                       AvgPx(   6): 0.000000
+				                     ClOrdID(  11): 4
+				                      CumQty(  14): 0
+				                      ExecID(  17): 60025
+				               ExecTransType(  20): 0
+				                    IDSource(  22): 5
+				                      LastPx(  31): 0.000000
+				                  LastShares(  32): 0
+				                     OrderID(  37): 25-2
+				                    OrderQty(  38): 2000
+				                   OrdStatus(  39): 5
+				                 OrigClOrdID(  41): 2
+				                     Rule80A(  47): A
+				                  SecurityID(  48): RIO.AX
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                 TimeInForce(  59): 0
+				                TransactTime(  60): 20061213-00:27:48
+				                      ListID(  66): 1
+				                    ExecType( 150): 5
+				                   LeavesQty( 151): 2000
+				    
+14:02:25 GEHCI          Message     <DEVGATE:GEH> Outgoing SEQUENCE_RESET:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 4
+				                   MsgSeqNum(  34): 9
+				                 PossDupFlag(  43): Y
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				             OrigSendingTime( 122): 20061213-03:02:25
+				                 SendingTime(  52): 20061213-03:02:25
+				                    NewSeqNo(  36): 22
+				                 GapFillFlag( 123): Y
+				    
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state Resending
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Resending dest state = CompleteLogonAcceptance
+14:02:25 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state CompleteLogonAcceptance
+14:02:35 GEHCI          Message     <DEVGATE:GEH> Outgoing TEST_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 1
+				                   MsgSeqNum(  34): 23
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:02:35
+				                   TestReqID( 112): 20061213140235
+				    
+14:02:44 GEHCI          Message     AEhTransport::EhReadCallback() error reading from socket: Connection reset by peer
+14:02:44 GEHCI          Message     <Sender:DEVGATE,Target:GEH>CCompleteLogonAcceptance::notifyError() transport error: AEhTransport::handleError() got error: Connection reset by peer
+14:02:44 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = CompleteLogonAcceptance dest state = InvalidLogonAcceptance
+14:02:44 GEHCI          Message     <Sender:DEVGATE,Target:GEH>SessionInitHandler::notifyTransportClose() session transport closed.
+14:02:44 GEHCI          Detail      Setting session GEH to 0
+14:02:44 GEHCI          ** Alert ** session GEH disconnected
+14:02:44 GEHCI          Detail      User 25 Status <Unregistered> unchanged
+14:02:44 GEHCI          Message     CFixSessionManager::registerSessionDisconnected() session <Sender:DEVGATE,Target:GEH> registered as disconnected.
+14:02:44 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state InvalidLogonAcceptance
+14:02:53 GEHCI          Message     <Sender:DEVGATE,Target:> SessionInitHandler::notifyTransportAccept() session accepted transport connection.
+14:02:53 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyExit() exiting state Start
+14:02:53 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyTransition() source state = Start dest state = AcceptingLogon
+14:02:53 GEHCI          Message     CFixSessionManager::registerSession() session <Sender:DEVGATE,Target:GEH> is replacing disconnected session <Sender:DEVGATE,Target:GEH>
+14:02:53 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state InvalidLogonAcceptance
+14:02:53 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = InvalidLogonAcceptance dest state = Stop
+14:02:53 GEHCI          Message     CFixSessionManager::unregisterSession() session <Sender:DEVGATE,Target:GEH> unregistered.
+14:02:53 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Stop
+14:02:53 GEHCI          Message     <DEVGATE:GEH> Incoming LOGON:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 61
+				                     MsgType(  35): A
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 9
+				                 SendingTime(  52): 20061213-03:02:53
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+14:02:53 GEHCI          Message     <DEVGATE:GEH> Outgoing LOGON:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): A
+				                   MsgSeqNum(  34): 24
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:02:53
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+14:02:53 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state AcceptingLogon
+14:02:53 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = AcceptingLogon dest state = CompleteLogonAcceptance
+14:02:53 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state CompleteLogonAcceptance
+14:02:53 GEHCI          ** Alert ** session GEH connected
+14:02:54 GEHCI          Message     <DEVGATE:GEH> Incoming RESEND_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 61
+				                     MsgType(  35): 2
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 10
+				                 SendingTime(  52): 20061213-03:02:53
+				                  BeginSeqNo(   7): 23
+				                    EndSeqNo(  16): 23
+				    
+14:02:54 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = CompleteLogonAcceptance dest state = Resending
+14:02:54 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Resending
+14:02:54 GEHCI          Message     <DEVGATE:GEH> Outgoing SEQUENCE_RESET:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 4
+				                   MsgSeqNum(  34): 23
+				                 PossDupFlag(  43): Y
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				             OrigSendingTime( 122): 20061213-03:02:54
+				                 SendingTime(  52): 20061213-03:02:54
+				                    NewSeqNo(  36): 24
+				                 GapFillFlag( 123): Y
+				    
+14:02:54 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state Resending
+14:02:54 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Resending dest state = CompleteLogonAcceptance
+14:02:54 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state CompleteLogonAcceptance
+14:02:58 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = CompleteLogonAcceptance dest state = Processing
+14:02:58 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Processing
+14:02:58 GEHCI          Detail      CM:readyReceived setting connection GEH in sync
+14:02:58 GEHCI          Detail      Connection GEH is ready
+14:02:58 GEHCI          Detail      DC:connectionReady for connection : GEH
+14:02:58 GEHCI          Message     User geh(25) Status Registered
+14:02:58 GEHCI          Message     <DEVGATE:GEH> Incoming ORDER_LIST:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 252
+				                     MsgType(  35): E
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 11
+				                 SendingTime(  52): 20061213-03:02:58
+				            OnBehalfOfCompID( 115): test
+				                      ListID(  66): 200
+				                     BidType( 394): 1
+				            ListExecInstType( 433): 1
+				                  ListNoOrds(  68): 2
+				                    NoOrders(  73): 2
+				    Group 0 :
+				                     ClOrdID(  11): 200
+				                   ListSeqNo(  67): 1
+				               ExDestination( 100): GEHT
+				                      Symbol(  55): WOW
+				                  SecurityID(  48): WOW.AX
+				                    IDSource(  22): 5
+				                        Side(  54): 1
+				                TransactTime(  60): 20061213-03:02:57
+				                    OrderQty(  38): 1000
+				                     OrdType(  40): 1
+				    Group 1 :
+				                     ClOrdID(  11): 201
+				                   ListSeqNo(  67): 2
+				               ExDestination( 100): GEHT
+				                      Symbol(  55): RIO
+				                  SecurityID(  48): RIO.AX
+				                    IDSource(  22): 5
+				                        Side(  54): 1
+				                TransactTime(  60): 20061213-03:02:57
+				                    OrderQty(  38): 1000
+				                     OrdType(  40): 1
+				    
+14:02:58 GEHCI          Detail      Security ID WOW.AX, security RIC, currency .
+14:02:58 GEHCI          Message     SecurityID WOW.AX (RIC), currency  mapped to WOW.AX.
+14:02:58 GEHCI          Detail      Creating new portfolio 200 for user geh(25)
+14:02:58 GEHCI          Detail      2 GEH Execution orders for geh, wave 4, portfolio 200.
+14:02:58 GEHCI          Detail      Security ID RIO.AX, security RIC, currency .
+14:02:58 GEHCI          Message     SecurityID RIO.AX (RIC), currency  mapped to RIO.AX.
+14:02:58 GEHCI          Detail      ListExecute message from client is not required
+14:02:58 GEHCI          Message     geh GEH/GEH execution 3(200 1)5(geh 5): Buy 1000 WOW.AX mkt A+
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+14:02:58 GEHCI          Message     geh GEH/GEH execution 4(201 1)6(geh 6): Buy 1000 RIO.AX mkt A+
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+14:02:58 GEHCI          Detail      Updated the wave 4 with 2 defined orders.
+14:02:58 GEHCI          Message     Executing list_wave for 'geh' wave 4
+14:02:58 GEHCI          Message     Sent geh Execution wave 4 to GEH.
+14:02:59 GEHCI          Message     GEHCI/geh GEH/GEH report 3(200 1)5(geh 5) 7 GEH: Ack 0 Buy WOW.AX mkt for $0 total 0 lvs 1000 14:02:59
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+14:02:59 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 8
+				             DeliverToCompID( 128): test
+				                   MsgSeqNum(  34): 25
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:02:59
+				                     OrderID(  37): 25-3
+				                      ExecID(  17): 70025
+				                    ExecType( 150): 0
+				               ExecTransType(  20): 0
+				                   OrdStatus(  39): 0
+				                      Symbol(  55): WOW
+				                        Side(  54): 1
+				                    OrderQty(  38): 1000
+				                  LastShares(  32): 0
+				                      LastPx(  31): 0.000000
+				                   LeavesQty( 151): 1000
+				                      CumQty(  14): 0
+				                       AvgPx(   6): 0.000000
+				                     ClOrdID(  11): 200
+				                    IDSource(  22): 5
+				                  SecurityID(  48): WOW.AX
+				                TransactTime(  60): 20061213-03:02:59
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                      ListID(  66): 200
+				    
+14:02:59 GEHCI          Message     GEHCI/geh GEH/GEH report 4(201 1)6(geh 6) 8 GEH: Ack 0 Buy RIO.AX mkt for $0 total 0 lvs 1000 14:02:59
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+14:02:59 GEHCI          Message     <DEVGATE:GEH> Outgoing EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 8
+				             DeliverToCompID( 128): test
+				                   MsgSeqNum(  34): 26
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:02:59
+				                     OrderID(  37): 25-4
+				                      ExecID(  17): 80025
+				                    ExecType( 150): 0
+				               ExecTransType(  20): 0
+				                   OrdStatus(  39): 0
+				                      Symbol(  55): RIO
+				                        Side(  54): 1
+				                    OrderQty(  38): 1000
+				                  LastShares(  32): 0
+				                      LastPx(  31): 0.000000
+				                   LeavesQty( 151): 1000
+				                      CumQty(  14): 0
+				                       AvgPx(   6): 0.000000
+				                     ClOrdID(  11): 201
+				                    IDSource(  22): 5
+				                  SecurityID(  48): RIO.AX
+				                TransactTime(  60): 20061213-03:02:59
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                      ListID(  66): 200
+				    
+14:03:14 GEHCI          Message     <DEVGATE:GEH> Incoming HEARTBEAT: SeqNo:12 Time:20061213-03:03:14
+14:03:16 GEHCI          Message     AEhTransport::EhReadCallback() error reading from socket: Connection reset by peer
+14:03:16 GEHCI          Message     <Sender:DEVGATE,Target:GEH> CProcessing::notifyError() transport error: AEhTransport::handleError() got error: Connection reset by peer
+14:03:16 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state Processing
+14:03:16 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Processing dest state = Disconnected
+14:03:16 GEHCI          Message     <Sender:DEVGATE,Target:GEH>SessionInitHandler::notifyTransportClose() session transport closed.
+14:03:16 GEHCI          Detail      Setting session GEH to 0
+14:03:16 GEHCI          ** Alert ** session GEH disconnected
+14:03:16 GEHCI          Message     User geh(25) Status Unregistered
+14:03:16 GEHCI          Message     CFixSessionManager::registerSessionDisconnected() session <Sender:DEVGATE,Target:GEH> registered as disconnected.
+14:03:16 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Disconnected
+14:04:05 GEHCI          Message     <Sender:DEVGATE,Target:> SessionInitHandler::notifyTransportAccept() session accepted transport connection.
+14:04:05 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyExit() exiting state Start
+14:04:05 GEHCI          Message     <Sender:DEVGATE,Target:> FixStateHandler::notifyTransition() source state = Start dest state = AcceptingLogon
+14:04:05 GEHCI          Message     CFixSessionManager::registerSession() session <Sender:DEVGATE,Target:GEH> is replacing disconnected session <Sender:DEVGATE,Target:GEH>
+14:04:05 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state Disconnected
+14:04:05 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = Disconnected dest state = Stop
+14:04:05 GEHCI          Message     CFixSessionManager::unregisterSession() session <Sender:DEVGATE,Target:GEH> unregistered.
+14:04:05 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state Stop
+14:04:05 GEHCI          Message     <DEVGATE:GEH> Incoming LOGON:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 62
+				                     MsgType(  35): A
+				                SenderCompID(  49): GEH
+				                TargetCompID(  56): DEVGATE
+				                   MsgSeqNum(  34): 13
+				                 SendingTime(  52): 20061213-03:04:05
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+14:04:05 GEHCI          Message     <DEVGATE:GEH> Outgoing LOGON:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): A
+				                   MsgSeqNum(  34): 27
+				                SenderCompID(  49): DEVGATE
+				                TargetCompID(  56): GEH
+				                 SendingTime(  52): 20061213-03:04:05
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 60
+				    
+14:04:05 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyExit() exiting state AcceptingLogon
+14:04:05 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = AcceptingLogon dest state = CompleteLogonAcceptance
+14:04:05 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state CompleteLogonAcceptance
+14:04:05 GEHCI          ** Alert ** session GEH connected
+14:04:14 GEHCI          Message     AEhTransport::EhReadCallback() error reading from socket: Connection reset by peer
+14:04:14 GEHCI          Message     <Sender:DEVGATE,Target:GEH>CCompleteLogonAcceptance::notifyError() transport error: AEhTransport::handleError() got error: Connection reset by peer
+14:04:14 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyTransition() source state = CompleteLogonAcceptance dest state = InvalidLogonAcceptance
+14:04:14 GEHCI          Message     <Sender:DEVGATE,Target:GEH>SessionInitHandler::notifyTransportClose() session transport closed.
+14:04:14 GEHCI          Detail      Setting session GEH to 0
+14:04:14 GEHCI          ** Alert ** session GEH disconnected
+14:04:14 GEHCI          Detail      User 25 Status <Unregistered> unchanged
+14:04:14 GEHCI          Message     CFixSessionManager::registerSessionDisconnected() session <Sender:DEVGATE,Target:GEH> registered as disconnected.
+14:04:14 GEHCI          Message     <Sender:DEVGATE,Target:GEH> FixStateHandler::notifyEntry() entering state InvalidLogonAcceptance
+14:04:44 GEHCI          Message     Sending ACKS to 1 drivers needing ACK
+14:24:57 GEHCI          Message     Scheduled resync in 3 seconds at 14:25:00. (tierSize: 5, tier: 1, tierOff: 3)
+14:25:00 GEHCI          Message     Starting resync triggered by time event
+14:25:00 GEHCI          Message     Reading data from /export/gate/MMFdata/node1
+14:25:00 GEHCI          Message     Starting resync of database tables.
+14:25:00 GEHCI          Detail      Table destinations          : alloc=  151, count=   23, max id=  150, inode= 3146377, statSz= 24, elemSz= 120 (0.0003 sec)
+14:25:00 GEHCI          Detail      No destination is configured with circuit_brkr_allowed set.
+14:25:00 GEHCI          Message     Previous closing prices were not loaded because no users configured with dollar cap are permitted for a destination checking dollar cap.
+14:25:00 GEHCI          Detail      SYMBOLOGY: SYMBOLOGY_LOAD_ALL option Configured
+14:25:00 GEHCI          Detail      SYMBOLOGY: stock_mapping table has not changed - not reloading symbols.
+14:25:00 GEHCI          Message     FeUserMgr initUsers
+14:25:00 GEHCI          Message     FeUserMgr got ciid 10
+14:25:00 GEHCI          Message     FeUser 25
+14:25:00 GEHCI          Detail      getUserPassword: NO DATA FOUND for userId 25
+14:25:00 GEHCI          Message     FeUser::init geh (25): 0 firms, 0 FirmMnemonics, 1 SubIds, 1 Waves, 1 Portfolios, 1 Destinations, 0 Custodians, 0 user firms
+14:25:00 GEHCI          Detail      User geh(1): OnBehalfOfCompID: test; 
+14:25:00 GEHCI          Detail      Resync: Last Execution Id: 4, Last Received Report Num: 8, Last Sent Report Num: 8, Last portfolio id: 2
+14:25:00 GEHCI          Detail      Initialized 1 users
+14:25:00 GEHCI          Detail      SYMBOLOGY: Symbols Already loaded
+14:25:00 GEHCI          Detail      --------------------------------------------------------------------------------
+14:25:00 GEHCI          Detail      		Resync: Configuration Information for fix_ci_params
+14:25:00 GEHCI          Detail      --------------------------------------------------------------------------------
+14:25:00 GEHCI          Detail      Default Destination: 10 - GEH
+14:25:00 GEHCI          Detail      Multiple clients: No
+14:25:00 GEHCI          Detail      Server: DEVGATE
+14:25:00 GEHCI          Detail      Client: GEH
+14:25:00 GEHCI          Detail      FIX Version: FIX.4.2
+14:25:00 GEHCI          Detail      Encryption method: NONE
+14:25:00 GEHCI          Detail      Display FIX messages: 1 - Restricted Display. Certain administrative messages will not be displayed.
+14:25:00 GEHCI          Detail      Use text for portfolio: No
+14:25:00 GEHCI          Detail      Nothing Done flavor: 0 - Send Nothing Done as FIX Done for Day.
+14:25:00 GEHCI          Detail      Summary type: 0 - Default
+14:25:00 GEHCI          Detail      Heartbeat interval: 30
+14:25:00 GEHCI          Detail      Test request interval: 45
+14:25:00 GEHCI          Detail      Forward destination messages: 1 - Regular.
+14:25:00 GEHCI          Detail      Correction type: 0 - Default
+14:25:00 GEHCI          Detail      ExecBroker type: 0 - Default. Ignores value of ExecBroker in FIX orders and the order is reported to the default giveup broker if any.
+14:25:00 GEHCI          Detail      Cache reset: Not allowed
+14:25:00 GEHCI          Detail      Auto connect: No
+14:25:00 GEHCI          Detail      Use SymbolSfx tag 65 in reports for preferred symbols: No
+14:25:00 GEHCI          Detail      Drop copy interval: 0
+14:25:00 GEHCI          Detail      Client supports summaries: Yes
+14:25:00 GEHCI          Detail      ECN Supported: No
+14:25:00 GEHCI          Detail      --------------------------------------------------------------------------------
+14:25:00 GEHCI          Detail      		Resync: Configuration Information for client_interfaces
+14:25:00 GEHCI          Detail      --------------------------------------------------------------------------------
+14:25:00 GEHCI          Detail      Correction quantity type: 3 - Remaining and executed shares (FIX-Style)
+14:25:00 GEHCI          Detail      Allocate new sequence number: Yes
+14:25:00 GEHCI          Detail      Symbol conversion:  Case insensitive.
+14:25:00 GEHCI          Detail      Correction behavior:  post-correction
+14:25:00 GEHCI          Detail      --------------------------------------------------------------------------------
+14:25:00 GEHCI          Detail      		Resync: Configuration Information for ci_lines
+14:25:00 GEHCI          Detail      --------------------------------------------------------------------------------
+14:25:00 GEHCI          Detail       Accepting connection on port:53510
+14:25:00 GEHCI          Detail      --------------------------------------------------------------------------------
+14:25:00 GEHCI          Detail      		Resync: Configuration Information - debug flags.
+14:25:00 GEHCI          Detail      --------------------------------------------------------------------------------
+14:25:00 GEHCI          Detail      Expecting Extra 1 FIX Messages after peer resend (EXSEQ)
+14:25:00 GEHCI          Detail      Symbology is Required.  Must convert to native symbol from SecurityID (48) and IDSource (22). (SYMBO)
+14:25:00 GEHCI          Detail      Send contents of Text(58), up to 40 chars, to destination as order-memo (OMEMO)
+14:25:00 GEHCI          Detail      Do not require ListExecute following bundled List-Orders (LISTE)
+14:25:00 GEHCI          Detail      --------------------------------------------------------------------------------
+14:25:00 GEHCI          Detail      Resync completed in 0.005 seconds
+14:55:23 GEHCI          Message     Scheduled resync in 1 seconds at 14:55:24. (tierSize: 5, tier: 1, tierOff: 1)
+14:55:24 GEHCI          Message     Starting resync triggered by time event
+14:55:24 GEHCI          Message     Reading data from /export/gate/MMFdata/node1
+14:55:24 GEHCI          Message     Starting resync of database tables.
+14:55:24 GEHCI          Detail      Table user_destinations     : alloc=   69, count=   69, inode= 3146378, statSz= 24, elemSz=  96 (0.0004 sec)
+14:55:24 GEHCI          Detail      No destination is configured with circuit_brkr_allowed set.
+14:55:24 GEHCI          Message     Previous closing prices were not loaded because no users configured with dollar cap are permitted for a destination checking dollar cap.
+14:55:24 GEHCI          Detail      SYMBOLOGY: SYMBOLOGY_LOAD_ALL option Configured
+14:55:24 GEHCI          Detail      SYMBOLOGY: stock_mapping table has not changed - not reloading symbols.
+14:55:24 GEHCI          Message     FeUserMgr initUsers
+14:55:24 GEHCI          Message     FeUserMgr got ciid 10
+14:55:24 GEHCI          Message     FeUser 25
+14:55:24 GEHCI          Detail      getUserPassword: NO DATA FOUND for userId 25
+14:55:24 GEHCI          Message     FeUser::init geh (25): 0 firms, 0 FirmMnemonics, 1 SubIds, 1 Waves, 1 Portfolios, 1 Destinations, 0 Custodians, 0 user firms
+14:55:24 GEHCI          Detail      User geh(1): OnBehalfOfCompID: test; 
+14:55:24 GEHCI          Detail      Resync: Last Execution Id: 4, Last Received Report Num: 8, Last Sent Report Num: 8, Last portfolio id: 2
+14:55:24 GEHCI          Detail      Initialized 1 users
+14:55:24 GEHCI          Detail      SYMBOLOGY: Symbols Already loaded
+14:55:24 GEHCI          Detail      --------------------------------------------------------------------------------
+14:55:24 GEHCI          Detail      		Resync: Configuration Information for fix_ci_params
+14:55:24 GEHCI          Detail      --------------------------------------------------------------------------------
+14:55:24 GEHCI          Detail      Default Destination: 10 - GEH
+14:55:24 GEHCI          Detail      Multiple clients: No
+14:55:24 GEHCI          Detail      Server: DEVGATE
+14:55:24 GEHCI          Detail      Client: GEH
+14:55:24 GEHCI          Detail      FIX Version: FIX.4.2
+14:55:24 GEHCI          Detail      Encryption method: NONE
+14:55:24 GEHCI          Detail      Display FIX messages: 1 - Restricted Display. Certain administrative messages will not be displayed.
+14:55:24 GEHCI          Detail      Use text for portfolio: No
+14:55:24 GEHCI          Detail      Nothing Done flavor: 0 - Send Nothing Done as FIX Done for Day.
+14:55:24 GEHCI          Detail      Summary type: 0 - Default
+14:55:24 GEHCI          Detail      Heartbeat interval: 30
+14:55:24 GEHCI          Detail      Test request interval: 45
+14:55:24 GEHCI          Detail      Forward destination messages: 1 - Regular.
+14:55:24 GEHCI          Detail      Correction type: 0 - Default
+14:55:24 GEHCI          Detail      ExecBroker type: 0 - Default. Ignores value of ExecBroker in FIX orders and the order is reported to the default giveup broker if any.
+14:55:24 GEHCI          Detail      Cache reset: Not allowed
+14:55:24 GEHCI          Detail      Auto connect: No
+14:55:24 GEHCI          Detail      Use SymbolSfx tag 65 in reports for preferred symbols: No
+14:55:24 GEHCI          Detail      Drop copy interval: 0
+14:55:24 GEHCI          Detail      Client supports summaries: Yes
+14:55:24 GEHCI          Detail      ECN Supported: No
+14:55:24 GEHCI          Detail      --------------------------------------------------------------------------------
+14:55:24 GEHCI          Detail      		Resync: Configuration Information for client_interfaces
+14:55:24 GEHCI          Detail      --------------------------------------------------------------------------------
+14:55:24 GEHCI          Detail      Correction quantity type: 3 - Remaining and executed shares (FIX-Style)
+14:55:24 GEHCI          Detail      Allocate new sequence number: Yes
+14:55:24 GEHCI          Detail      Symbol conversion:  Case insensitive.
+14:55:24 GEHCI          Detail      Correction behavior:  post-correction
+14:55:24 GEHCI          Detail      --------------------------------------------------------------------------------
+14:55:24 GEHCI          Detail      		Resync: Configuration Information for ci_lines
+14:55:24 GEHCI          Detail      --------------------------------------------------------------------------------
+14:55:24 GEHCI          Detail       Accepting connection on port:53510
+14:55:24 GEHCI          Detail      --------------------------------------------------------------------------------
+14:55:24 GEHCI          Detail      		Resync: Configuration Information - debug flags.
+14:55:24 GEHCI          Detail      --------------------------------------------------------------------------------
+14:55:24 GEHCI          Detail      Expecting Extra 1 FIX Messages after peer resend (EXSEQ)
+14:55:24 GEHCI          Detail      Symbology is Required.  Must convert to native symbol from SecurityID (48) and IDSource (22). (SYMBO)
+14:55:24 GEHCI          Detail      Send contents of Text(58), up to 40 chars, to destination as order-memo (OMEMO)
+14:55:24 GEHCI          Detail      Do not require ListExecute following bundled List-Orders (LISTE)
+14:55:24 GEHCI          Detail      --------------------------------------------------------------------------------
+14:55:24 GEHCI          Detail      Resync completed in 0.005 seconds
+16:30:00 GEHCI          Message     Wizard command: End-of-day admin query of all outstanding orders.
+16:30:00 GEHCI          Message     No eligible orders found for the EOD admin query.

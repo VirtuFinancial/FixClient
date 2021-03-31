@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	
+    <Product Id="6DE698C4-E272-49DE-9562-7B8C58A09796" 
+             Name="ITG Asia Pac FIX Client" 
+             Language="1033" 
+             Version="2.0.0.0" 
+             Manufacturer="ITG Asia Pac" 
+             UpgradeCode="968C0669-AD22-4887-99E8-56DE2B4ABB22">
+		
+        <Package InstallerVersion="405" Compressed="yes" InstallScope="perMachine" Platform="x86" InstallPrivileges="elevated"/>
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+        <MediaTemplate EmbedCab="yes"/>
+
+        <UIRef Id="WixUI_MondoNoLicense"/>
+        <WixVariable Id="WixUIDialogBmp" Value="Resources\InstallerDialog.bmp" />
+        <WixVariable Id="WixUIBannerBmp" Value="Resources\InstallerBanner.bmp" />
+
+        <Icon Id="Icon.ico" SourceFile="Icons\FixClient.ico"/>
+        <Property Id="ARPPRODUCTICON" Value="Icon.ico" />
+
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="ProgramFilesFolder">
+                <Directory Id="ITGFolder" Name="ITG">
+                    <Directory Id="AsiaPacFolder" Name="Asia Pac">
+                        <Directory Id="INSTALLFOLDER" Name="FIX Client"/>
+                    </Directory>
+                </Directory>
+            </Directory>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="ProgramMenuSubfolder" Name="ITG Asia Pac">
+                    <Component Id="ApplicationShortcuts" Guid="29EBE110-9866-4FE8-A7AD-6B13BB2420E2">
+                        <Shortcut Id="ApplicationShortcut1" Name="FIX Client" Description="ITG Asia Pac FIX Client"
+                                  Target="[INSTALLFOLDER]FixClient.exe" WorkingDirectory="INSTALLFOLDER"/>
+                        <RegistryValue Root="HKCU" Key="Software\ITG Asia Pac\FIX Client" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+                        <RemoveFolder Id="ProgramMenuSubfolder" On="uninstall"/>
+                    </Component>
+                </Directory>
+            </Directory>
+        </Directory>
+
+        <DirectoryRef Id="TARGETDIR">
+            <Merge Id="VCRedist" SourceFile="C:\Program Files (x86)\Common Files\Merge Modules\Microsoft_VC110_CRT_x86.msm" DiskId="1" Language="0"/>
+        </DirectoryRef>
+
+        <Feature Id="VCRedist" Title="Visual C++ 11.0 Runtime" AllowAdvertise="no" Display="expand" Level="1">
+            <MergeRef Id="VCRedist"/>
+        </Feature>
+
+        <Feature Id="FixClientFeature" Title="FIX Client" Display="expand" Level="1" ConfigurableDirectory="INSTALLFOLDER">
+            <ComponentGroupRef Id="FixClientComponents" />
+        </Feature>
+        
+        <ComponentGroup Id="FixClientComponents" Directory="INSTALLFOLDER">
+            <Component Id="FixClient" Guid="C945FD77-11AD-4EDC-979A-ADE4659B874B">
+                <?define FixFolder="C:/Program Files (x86)/ITG/Asia Pac/.NET 4.5 FIX Engine"?>
+                <File Id="FixClient" Name="$(var.FixClient.TargetFileName)" Source="$(var.FixClient.TargetPath)" DiskId="1" KeyPath="yes" />
+                <File Id="CustomFields" Name="CustomFields.xml" Source="$(var.FixClient.ProjectDir)/CustomFields.xml" DiskId="1" />
+                <File Id="Fix" Name="Fix.dll" Source="$(var.FixFolder)/Fix.dll" DiskId="1" />
+                <File Id="libosthread" Name="libosthread.dll" Source="$(var.FixFolder)/libosthread.dll" DiskId="1" />
+                <File Id="libcommon" Name="libcommon.dll" Source="$(var.FixFolder)/libcommon.dll" DiskId="1" />
+                <File Id="libconfiguration" Name="libconfiguration.dll" Source="$(var.FixFolder)/libconfiguration.dll" DiskId="1" />
+                <File Id="libdatetime" Name="libdatetime.dll" Source="$(var.FixFolder)/libdatetime.dll" DiskId="1" />
+                <File Id="libfix" Name="libfix.dll" Source="$(var.FixFolder)/libfix.dll" DiskId="1" />
+                <File Id="libgoa" Name="libgoa.dll" Source="$(var.FixFolder)/libgoa.dll" DiskId="1" />
+                <File Id="liblog" Name="liblog.dll" Source="$(var.FixFolder)/liblog.dll" DiskId="1" />
+                <File Id="libmts" Name="libmts.dll" Source="$(var.FixFolder)/libmts.dll" DiskId="1" />
+                <File Id="libnetsocket" Name="libnetsocket.dll" Source="$(var.FixFolder)/libnetsocket.dll" DiskId="1" />
+                <File Id="libxml" Name="libxml.dll" Source="$(var.FixFolder)/libxml.dll" DiskId="1" />
+                <File Id="libxerces" Name="xerces-c_3_1.dll" Source="$(var.FixFolder)/xerces-c_3_1.dll" DiskId="1" />
+                <File Id="boost_chrono" Name="boost_chrono-vc110-mt-1_51.dll" Source="$(var.FixFolder)/boost_chrono-vc110-mt-1_51.dll" DiskId="1" />
+                <File Id="boost_date_time" Name="boost_date_time-vc110-mt-1_51.dll" Source="$(var.FixFolder)/boost_date_time-vc110-mt-1_51.dll" DiskId="1" />
+                <File Id="boost_regex" Name="boost_regex-vc110-mt-1_51.dll" Source="$(var.FixFolder)/boost_regex-vc110-mt-1_51.dll" DiskId="1" />
+                <File Id="boost_system" Name="boost_system-vc110-mt-1_51.dll" Source="$(var.FixFolder)/boost_system-vc110-mt-1_51.dll" DiskId="1" />
+                <File Id="boost_thread" Name="boost_thread-vc110-mt-1_51.dll" Source="$(var.FixFolder)/boost_thread-vc110-mt-1_51.dll" DiskId="1" />
+            </Component>
+            <ComponentRef Id="ApplicationShortcuts"/>
+        </ComponentGroup>
+        
+	</Product>
+
+    <Fragment>
+        <UI Id="WixUI_MondoNoLicense">
+            <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+            <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+            <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+            <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+            <Property Id="WixUI_Mode" Value="Mondo" />
+            <DialogRef Id="ErrorDlg" />
+            <DialogRef Id="FatalError" />
+            <DialogRef Id="FilesInUse" />
+            <DialogRef Id="MsiRMFilesInUse" />
+            <DialogRef Id="PrepareDlg" />
+            <DialogRef Id="ProgressDlg" />
+            <DialogRef Id="ResumeDlg" />
+            <DialogRef Id="UserExit" />
+            <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+            <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="SetupTypeDlg">1</Publish>
+            <Publish Dialog="SetupTypeDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
+            <Publish Dialog="SetupTypeDlg" Control="TypicalButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="SetupTypeDlg" Control="CustomButton" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+            <Publish Dialog="SetupTypeDlg" Control="CompleteButton" Event="NewDialog"                Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg"                Order="1">WixUI_InstallMode = "Change"</Publish>
+            <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="SetupTypeDlg"                Order="2">WixUI_InstallMode = "InstallCustom"</Publish>
+            <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg"                Order="1">WixUI_InstallMode = "InstallCustom"</Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="SetupTypeDlg"                Order="2">WixUI_InstallMode = "InstallTypical" OR WixUI_InstallMode = "InstallComplete"</Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg"                Order="3">WixUI_InstallMode = "Change"</Publish>
+            <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg"                Order="4">WixUI_InstallMode = "Repair" OR WixUI_InstallMode = "Remove"</Publish>
+            <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog"                Value="MaintenanceTypeDlg">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlg" Control="ChangeButton" Event="NewDialog"                Value="CustomizeDlg">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog"                Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog"                Value="VerifyReadyDlg">1</Publish>
+            <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog"                Value="MaintenanceWelcomeDlg">1</Publish>
+        </UI>
+        <UIRef Id="WixUI_Common" />
+    </Fragment>
+</Wix>

@@ -1,0 +1,1197 @@
+11:48:58 GEHTEST/em0.GE Message     Logging started on gateDEV-p01 with the pid 12091, (@@)[Gate V1.0 Prod Handoff #94HK (US H94a)] Tue Oct 31 17:33:19 PST 2006.
+11:48:58 GEHTEST/em0.GE Detail      Table gate                  : alloc=    2, count=    1, max id=    1, inode= 3146450, statSz= 24, elemSz=1480 (0.0002 sec)
+11:48:58 GEHTEST/em0.GE Detail      Table server                : alloc=    2, count=    2, max id=    1, inode= 3146637, statSz= 24, elemSz= 736 (0.0001 sec)
+11:48:58 GEHTEST/em0.GE Detail      Table client_interfaces     : alloc=   55, count=   30, max id=   54, inode= 3146388, statSz= 24, elemSz= 352 (0.0001 sec)
+11:48:58 GEHTEST/em0.GE Detail      Table users                 : alloc=  185, count=   93, max id=  184, inode= 3146697, statSz= 24, elemSz= 216 (0.0001 sec)
+11:48:58 GEHTEST/em0.GE Detail      Table firms                 : alloc=    1, count=    0, max id=    0, inode= 3146426, statSz= 24, elemSz=  64 (0.0000 sec)
+11:48:58 GEHTEST/em0.GE Message     Installed user login input events.
+11:48:58 GEHTEST/em0.GE Message     Set shutdown event for Wed Dec 20 00:00:00 2006
+11:48:58 GEHTEST/em0.GE Message     Sybase: Logged into the Database Master.
+11:48:58 GEHTEST/em0.GE Message     Sybase: Servers gateDEV-db01 and NONE were sent by the Database Master.
+11:48:58 GEHTEST/em0.GE Message     Sybase: Started a session on server gateDEV-db01 with server pid of 38.
+11:48:58 GEHTEST/em0.GE Message     Sybase: No backup server has been specified.
+11:48:58 GEHTEST/em0.GE Message     Sybase: Received a continue message from the Database Master, creating event
+11:49:00 GEHTEST/em0.GE Message     Sybase: Received the continue event, resuming normal operations
+11:49:00 GEHTEST/em0.GE Detail      Client master channel indicates new DB Master channel: 16
+11:49:00 GEHTEST/em0.GE Detail      Table drivers               : alloc=   34, count=    7, max id=   33, inode= 3146420, statSz= 24, elemSz= 224 (0.0001 sec)
+11:49:00 GEHTEST/em0.GE Detail      Table driver_modules        : alloc=   14, count=   14, inode= 3146414, statSz= 24, elemSz= 408 (0.0001 sec)
+11:49:00 GEHTEST/em0.GE Detail      Table destinations          : alloc=  151, count=   24, max id=  150, inode= 3146411, statSz= 24, elemSz= 120 (0.0000 sec)
+11:49:00 GEHTEST/em0.GE Detail      Table module_destinations   : alloc=    0, count=    0, inode= 3146460, statSz= 24, elemSz=  16 (0.0000 sec)
+11:49:00 GEHTEST/em0.GE Message     0 relevant module destinations loaded
+11:49:00 GEHTEST/em0.GE Detail      Table dest_definitions      : alloc=  151, count=   24, max id=  150, inode= 3146405, statSz= 24, elemSz= 136 (0.0000 sec)
+11:49:00 GEHTEST/em0.GE Message     This driver supports virtual dest 'GEH'
+11:49:00 GEHTEST/em0.GE Message     1 virtual destinations supported by this driver.
+11:49:00 GEHTEST/em0.GE Message     Initializing recovery status Off from DB for 'GEH'
+11:49:00 GEHTEST/em0.GE Detail      Table attributes            : alloc=  105, count=  105, inode= 3146384, statSz= 24, elemSz= 136 (0.0011 sec)
+11:49:00 GEHTEST/em0.GE Detail      16 Attributes relevant (out of 105)
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ GLUE BUST Auto Bust ] = 0 [ OFF ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ GLUE R80A R80A stat ] = 4 [ Force  OFF ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ GLUE ATDLM AttribDlm ] = 2 [ OldDlm(^A) ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ GLUE ATREJ AttReject ] = 1 [ NoReject ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ GLUE DBLOG DB Logging ] = 10 [ Minutes ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ GLUE DBPER DB persist ] = 1 [ Use DB ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ GLUE KPEXC ChgExecId ] = 1 [ ON ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ GLUE RSNDL ResyncDly ] = 5 [ Seconds ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ GLUE SMRES SymResynch ] = 1 [ ON ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ GLUE UPFIL Upwd Fill ( User = 42 ) ] = 1 [ ON ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ PERF LMORD LMonOrder ] = 0 [ 0 seconds ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ PERF LMSTO StoreLimit ] = 10 [ 10 minutes ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ PERF MONLN MonitorLin ] = 2 [ ON, nolog ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ ROUTE OBUST OBUST ] = 1 [ ON ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ ROUTE QTXPN QTXPN ] = 1 [ ON ] 
+11:49:00 GEHTEST/em0.GE Detail      ATTRIBUTE:LOADED: [ ROUTE SYMCN SYMCN ] = 1 [ ON ] 
+11:49:00 GEHTEST/em0.GE Message     Installed DB Access timing event for 600 seconds
+11:49:00 GEHTEST/em0.GE Message     Report monitoring attribute cannot be missing or zero, will use default of 60 seconds
+11:49:00 GEHTEST/em0.GE Message     Delay threshold cannot be missing or zero, will use default of 120 seconds
+11:49:00 GEHTEST/em0.GE Message     Max cache Size not specified (LMMAX), will use default of 50 (x100)
+11:49:00 GEHTEST/em0.GE Detail      Table order_attributes      : alloc=   58, count=   58, inode= 3146583, statSz= 24, elemSz=  88 (0.0001 sec)
+11:49:00 GEHTEST/em0.GE Message     Persisted Reports will be stored in DATABASE, GLUE/DBPER attribute is set to 1 (ON)
+11:49:00 GEHTEST/em0.GE Message     Successfully installed START_OF_DAY_EVENT -- Destination: 10 to trigger at: Tue Dec 19 06:00:00 2006
+11:49:00 GEHTEST/em0.GE Detail      ----------------------------------------------------------------
+				                        Configuration Data 
+				    ----------------------------------------------------------------
+11:49:00 GEHTEST/em0.GE Detail      ArgsHandler.cxx:62 Processing Command Line arguments ...ArgsHandler.cxx:104 Invalid command line argument received: --O
+				    ... finished Command Line arguments. 
+11:49:00 GEHTEST/em0.GE Message     AttributeHandler.cxx:317 Loading Attributes
+11:49:00 GEHTEST/em0.GE Message     AttributeHandler.cxx:852 Busted reports will be handled based on the bust_to_summary bit in fix_dest_defs -- 
+				    	 the Auto Busting mechanism will NOT be used.
+11:49:00 GEHTEST/em0.GE Message     AttributeHandler.cxx:897 Portfolio name with prefix Port: will be put into Text field. (QTXPN)
+11:49:00 GEHTEST/em0.GE Message     AttributeHandler.cxx:1016 SecurityID and SourceID will be passed to the client. (SYMCN) 
+11:49:00 GEHTEST/em0.GE Detail      Table fix_driver_defs       : alloc=    7, count=    7, inode= 3146441, statSz= 24, elemSz= 192 (0.0001 sec)
+11:49:00 GEHTEST/em0.GE Detail      Table module_lines          : alloc=    7, count=    7, inode= 3146461, statSz= 24, elemSz=  96 (0.0001 sec)
+11:49:00 GEHTEST/em0.GE Detail      Table fix_dest_defs         : alloc=   28, count=   28, inode= 3146434, statSz= 24, elemSz=  72 (0.0001 sec)
+11:49:00 GEHTEST/em0.GE Detail      Table user_monikers         : alloc=  185, count=   97, max id=  184, inode= 3146672, statSz= 24, elemSz= 112 (0.0000 sec)
+11:49:00 GEHTEST/em0.GE Detail      Table branches              : alloc=   92, count=   92, inode= 3146385, statSz= 24, elemSz=  24 (0.0001 sec)
+11:49:00 GEHTEST/em0.GE Detail      Table fix_em_monikers       : alloc=    0, count=    0, inode= 3146442, statSz= 24, elemSz=  24 (0.0001 sec)
+11:49:00 GEHTEST/em0.GE Detail      Table nasd_firms            : alloc=    0, count=    0, inode= 3146464, statSz= 24, elemSz=  16 (0.0001 sec)
+11:49:00 GEHTEST/em0.GE Detail      Table fix_dest_subid        : alloc=   25, count=   25, inode= 3146436, statSz= 24, elemSz= 144 (0.0001 sec)
+11:49:00 GEHTEST/em0.GE Detail      FIXDestSubIDs.cxx:545 fix_driver_defs.use_dest_subid =  6 - Platform Desk flavor 
+11:49:00 GEHTEST/em0.GE Detail      ReportProcessor.cxx:101 The Local time offset from GMT (hours): 11
+				    	 This duration will be added to the TransactTime(60) field.
+11:49:00 GEHTEST/em0.GE Detail      FIXem.cxx:391 FIX Engine cache directory: 
+				    	 /home/gateHK/logs/2006/12.19/GEHTEST/em0CacheDir
+11:49:00 GEHTEST/em0.GE Message     CFixSessionManager::registerSession() session <Sender:GATE,Target:DESK_SERVER> is new.
+11:49:00 GEHTEST/em0.GE Detail      FIXem.cxx:480  This Line Module is configured to initiate connections:
+				    		 Connecting to the server: node1::gateDEV-p01 (GATE) -> GEHTEST (dev01-mel.itgasiapac.com:20100 DESK_SERVER)
+11:49:00 GEHTEST/em0.GE Detail      FIXem.cxx:948 displaying the database table data ...
+				    ----------------------------------------------------------------
+				                        fix_driver_defs 
+				    ----------------------------------------------------------------
+				             driver_comm_id = 11
+				           driver_module_id = 9
+				             encrypt_method = 'NONE'
+				                encrypt_key = ''
+				                     sender = 'GATE' - SenderCompID(49)
+				                     target = 'DESK_SERVER' - TargetCompID(56)
+				                    version = 'FIX.4.2' - FIX Protocol Version
+				         heartbeat_interval = 30 - Seconds between HeartBeat Messages
+				       testrequest_interval = 45 - Seconds between TestRequest Messages
+				         reconnect_interval = 60 - Seconds between reconnect attempts
+				             use_dest_subid = 6 - Platform Desk flavor 
+				            display_fix_msg = 2 - All Messages will be Displayed
+				            correction_type = 0 - Ack on Cancel/Replace ID, Corrected on Order ID
+				                   ecn_type = 0 - Routing destination only
+				            use_old_clordid = 0 - ClOrdID(11) = the new ID for all corrections
+				              optional_info = 0 - Optional Report information will NOT be saved
+				     use_text_for_portfolio = 0 - Porfolio names will NOT be sent in the Text(58) field
+				             report_to_exch = 0 - Executions will NOT be reported to tape
+				                 use_leaves = 0 - OrderQty(38) = the original quantity in Cancels/Corrections
+				    
+				     Max outstanding number of resend requests 10
+				     Extra sequence numbers after peer resend 0
+				    
+				    ----------------------------------------------------------------
+				                         fix_dest_defs 
+				    ----------------------------------------------------------------
+				                       dest = 10 - Destination ID
+				              ExDestination = '0' - value used for the ExDestination(100) field
+				                targetsubid = '' - value used for the TargetSubID(57) field, if present
+				                  handlinst = 3 - HandlInst(21): Manual, Best Execution
+				            bust_to_summary = 0 - Handle Busted reports manually
+				          dest_subid_flavor = 0 - No FIX ID's required
+				       price_change_to_bust = 1 - Price Corrections will be converted to summary report
+				    
+				    ----------------------------------------------------------------
+				                        module_lines 
+				    ----------------------------------------------------------------
+				             driver_comm_id = 11
+				           driver_module_id = 9
+				                    line_id = 1
+				            connection_type = 2
+				                remote_host = 'dev01-mel.itgasiapac.com'
+				                       port = 20100
+				                  data_type = 3
+				                server_type = 0
+				                     active = 1
+11:49:00 GEHTEST/em0.GE Detail      ----------------------------------------------------------------
+11:49:00 GEHTEST/em0.GE Message     Entering main processing loop.
+11:49:01 GEHTEST/em0.GE Message     FIXem.cxx:1274 First Start of day message received for the destination GEHTEST(10)
+11:49:01 GEHTEST/em0.GE Detail      FIXem.cxx:2141 The FIX lion is not connected ...
+11:49:01 GEHTEST/em0.GE Message     Status Coming up: CONNECTION node1::gateDEV-p01 (GATE) -> GEHTEST (dev01-mel.itgasiapac.com:20100 DESK_SERVER) is COMING UP
+11:49:28 GEHTEST/em0.GE Detail      FIXem.cxx:2160 The FIX lion has connected on channel: 38
+11:49:28 GEHTEST/em0.GE Message     CFIXemStateHandler.cxx:54  <Sender:GATE,Target:DESK_SERVER>
+				        Leaving: Start --> Entering: InitiatingLogon
+				    
+11:49:28 GEHTEST/em0.GE Message     <Sender:GATE,Target:DESK_SERVER>CDefaultInitHandler::notifyTransportOpen() session opened transport connection.
+11:49:28 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing LOGON:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): A
+				                   MsgSeqNum(  34): 1
+				                SenderCompID(  49): GATE
+				                 SendingTime(  52): 20061219-00:49:28
+				                TargetCompID(  56): DESK_SERVER
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 30
+11:49:29 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming LOGON:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 66
+				                     MsgType(  35): A
+				                   MsgSeqNum(  34): 1
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:49:29
+				                TargetCompID(  56): GATE
+				               EncryptMethod(  98): 0
+				                  HeartBtInt( 108): 30
+11:49:29 GEHTEST/em0.GE Message     CFIXemStateHandler.cxx:54  <Sender:GATE,Target:DESK_SERVER>
+				        Leaving: InitiatingLogon --> Entering: CompleteLogonInitiation
+				    
+11:49:32 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing TEST_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): 1
+				                   MsgSeqNum(  34): 2
+				                SenderCompID(  49): GATE
+				                 SendingTime(  52): 20061219-00:49:32
+				                TargetCompID(  56): DESK_SERVER
+				                   TestReqID( 112): 20061219114932
+11:49:32 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 2 Time: 20061219-00:49:32 TestReqID: 20061219114932
+11:49:32 GEHTEST/em0.GE Message     CFIXemStateHandler.cxx:54  <Sender:GATE,Target:DESK_SERVER>
+				        Leaving: CompleteLogonInitiation --> Entering: Processing
+				    
+11:49:32 GEHTEST/em0.GE Message     Status OK: CONNECTION node1::gateDEV-p01 (GATE) -> GEHTEST (dev01-mel.itgasiapac.com:20100 DESK_SERVER) is UP
+11:49:32 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 2 Time: 20061219-00:49:32 TestReqID: 20061219114932
+11:49:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 3 Time: 20061219-00:49:59
+11:49:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing HEARTBEAT: SeqNo: 3 Time: 20061219-00:49:59
+11:50:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 4 Time: 20061219-00:50:29
+11:50:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing HEARTBEAT: SeqNo: 4 Time: 20061219-00:50:29
+11:50:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 5 Time: 20061219-00:50:59
+11:50:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing HEARTBEAT: SeqNo: 5 Time: 20061219-00:50:59
+11:51:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing HEARTBEAT: SeqNo: 6 Time: 20061219-00:51:29
+11:51:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 6 Time: 20061219-00:51:29
+11:51:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 7 Time: 20061219-00:51:59
+11:51:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing HEARTBEAT: SeqNo: 7 Time: 20061219-00:51:59
+11:52:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 8 Time: 20061219-00:52:29
+11:52:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing HEARTBEAT: SeqNo: 8 Time: 20061219-00:52:29
+11:52:56 GEHTEST/em0.GE Message     geh Execution wave 30: 2 orders in portfolio '100'.
+11:52:56 GEHTEST/em0.GE Message     geh GEH/GEH execution 31(100 1)45(geh 45): Buy 1000 WOW.AX mkt A+
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:52:56 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_LIST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): E
+				                   MsgSeqNum(  34): 9
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:52:56
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                      ListID(  66): 25-30
+				                 TotNoOrders(  68): 2
+				                    ClientID( 109): GT25D2dtest
+				                     BidType( 394): 3
+				               PortfolioName(7050): 100
+				    Holder 0 :
+				    Group 0 :
+				                     ClOrdID(  11): geh00045
+				                   ListSeqNo(  67): 1
+				                    ClientID( 109): GT25D2dtest
+				                   HandlInst(  21): 3
+				               ExDestination( 100): 0
+				                      Symbol(  55): WOW
+				                   SymbolSfx(  65): AX
+				                  SecurityID(  48): WOW.AX
+				                    IDSource(  22): 5
+				                        Side(  54): 1
+				                TransactTime(  60): 20061219-00:52:56
+				                    OrderQty(  38): 1000
+				                     OrdType(  40): 1
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                        Text(  58): Port:100
+11:52:56 GEHTEST/em0.GE Message     geh GEH/GEH execution 32(101 1)46(geh 46): Buy 1000 RIO.AX mkt A+
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:52:56 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_LIST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): E
+				                   MsgSeqNum(  34): 10
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:52:56
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                      ListID(  66): 25-30
+				                 TotNoOrders(  68): 2
+				                    ClientID( 109): GT25D2etest
+				                     BidType( 394): 3
+				               PortfolioName(7050): 100
+				    Holder 0 :
+				    Group 0 :
+				                     ClOrdID(  11): geh00046
+				                   ListSeqNo(  67): 2
+				                    ClientID( 109): GT25D2etest
+				                   HandlInst(  21): 3
+				               ExDestination( 100): 0
+				                      Symbol(  55): RIO
+				                   SymbolSfx(  65): AX
+				                  SecurityID(  48): RIO.AX
+				                    IDSource(  22): 5
+				                        Side(  54): 1
+				                TransactTime(  60): 20061219-00:52:56
+				                    OrderQty(  38): 1000
+				                     OrdType(  40): 1
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                        Text(  58): Port:100
+11:52:56 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing LIST_EXECUTE:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): L
+				                   MsgSeqNum(  34): 11
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:52:56
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                TransactTime(  60): 20061219-00:52:56
+				                      ListID(  66): 25-30
+				                    ClientID( 109): GT25D2dtest
+				               PortfolioName(7050): 100
+11:52:57 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 150
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 9
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:52:57
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00045
+				                      CumQty(  14): 0
+				                      ExecID(  17): 714241
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714241
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 0
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                    ExecType( 150): 0
+				                   LeavesQty( 151): 1000
+11:52:57 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 45 [60] Ack 0 Buy WOW $0 lvs 1000 11:52:57
+11:52:57 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 151
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 10
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:52:57
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00046
+				                      CumQty(  14): 0
+				                      ExecID(  17): 714242
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714242
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 0
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                    ExecType( 150): 0
+				                   LeavesQty( 151): 1000
+11:52:57 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 46 [61] Ack 0 Buy RIO $0 lvs 1000 11:52:57
+11:52:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 11 Time: 20061219-00:52:59
+11:53:00 GEHTEST/em0.GE Message     geh Execution wave 31: 2 orders in portfolio '101'.
+11:53:00 GEHTEST/em0.GE Message     geh GEH/GEH execution 33(102 1)47(geh 47): Buy 1000 WOW.AX mkt A+
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:53:00 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_LIST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): E
+				                   MsgSeqNum(  34): 12
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:00
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                      ListID(  66): 25-31
+				                 TotNoOrders(  68): 2
+				                    ClientID( 109): GT25D2ftest
+				                     BidType( 394): 3
+				               PortfolioName(7050): 101
+				    Holder 0 :
+				    Group 0 :
+				                     ClOrdID(  11): geh00047
+				                   ListSeqNo(  67): 1
+				                    ClientID( 109): GT25D2ftest
+				                   HandlInst(  21): 3
+				               ExDestination( 100): 0
+				                      Symbol(  55): WOW
+				                   SymbolSfx(  65): AX
+				                  SecurityID(  48): WOW.AX
+				                    IDSource(  22): 5
+				                        Side(  54): 1
+				                TransactTime(  60): 20061219-00:53:00
+				                    OrderQty(  38): 1000
+				                     OrdType(  40): 1
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                        Text(  58): Port:101
+11:53:00 GEHTEST/em0.GE Message     geh GEH/GEH execution 34(103 1)48(geh 48): Buy 1000 RIO.AX mkt A+
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:53:00 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_LIST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): E
+				                   MsgSeqNum(  34): 13
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:00
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                      ListID(  66): 25-31
+				                 TotNoOrders(  68): 2
+				                    ClientID( 109): GT25D30test
+				                     BidType( 394): 3
+				               PortfolioName(7050): 101
+				    Holder 0 :
+				    Group 0 :
+				                     ClOrdID(  11): geh00048
+				                   ListSeqNo(  67): 2
+				                    ClientID( 109): GT25D30test
+				                   HandlInst(  21): 3
+				               ExDestination( 100): 0
+				                      Symbol(  55): RIO
+				                   SymbolSfx(  65): AX
+				                  SecurityID(  48): RIO.AX
+				                    IDSource(  22): 5
+				                        Side(  54): 1
+				                TransactTime(  60): 20061219-00:53:00
+				                    OrderQty(  38): 1000
+				                     OrdType(  40): 1
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                        Text(  58): Port:101
+11:53:00 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing LIST_EXECUTE:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): L
+				                   MsgSeqNum(  34): 14
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:00
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                TransactTime(  60): 20061219-00:53:00
+				                      ListID(  66): 25-31
+				                    ClientID( 109): GT25D2ftest
+				               PortfolioName(7050): 101
+11:53:00 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 151
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 12
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:00
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00047
+				                      CumQty(  14): 0
+				                      ExecID(  17): 714244
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714244
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 0
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                    ExecType( 150): 0
+				                   LeavesQty( 151): 1000
+11:53:00 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 47 [62] Ack 0 Buy WOW $0 lvs 1000 11:53:00
+11:53:01 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 151
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 13
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:00
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00048
+				                      CumQty(  14): 0
+				                      ExecID(  17): 714245
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714245
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 0
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                    ExecType( 150): 0
+				                   LeavesQty( 151): 1000
+11:53:01 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 48 [63] Ack 0 Buy RIO $0 lvs 1000 11:53:01
+11:53:10 GEHTEST/em0.GE Message     geh GEH/GEH correction 31 for WOW.AX:
+				      from (100 1)45(geh 45): Buy 1000 mkt 
+				        to(104 1)49(geh 49): Buy 2000 mkt
+11:53:10 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_CANCEL_REPLACE_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): G
+				                   MsgSeqNum(  34): 15
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:10
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                     ClOrdID(  11): geh00049
+				                   HandlInst(  21): 3
+				                    IDSource(  22): 5
+				                    OrderQty(  38): 2000
+				                     OrdType(  40): 1
+				                 OrigClOrdID(  41): geh00045
+				                     Rule80A(  47): A
+				                  SecurityID(  48): WOW.AX
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                 TimeInForce(  59): 0
+				                TransactTime(  60): 20061219-00:53:10
+				                   SymbolSfx(  65): AX
+				               ExDestination( 100): 0
+				                    ClientID( 109): GT25D2dtest
+11:53:10 GEHTEST/em0.GE Message     Report monitoring attribute cannot be missing or zero, will use default of 60 seconds
+11:53:10 GEHTEST/em0.GE Message     Delay threshold cannot be missing or zero, will use default of 120 seconds
+11:53:10 GEHTEST/em0.GE Message     Max cache Size not specified (LMMAX), will use default of 50 (x100)
+11:53:10 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 164
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 14
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:10
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00049
+				                      CumQty(  14): 0
+				                      ExecID(  17): 94
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714241
+				                    OrderQty(  38): 2000
+				                   OrdStatus(  39): 6
+				                 OrigClOrdID(  41): geh00045
+				                       Price(  44): 0
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                    ExecType( 150): 6
+				                   LeavesQty( 151): 2000
+11:53:10 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 49 [64] Ack 0 Buy WOW $0 lvs 2000 11:53:10
+11:53:10 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 164
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 15
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:10
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00049
+				                      CumQty(  14): 0
+				                      ExecID(  17): 95
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714241
+				                    OrderQty(  38): 2000
+				                   OrdStatus(  39): 5
+				                 OrigClOrdID(  41): geh00045
+				                       Price(  44): 0
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                    ExecType( 150): 5
+				                   LeavesQty( 151): 2000
+11:53:10 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 45 [65] Corrected 0 Buy WOW $0 lvs 2000 11:53:10
+11:53:15 GEHTEST/em0.GE Message     geh Cancel wave 33: 1 orders in portfolio ''.
+11:53:15 GEHTEST/em0.GE Message     geh GEH/GEH cancel 32(105 1)50(geh 50): for RIO.AX on old (101 1)46(geh 46): Buy 1000 mkt A+
+11:53:15 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_CANCEL_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): F
+				                   MsgSeqNum(  34): 16
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:15
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                     ClOrdID(  11): geh00050
+				                    IDSource(  22): 5
+				                    OrderQty(  38): 1000
+				                 OrigClOrdID(  41): geh00046
+				                  SecurityID(  48): RIO.AX
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                TransactTime(  60): 20061219-00:53:15
+				                   SymbolSfx(  65): AX
+				                      ListID(  66): 25-30
+				                    ClientID( 109): GT25D2etest
+11:53:15 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 159
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 16
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:15
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00050
+				                      CumQty(  14): 0
+				                      ExecID(  17): 96
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714242
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 6
+				                 OrigClOrdID(  41): geh00046
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                    ExecType( 150): 6
+				                   LeavesQty( 151): 1000
+11:53:15 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 50 [66] Ack 0 Buy RIO $0 lvs 1000 11:53:15
+11:53:15 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 149
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 17
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:15
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00050
+				                      CumQty(  14): 0
+				                      ExecID(  17): 97
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714242
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 4
+				                       Price(  44): 0
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                    ExecType( 150): 4
+				                   LeavesQty( 151): 0
+11:53:15 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 50 [67] Cancelled 1000 Buy RIO $0 lvs 0 11:53:15
+11:53:23 GEHTEST/em0.GE Message     geh Cancel wave 34: 1 orders in portfolio ''.
+11:53:23 GEHTEST/em0.GE Message     geh GEH/GEH cancel 33(106 1)51(geh 51): for WOW.AX on old (102 1)47(geh 47): Buy 1000 mkt A+
+11:53:23 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_CANCEL_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): F
+				                   MsgSeqNum(  34): 17
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:23
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                     ClOrdID(  11): geh00051
+				                    IDSource(  22): 5
+				                    OrderQty(  38): 1000
+				                 OrigClOrdID(  41): geh00047
+				                  SecurityID(  48): WOW.AX
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                TransactTime(  60): 20061219-00:53:23
+				                   SymbolSfx(  65): AX
+				                      ListID(  66): 25-31
+				                    ClientID( 109): GT25D2ftest
+11:53:23 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 159
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 18
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:23
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00051
+				                      CumQty(  14): 0
+				                      ExecID(  17): 98
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714244
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 6
+				                 OrigClOrdID(  41): geh00047
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                    ExecType( 150): 6
+				                   LeavesQty( 151): 1000
+11:53:23 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 51 [68] Ack 0 Buy WOW $0 lvs 1000 11:53:23
+11:53:23 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 149
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 19
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:23
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00051
+				                      CumQty(  14): 0
+				                      ExecID(  17): 99
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714244
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 4
+				                       Price(  44): 0
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                    ExecType( 150): 4
+				                   LeavesQty( 151): 0
+11:53:23 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 51 [69] Cancelled 1000 Buy WOW $0 lvs 0 11:53:23
+11:53:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 20 Time: 20061219-00:53:29
+11:53:32 GEHTEST/em0.GE Message     geh GEH/GEH correction 34 for RIO.AX:
+				      from (103 1)48(geh 48): Buy 1000 mkt 
+				        to(107 1)52(geh 52): Buy 4500 mkt
+11:53:32 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_CANCEL_REPLACE_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): G
+				                   MsgSeqNum(  34): 18
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:32
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                     ClOrdID(  11): geh00052
+				                   HandlInst(  21): 3
+				                    IDSource(  22): 5
+				                    OrderQty(  38): 4500
+				                     OrdType(  40): 1
+				                 OrigClOrdID(  41): geh00048
+				                     Rule80A(  47): A
+				                  SecurityID(  48): RIO.AX
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                 TimeInForce(  59): 0
+				                TransactTime(  60): 20061219-00:53:32
+				                   SymbolSfx(  65): AX
+				               ExDestination( 100): 0
+				                    ClientID( 109): GT25D30test
+11:53:32 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 165
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 21
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:32
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00052
+				                      CumQty(  14): 0
+				                      ExecID(  17): 100
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714245
+				                    OrderQty(  38): 4500
+				                   OrdStatus(  39): 6
+				                 OrigClOrdID(  41): geh00048
+				                       Price(  44): 0
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                    ExecType( 150): 6
+				                   LeavesQty( 151): 4500
+11:53:32 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 52 [70] Ack 0 Buy RIO $0 lvs 4500 11:53:32
+11:53:32 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 165
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 22
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:32
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00052
+				                      CumQty(  14): 0
+				                      ExecID(  17): 101
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714245
+				                    OrderQty(  38): 4500
+				                   OrdStatus(  39): 5
+				                 OrigClOrdID(  41): geh00048
+				                       Price(  44): 0
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                    ExecType( 150): 5
+				                   LeavesQty( 151): 4500
+11:53:32 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 48 [71] Corrected 0 Buy RIO $0 lvs 4500 11:53:32
+11:53:36 GEHTEST/em0.GE Message     geh Cancel wave 36: 1 orders in portfolio ''.
+11:53:36 GEHTEST/em0.GE Message     geh GEH/GEH cancel 31(108 1)53(geh 53): for WOW.AX on old (104 1)49(geh 49): Buy 2000 mkt A+
+11:53:36 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_CANCEL_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): F
+				                   MsgSeqNum(  34): 19
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:36
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                     ClOrdID(  11): geh00053
+				                    IDSource(  22): 5
+				                    OrderQty(  38): 2000
+				                 OrigClOrdID(  41): geh00049
+				                  SecurityID(  48): WOW.AX
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                TransactTime(  60): 20061219-00:53:36
+				                   SymbolSfx(  65): AX
+				                      ListID(  66): 25-30
+				                    ClientID( 109): GT25D2dtest
+11:53:37 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 160
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 23
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:37
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00053
+				                      CumQty(  14): 0
+				                      ExecID(  17): 102
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714241
+				                    OrderQty(  38): 2000
+				                   OrdStatus(  39): 6
+				                 OrigClOrdID(  41): geh00049
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                    ExecType( 150): 6
+				                   LeavesQty( 151): 2000
+11:53:37 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 53 [72] Ack 0 Buy WOW $0 lvs 2000 11:53:37
+11:53:37 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 150
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 24
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:37
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00053
+				                      CumQty(  14): 0
+				                      ExecID(  17): 103
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714241
+				                    OrderQty(  38): 2000
+				                   OrdStatus(  39): 4
+				                       Price(  44): 0
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                    ExecType( 150): 4
+				                   LeavesQty( 151): 0
+11:53:37 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 53 [73] Cancelled 2000 Buy WOW $0 lvs 0 11:53:37
+11:53:41 GEHTEST/em0.GE Message     geh Cancel wave 37: 1 orders in portfolio ''.
+11:53:41 GEHTEST/em0.GE Message     geh GEH/GEH cancel 34(109 1)54(geh 54): for RIO.AX on old (107 1)52(geh 52): Buy 4500 mkt A+
+11:53:41 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_CANCEL_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): F
+				                   MsgSeqNum(  34): 20
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:41
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                     ClOrdID(  11): geh00054
+				                    IDSource(  22): 5
+				                    OrderQty(  38): 4500
+				                 OrigClOrdID(  41): geh00052
+				                  SecurityID(  48): RIO.AX
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                TransactTime(  60): 20061219-00:53:41
+				                   SymbolSfx(  65): AX
+				                      ListID(  66): 25-31
+				                    ClientID( 109): GT25D30test
+11:53:41 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 160
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 25
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:41
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00054
+				                      CumQty(  14): 0
+				                      ExecID(  17): 104
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714245
+				                    OrderQty(  38): 4500
+				                   OrdStatus(  39): 6
+				                 OrigClOrdID(  41): geh00052
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                    ExecType( 150): 6
+				                   LeavesQty( 151): 4500
+11:53:41 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 54 [74] Ack 0 Buy RIO $0 lvs 4500 11:53:41
+11:53:41 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 150
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 26
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:41
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00054
+				                      CumQty(  14): 0
+				                      ExecID(  17): 105
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714245
+				                    OrderQty(  38): 4500
+				                   OrdStatus(  39): 4
+				                       Price(  44): 0
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                    ExecType( 150): 4
+				                   LeavesQty( 151): 0
+11:53:41 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 54 [75] Cancelled 4500 Buy RIO $0 lvs 0 11:53:41
+11:53:49 GEHTEST/em0.GE Message     geh Execution wave 38: 2 orders in portfolio '102'.
+11:53:49 GEHTEST/em0.GE Message     geh GEH/GEH execution 35(110 1)55(geh 55): Buy 1000 WOW.AX mkt A+
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:53:49 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_LIST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): E
+				                   MsgSeqNum(  34): 21
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:49
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                      ListID(  66): 25-38
+				                 TotNoOrders(  68): 2
+				                    ClientID( 109): GT25D37test
+				                     BidType( 394): 3
+				               PortfolioName(7050): 102
+				    Holder 0 :
+				    Group 0 :
+				                     ClOrdID(  11): geh00055
+				                   ListSeqNo(  67): 1
+				                    ClientID( 109): GT25D37test
+				                   HandlInst(  21): 3
+				               ExDestination( 100): 0
+				                      Symbol(  55): WOW
+				                   SymbolSfx(  65): AX
+				                  SecurityID(  48): WOW.AX
+				                    IDSource(  22): 5
+				                        Side(  54): 1
+				                TransactTime(  60): 20061219-00:53:49
+				                    OrderQty(  38): 1000
+				                     OrdType(  40): 1
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                        Text(  58): Port:102
+11:53:49 GEHTEST/em0.GE Message     geh GEH/GEH execution 36(111 1)56(geh 56): Buy 1000 RIO.AX mkt A+
+				       SysAtt: ClIntent=D-GEHT, SvcCode=test.
+11:53:49 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_LIST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): E
+				                   MsgSeqNum(  34): 22
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:49
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                      ListID(  66): 25-38
+				                 TotNoOrders(  68): 2
+				                    ClientID( 109): GT25D38test
+				                     BidType( 394): 3
+				               PortfolioName(7050): 102
+				    Holder 0 :
+				    Group 0 :
+				                     ClOrdID(  11): geh00056
+				                   ListSeqNo(  67): 2
+				                    ClientID( 109): GT25D38test
+				                   HandlInst(  21): 3
+				               ExDestination( 100): 0
+				                      Symbol(  55): RIO
+				                   SymbolSfx(  65): AX
+				                  SecurityID(  48): RIO.AX
+				                    IDSource(  22): 5
+				                        Side(  54): 1
+				                TransactTime(  60): 20061219-00:53:49
+				                    OrderQty(  38): 1000
+				                     OrdType(  40): 1
+				                 TimeInForce(  59): 0
+				                     Rule80A(  47): A
+				                        Text(  58): Port:102
+11:53:49 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing LIST_EXECUTE:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): L
+				                   MsgSeqNum(  34): 23
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:49
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                TransactTime(  60): 20061219-00:53:49
+				                      ListID(  66): 25-38
+				                    ClientID( 109): GT25D37test
+				               PortfolioName(7050): 102
+11:53:50 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 151
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 27
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:50
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00055
+				                      CumQty(  14): 0
+				                      ExecID(  17): 714247
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714247
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 0
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                    ExecType( 150): 0
+				                   LeavesQty( 151): 1000
+11:53:50 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 55 [76] Ack 0 Buy WOW $0 lvs 1000 11:53:50
+11:53:50 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 151
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 28
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:50
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00056
+				                      CumQty(  14): 0
+				                      ExecID(  17): 714248
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714248
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 0
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                    ExecType( 150): 0
+				                   LeavesQty( 151): 1000
+11:53:50 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 56 [77] Ack 0 Buy RIO $0 lvs 1000 11:53:50
+11:53:54 GEHTEST/em0.GE Message     geh Cancel wave 39: 1 orders in portfolio ''.
+11:53:54 GEHTEST/em0.GE Message     geh GEH/GEH cancel 35(112 1)57(geh 57): for WOW.AX on old (110 1)55(geh 55): Buy 1000 mkt A+
+11:53:54 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_CANCEL_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): F
+				                   MsgSeqNum(  34): 24
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:54
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                     ClOrdID(  11): geh00057
+				                    IDSource(  22): 5
+				                    OrderQty(  38): 1000
+				                 OrigClOrdID(  41): geh00055
+				                  SecurityID(  48): WOW.AX
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                TransactTime(  60): 20061219-00:53:54
+				                   SymbolSfx(  65): AX
+				                      ListID(  66): 25-38
+				                    ClientID( 109): GT25D37test
+11:53:54 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 160
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 29
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:54
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00057
+				                      CumQty(  14): 0
+				                      ExecID(  17): 106
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714247
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 6
+				                 OrigClOrdID(  41): geh00055
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                    ExecType( 150): 6
+				                   LeavesQty( 151): 1000
+11:53:54 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 57 [78] Ack 0 Buy WOW $0 lvs 1000 11:53:54
+11:53:54 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 150
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 30
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:53:54
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00057
+				                      CumQty(  14): 0
+				                      ExecID(  17): 107
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714247
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 4
+				                       Price(  44): 0
+				                        Side(  54): 1
+				                      Symbol(  55): WOW
+				                    ExecType( 150): 4
+				                   LeavesQty( 151): 0
+11:53:54 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 57 [79] Cancelled 1000 Buy WOW $0 lvs 0 11:53:54
+11:53:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 31 Time: 20061219-00:53:59
+11:53:59 GEHTEST/em0.GE Message     geh Cancel wave 40: 1 orders in portfolio ''.
+11:53:59 GEHTEST/em0.GE Message     geh GEH/GEH cancel 36(113 1)58(geh 58): for RIO.AX on old (111 1)56(geh 56): Buy 1000 mkt A+
+11:53:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing ORDER_CANCEL_REQUEST:
+				                 BeginString(   8): FIX.4.2
+				                     MsgType(  35): F
+				                   MsgSeqNum(  34): 25
+				                SenderCompID(  49): GATE
+				                 SenderSubID(  50): geh
+				                 SendingTime(  52): 20061219-00:53:59
+				                TargetCompID(  56): DESK_SERVER
+				                 TargetSubID(  57): geh
+				            OnBehalfOfCompID( 115): TEST
+				                     ClOrdID(  11): geh00058
+				                    IDSource(  22): 5
+				                    OrderQty(  38): 1000
+				                 OrigClOrdID(  41): geh00056
+				                  SecurityID(  48): RIO.AX
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                TransactTime(  60): 20061219-00:53:59
+				                   SymbolSfx(  65): AX
+				                      ListID(  66): 25-38
+				                    ClientID( 109): GT25D38test
+11:54:00 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 160
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 32
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:54:00
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00058
+				                      CumQty(  14): 0
+				                      ExecID(  17): 108
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714248
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 6
+				                 OrigClOrdID(  41): geh00056
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                    ExecType( 150): 6
+				                   LeavesQty( 151): 1000
+11:54:00 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 58 [80] Ack 0 Buy RIO $0 lvs 1000 11:54:00
+11:54:00 GEHTEST/em0.GE Detail      
+				    <GATE:DESK_SERVER> Incoming EXECUTION_REPORT:
+				                 BeginString(   8): FIX.4.2
+				                  BodyLength(   9): 150
+				                     MsgType(  35): 8
+				                   MsgSeqNum(  34): 33
+				                SenderCompID(  49): DESK_SERVER
+				                 SendingTime(  52): 20061219-00:54:00
+				                TargetCompID(  56): GATE
+				                       AvgPx(   6): 0
+				                     ClOrdID(  11): geh00058
+				                      CumQty(  14): 0
+				                      ExecID(  17): 109
+				               ExecTransType(  20): 0
+				                      LastPx(  31): 0
+				                  LastShares(  32): 0
+				                     OrderID(  37): 714248
+				                    OrderQty(  38): 1000
+				                   OrdStatus(  39): 4
+				                       Price(  44): 0
+				                        Side(  54): 1
+				                      Symbol(  55): RIO
+				                    ExecType( 150): 4
+				                   LeavesQty( 151): 0
+11:54:00 GEHTEST/em0.GE Message     GEHCI/geh GEH/GEH report Seq: 58 [81] Cancelled 1000 Buy RIO $0 lvs 0 11:54:00
+11:54:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 34 Time: 20061219-00:54:29
+11:54:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing HEARTBEAT: SeqNo: 26 Time: 20061219-00:54:29
+11:54:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing HEARTBEAT: SeqNo: 27 Time: 20061219-00:54:59
+11:54:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 35 Time: 20061219-00:54:59
+11:55:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing HEARTBEAT: SeqNo: 28 Time: 20061219-00:55:29
+11:55:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 36 Time: 20061219-00:55:29
+11:55:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 37 Time: 20061219-00:55:59
+11:55:59 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing HEARTBEAT: SeqNo: 29 Time: 20061219-00:55:59
+11:56:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Incoming HEARTBEAT: SeqNo: 38 Time: 20061219-00:56:29
+11:56:29 GEHTEST/em0.GE Detail      <GATE:DESK_SERVER> Outgoing HEARTBEAT: SeqNo: 30 Time: 20061219-00:56:29

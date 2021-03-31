@@ -1,0 +1,65 @@
+/////////////////////////////////////////////////
+//
+// FIX Client
+//
+// Copyright @ 2021 VIRTU Financial Inc.
+// All rights reserved.
+//
+// Filename: ToolStripCheckBox.cs
+// Author:   Gary Hughes
+//
+/////////////////////////////////////////////////
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace FixClient
+{
+    public partial class ToolStripCheckBox : ToolStripControlHost
+    {
+        readonly FlowLayoutPanel _controlPanel;
+        readonly CheckBox _checkBox = new CheckBox();
+         
+        public ToolStripCheckBox() : base(new FlowLayoutPanel())
+        {
+            _controlPanel = (FlowLayoutPanel)Control;
+            _controlPanel.BackColor = Color.Transparent;
+            //
+            // up the top padding a touch to make the alignment look better.
+            //
+            _checkBox.AutoSize = true;
+            _checkBox.Padding = new Padding(_checkBox.Padding.Left,
+                                           _checkBox.Padding.Top + 2,
+                                           _checkBox.Padding.Right,
+                                           _checkBox.Padding.Bottom);
+            _checkBox.CheckedChanged += CheckBoxCheckedChanged;
+            _controlPanel.Controls.Add(_checkBox);
+        }
+
+        void CheckBoxCheckedChanged(object sender, EventArgs e)
+        {
+            if (CheckChanged != null)
+            {
+                CheckChanged(sender, e);
+            }
+        }
+
+        public event EventHandler CheckChanged;        
+
+        public bool Checked
+        {
+            get { return _checkBox.Checked; }
+            set { _checkBox.Checked = value; }
+        }
+
+        public new string Text
+        {
+            get { return _checkBox.Text; }
+            set { _checkBox.Text = value; }
+        }
+
+        
+
+    }
+}

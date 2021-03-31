@@ -1,0 +1,72 @@
+/////////////////////////////////////////////////
+//
+// FIX Client
+//
+// Copyright @ 2021 VIRTU Financial Inc.
+// All rights reserved.
+//
+// Filename: ApplVerIdTypeConverter.cs
+// Author:   Gary Hughes
+//
+/////////////////////////////////////////////////
+
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.ComponentModel;
+
+namespace Fix
+{
+    public static partial class Dictionary
+    {
+        public class ApplVerIdTypeConverter : TypeConverter
+        {
+            readonly List<Version> _versions = new List<Version>();
+
+            public ApplVerIdTypeConverter()
+            {
+                foreach (var version in Versions)
+                {
+                    if (version.BeginString.StartsWith("FIXT."))
+                        continue;
+                    _versions.Add(version);
+                }
+            }
+
+            public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+            {
+                return true;
+            }
+
+            public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+            {
+                return new StandardValuesCollection(_versions);
+            }
+
+            public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+            {
+                if (sourceType == typeof (string))
+                    return true;
+                return base.CanConvertFrom(context, sourceType);
+            }
+
+            public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+            {
+                var key = value as string;
+
+                if (key != null)
+                {
+                    foreach (var version in _versions)
+                    {
+                        if (version.BeginString == key)
+                            return version;
+                    }
+                }
+
+                return base.ConvertFrom(context, culture, value);
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Components xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" copyright="Copyright (c) FIX Protocol Ltd. All Rights Reserved." edition="2010" version="FIX.4.2" xsi:noNamespaceSchemaLocation="../../schema/Components.xsd" generated="2010-03-13T14:54:02-05:00">
+	<Component added="FIX.4.0">
+		<ComponentID>1001</ComponentID>
+		<ComponentType>Block</ComponentType>
+		<CategoryID>Session</CategoryID>
+		<Name>StandardHeader</Name>
+		<NotReqXML>1</NotReqXML>		
+		<Description>The standard FIX message header</Description>
+	</Component>
+	<Component added="FIX.4.0">
+		<ComponentID>1002</ComponentID>
+		<ComponentType>Block</ComponentType>
+		<CategoryID>Session</CategoryID>
+		<Name>StandardTrailer</Name>
+		<NotReqXML>1</NotReqXML>		
+		<Description>The standard FIX message trailer</Description>
+	</Component>
+</Components>

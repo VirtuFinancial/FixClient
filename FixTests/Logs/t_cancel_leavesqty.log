@@ -1,0 +1,128 @@
+20120622-01:13:02 (OrderSingle)
+{
+     BeginString    (8) - FIX.4.2
+      BodyLength    (9) - 223
+         MsgType   (35) - D
+    SenderCompID   (49) - DEVGATE
+    TargetCompID   (56) - GEHQJ
+     SenderSubID   (50) - smart
+     TargetSubID   (57) - smart
+OnBehalfOfCompID  (115) - 
+       MsgSeqNum   (34) - 936
+     SendingTime   (52) - 20120622-01:13:02
+         ClOrdID   (11) - bla00020
+        OrderQty   (38) - 2285
+   ExDestination  (100) - ASXP
+       HandlInst   (21) - 1 - Automated execution order, private, no Broker intervention
+           Price   (44) - 10.000000
+         OrdType   (40) - 2 - Limit
+     TimeInForce   (59) - 0 - Day
+            Side   (54) - 1 - Buy
+       SymbolSfx   (65) - AXP
+          Symbol   (55) - BHP
+         Rule80A   (47) - A - Agency single order
+        ClientID  (109) - GT40D14SMRT
+            7050 (7050) - GEHMCFIXSOR01DEV
+          MinQty  (110) - 50
+    TransactTime   (60) - 20120622-01:13:02
+        CheckSum   (10) - 255
+}
+20120622-01:13:02 (ExecutionReport)
+{
+  BeginString    (8) - FIX.4.2
+   BodyLength    (9) - 0
+      MsgType   (35) - 8
+ SenderCompID   (49) - GEHQJ
+ TargetCompID   (56) - DEVGATE
+    MsgSeqNum   (34) - 946
+  SendingTime   (52) - 20120622-01:13:02
+ExecTransType   (20) - 0 - New
+    OrdStatus   (39) - 0 - New
+      ClOrdID   (11) - bla00020
+      OrderID   (37) - DEVGATE-GEHQJ-bla00020
+       ExecID   (17) - 27
+     ExecType  (150) - 0 - New
+    LeavesQty  (151) - 2285
+       Symbol   (55) - BHP
+         Side   (54) - 1 - Buy
+     OrderQty   (38) - 2285
+        Price   (44) - 10
+   LastShares   (32) - 0
+       LastPx   (31) - 0
+       CumQty   (14) - 0
+        AvgPx    (6) - 0
+}
+20120622-01:13:13 (OrderCancelRequest)
+{
+     BeginString    (8) - FIX.4.2
+      BodyLength    (9) - 164
+         MsgType   (35) - F
+    SenderCompID   (49) - DEVGATE
+    TargetCompID   (56) - GEHQJ
+     SenderSubID   (50) - smart
+     TargetSubID   (57) - smart
+OnBehalfOfCompID  (115) - 
+       MsgSeqNum   (34) - 940
+     SendingTime   (52) - 20120622-01:13:13
+     OrigClOrdID   (41) - bla00020
+         ClOrdID   (11) - bla00024
+       SymbolSfx   (65) - AXP
+          Symbol   (55) - BHP
+            Side   (54) - 1 - Buy
+        ClientID  (109) - GT40D14SMRT
+    TransactTime   (60) - 20120622-01:13:13
+        OrderQty   (38) - 2285
+        CheckSum   (10) - 066
+}
+20120622-01:13:13 (ExecutionReport)
+{
+  BeginString    (8) - FIX.4.2
+   BodyLength    (9) - 0
+      MsgType   (35) - 8
+ SenderCompID   (49) - GEHQJ
+ TargetCompID   (56) - DEVGATE
+    MsgSeqNum   (34) - 953
+  SendingTime   (52) - 20120622-01:13:13
+ExecTransType   (20) - 0 - New
+    OrdStatus   (39) - 6 - Pending Cancel Replace
+      ClOrdID   (11) - bla00024
+      OrderID   (37) - DEVGATE-GEHQJ-bla00020
+       ExecID   (17) - 34
+     ExecType  (150) - 6 - Pending Cancel Replace
+    LeavesQty  (151) - 2285
+  OrigClOrdID   (41) - bla00020
+       Symbol   (55) - BHP
+         Side   (54) - 1 - Buy
+     OrderQty   (38) - 2285
+        Price   (44) - 10
+   LastShares   (32) - 0
+       LastPx   (31) - 0
+       CumQty   (14) - 0
+        AvgPx    (6) - 0
+}
+20120622-01:13:13 (ExecutionReport)
+{
+  BeginString    (8) - FIX.4.2
+   BodyLength    (9) - 0
+      MsgType   (35) - 8
+ SenderCompID   (49) - GEHQJ
+ TargetCompID   (56) - DEVGATE
+    MsgSeqNum   (34) - 954
+  SendingTime   (52) - 20120622-01:13:13
+ExecTransType   (20) - 0 - New
+    OrdStatus   (39) - 4 - Cancelled
+      ClOrdID   (11) - bla00024
+      OrderID   (37) - DEVGATE-GEHQJ-bla00020
+       ExecID   (17) - 35
+     ExecType  (150) - 4 - Cancelled
+    LeavesQty  (151) - 0
+  OrigClOrdID   (41) - bla00020
+       Symbol   (55) - BHP
+         Side   (54) - 1 - Buy
+     OrderQty   (38) - 2285
+        Price   (44) - 10
+   LastShares   (32) - 0
+       LastPx   (31) - 0
+       CumQty   (14) - 0
+        AvgPx    (6) - 0
+}

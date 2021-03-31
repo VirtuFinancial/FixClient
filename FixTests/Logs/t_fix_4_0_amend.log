@@ -1,0 +1,165 @@
+2012-05-08 13:43:52.4700|DEBUG|AwesomO.Execution.FixClient|10.132.21.75:49513 OrderSingle
+{
+	      BeginString    (8) - FIX.4.2
+	       BodyLength    (9) - 277
+	          MsgType   (35) - D
+	     SenderCompID   (49) - ITGA
+	     TargetCompID   (56) - server
+	      TargetSubID   (57) - ONSHORE
+	        MsgSeqNum   (34) - 3
+	      SendingTime   (52) - 20120508-03:43:52
+	          ClOrdID   (11) - BCP00002
+	         OrderQty   (38) - 10000
+	    ExDestination  (100) - DARK
+	        HandlInst   (21) - 2 - Automated execution order, public, Broker intervention OK
+	            Price   (44) - 51.000000
+	          OrdType   (40) - 2 - Limit
+	      TimeInForce   (59) - 0 - Day
+	             Side   (54) - 1 - Buy
+	     SecurityType  (167) - FUT - Future
+	MaturityMonthYear  (200) - 200412
+	           Symbol   (55) - SSGH3
+	          Rule80A   (47) - A - Agency single order
+	         Currency   (15) - SGD
+	     TransactTime   (60) - 20120508-03:43:52
+	             6000 (6000) - TEST
+	             6005 (6005) - MM=200412OAF=167=FUT;200=200412ST=FUT
+	             6506 (6506) - GCO=1649-2GCI=D-RSDKGSC=CLNK
+	         CheckSum   (10) - 083
+}
+2012-05-08 13:43:52.9700|DEBUG|AwesomO.Execution.FixClient|10.132.21.75:49513 ExecutionReport
+{
+	  BeginString    (8) - FIX.4.2
+	   BodyLength    (9) - 164
+	      MsgType   (35) - 8
+	 SenderCompID   (49) - server
+	 TargetCompID   (56) - ITGA
+	    MsgSeqNum   (34) - 3
+	  SendingTime   (52) - 20120508-03:43:52
+	ExecTransType   (20) - 0 - New
+	    OrdStatus   (39) - 0 - New
+	      ClOrdID   (11) - BCP00002
+	      OrderID   (37) - ITGA-server-BCP00002
+	       ExecID   (17) - 0
+	     ExecType  (150) - 0 - New
+	    LeavesQty  (151) - 10000
+	       Symbol   (55) - SSGH3
+	         Side   (54) - 1 - Buy
+	     OrderQty   (38) - 10000
+	        Price   (44) - 51
+	   LastShares   (32) - 0
+	       LastPx   (31) - 0
+	       CumQty   (14) - 0
+	        AvgPx    (6) - 0
+	     CheckSum   (10) - 224
+}
+2012-05-08 13:44:14.0325|DEBUG|AwesomO.Execution.FixClient|10.132.21.75:49513 ExecutionReport
+{
+	  BeginString    (8) - FIX.4.2
+	   BodyLength    (9) - 179
+	      MsgType   (35) - 8
+	 SenderCompID   (49) - server
+	 TargetCompID   (56) - ITGA
+	    MsgSeqNum   (34) - 5
+	  SendingTime   (52) - 20120508-03:44:14
+	ExecTransType   (20) - 0 - New
+	    OrdStatus   (39) - 1 - Partially Filled
+	      ClOrdID   (11) - BCP00002
+	      OrderID   (37) - ITGA-server-BCP00002
+	       ExecID   (17) - 1
+	     ExecType  (150) - 1 - Partial Fill
+	    LeavesQty  (151) - 8500
+	       Symbol   (55) - SSGH3
+	         Side   (54) - 1 - Buy
+	     OrderQty   (38) - 10000
+	        Price   (44) - 51
+	   LastShares   (32) - 1500
+	       LastPx   (31) - 51
+	       CumQty   (14) - 1500
+	        AvgPx    (6) - 51
+	      LastMkt   (30) - DARK
+	     CheckSum   (10) - 033
+}
+2012-05-08 13:45:14.2200|DEBUG|AwesomO.Execution.FixClient|10.132.21.75:49513 OrderCancelReplaceRequest
+{
+	      BeginString    (8) - FIX.4.2
+	       BodyLength    (9) - 215
+	          MsgType   (35) - G
+	     SenderCompID   (49) - ITGA
+	     TargetCompID   (56) - server
+	      TargetSubID   (57) - ONSHORE
+	        MsgSeqNum   (34) - 6
+	      SendingTime   (52) - 20120508-03:45:14
+	    ExDestination  (100) - DARK
+	        HandlInst   (21) - 2 - Automated execution order, public, Broker intervention OK
+	            Price   (44) - 51.000000
+	          OrdType   (40) - 2 - Limit
+	      TimeInForce   (59) - 0 - Day
+	             Side   (54) - 1 - Buy
+	     SecurityType  (167) - FUT - Future
+	           Symbol   (55) - SSGH3
+	MaturityMonthYear  (200) - 201303
+	          Rule80A   (47) - A - Agency single order
+	     TransactTime   (60) - 20120508-03:45:14
+	      OrigClOrdID   (41) - BCP00002
+	          ClOrdID   (11) - BCP00004
+	         OrderQty   (38) - 10000
+	             6005 (6005) - OAF=167=FUTST=FUT
+	         CheckSum   (10) - 111
+}
+2012-05-08 13:45:14.2513|DEBUG|AwesomO.Execution.FixClient|10.132.21.75:49513 ExecutionReport
+{
+	  BeginString    (8) - FIX.4.2
+	   BodyLength    (9) - 187
+	      MsgType   (35) - 8
+	 SenderCompID   (49) - server
+	 TargetCompID   (56) - ITGA
+	    MsgSeqNum   (34) - 8
+	  SendingTime   (52) - 20120508-03:45:14
+	ExecTransType   (20) - 0 - New
+	    OrdStatus   (39) - 6 - Pending Cancel Replace
+	      ClOrdID   (11) - BCP00004
+	      OrderID   (37) - ITGA-server-BCP00002
+	       ExecID   (17) - 2
+	     ExecType  (150) - 6 - Pending Cancel Replace
+	    LeavesQty  (151) - 8500
+	  OrigClOrdID   (41) - BCP00002
+	       Symbol   (55) - SSGH3
+	         Side   (54) - 1 - Buy
+	     OrderQty   (38) - 10000
+	        Price   (44) - 51
+	   LastShares   (32) - 0
+	       LastPx   (31) - 0
+	       CumQty   (14) - 1500
+	        AvgPx    (6) - 51
+	      LastMkt   (30) - DARK
+	     CheckSum   (10) - 207
+}
+2012-05-08 13:45:14.2669|DEBUG|AwesomO.Execution.FixClient|10.132.21.75:49513 ExecutionReport
+{
+	  BeginString    (8) - FIX.4.2
+	   BodyLength    (9) - 184
+	      MsgType   (35) - 8
+	 SenderCompID   (49) - server
+	 TargetCompID   (56) - ITGA
+	    MsgSeqNum   (34) - 9
+	  SendingTime   (52) - 20120508-03:45:14
+	ExecTransType   (20) - 0 - New
+	    OrdStatus   (39) - 5 - Replaced
+	      ClOrdID   (11) - BCP00002
+	      OrderID   (37) - ITGA-server-BCP00004
+	       ExecID   (17) - 3
+	     ExecType  (150) - 5 - Replace
+	    LeavesQty  (151) - 0
+	  OrigClOrdID   (41) - BCP00002
+	       Symbol   (55) - SSGH3
+	         Side   (54) - 1 - Buy
+	     OrderQty   (38) - 10000
+	        Price   (44) - 51
+	   LastShares   (32) - 0
+	       LastPx   (31) - 0
+	       CumQty   (14) - 1500
+	        AvgPx    (6) - 51
+	      LastMkt   (30) - DARK
+	     CheckSum   (10) - 047
+}

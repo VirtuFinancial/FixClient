@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
+    <Bundle Name="ITG Asia Pac FIX Client" 
+            Version="2.0.0.0" 
+            Manufacturer="ITG Asia Pac" 
+            UpgradeCode="b8e268ed-bfa1-4958-9e6a-b4ad7dc2b6a7"
+            IconSourceFile="Icons\FixClient.ico">
+        <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.HyperlinkLicense">
+            <bal:WixStandardBootstrapperApplication SuppressOptionsUI="yes" LicenseUrl="" LogoFile="Resources/InstallerLogo.bmp"/>
+        </BootstrapperApplicationRef>
+        <Chain>
+            <PackageGroupRef Id="NetFx45Web" />
+            <MsiPackage Compressed="yes"
+                        SourceFile="$(var.Setup86.TargetPath)"
+                        Vital="yes"
+                        DisplayInternalUI="no"/>
+		</Chain>
+	</Bundle>
+</Wix>

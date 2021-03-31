@@ -1,0 +1,571 @@
+20091004-23:07:07 (sending) (OrderSingle)
+{
+	     BeginString    (8) - FIX.4.0
+	      BodyLength    (9) - 154
+	         MsgType   (35) - D
+	    SenderCompID   (49) - HKGATE
+	    TargetCompID   (56) - GEHASF
+	       MsgSeqNum   (34) - 159
+	     SendingTime   (52) - 20091004-23:07:07
+	OnBehalfOfCompID  (115) - test
+	            6005 (6005) - ASN=PACISS=V2M0X5G0E1iG0S0iP0iU1
+	         ClOrdID   (11) - 12
+	       HandlInst   (21) - 1 - Automated execution order, private, no Broker intervention
+	          Symbol   (55) - WBC
+	            Side   (54) - 1 - Buy
+	        OrderQty   (38) - 100000
+	         OrdType   (40) - 2 - Limit
+	       SymbolSfx   (65) - AX
+	           Price   (44) - 25.42
+	        CheckSum   (10) - 070
+}
+20091004-23:07:08 (received) (ExecutionReport)
+{
+	    BeginString    (8) - FIX.4.0
+	     BodyLength    (9) - 176
+	        MsgType   (35) - 8
+	   SenderCompID   (49) - GEHASF
+	   TargetCompID   (56) - HKGATE
+	DeliverToCompID  (128) - test
+	      MsgSeqNum   (34) - 206
+	     PossResend   (97) - N
+	    SendingTime   (52) - 20091004-23:07:08
+	          AvgPx    (6) - 0.000000
+	        ClOrdID   (11) - 12
+	         CumQty   (14) - 0
+	         ExecID   (17) - 74
+	  ExecTransType   (20) - 0 - New
+	         LastPx   (31) - 0.000000
+	     LastShares   (32) - 0
+	        OrderID   (37) - 12
+	       OrderQty   (38) - 100000
+	      OrdStatus   (39) - 0 - New
+	        OrdType   (40) - 2 - Limit
+	          Price   (44) - 25.420000
+	           Side   (54) - 1 - Buy
+	         Symbol   (55) - WBC.AX
+	    TimeInForce   (59) - 0 - Day
+	       CheckSum   (10) - 033
+}
+20091004-23:07:18 (received) (ExecutionReport)
+{
+	    BeginString    (8) - FIX.4.0
+	     BodyLength    (9) - 212
+	        MsgType   (35) - 8
+	   SenderCompID   (49) - GEHASF
+	   TargetCompID   (56) - HKGATE
+	DeliverToCompID  (128) - test
+	      MsgSeqNum   (34) - 207
+	     PossResend   (97) - N
+	    SendingTime   (52) - 20091004-23:07:18
+	          AvgPx    (6) - 25.400000
+	        ClOrdID   (11) - 12
+	         CumQty   (14) - 8215
+	         ExecID   (17) - 75
+	  ExecTransType   (20) - 0 - New
+	        LastMkt   (30) - ASX
+	         LastPx   (31) - 25.400000
+	     LastShares   (32) - 8215
+	        OrderID   (37) - 12
+	       OrderQty   (38) - 100000
+	      OrdStatus   (39) - 1 - Partially Filled
+	        OrdType   (40) - 2 - Limit
+	          Price   (44) - 25.420000
+	           Side   (54) - 1 - Buy
+	         Symbol   (55) - WBC.AX
+	    TimeInForce   (59) - 0 - Day
+	   TransactTime   (60) - 20091005-10:07:18
+	       CheckSum   (10) - 102
+}
+20091004-23:08:30 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 211
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 210
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:08:30
+          AvgPx    (6) - 25.400793
+        ClOrdID   (11) - 12
+         CumQty   (14) - 8554
+         ExecID   (17) - 76
+  ExecTransType   (20) - 0 - New
+        LastMkt   (30) - ASX
+         LastPx   (31) - 25.420000
+     LastShares   (32) - 339
+        OrderID   (37) - 12
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 1 - Partially Filled
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.420000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+   TransactTime   (60) - 20091005-10:08:30
+       CheckSum   (10) - 064
+}
+20091004-23:08:37 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 211
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 211
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:08:37
+          AvgPx    (6) - 25.401525
+        ClOrdID   (11) - 12
+         CumQty   (14) - 8893
+         ExecID   (17) - 77
+  ExecTransType   (20) - 0 - New
+        LastMkt   (30) - ASX
+         LastPx   (31) - 25.420000
+     LastShares   (32) - 339
+        OrderID   (37) - 12
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 1 - Partially Filled
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.420000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+   TransactTime   (60) - 20091005-10:08:37
+       CheckSum   (10) - 080
+}
+20091004-23:08:39 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 211
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 212
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:08:39
+          AvgPx    (6) - 25.401689
+        ClOrdID   (11) - 12
+         CumQty   (14) - 9069
+         ExecID   (17) - 78
+  ExecTransType   (20) - 0 - New
+        LastMkt   (30) - ASX
+         LastPx   (31) - 25.410000
+     LastShares   (32) - 176
+        OrderID   (37) - 12
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 1 - Partially Filled
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.420000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+   TransactTime   (60) - 20091005-10:08:39
+       CheckSum   (10) - 091
+}
+20091004-23:08:47 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 213
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 213
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:08:47
+          AvgPx    (6) - 25.399511
+        ClOrdID   (11) - 12
+         CumQty   (14) - 11146
+         ExecID   (17) - 79
+  ExecTransType   (20) - 0 - New
+        LastMkt   (30) - ASX
+         LastPx   (31) - 25.390000
+     LastShares   (32) - 2077
+        OrderID   (37) - 12
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 1 - Partially Filled
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.420000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+   TransactTime   (60) - 20091005-10:08:47
+       CheckSum   (10) - 187
+}
+20091004-23:09:37 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 213
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 215
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:09:37
+          AvgPx    (6) - 25.399600
+        ClOrdID   (11) - 12
+         CumQty   (14) - 13611
+         ExecID   (17) - 80
+  ExecTransType   (20) - 0 - New
+        LastMkt   (30) - ASX
+         LastPx   (31) - 25.400000
+     LastShares   (32) - 2465
+        OrderID   (37) - 12
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 1 - Partially Filled
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.420000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+   TransactTime   (60) - 20091005-10:09:37
+       CheckSum   (10) - 172
+}
+20091004-23:09:40 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 213
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 216
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:09:40
+          AvgPx    (6) - 25.401205
+        ClOrdID   (11) - 12
+         CumQty   (14) - 16096
+         ExecID   (17) - 81
+  ExecTransType   (20) - 0 - New
+        LastMkt   (30) - ASX
+         LastPx   (31) - 25.410000
+     LastShares   (32) - 2485
+        OrderID   (37) - 12
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 1 - Partially Filled
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.420000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+   TransactTime   (60) - 20091005-10:09:40
+       CheckSum   (10) - 160
+}
+20091004-23:09:47 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 213
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 217
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:09:47
+          AvgPx    (6) - 25.402405
+        ClOrdID   (11) - 12
+         CumQty   (14) - 17194
+         ExecID   (17) - 82
+  ExecTransType   (20) - 0 - New
+        LastMkt   (30) - ASX
+         LastPx   (31) - 25.420000
+     LastShares   (32) - 1098
+        OrderID   (37) - 12
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 1 - Partially Filled
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.420000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+   TransactTime   (60) - 20091005-10:09:47
+       CheckSum   (10) - 179
+}
+20091004-23:13:32 (sending) (OrderCancelReplaceRequest)
+{
+     BeginString    (8) - FIX.4.0
+      BodyLength    (9) - 149
+         MsgType   (35) - G
+    SenderCompID   (49) - HKGATE
+    TargetCompID   (56) - GEHASF
+       MsgSeqNum   (34) - 173
+     SendingTime   (52) - 20091004-23:13:32
+OnBehalfOfCompID  (115) - test
+ DeliverToCompID  (128) - test
+      PossResend   (97) - N
+     OrigClOrdID   (41) - 12
+         ClOrdID   (11) - 13
+       HandlInst   (21) - 1 - Automated execution order, private, no Broker intervention
+          Symbol   (55) - WBC.AX
+            Side   (54) - 1 - Buy
+        OrderQty   (38) - 100000
+         OrdType   (40) - 2 - Limit
+         OrderID   (37) - 12
+       SymbolSfx   (65) - AX
+           Price   (44) - 25.46
+     TimeInForce   (59) - 0 - Day
+        CheckSum   (10) - 174
+}
+20091004-23:13:32 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 181
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 225
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:13:32
+          AvgPx    (6) - 25.402405
+        ClOrdID   (11) - 13
+         CumQty   (14) - 17194
+         ExecID   (17) - 83
+  ExecTransType   (20) - 0 - New
+         LastPx   (31) - 0.000000
+     LastShares   (32) - 0
+        OrderID   (37) - 13
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 6 - Pending Cancel Replace
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.420000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+       CheckSum   (10) - 060
+}
+20091004-23:13:32 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 181
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 226
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:13:32
+          AvgPx    (6) - 25.402405
+        ClOrdID   (11) - 12
+         CumQty   (14) - 17194
+         ExecID   (17) - 84
+  ExecTransType   (20) - 0 - New
+         LastPx   (31) - 0.000000
+     LastShares   (32) - 0
+        OrderID   (37) - 12
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 5 - Replaced
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.460000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+       CheckSum   (10) - 063
+}
+20091004-23:13:32 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 212
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 227
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:13:32
+          AvgPx    (6) - 25.405523
+        ClOrdID   (11) - 13
+         CumQty   (14) - 18178
+         ExecID   (17) - 85
+  ExecTransType   (20) - 0 - New
+        LastMkt   (30) - ASX
+         LastPx   (31) - 25.460000
+     LastShares   (32) - 984
+        OrderID   (37) - 13
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 1 - Partially Filled
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.460000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+   TransactTime   (60) - 20091005-10:13:32
+       CheckSum   (10) - 132
+}
+20091004-23:14:10 (sending) (OrderCancelReplaceRequest)
+{
+     BeginString    (8) - FIX.4.0
+      BodyLength    (9) - 148
+         MsgType   (35) - G
+    SenderCompID   (49) - HKGATE
+    TargetCompID   (56) - GEHASF
+       MsgSeqNum   (34) - 175
+     SendingTime   (52) - 20091004-23:14:10
+OnBehalfOfCompID  (115) - test
+ DeliverToCompID  (128) - test
+      PossResend   (97) - N
+     OrigClOrdID   (41) - 13
+         ClOrdID   (11) - 14
+       HandlInst   (21) - 1 - Automated execution order, private, no Broker intervention
+          Symbol   (55) - WBC.AX
+            Side   (54) - 1 - Buy
+        OrderQty   (38) - 100000
+         OrdType   (40) - 2 - Limit
+         OrderID   (37) - 13
+       SymbolSfx   (65) - AX
+           Price   (44) - 25.5
+     TimeInForce   (59) - 0 - Day
+        CheckSum   (10) - 122
+}
+20091004-23:14:10 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 181
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 229
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:14:10
+          AvgPx    (6) - 25.405523
+        ClOrdID   (11) - 14
+         CumQty   (14) - 18178
+         ExecID   (17) - 86
+  ExecTransType   (20) - 0 - New
+         LastPx   (31) - 0.000000
+     LastShares   (32) - 0
+        OrderID   (37) - 14
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 6 - Pending Cancel Replace
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.460000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+       CheckSum   (10) - 077
+}
+20091004-23:14:10 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 181
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 230
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:14:10
+          AvgPx    (6) - 25.405523
+        ClOrdID   (11) - 13
+         CumQty   (14) - 18178
+         ExecID   (17) - 87
+  ExecTransType   (20) - 0 - New
+         LastPx   (31) - 0.000000
+     LastShares   (32) - 0
+        OrderID   (37) - 13
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 5 - Replaced
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.500000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+       CheckSum   (10) - 062
+}
+20091004-23:14:10 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 213
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 231
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:14:10
+          AvgPx    (6) - 25.412568
+        ClOrdID   (11) - 14
+         CumQty   (14) - 20077
+         ExecID   (17) - 88
+  ExecTransType   (20) - 0 - New
+        LastMkt   (30) - ASX
+         LastPx   (31) - 25.480000
+     LastShares   (32) - 1899
+        OrderID   (37) - 14
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 1 - Partially Filled
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.500000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+   TransactTime   (60) - 20091005-10:14:10
+       CheckSum   (10) - 176
+}
+20091004-23:14:13 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 213
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 232
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:14:13
+          AvgPx    (6) - 25.416714
+        ClOrdID   (11) - 14
+         CumQty   (14) - 21213
+         ExecID   (17) - 89
+  ExecTransType   (20) - 0 - New
+        LastMkt   (30) - ASX
+         LastPx   (31) - 25.490000
+     LastShares   (32) - 1136
+        OrderID   (37) - 14
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 1 - Partially Filled
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.500000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+   TransactTime   (60) - 20091005-10:14:13
+       CheckSum   (10) - 159
+}
+20091004-23:14:21 (received) (ExecutionReport)
+{
+    BeginString    (8) - FIX.4.0
+     BodyLength    (9) - 215
+        MsgType   (35) - 8
+   SenderCompID   (49) - GEHASF
+   TargetCompID   (56) - HKGATE
+DeliverToCompID  (128) - test
+      MsgSeqNum   (34) - 233
+     PossResend   (97) - N
+    SendingTime   (52) - 20091004-23:14:21
+          AvgPx    (6) - 25.482333
+        ClOrdID   (11) - 14
+         CumQty   (14) - 100000
+         ExecID   (17) - 90
+  ExecTransType   (20) - 0 - New
+        LastMkt   (30) - ASX
+         LastPx   (31) - 25.500000
+     LastShares   (32) - 78787
+        OrderID   (37) - 14
+       OrderQty   (38) - 100000
+      OrdStatus   (39) - 2 - Filled
+        OrdType   (40) - 2 - Limit
+          Price   (44) - 25.500000
+           Side   (54) - 1 - Buy
+         Symbol   (55) - WBC.AX
+    TimeInForce   (59) - 0 - Day
+   TransactTime   (60) - 20091005-10:14:21
+       CheckSum   (10) - 003
+}

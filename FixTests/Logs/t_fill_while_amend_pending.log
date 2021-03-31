@@ -1,0 +1,152 @@
+2013-07-11 15:29:38.8299|DEBUG|AwesomO.Execution.FixClient|127.0.0.1:62766 OrderSingle
+{
+  BeginString    (8) - FIX.4.2
+   BodyLength    (9) - 138
+      MsgType   (35) - D
+ SenderCompID   (49) - FIX_CLIENT
+ TargetCompID   (56) - QJ
+    MsgSeqNum   (34) - 98
+  SendingTime   (52) - 20130711-05:29:38
+      ClOrdID   (11) - 15263
+    HandlInst   (21) - 1 - Automated execution order, private, no Broker intervention
+       Symbol   (55) - BHP.AX
+         Side   (54) - 2 - Sell
+ TransactTime   (60) - 20130711-05:29:37
+      OrdType   (40) - 2 - Limit
+ExDestination  (100) - DARK
+     OrderQty   (38) - 1000
+        Price   (44) - 15.24
+  TimeInForce   (59) - 0 - Day
+     CheckSum   (10) - 132
+}
+2013-07-11 15:29:42.1882|DEBUG|AwesomO.Execution.FixClient|127.0.0.1:62766 ExecutionReport
+{
+  BeginString    (8) - FIX.4.2
+   BodyLength    (9) - 0
+      MsgType   (35) - 8
+ SenderCompID   (49) - QJ
+ TargetCompID   (56) - FIX_CLIENT
+    MsgSeqNum   (34) - 112
+  SendingTime   (52) - 20130711-05:29:42
+ExecTransType   (20) - 0 - New
+    OrdStatus   (39) - 0 - New
+      ClOrdID   (11) - 15263
+      OrderID   (37) - FIX_CLIENT-QJ-15263
+       ExecID   (17) - 54
+     ExecType  (150) - 0 - New
+    LeavesQty  (151) - 1000
+       Symbol   (55) - BHP.AX
+         Side   (54) - 2 - Sell
+     OrderQty   (38) - 1000
+        Price   (44) - 15.24
+   LastShares   (32) - 0
+       LastPx   (31) - 0
+       CumQty   (14) - 0
+        AvgPx    (6) - 0
+      OrdType   (40) - 2 - Limit
+}
+2013-07-11 15:30:07.8658|DEBUG|AwesomO.Execution.FixClient|127.0.0.1:62766 OrderCancelReplaceRequest
+{
+  BeginString    (8) - FIX.4.2
+   BodyLength    (9) - 170
+      MsgType   (35) - G
+ SenderCompID   (49) - FIX_CLIENT
+ TargetCompID   (56) - QJ
+    MsgSeqNum   (34) - 99
+  SendingTime   (52) - 20130711-05:30:07
+  OrigClOrdID   (41) - 15263
+      ClOrdID   (11) - 15264
+    HandlInst   (21) - 1 - Automated execution order, private, no Broker intervention
+       Symbol   (55) - BHP.AX
+         Side   (54) - 2 - Sell
+ TransactTime   (60) - 20130711-05:30:03
+      OrdType   (40) - 2 - Limit
+      OrderID   (37) - FIX_CLIENT-QJ-15263
+ExDestination  (100) - DARK
+     OrderQty   (38) - 2000
+        Price   (44) - 15.24
+  TimeInForce   (59) - 0 - Day
+     CheckSum   (10) - 178
+}
+2013-07-11 15:30:07.8778|DEBUG|AwesomO.Execution.FixClient|127.0.0.1:62766 ExecutionReport
+{
+  BeginString    (8) - FIX.4.2
+   BodyLength    (9) - 0
+      MsgType   (35) - 8
+ SenderCompID   (49) - QJ
+ TargetCompID   (56) - FIX_CLIENT
+    MsgSeqNum   (34) - 113
+  SendingTime   (52) - 20130711-05:30:07
+ExecTransType   (20) - 0 - New
+    OrdStatus   (39) - 6 - Pending Cancel Replace
+      ClOrdID   (11) - 15264
+      OrderID   (37) - FIX_CLIENT-QJ-15263
+       ExecID   (17) - 55
+     ExecType  (150) - 6 - Pending Cancel Replace
+    LeavesQty  (151) - 1000
+  OrigClOrdID   (41) - 15263
+       Symbol   (55) - BHP.AX
+         Side   (54) - 2 - Sell
+     OrderQty   (38) - 1000
+        Price   (44) - 15.24
+   LastShares   (32) - 0
+       LastPx   (31) - 0
+       CumQty   (14) - 0
+        AvgPx    (6) - 0
+      OrdType   (40) - 2 - Limit
+}
+2013-07-11 15:30:17.2577|DEBUG|AwesomO.Execution.FixClient|127.0.0.1:62766 ExecutionReport
+{
+  BeginString    (8) - FIX.4.2
+   BodyLength    (9) - 0
+      MsgType   (35) - 8
+ SenderCompID   (49) - QJ
+ TargetCompID   (56) - FIX_CLIENT
+    MsgSeqNum   (34) - 114
+  SendingTime   (52) - 20130711-05:30:17
+ExecTransType   (20) - 0 - New
+    OrdStatus   (39) - 6 - Pending Cancel Replace
+      ClOrdID   (11) - 15263
+      OrderID   (37) - FIX_CLIENT-QJ-15263
+       ExecID   (17) - 56
+     ExecType  (150) - 1 - Partial Fill
+    LeavesQty  (151) - 500
+       Symbol   (55) - BHP.AX
+         Side   (54) - 2 - Sell
+     OrderQty   (38) - 1000
+        Price   (44) - 15.24
+   LastShares   (32) - 500
+       LastPx   (31) - 15.24
+       CumQty   (14) - 500
+        AvgPx    (6) - 15.24
+      LastMkt   (30) - DARK
+      OrdType   (40) - 2 - Limit
+}
+2013-07-11 15:30:19.5919|DEBUG|AwesomO.Execution.FixClient|127.0.0.1:62766 ExecutionReport
+{
+  BeginString    (8) - FIX.4.2
+   BodyLength    (9) - 0
+      MsgType   (35) - 8
+ SenderCompID   (49) - QJ
+ TargetCompID   (56) - FIX_CLIENT
+    MsgSeqNum   (34) - 115
+  SendingTime   (52) - 20130711-05:30:19
+ExecTransType   (20) - 0 - New
+    OrdStatus   (39) - 5 - Replaced
+      ClOrdID   (11) - 15263
+      OrderID   (37) - FIX_CLIENT-QJ-15264
+       ExecID   (17) - 57
+     ExecType  (150) - 5 - Replace
+    LeavesQty  (151) - 0
+  OrigClOrdID   (41) - 15263
+       Symbol   (55) - BHP.AX
+         Side   (54) - 2 - Sell
+     OrderQty   (38) - 2000
+        Price   (44) - 15.24
+   LastShares   (32) - 0
+       LastPx   (31) - 0
+       CumQty   (14) - 500
+        AvgPx    (6) - 15.24
+      LastMkt   (30) - DARK
+      OrdType   (40) - 2 - Limit
+}
