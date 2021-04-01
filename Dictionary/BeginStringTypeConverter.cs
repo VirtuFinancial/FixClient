@@ -19,7 +19,7 @@ using System.ComponentModel;
 
 namespace Fix
 {
-    public static partial class Dictionary
+    public partial class Dictionary
     {
         public class BeginStringTypeConverter : TypeConverter
         {

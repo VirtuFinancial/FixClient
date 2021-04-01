@@ -1,76 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{603834ED-4BC7-4E61-9B30-F3D84A4DDE8A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Fix</RootNamespace>
-    <AssemblyName>Fix.Dictionary</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AddedAttribute.cs" />
-    <Compile Include="Dictionary.FieldDefinition.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="IOrderedDictionary.cs" />
-    <Compile Include="JavaScriptConverter.cs" />
-    <Compile Include="ApplVerIdTypeConverter.cs" />
-    <Compile Include="Dictionary.DataType.cs" />
-    <Compile Include="Dictionary.MessageFieldCollection.cs" />
-    <Compile Include="Dictionary.VersionFieldCollection.cs" />
-    <Compile Include="Dictionary.Field.cs" />
-    <Compile Include="Dictionary.Message.cs" />
-    <Compile Include="Dictionary.Version.cs" />
-    <Compile Include="OrderedDictionary.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BeginStringTypeConverter.cs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
   <PropertyGroup>
     <CoreCompileDependsOn>$(CoreCompileDependsOn);AddLexicographerOutput</CoreCompileDependsOn>
   </PropertyGroup>
   <Target Name="AddLexicographerOutput">
     <Exec Command="&quot;$(SolutionDir)Lexicographer\bin\$(Configuration)\Lexicographer.exe&quot; Repository Generated" />
-    <ItemGroup>
-      <Compile Include="Generated\*.cs" />
-    </ItemGroup>
   </Target>
   <Target Name="AfterClean">
     <RemoveDir Directories="Generated" />
   </Target>
+
 </Project>

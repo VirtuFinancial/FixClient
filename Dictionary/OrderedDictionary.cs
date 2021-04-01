@@ -18,7 +18,7 @@ using System.Linq;
 
 namespace Fix
 {
-    public static partial class Dictionary
+    public partial class Dictionary
     {
         public sealed class OrderedDictionary<TKey, TValue> : IOrderedDictionary<TKey, TValue>
         {
