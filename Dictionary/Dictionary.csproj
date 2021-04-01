@@ -2,14 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
-
-  <PropertyGroup>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <CoreCompileDependsOn>$(CoreCompileDependsOn);AddLexicographerOutput</CoreCompileDependsOn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="*.cs" />
+  </ItemGroup>
+
   <Target Name="AddLexicographerOutput">
     <Exec Command="&quot;$(SolutionDir)Lexicographer\bin\$(Configuration)\Lexicographer.exe&quot; Repository Generated" />
+    <ItemGroup>
+      <Compile Include="Generated\*.cs" />
+    </ItemGroup>
   </Target>
+
   <Target Name="AfterClean">
     <RemoveDir Directories="Generated" />
   </Target>
