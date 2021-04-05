@@ -21,7 +21,7 @@ namespace FixClient
 	/// </summary>
 	public class CustomPropertyGrid : PropertyGrid
 	{
-	    ResourceManager _rm;
+	    //ResourceManager _rm;
 	 
 	    public CustomPropertyGrid()
         {

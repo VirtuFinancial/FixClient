@@ -5,28 +5,28 @@ VisualStudioVersion = 16.0.31105.61
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lexicographer", "Lexicographer\Lexicographer.csproj", "{A10B8866-4074-4C59-922B-122C96C902F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dictionary", "Dictionary\Dictionary.csproj", "{603834ED-4BC7-4E61-9B30-F3D84A4DDE8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dictionary", "Dictionary\Dictionary.csproj", "{603834ED-4BC7-4E61-9B30-F3D84A4DDE8A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A10B8866-4074-4C59-922B-122C96C902F3} = {A10B8866-4074-4C59-922B-122C96C902F3}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DictionaryTests", "DictionaryTests\DictionaryTests.csproj", "{9394B32B-9A5D-4B18-BB1E-35DFDF4CA11C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictionaryTests", "DictionaryTests\DictionaryTests.csproj", "{9394B32B-9A5D-4B18-BB1E-35DFDF4CA11C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fix", "Fix\Fix.csproj", "{5F8A0688-7730-4147-8B65-8EFD0C5F040F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{D4900FAF-6F3D-456F-AD7C-421C676CA181}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixTests", "FixTests\FixTests.csproj", "{767DFA3D-8309-4741-94EC-8DEAA7EAC85C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixTests", "FixTests\FixTests.csproj", "{767DFA3D-8309-4741-94EC-8DEAA7EAC85C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixClient", "FixClient\FixClient.csproj", "{4338707D-10ED-47B2-B273-6E54D3DE9383}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixClient", "FixClient\FixClient.csproj", "{4338707D-10ED-47B2-B273-6E54D3DE9383}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixClientTests", "FixClientTests\FixClientTests.csproj", "{935F6F82-B211-49D0-8100-B4F166BE959A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixClientTests", "FixClientTests\FixClientTests.csproj", "{935F6F82-B211-49D0-8100-B4F166BE959A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DictionaryPerformanceTest", "DictionaryPerformanceTest\DictionaryPerformanceTest.csproj", "{6F8DF4FE-DE6D-412F-AC98-92C429D12913}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DictionaryPerformanceTest", "DictionaryPerformanceTest\DictionaryPerformanceTest.csproj", "{6F8DF4FE-DE6D-412F-AC98-92C429D12913}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixPerformanceTest", "FixPerformanceTest\FixPerformanceTest.csproj", "{B5BA8407-7C72-4EE5-B371-F6FB054DFF81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixPerformanceTest", "FixPerformanceTest\FixPerformanceTest.csproj", "{B5BA8407-7C72-4EE5-B371-F6FB054DFF81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixPersistentSessionPerformanceTest", "FixPersistentSessionPerformanceTest\FixPersistentSessionPerformanceTest.csproj", "{466B5062-FC75-44BA-AA3A-359CE922D58A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixPersistentSessionPerformanceTest", "FixPersistentSessionPerformanceTest\FixPersistentSessionPerformanceTest.csproj", "{466B5062-FC75-44BA-AA3A-359CE922D58A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -197,7 +197,9 @@ Global
 		{B5BA8407-7C72-4EE5-B371-F6FB054DFF81}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B5BA8407-7C72-4EE5-B371-F6FB054DFF81}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B5BA8407-7C72-4EE5-B371-F6FB054DFF81}.Release|x64.ActiveCfg = Release|Any CPU
+		{B5BA8407-7C72-4EE5-B371-F6FB054DFF81}.Release|x64.Build.0 = Release|Any CPU
 		{B5BA8407-7C72-4EE5-B371-F6FB054DFF81}.Release|x86.ActiveCfg = Release|Any CPU
+		{B5BA8407-7C72-4EE5-B371-F6FB054DFF81}.Release|x86.Build.0 = Release|Any CPU
 		{466B5062-FC75-44BA-AA3A-359CE922D58A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{466B5062-FC75-44BA-AA3A-359CE922D58A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{466B5062-FC75-44BA-AA3A-359CE922D58A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

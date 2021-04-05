@@ -10,8 +10,12 @@
     <Compile Include="*.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Lexicographer\Lexicographer.csproj" TargetFramework="net5.0" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  
   <Target Name="AddLexicographerOutput">
-    <Exec Command="&quot;$(SolutionDir)Lexicographer\bin\$(Configuration)\Lexicographer.exe&quot; Repository Generated" />
+    <Exec Command="&quot;$(SolutionDir)Lexicographer\bin\$(Configuration)\net5.0\Lexicographer.exe&quot; Repository Generated" />
     <ItemGroup>
       <Compile Include="Generated\*.cs" />
     </ItemGroup>
