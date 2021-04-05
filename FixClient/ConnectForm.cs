@@ -59,7 +59,7 @@ namespace FixClient
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(null, ex.Message, "ITGA Fix Initiator", MessageBoxButtons.OK,
+                        MessageBox.Show(null, ex.Message, "Fix Initiator", MessageBoxButtons.OK,
                                         MessageBoxIcon.Information);
                         DialogResult = DialogResult.Cancel;
                     }
@@ -85,7 +85,7 @@ namespace FixClient
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(null, ex.Message, "ITGA Fix Initiator", MessageBoxButtons.OK,
+                        MessageBox.Show(null, ex.Message, "Fix Initiator", MessageBoxButtons.OK,
                                         MessageBoxIcon.Information);
                         DialogResult = DialogResult.Cancel;
                     }       

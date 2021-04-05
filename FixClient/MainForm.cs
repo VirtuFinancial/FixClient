@@ -426,7 +426,7 @@ namespace FixClient
             Load += MainFormLoad;
            
             Size = new Size(1280, 800);
-            Text = "ITG Asia Pac FIX Client";
+            Text = "FIX Client";
             Icon = Properties.Resources.FixClient;
 
             LoadMru();
