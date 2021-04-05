@@ -2,7 +2,7 @@
 4.0.0
 
 •	First open source version.
-•	Moved to .NET 5 and publish as a single file application.
+•	Moved to .NET 5.0 and publish as a single file application.
 •	Removed the old WIX installers.
 
 --------------------------------------------------------------------------------
