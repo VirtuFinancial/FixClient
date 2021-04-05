@@ -35,7 +35,6 @@ namespace FixClient
         readonly ToolStripButton _messagesButton;
         readonly ToolStripButton _historyButton;
         readonly ToolStripButton _ordersButton;
-        readonly ToolStripButton _tradesButton;
         //readonly ToolStripButton _generatorButton;
         readonly ToolStripButton _filtersButton;
         readonly ToolStripButton _customiseButton;
@@ -74,7 +73,6 @@ namespace FixClient
 
         readonly MessagesPanel _messagesPanel;
         readonly OrdersPanel _ordersPanel;
-        readonly TradeReportsPanel _tradesPanel;
         readonly HistoryPanel _historyPanel;
         readonly GeneratorPanel _generatorPanel;
         readonly FiltersPanel _filtersPanel;
@@ -203,8 +201,6 @@ namespace FixClient
             
             _ordersPanel = new OrdersPanel(_messagesPanel, _messagesButton) { Dock = DockStyle.Fill };
 
-            _tradesPanel = new TradeReportsPanel(_messagesPanel, _messagesButton) { Dock = DockStyle.Fill };
-            
             _historyPanel = new HistoryPanel { Dock = DockStyle.Fill };
             _historyPanel.MessageSelected += MessageDefaultsPanelMessageSelected;
 
@@ -222,13 +218,6 @@ namespace FixClient
                                 };
             _viewToolStrip.Items.Add(_ordersButton);
 
-            _tradesButton = new ToolStripButton("Trades", Properties.Resources.Trades, UpdateContentPanel)
-                                {
-                                    ImageTransparentColor = Color.Magenta,
-                                    Tag = _tradesPanel
-                                };
-            _viewToolStrip.Items.Add(_tradesButton);
-            
             _generatorPanel = new GeneratorPanel {Dock = DockStyle.Fill};
             /*
             _generatorButton = new ToolStripButton("Generator", Properties.Resources.Function, UpdateContentPanel)
@@ -356,11 +345,6 @@ namespace FixClient
                               };
             viewMenu.DropDownItems.Add(_viewOrders);
 
-            _viewTrades = new ToolStripMenuItem(_tradesButton.Text, _tradesButton.Image, UpdateContentPanel)
-                              {
-                                  Tag = _tradesPanel
-                              };
-            viewMenu.DropDownItems.Add(_viewTrades);
             /*
             _viewGenerator = new ToolStripMenuItem(_generatorButton.Text, _generatorButton.Image, UpdateContentPanel)
                                  {
@@ -734,7 +718,6 @@ namespace FixClient
                     _historyPanel.Session = CurrentSession;
                     _filtersPanel.Session = CurrentSession;
                     _ordersPanel.Session = CurrentSession;
-                    _tradesPanel.Session = CurrentSession;
                     _generatorPanel.Session = CurrentSession;
                     _customisePanel.Session = CurrentSession;
                 }
@@ -813,7 +796,6 @@ namespace FixClient
                 _historyPanel.Session = CurrentSession;
                 _filtersPanel.Session = CurrentSession;
                 _ordersPanel.Session = CurrentSession;
-                _tradesPanel.Session = CurrentSession;
                 _generatorPanel.Session = CurrentSession;
                 _customisePanel.Session = CurrentSession;
                 _logPanel.Session = CurrentSession;
@@ -963,7 +945,6 @@ namespace FixClient
                 SaveSessionFile();
 
                 _ordersPanel.Session = CurrentSession;
-                _tradesPanel.Session = CurrentSession;
                 //_generatorPanel.Session = Session;
                 _filtersPanel.Session = CurrentSession;
                 _customisePanel.Session = CurrentSession;
@@ -1001,7 +982,6 @@ namespace FixClient
                 _filtersPanel.Session = CurrentSession;
                 _historyPanel.Session = CurrentSession;
                 _ordersPanel.Session = CurrentSession;
-                _tradesPanel.Session = CurrentSession;
                 _generatorPanel.Session = CurrentSession;
                 _customisePanel.Session = CurrentSession;
                 
