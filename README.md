@@ -6,13 +6,11 @@ FIX Client is a Windows desktop program designed for manually testing [FIX proto
 
 ## Requirements
 
-* Visual Studio 2015 or greater
-* .NET Framework 4.5
-* WIX Toolset
+* Visual Studio Community Edition.
 
 ## Installation
 
-The project contains an installer built using the [WIX Toolset](https://wixtoolset.org).
+* FIX Client is distributed as .NET Core single file application, just copy FixClient.exe and run it.
 
 ## Acknowledgements
 
