@@ -4,6 +4,8 @@
 •	First open source version.
 •	Moved to .NET 5.0 and publish as a single file application.
 •	Removed the old WIX installers.
+•	Removed the trades view - this was a special case and only even partially implemented.
+•	Hide the broken data dictionary view - this is broken and will be replaced.
 
 --------------------------------------------------------------------------------
 3.31.0		2016/01/29
