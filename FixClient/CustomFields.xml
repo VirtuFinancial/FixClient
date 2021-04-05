@@ -8,13 +8,4 @@
   <Field name="DiscretionQuantity"	id="9887" categories="GATE"/>
   <Field name="BangMMQty" id="9911" categories="GATE"/>
   <Field name="DiscretionMinQty"	id="9912" categories="GATE"/>
-  <Field name="XRef"	id="8101" categories="Rotation"/>
-  <Field name="Moniker" id="8102" categories="Rotation"/>
-  <Field name="ParentID" id="8103" categories="Rotation"/>
-  <Field name="StartTime" id="8110" categories="Rotation"/>
-  <Field name="PriceProtection" id="8150" categories="Rotation"/>
-  <Field name="PlusOffset" id="8151" categories="Rotation"/>
-  <Field name="OrderType" id="8152" categories="Rotation"/>
-  <Field name="PullOnFinish" id="8153" categories="Rotation"/>
-  <Field name="MinQty" id="8154" categories="Rotation"/>
 </Fields>
