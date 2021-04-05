@@ -263,7 +263,7 @@ namespace FixClient
                                         ImageTransparentColor = Color.Magenta,
                                         Tag = _dictionaryPanel
                                     };
-            _viewToolStrip.Items.Add(_dictionaryButton);
+            //_viewToolStrip.Items.Add(_dictionaryButton);
             
             _parserPanel = new ParserPanel { Dock = DockStyle.Fill };
 
@@ -384,7 +384,7 @@ namespace FixClient
                                   {
                                       Tag = _dictionaryPanel
                                   };
-            viewMenu.DropDownItems.Add(_viewDictionary);
+            //viewMenu.DropDownItems.Add(_viewDictionary);
             
             _viewParser = new ToolStripMenuItem(_parserButton.Text, _parserButton.Image, UpdateContentPanel)
                            {

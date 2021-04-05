@@ -31,7 +31,7 @@ namespace FixClient
 
             _browser = new WebBrowser { Dock = DockStyle.Fill };
             _browser.ScriptErrorsSuppressed = true;
-            _browser.Navigate("http://www.onixs.biz/tools/fixdictionary/index.php");
+            _browser.Navigate("https://www.onixs.biz/fix-dictionary.html");
 
             ContentPanel.Controls.Add(_browser);
 
@@ -89,8 +89,8 @@ namespace FixClient
 
                     numeric = builder.ToString();
                 }
-                
-                var uri = new Uri(string.Format("http://onixs.biz/fixdictionary/{0}/msgType_{1}_{2}.html",
+
+                var uri = new Uri(string.Format("http://onixs.biz/fix-dictionary/{0}/msgType_{1}_{2}.html",
                                                 value.BeginString.Substring(4, 3),                                
                                                 value.MsgType,
                                                 numeric));
