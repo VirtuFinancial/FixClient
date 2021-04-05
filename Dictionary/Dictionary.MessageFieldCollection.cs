@@ -17,7 +17,7 @@ using System.ComponentModel;
 
 namespace Fix
 {
-    public static partial class Dictionary
+    public partial class Dictionary
     {
         [Browsable(false)]
         public class MessageFieldCollection : IEnumerable<Field>

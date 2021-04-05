@@ -16,7 +16,7 @@ using System.Collections.Specialized;
 
 namespace Fix
 {
-    public static partial class Dictionary
+    public partial class Dictionary
     {
         public interface IOrderedDictionary<TKey, TValue> : IOrderedDictionary, IDictionary<TKey, TValue>
         {

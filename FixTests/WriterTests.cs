@@ -10,12 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using System.Linq;
-using System.Data.Linq;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FixTests

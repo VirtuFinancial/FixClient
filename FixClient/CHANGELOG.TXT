@@ -1,4 +1,11 @@
 ﻿--------------------------------------------------------------------------------
+4.0.0
+
+•	First open source version.
+•	Moved to .NET 5.0 and publish as a single file application.
+•	Removed the old WIX installers.
+
+--------------------------------------------------------------------------------
 3.31.0		2016/01/29
 
 •	Changed fix message body length comparison from string to numeric

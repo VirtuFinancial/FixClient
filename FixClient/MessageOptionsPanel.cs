@@ -106,6 +106,7 @@ namespace FixClient
 
         void MoveSplitter(PropertyGrid propertyGrid, int x)
         {
+            /* TODO
             object propertyGridView = typeof(PropertyGrid).InvokeMember("gridView", 
                                                                         BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance, 
                                                                         null, 
@@ -116,6 +117,7 @@ namespace FixClient
                                                     null, 
                                                     propertyGridView, 
                                                     new object[] { x });
+            */
         }
 
         void PropertyGridPropertyValueChanged(object s, PropertyValueChangedEventArgs e)

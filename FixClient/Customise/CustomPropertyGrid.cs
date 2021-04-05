@@ -21,7 +21,7 @@ namespace FixClient
 	/// </summary>
 	public class CustomPropertyGrid : PropertyGrid
 	{
-	    ResourceManager _rm;
+	    //ResourceManager _rm;
 	 
 	    public CustomPropertyGrid()
         {
@@ -30,6 +30,7 @@ namespace FixClient
         
         public bool ExpandOnTab { get; set; }
 
+		/*
 	    public override void Refresh() {
 	        if (_rm == null) {
 	            _rm = new ResourceManager(GetType());
@@ -58,6 +59,7 @@ namespace FixClient
 	        }
 	        base.Refresh();
 	    }
+		*/
 
 	 	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
 		{

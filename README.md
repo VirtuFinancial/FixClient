@@ -4,15 +4,14 @@
 
 FIX Client is a Windows desktop program designed for manually testing [FIX protocol](https://www.fixtrading.org/online-specification/) end points. It can simulate both initiator and acceptor behaviour. FIX Client is written in C# using Winforms and is built on a C# FIX library that can be used standalone to build other programs.  
 
-## Requirements
+## Build Requirements
 
-* Visual Studio 2015 or greater
-* .NET Framework 4.5
-* WIX Toolset
+* Visual Studio Community Edition.
 
 ## Installation
 
-The project contains an installer built using the [WIX Toolset](https://wixtoolset.org).
+* Install the [.NET 5.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-5.0.4-windows-x64-installer)
+* FIX Client is distributed as .NET Core single file application, just copy FixClient.exe and run it.
 
 ## Acknowledgements
 

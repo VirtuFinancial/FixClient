@@ -18,7 +18,7 @@ using System.Reflection;
 
 namespace Fix
 {
-    public static partial class Dictionary
+    public partial class Dictionary
     {
         // TODO -   we need to be able to represent gaps efficiently - it has a minimal effect on size and none on 
         //          performance so perhaps just leave it as is for now.

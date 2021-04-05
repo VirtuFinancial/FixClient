@@ -22,7 +22,7 @@
 
 namespace FixClient.Properties
 {
-	public partial class Settings : System.Configuration.ApplicationSettingsBase
+	partial class Settings : System.Configuration.ApplicationSettingsBase
 	{
 		private static Settings m_Value;
 
