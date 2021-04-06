@@ -4,15 +4,14 @@
 •	First open source version.
 •	Moved to .NET 5.0 and publish as a single file application.
 •	Removed the old WIX installers.
-•	Removed the trades view - this was a special case and only even partially implemented.
-•	Hide the broken data dictionary view - this is broken and will be replaced.
+•	Removed the trades view - this was a special case and only ever partially implemented.
+•	Hide the data dictionary view - this is broken and will be replaced.
 
 --------------------------------------------------------------------------------
 3.31.0		2016/01/29
 
 •	Changed fix message body length comparison from string to numeric
 	- This came up during testing of a Fix 5 connection
-
 •	When you reset a session, options are presented to retain active GTC and GTD orders.
 	- It is probably a good idea to be using the option to append the date to ClOrdIDs if you retain orders
 	  across resets or strange things may happen.
