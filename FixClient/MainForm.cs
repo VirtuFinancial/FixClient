@@ -57,7 +57,6 @@ namespace FixClient
         readonly ToolStripMenuItem _viewMessages;
         readonly ToolStripMenuItem _viewHistory;
         readonly ToolStripMenuItem _viewOrders;
-        readonly ToolStripMenuItem _viewTrades;
         //readonly ToolStripMenuItem _viewGenerator;
         readonly ToolStripMenuItem _viewFilters;
         readonly ToolStripMenuItem _viewCustomise;
