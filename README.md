@@ -4,18 +4,23 @@
 
 ## Synopsis
 
-FIX Client is a Windows desktop program designed for manually testing [FIX protocol](https://www.fixtrading.org/online-specification/) end points. It can simulate both initiator and acceptor behaviour. FIX Client is written in C# using Winforms and is built on a C# FIX library that can be used standalone to build other programs.  
+FIX Client is a Windows desktop program designed for manually testing [FIX protocol](https://www.fixtrading.org/online-specification/) end points. It can simulate both initiator and acceptor behaviour. FIX Client is written in C# using Winforms and is built on a C# FIX library that can be used standalone to build other programs.
 
-## Build Requirements
+## Releases
 
-* [Visual Studio Community Edition 2019](https://visualstudio.microsoft.com/vs/community/)
-* [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-5.0.202-windows-x64-installer)
+* Download the latest release [here](https://github.com/GaryHughes/FixClient/releases/latest).
+* If this is the first time you've run FIX Client follow the installation instructions below.
 
 ## Installation
 
 * Install the [.NET 5.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-5.0.5-windows-x64-installer)
     * **NB** FIX Client is not compatible with **.NET 5.0.4** Plesae see [here](https://github.com/GaryHughes/FixClient/issues/2) for details.  
-* FIX Client is distributed as .NET Core single file application, just copy FixClient.exe and run it.
+* FIX Client is distributed as .NET Core single file application, just extract FixClient.exe from a release zip file and run it.
+
+## Build Requirements
+
+* [Visual Studio Community Edition 2019](https://visualstudio.microsoft.com/vs/community/)
+* [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-5.0.202-windows-x64-installer)
 
 ## Acknowledgements
 
