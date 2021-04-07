@@ -6,6 +6,7 @@
 •	Removed the old WIX installers.
 •	Removed the trades view - this was a special case and only ever partially implemented.
 •	Hide the data dictionary view - this is broken and will be replaced.
+•	CustomFields.xml is now embedded in the binary so it doesn't have to be distributed seperately.
 
 --------------------------------------------------------------------------------
 3.31.0		2016/01/29

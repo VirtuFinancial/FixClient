@@ -87,8 +87,7 @@ namespace FixClient
                 DropDownStyle = ComboBoxStyle.DropDownList
             };
 
-            string file = Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + "CustomFields.xml";
-            var customFields = new CustomFieldCollection(file);
+            var customFields = new CustomFieldCollection(Properties.Resources.CustomFields);
 
             foreach (CustomFieldCategory category in customFields.Fields.Values)
             {
