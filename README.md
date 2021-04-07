@@ -8,11 +8,12 @@ FIX Client is a Windows desktop program designed for manually testing [FIX proto
 
 ## Build Requirements
 
-* Visual Studio Community Edition.
+* [Visual Studio Community Edition 2019](https://visualstudio.microsoft.com/vs/community/)
+* [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-5.0.202-windows-x64-installer)
 
 ## Installation
 
-* Install the [.NET 5.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-5.0.3-windows-x64-installer)
+* Install the [.NET 5.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-5.0.5-windows-x64-installer)
     * **NB** FIX Client is not compatible with **.NET 5.0.4** Plesae see [here](https://github.com/GaryHughes/FixClient/issues/2) for details.  
 * FIX Client is distributed as .NET Core single file application, just copy FixClient.exe and run it.
 
