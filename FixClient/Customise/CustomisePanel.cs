@@ -139,9 +139,7 @@ namespace FixClient
             if (_categoryComboBox.SelectedItem == null)
                 return;
 
-            var category = _categoryComboBox.SelectedItem as CustomFieldCategory;
-
-            if (category != null)
+            if (_categoryComboBox.SelectedItem is CustomFieldCategory category)
             {
                 foreach (CustomField field in category.Fields)
                 {
@@ -185,28 +183,26 @@ namespace FixClient
         {
             if (_fieldGrid.SelectedRows.Count < 1)
                 return;
-            
-            using (CustomFieldForm form = new CustomFieldForm(Session.Version, true))
-            {
-                DataGridViewRow row = _fieldGrid.SelectedRows[0];
-                var view = row.DataBoundItem as DataRowView;
-                var dataRow = (CustomFieldDataRow)view.Row;
-                CustomField field = dataRow.Field;
 
-                if (field == null)
-                    return;
+            using CustomFieldForm form = new(Session.Version, true);
+            DataGridViewRow row = _fieldGrid.SelectedRows[0];
+            var view = row.DataBoundItem as DataRowView;
+            var dataRow = (CustomFieldDataRow)view.Row;
+            CustomField field = dataRow.Field;
 
-                form.Field = new CustomField { Tag = field.Tag, Name = field.Name };
+            if (field == null)
+                return;
 
-                if (form.ShowDialog() != DialogResult.OK)
-                    return;
+            form.Field = new CustomField { Tag = field.Tag, Name = field.Name };
 
-                field.Name = form.Field.Name;
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
 
-                _fieldGrid.SelectedRows[0].Cells[CustomiseFieldDataGridView.ColumnFieldName].Value = field.Name;
-                _fieldGrid.Update();
-                Session.WriteCustomFields();
-            }
+            field.Name = form.Field.Name;
+
+            _fieldGrid.SelectedRows[0].Cells[CustomiseFieldDataGridView.ColumnFieldName].Value = field.Name;
+            _fieldGrid.Update();
+            Session.WriteCustomFields();
         }
 
         void DeleteFieldButtonClick(object sender, EventArgs e)
@@ -257,19 +253,17 @@ namespace FixClient
 
         void NewFieldButtonClick(object sender, EventArgs e)
         {
-            using (CustomFieldForm form = new CustomFieldForm(Session.Version, false))
+            using CustomFieldForm form = new(Session.Version, false);
+
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            CustomField field = form.Field;
+
+            if (!Session.CustomFields.ContainsKey(field.Tag))
             {
-
-                if (form.ShowDialog() != DialogResult.OK)
-                    return;
-
-                CustomField field = form.Field;
-
-                if (!Session.CustomFields.ContainsKey(field.Tag))
-                {
-                    AddField(field);
-                    Session.WriteCustomFields();
-                }
+                AddField(field);
+                Session.WriteCustomFields();
             }
         }
 

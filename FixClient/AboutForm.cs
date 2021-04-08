@@ -26,11 +26,10 @@ namespace FixClient
             //  Change assembly information settings for your application through either:
             //  - Project->Properties->Application->Assembly Information
             //  - AssemblyInfo.cs
-            Text = String.Format("About {0}", "FIX Client");
+            Text = string.Format("About {0}", "FIX Client");
             labelProductName.Text = "FIX Client";
-            labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
-            labelCopyright.Text = AssemblyCopyright;
-            labelCompanyName.Text = AssemblyCompany;
+            labelVersion.Text = string.Format("Version {0}", AssemblyVersion);
+            labelCopyright.Text = string.Format("Original work Copyright VIRTU Financial 2021\r\n\r\nModified work Copyright Gary Hughes 2021");
         }
 
         #region Assembly Attribute Accessors

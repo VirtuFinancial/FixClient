@@ -60,7 +60,7 @@ namespace FixClient
         //readonly ToolStripMenuItem _viewGenerator;
         readonly ToolStripMenuItem _viewFilters;
         readonly ToolStripMenuItem _viewCustomise;
-        readonly ToolStripMenuItem _viewDictionary;
+        //readonly ToolStripMenuItem _viewDictionary;
         readonly ToolStripMenuItem _viewParser;
         readonly ToolStripMenuItem _viewLog;
 
@@ -68,7 +68,7 @@ namespace FixClient
 
         readonly MenuStrip _mainMenu;
 
-        List<string> _mru = new List<string>();
+        List<string> _mru = new();
 
         readonly MessagesPanel _messagesPanel;
         readonly OrdersPanel _ordersPanel;
@@ -363,10 +363,10 @@ namespace FixClient
                                  };
             viewMenu.DropDownItems.Add(_viewCustomise);
             
-            _viewDictionary = new ToolStripMenuItem(_dictionaryButton.Text, _dictionaryButton.Image, UpdateContentPanel)
-                                  {
-                                      Tag = _dictionaryPanel
-                                  };
+            //_viewDictionary = new ToolStripMenuItem(_dictionaryButton.Text, _dictionaryButton.Image, UpdateContentPanel)
+            //                      {
+            //                          Tag = _dictionaryPanel
+            //                      };
             //viewMenu.DropDownItems.Add(_viewDictionary);
             
             _viewParser = new ToolStripMenuItem(_parserButton.Text, _parserButton.Image, UpdateContentPanel)
@@ -452,10 +452,8 @@ namespace FixClient
 
         static void HelpAboutClick(object sender, EventArgs e)
         {
-            using (AboutForm form = new AboutForm())
-            {
-                form.ShowDialog();
-            }
+            using AboutForm form = new();
+            form.ShowDialog();
         }
 
         void FileExitClick(object sender, EventArgs e)
@@ -467,8 +465,7 @@ namespace FixClient
         {
             Control control = null;
 
-            var stripButton = sender as ToolStripButton;
-            if (stripButton != null)
+            if (sender is ToolStripButton stripButton)
             {
                 ToolStripButton button = stripButton;
 
@@ -480,8 +477,7 @@ namespace FixClient
             }
             else
             {
-                var item = sender as ToolStripMenuItem;
-                if (item != null)
+                if (sender is ToolStripMenuItem item)
                 {
                     ToolStripMenuItem menu = item;
 
@@ -634,25 +630,23 @@ namespace FixClient
 
             if (File.Exists(cacheName))
             {
-                using (FileStream stream = new FileStream(cacheName, FileMode.Open))
+                using FileStream stream = new(cacheName, FileMode.Open);
+                try
                 {
-                    try
+                    var ser = new XmlSerializer(typeof(List<string>));
+                    _mru = (List<string>)ser.Deserialize(stream);
+                    foreach (string filename in _mru)
                     {
-                        var ser = new XmlSerializer(typeof(List<string>));
-                        _mru = (List<string>)ser.Deserialize(stream);
-                        foreach(string filename in _mru)
-                        {
-                            AddToMruMenu(filename);
-                        }
+                        AddToMruMenu(filename);
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(this,
-                                        ex.Message,
-                                        Application.ProductName,
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this,
+                                    ex.Message,
+                                    Application.ProductName,
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information);
                 }
             }
         }
@@ -660,12 +654,9 @@ namespace FixClient
         void SaveMru()
         {
             string cacheName = string.Format("{0}\\MRU", Application.UserAppDataPath);
-
-            using (FileStream stream = new FileStream(cacheName, FileMode.Create))
-            {
-                var ser = new XmlSerializer(typeof(List<string>));
-                ser.Serialize(stream, _mru);
-            }
+            using FileStream stream = new(cacheName, FileMode.Create);
+            var ser = new XmlSerializer(typeof(List<string>));
+            ser.Serialize(stream, _mru);
         }
 
         void AddToMruMenu(string filename)
@@ -698,41 +689,39 @@ namespace FixClient
 
         void OpenButtonClick(object sender, EventArgs e)
         {
-            using (OpenFileDialog dlg = new OpenFileDialog())
+            using OpenFileDialog dlg = new();
+            if (dlg.ShowDialog() != DialogResult.OK)
+                return;
+
+            try
             {
-                if (dlg.ShowDialog() != DialogResult.OK)
-                    return;
+                CurrentSession = new Session();
+                _logPanel.Session = CurrentSession;
+                CurrentSession.FileName = dlg.FileName;
+                CurrentSession.Read();
+                CurrentSession.StateChanged += CurrentSessionStateChanged;
 
-                try
-                {
-                    CurrentSession = new Session();
-                    _logPanel.Session = CurrentSession;
-                    CurrentSession.FileName = dlg.FileName;
-                    CurrentSession.Read();
-                    CurrentSession.StateChanged += CurrentSessionStateChanged;
+                AddToMru(dlg.FileName);
 
-                    AddToMru(dlg.FileName);
-
-                    _messagesPanel.Session = CurrentSession;
-                    _historyPanel.Session = CurrentSession;
-                    _filtersPanel.Session = CurrentSession;
-                    _ordersPanel.Session = CurrentSession;
-                    _generatorPanel.Session = CurrentSession;
-                    _customisePanel.Session = CurrentSession;
-                }
-                catch (Exception ex)
-                {
-                    CurrentSession = null;
-                    MessageBox.Show(this,
-                                    ex.Message,
-                                    Application.ProductName,
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Information);
-                }
-                finally
-                {
-                    UpdateUiState();                    
-                }
+                _messagesPanel.Session = CurrentSession;
+                _historyPanel.Session = CurrentSession;
+                _filtersPanel.Session = CurrentSession;
+                _ordersPanel.Session = CurrentSession;
+                _generatorPanel.Session = CurrentSession;
+                _customisePanel.Session = CurrentSession;
+            }
+            catch (Exception ex)
+            {
+                CurrentSession = null;
+                MessageBox.Show(this,
+                                ex.Message,
+                                Application.ProductName,
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+            }
+            finally
+            {
+                UpdateUiState();
             }
         }
 
@@ -770,7 +759,7 @@ namespace FixClient
 
         void NewSessionButtonClick(object sender, EventArgs e)
         {
-            using (SessionForm form = new SessionForm())
+            using (SessionForm form = new())
             {
                 form.Session = new Session
                 {
@@ -827,7 +816,7 @@ namespace FixClient
                 filename = CurrentSession.SenderCompId + "-" + CurrentSession.TargetCompId + ".session";
             }
 
-            using (SaveFileDialog dlg = new SaveFileDialog())
+            using (SaveFileDialog dlg = new())
             {
                 dlg.Filter = "txt files (*.session)|*.session|All files (*.*)|*.*";
                 dlg.FilterIndex = 2;
@@ -882,7 +871,7 @@ namespace FixClient
 
             try
             {
-                using (ConnectForm form = new ConnectForm(bindEndPoint, endPoint, CurrentSession.Behaviour))
+                using (ConnectForm form = new(bindEndPoint, endPoint, CurrentSession.Behaviour))
                 {
                     form.Text = title;
                     _connectButton.Enabled = false;
@@ -913,42 +902,40 @@ namespace FixClient
 
         void EditSessionButtonClick(object sender, EventArgs e)
         {
-            using (SessionForm form = new SessionForm())
+            using SessionForm form = new();
+            form.Readonly = CurrentSession != null && CurrentSession.Connected;
+
+            Session clone = null;
+
+            if (CurrentSession != null)
             {
-                form.Readonly = CurrentSession != null && CurrentSession.Connected;
-
-                Session clone = null;
-                
-                if (CurrentSession != null)
-                {
-                    clone = (Session)CurrentSession.Clone();
-                }
-
-                form.Session = clone;
-
-                if (form.ShowDialog() != DialogResult.OK)
-                    return;
-
-                if (CurrentSession != null && clone != null)
-                {
-                    if (CurrentSession.BeginString.BeginString != clone.BeginString.BeginString || 
-                        CurrentSession.DefaultApplVerId.BeginString != clone.DefaultApplVerId.BeginString)
-                    {
-                        CurrentSession.ResetMessageTemplates();
-                            
-                    }
-
-                    CurrentSession.CopyPropertiesFrom(clone);
-                }
-
-                SaveSessionFile();
-
-                _ordersPanel.Session = CurrentSession;
-                //_generatorPanel.Session = Session;
-                _filtersPanel.Session = CurrentSession;
-                _customisePanel.Session = CurrentSession;
-                _messagesPanel.Session = CurrentSession;
+                clone = (Session)CurrentSession.Clone();
             }
+
+            form.Session = clone;
+
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            if (CurrentSession != null && clone != null)
+            {
+                if (CurrentSession.BeginString.BeginString != clone.BeginString.BeginString ||
+                    CurrentSession.DefaultApplVerId.BeginString != clone.DefaultApplVerId.BeginString)
+                {
+                    CurrentSession.ResetMessageTemplates();
+
+                }
+
+                CurrentSession.CopyPropertiesFrom(clone);
+            }
+
+            SaveSessionFile();
+
+            _ordersPanel.Session = CurrentSession;
+            //_generatorPanel.Session = Session;
+            _filtersPanel.Session = CurrentSession;
+            _customisePanel.Session = CurrentSession;
+            _messagesPanel.Session = CurrentSession;
         }
 
         void ResetButtonClick(object sender, EventArgs e)
@@ -956,15 +943,13 @@ namespace FixClient
             if(CurrentSession == null)
                 return;
 
-            using (var form = new ResetForm())
-            {
-                form.StartPosition = FormStartPosition.CenterParent;
+            using var form = new ResetForm();
+            form.StartPosition = FormStartPosition.CenterParent;
 
-                if (form.ShowDialog(this) != DialogResult.Yes)
-                    return;
+            if (form.ShowDialog(this) != DialogResult.Yes)
+                return;
 
-                CurrentSession.Reset(form.ResetGeneratedIds, form.Retain);
-            }
+            CurrentSession.Reset(form.ResetGeneratedIds, form.Retain);
         }
         
         void OpenButtonDropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -1007,21 +992,19 @@ namespace FixClient
 
             if (File.Exists(cacheName))
             {
-                using (FileStream stream = new FileStream(cacheName, FileMode.Open))
+                using FileStream stream = new(cacheName, FileMode.Open);
+                try
                 {
-                    try
-                    {
-                        var ser = new XmlSerializer(typeof(Point));
-                        Location = (Point)ser.Deserialize(stream);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(this,
-                                        ex.Message,
-                                        Application.ProductName,
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
-                    }
+                    var ser = new XmlSerializer(typeof(Point));
+                    Location = (Point)ser.Deserialize(stream);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this,
+                                    ex.Message,
+                                    Application.ProductName,
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information);
                 }
             }
 
@@ -1029,21 +1012,19 @@ namespace FixClient
 
             if (File.Exists(cacheName))
             {
-                using (FileStream stream = new FileStream(cacheName, FileMode.Open))
+                using FileStream stream = new(cacheName, FileMode.Open);
+                try
                 {
-                    try
-                    {
-                        var ser = new XmlSerializer(typeof(Size));
-                        Size = (Size)ser.Deserialize(stream);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(this,
-                                        ex.Message,
-                                        Application.ProductName,
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
-                    }
+                    var ser = new XmlSerializer(typeof(Size));
+                    Size = (Size)ser.Deserialize(stream);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this,
+                                    ex.Message,
+                                    Application.ProductName,
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information);
                 }
             }
         }
@@ -1059,7 +1040,7 @@ namespace FixClient
 
             string cacheName = string.Format("{0}\\Location", Application.UserAppDataPath);
 
-            using (FileStream stream = new FileStream(cacheName, FileMode.Create))
+            using (FileStream stream = new(cacheName, FileMode.Create))
             {
                 var ser = new XmlSerializer(typeof(Point));
                 ser.Serialize(stream, Location);
@@ -1067,7 +1048,7 @@ namespace FixClient
 
             cacheName = string.Format("{0}\\Size", Application.UserAppDataPath);
 
-            using (FileStream stream = new FileStream(cacheName, FileMode.Create))
+            using (FileStream stream = new(cacheName, FileMode.Create))
             {
                 var ser = new XmlSerializer(typeof(Size));
                 ser.Serialize(stream, Size);

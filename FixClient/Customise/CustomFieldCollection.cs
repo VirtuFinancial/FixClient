@@ -20,7 +20,7 @@ namespace FixClient
 {
     class CustomFieldCollection
     {
-        readonly Dictionary<string, CustomFieldCategory> _fields = new Dictionary<string, CustomFieldCategory>();
+        readonly Dictionary<string, CustomFieldCategory> _fields = new();
 
         public CustomFieldCollection(string xml)
         {
