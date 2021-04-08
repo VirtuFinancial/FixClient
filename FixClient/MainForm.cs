@@ -38,7 +38,7 @@ namespace FixClient
         //readonly ToolStripButton _generatorButton;
         readonly ToolStripButton _filtersButton;
         readonly ToolStripButton _customiseButton;
-        readonly ToolStripButton _dictionaryButton;
+        //readonly ToolStripButton _dictionaryButton;
         readonly ToolStripButton _parserButton;
         readonly ToolStripButton _logButton;
 
