@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -88,7 +88,7 @@ namespace Fix
         public object Clone()
         {
             var clone = new MessageCollection();
-            foreach(Message message in _messages)
+            foreach (Message message in _messages)
                 clone.Add(message);
             return clone;
         }

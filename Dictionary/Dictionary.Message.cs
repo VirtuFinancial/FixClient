@@ -10,9 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace Fix
 {
@@ -81,7 +81,7 @@ namespace Fix
 
             public virtual IEnumerator<Message> GetEnumerator()
             {
-                foreach(Message message in _messages)
+                foreach (Message message in _messages)
                     yield return message;
             }
 

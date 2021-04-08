@@ -10,11 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 using System.CodeDom;
+using System.Collections.Generic;
 
 namespace Lexicographer
 {
@@ -27,7 +25,7 @@ namespace Lexicographer
                 Attributes = MemberAttributes.Public,
                 IsPartial = true
             };
-          
+
             var versionType = new CodeTypeDeclaration(version.BeginString.Replace(".", "_"))
             {
                 Attributes = MemberAttributes.Public,
@@ -51,7 +49,7 @@ namespace Lexicographer
                                                                 }
             };
             versionType.Members.Add(fieldsProperty);
-           
+
             var fieldsType = new CodeTypeDeclaration(versionType.Name + "FieldCollection")
             {
                 Attributes = MemberAttributes.Public,
@@ -74,13 +72,13 @@ namespace Lexicographer
             foreach (Fix.Repository.Field field in version.Fields.Values)
             {
                 int actualTag = Convert.ToInt32(field.Tag);
-                
-                while(actualTag > expectedTag)
+
+                while (actualTag > expectedTag)
                 {
                     itemsCreate.Initializers.Add(new CodePrimitiveExpression(null));
                     expectedTag++;
                 }
-                
+
                 itemsCreate.Initializers.Add(new CodeTypeReferenceExpression(field.Name));
                 expectedTag++;
             }
@@ -159,7 +157,7 @@ namespace Lexicographer
 
             versionType.Members.Add(fieldsType);
             dictionaryType.Members.Add(versionType);
-          
+
             return dictionaryType;
         }
     }

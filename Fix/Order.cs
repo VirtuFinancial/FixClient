@@ -10,10 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Fix
 {
@@ -21,16 +19,16 @@ namespace Fix
     {
         public Order(Message message)
         {
-            if(message.MsgType != Dictionary.Messages.NewOrderSingle.MsgType)
-	        {
+            if (message.MsgType != Dictionary.Messages.NewOrderSingle.MsgType)
+            {
                 throw new ArgumentException("Message is not an NewOrderSingle");
-	        }
+            }
 
             Field field = message.Fields.Find(Dictionary.Fields.SenderCompID);
 
             if (string.IsNullOrEmpty(field?.Value))
             {
-               throw new ArgumentException("Message does not contain a SenderCompID"); 
+                throw new ArgumentException("Message does not contain a SenderCompID");
             }
 
             SenderCompID = field.Value;
@@ -83,11 +81,11 @@ namespace Fix
                 ExDestination = field.Value;
             }
 
-            Price = (decimal?) message.Fields.Find(Dictionary.Fields.Price);
-            Side = (Side?) message.Fields.Find(Dictionary.Fields.Side);
-            TimeInForce = (TimeInForce?) message.Fields.Find(Dictionary.Fields.TimeInForce);
+            Price = (decimal?)message.Fields.Find(Dictionary.Fields.Price);
+            Side = (Side?)message.Fields.Find(Dictionary.Fields.Side);
+            TimeInForce = (TimeInForce?)message.Fields.Find(Dictionary.Fields.TimeInForce);
             Text = (string)message.Fields.Find(Dictionary.Fields.Text);
-            
+
             field = message.Fields.Find(Dictionary.Fields.ListID);
 
             if (field != null)
@@ -110,7 +108,7 @@ namespace Fix
             };
         }
 
-        public List<Message> Messages { get; private set; } 
+        public List<Message> Messages { get; private set; }
 
         public string SenderCompID { get; set; }
         public string TargetCompID { get; set; }
@@ -141,32 +139,32 @@ namespace Fix
         {
             get
             {
-                if(OrdStatus == null)
-		            return true;
+                if (OrdStatus == null)
+                    return true;
 
-	            switch(OrdStatus.Value)
-	            {
-		            case Fix.OrdStatus.New:
-		            case Fix.OrdStatus.PartiallyFilled:
-		            case Fix.OrdStatus.Filled:
-		            case Fix.OrdStatus.PendingCancel:
-		            case Fix.OrdStatus.PendingNew:
-		            case Fix.OrdStatus.Calculated:
-		            case Fix.OrdStatus.AcceptedForBidding:
-		            case Fix.OrdStatus.PendingReplace:
-			            return true;
+                switch (OrdStatus.Value)
+                {
+                    case Fix.OrdStatus.New:
+                    case Fix.OrdStatus.PartiallyFilled:
+                    case Fix.OrdStatus.Filled:
+                    case Fix.OrdStatus.PendingCancel:
+                    case Fix.OrdStatus.PendingNew:
+                    case Fix.OrdStatus.Calculated:
+                    case Fix.OrdStatus.AcceptedForBidding:
+                    case Fix.OrdStatus.PendingReplace:
+                        return true;
 
-		            case Fix.OrdStatus.DoneForDay:
-		            case Fix.OrdStatus.Canceled:
-		            case Fix.OrdStatus.Replaced:
-		            case Fix.OrdStatus.Stopped:
-		            case Fix.OrdStatus.Rejected:
-		            case Fix.OrdStatus.Suspended:
-		            case Fix.OrdStatus.Expired:
-			            break;
-	            }
+                    case Fix.OrdStatus.DoneForDay:
+                    case Fix.OrdStatus.Canceled:
+                    case Fix.OrdStatus.Replaced:
+                    case Fix.OrdStatus.Stopped:
+                    case Fix.OrdStatus.Rejected:
+                    case Fix.OrdStatus.Suspended:
+                    case Fix.OrdStatus.Expired:
+                        break;
+                }
 
-	            return false;
+                return false;
             }
         }
 

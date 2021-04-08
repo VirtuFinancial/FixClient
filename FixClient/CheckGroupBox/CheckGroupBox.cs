@@ -42,192 +42,192 @@ using System.Windows.Forms.VisualStyles;
 
 namespace FixClient
 {
-	/// <summary>
-	/// CheckGroupBox is a GroupBox with an embeded CheckBox.
-	/// </summary>
-	[ToolboxBitmap(typeof(CheckGroupBox), "CheckGroupBox.bmp")]
-	public partial class CheckGroupBox : GroupBox
-	{
-		// Constants
-		const int CHECKBOX_X_OFFSET = 10;
-		const int CHECKBOX_Y_OFFSET = 0;
+    /// <summary>
+    /// CheckGroupBox is a GroupBox with an embeded CheckBox.
+    /// </summary>
+    [ToolboxBitmap(typeof(CheckGroupBox), "CheckGroupBox.bmp")]
+    public partial class CheckGroupBox : GroupBox
+    {
+        // Constants
+        const int CHECKBOX_X_OFFSET = 10;
+        const int CHECKBOX_Y_OFFSET = 0;
 
-		// Members
-		bool m_bDisableChildrenIfUnchecked;
+        // Members
+        bool m_bDisableChildrenIfUnchecked;
 
-		/// <summary>
-		/// CheckGroupBox public constructor.
-		/// </summary>
-		public CheckGroupBox()
-		{
-			InitializeComponent();
-			m_bDisableChildrenIfUnchecked = true;
-			m_checkBox.Parent = this;
-			m_checkBox.Location = new Point(CHECKBOX_X_OFFSET, CHECKBOX_Y_OFFSET);
-			Checked = true;
+        /// <summary>
+        /// CheckGroupBox public constructor.
+        /// </summary>
+        public CheckGroupBox()
+        {
+            InitializeComponent();
+            m_bDisableChildrenIfUnchecked = true;
+            m_checkBox.Parent = this;
+            m_checkBox.Location = new Point(CHECKBOX_X_OFFSET, CHECKBOX_Y_OFFSET);
+            Checked = true;
 
-			// Set the color of the CheckBox's text to the color of the label in a standard groupbox control.
-			var vsr = new VisualStyleRenderer(VisualStyleElement.Button.GroupBox.Normal);
-			Color groupBoxTextColor = vsr.GetColor(ColorProperty.TextColor);
-			m_checkBox.ForeColor = groupBoxTextColor;
-		}
+            // Set the color of the CheckBox's text to the color of the label in a standard groupbox control.
+            var vsr = new VisualStyleRenderer(VisualStyleElement.Button.GroupBox.Normal);
+            Color groupBoxTextColor = vsr.GetColor(ColorProperty.TextColor);
+            m_checkBox.ForeColor = groupBoxTextColor;
+        }
 
-		#region Properties
-		/// <summary>
-		/// The text associated with the control.
-		/// </summary>
-		public override string Text
-		{
-			get
-			{
-				if(Site != null && Site.DesignMode == true)
-				{
-					// Design-time mode
-					return m_checkBox.Text;
-				}
-				else
-				{
-					// Run-time
-					return " "; // Set the text of the GroupBox to a space, so the gap appears before the CheckBox.
-				}
-			}
-			set
-			{
-				base.Text = " "; // Set the text of the GroupBox to a space, so the gap appears before the CheckBox.
-				m_checkBox.Text = value;
-			}
-		}
+        #region Properties
+        /// <summary>
+        /// The text associated with the control.
+        /// </summary>
+        public override string Text
+        {
+            get
+            {
+                if (Site != null && Site.DesignMode == true)
+                {
+                    // Design-time mode
+                    return m_checkBox.Text;
+                }
+                else
+                {
+                    // Run-time
+                    return " "; // Set the text of the GroupBox to a space, so the gap appears before the CheckBox.
+                }
+            }
+            set
+            {
+                base.Text = " "; // Set the text of the GroupBox to a space, so the gap appears before the CheckBox.
+                m_checkBox.Text = value;
+            }
+        }
 
-		/// <summary>
-		/// Indicates whether the component is checked or not.
-		/// </summary>
-		[Description("Indicates whether the component is checked or not.")]
-		[Category("Appearance")]
-		[DefaultValue(true)]
-		public bool Checked
-		{
-			get
-			{
-				return m_checkBox.Checked;
-			}
-			set
-			{
-				if(m_checkBox.Checked != value)
-				{
-					m_checkBox.Checked = value;
-				}
-			}
-		}
+        /// <summary>
+        /// Indicates whether the component is checked or not.
+        /// </summary>
+        [Description("Indicates whether the component is checked or not.")]
+        [Category("Appearance")]
+        [DefaultValue(true)]
+        public bool Checked
+        {
+            get
+            {
+                return m_checkBox.Checked;
+            }
+            set
+            {
+                if (m_checkBox.Checked != value)
+                {
+                    m_checkBox.Checked = value;
+                }
+            }
+        }
 
-		/// <summary>
-		/// Indicates the state of the component.
-		/// </summary>
-		[Description("Indicates the state of the component.")]
-		[Category("Appearance")]
-		[DefaultValue(CheckState.Checked)]
-		public CheckState CheckState
-		{
-			get
-			{
-				return m_checkBox.CheckState;
-			}
-			set
-			{
-				if(m_checkBox.CheckState != value)
-				{
-					m_checkBox.CheckState = value;
-				}
-			}
-		}
+        /// <summary>
+        /// Indicates the state of the component.
+        /// </summary>
+        [Description("Indicates the state of the component.")]
+        [Category("Appearance")]
+        [DefaultValue(CheckState.Checked)]
+        public CheckState CheckState
+        {
+            get
+            {
+                return m_checkBox.CheckState;
+            }
+            set
+            {
+                if (m_checkBox.CheckState != value)
+                {
+                    m_checkBox.CheckState = value;
+                }
+            }
+        }
 
-		/// <summary>
-		/// Determines if child controls of the GroupBox are disabled when the CheckBox is unchecked.
-		/// </summary>
-		[Description("Determines if child controls of the GroupBox are disabled when the CheckBox is unchecked.")]
-		[Category("Appearance")]
-		[DefaultValue(true)]
-		public bool DisableChildrenIfUnchecked
-		{
-			get
-			{
-				return m_bDisableChildrenIfUnchecked;
-			}
-			set
-			{
-				if(m_bDisableChildrenIfUnchecked != value)
-				{
-					m_bDisableChildrenIfUnchecked = value;
-				}
-			}
-		}
-		#endregion Properties
+        /// <summary>
+        /// Determines if child controls of the GroupBox are disabled when the CheckBox is unchecked.
+        /// </summary>
+        [Description("Determines if child controls of the GroupBox are disabled when the CheckBox is unchecked.")]
+        [Category("Appearance")]
+        [DefaultValue(true)]
+        public bool DisableChildrenIfUnchecked
+        {
+            get
+            {
+                return m_bDisableChildrenIfUnchecked;
+            }
+            set
+            {
+                if (m_bDisableChildrenIfUnchecked != value)
+                {
+                    m_bDisableChildrenIfUnchecked = value;
+                }
+            }
+        }
+        #endregion Properties
 
-		#region Event Handlers
-		/// <summary>
-		/// Occurs whenever the Checked property of the CheckBox is changed.
-		/// </summary>
-		[Description("Occurs whenever the Checked property of the CheckBox is changed.")]
-		public event EventHandler CheckedChanged;
-		
-		/// <summary>
-		/// Occurs whenever the CheckState property of the CheckBox is changed.
-		/// </summary>
-		[Description("Occurs whenever the CheckState property of the CheckBox is changed.")]
-		public event EventHandler CheckStateChanged;
+        #region Event Handlers
+        /// <summary>
+        /// Occurs whenever the Checked property of the CheckBox is changed.
+        /// </summary>
+        [Description("Occurs whenever the Checked property of the CheckBox is changed.")]
+        public event EventHandler CheckedChanged;
 
-		/// <summary>
-		/// Raises the System.Windows.Forms.CheckBox.checkBox_CheckedChanged event.
-		/// </summary>
-		/// <param name="e">An System.EventArgs that contains the event data.</param>
-		protected virtual void OnCheckedChanged(EventArgs e)
-		{
-		}
+        /// <summary>
+        /// Occurs whenever the CheckState property of the CheckBox is changed.
+        /// </summary>
+        [Description("Occurs whenever the CheckState property of the CheckBox is changed.")]
+        public event EventHandler CheckStateChanged;
 
-		/// <summary>
-		/// Raises the System.Windows.Forms.CheckBox.CheckStateChanged event.
-		/// </summary>
-		/// <param name="e">An System.EventArgs that contains the event data.</param>
-		protected virtual void OnCheckStateChanged(EventArgs e)
-		{
-		}
-		#endregion Event Handlers
+        /// <summary>
+        /// Raises the System.Windows.Forms.CheckBox.checkBox_CheckedChanged event.
+        /// </summary>
+        /// <param name="e">An System.EventArgs that contains the event data.</param>
+        protected virtual void OnCheckedChanged(EventArgs e)
+        {
+        }
 
-		#region Events
-		void checkBox_CheckedChanged(object sender, EventArgs e)
-		{
-			if(m_bDisableChildrenIfUnchecked == true)
-			{
-				bool bEnabled = m_checkBox.Checked;
-				foreach(Control control in Controls)
-				{
-					if(control != m_checkBox)
-					{
-						control.Enabled = bEnabled;
-					}
-				}
-			}
+        /// <summary>
+        /// Raises the System.Windows.Forms.CheckBox.CheckStateChanged event.
+        /// </summary>
+        /// <param name="e">An System.EventArgs that contains the event data.</param>
+        protected virtual void OnCheckStateChanged(EventArgs e)
+        {
+        }
+        #endregion Event Handlers
 
-			if(CheckedChanged != null)
-			{
-				CheckedChanged(sender, e);
-			}
-		}
+        #region Events
+        void checkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (m_bDisableChildrenIfUnchecked == true)
+            {
+                bool bEnabled = m_checkBox.Checked;
+                foreach (Control control in Controls)
+                {
+                    if (control != m_checkBox)
+                    {
+                        control.Enabled = bEnabled;
+                    }
+                }
+            }
 
-		void checkBox_CheckStateChanged(object sender, EventArgs e)
-		{
-			if(CheckStateChanged != null)
-			{
-				CheckStateChanged(sender, e);
-			}
-		}
+            if (CheckedChanged != null)
+            {
+                CheckedChanged(sender, e);
+            }
+        }
 
-		void CheckGroupBox_ControlAdded(object sender, ControlEventArgs e)
-		{
-			if(m_bDisableChildrenIfUnchecked == true)
-			{
-				e.Control.Enabled = Checked;
-			}
-		}
-		#endregion Events
-	}
+        void checkBox_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (CheckStateChanged != null)
+            {
+                CheckStateChanged(sender, e);
+            }
+        }
+
+        void CheckGroupBox_ControlAdded(object sender, ControlEventArgs e)
+        {
+            if (m_bDisableChildrenIfUnchecked == true)
+            {
+                e.Control.Enabled = Checked;
+            }
+        }
+        #endregion Events
+    }
 }

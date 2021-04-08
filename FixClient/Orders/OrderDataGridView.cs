@@ -11,17 +11,17 @@
 /////////////////////////////////////////////////
 
 using System;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Data;
 
 namespace FixClient
 {
-	public sealed partial class OrderDataGridView : DataGridView
-	{
-		public OrderDataGridView()
-		{
-			InitializeComponent();
+    public sealed partial class OrderDataGridView : DataGridView
+    {
+        public OrderDataGridView()
+        {
+            InitializeComponent();
 
             EnableHeadersVisualStyles = false;
             ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -31,24 +31,24 @@ namespace FixClient
             ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             ColumnHeadersHeight -= 3;
-			MultiSelect = false;
-			SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-			AllowUserToAddRows = false;
-			RowHeadersVisible = false;
-			BorderStyle = BorderStyle.None;
-			CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-			AllowUserToDeleteRows = false;
-			RowTemplate.Resizable = DataGridViewTriState.False;
-	        DefaultCellStyle.SelectionBackColor = LookAndFeel.Color.GridCellSelectedBackground;
+            MultiSelect = false;
+            SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            AllowUserToAddRows = false;
+            RowHeadersVisible = false;
+            BorderStyle = BorderStyle.None;
+            CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            AllowUserToDeleteRows = false;
+            RowTemplate.Resizable = DataGridViewTriState.False;
+            DefaultCellStyle.SelectionBackColor = LookAndFeel.Color.GridCellSelectedBackground;
             DefaultCellStyle.SelectionForeColor = LookAndFeel.Color.GridCellSelectedForeground;
             DefaultCellStyle.BackColor = LookAndFeel.Color.GridCellBackground;
             DefaultCellStyle.ForeColor = LookAndFeel.Color.GridCellForeground;
             BackgroundColor = LookAndFeel.Color.GridCellBackground;
             GridColor = LookAndFeel.Color.Grid;
             DefaultCellStyle.WrapMode = DataGridViewTriState.False;
-			DefaultCellStyle.Font = new Font("Arial", 8);
-			RowTemplate.Height -= 3;
-			DoubleBuffered = true;
+            DefaultCellStyle.Font = new Font("Arial", 8);
+            RowTemplate.Height -= 3;
+            DoubleBuffered = true;
             ReadOnly = true;
         }
 
@@ -151,9 +151,9 @@ namespace FixClient
             }
         }
 
-	    protected override void OnCellFormatting(DataGridViewCellFormattingEventArgs e)
-	    {
-	        DataGridViewColumn column = Columns[e.ColumnIndex];
+        protected override void OnCellFormatting(DataGridViewCellFormattingEventArgs e)
+        {
+            DataGridViewColumn column = Columns[e.ColumnIndex];
             var rowView = Rows[e.RowIndex].DataBoundItem as DataRowView;
 
             if (rowView == null)
@@ -161,8 +161,8 @@ namespace FixClient
 
             DataRow row = rowView.Row;
 
-	        if (column.Name == OrderDataTable.ColumnQuantity)
-	        {
+            if (column.Name == OrderDataTable.ColumnQuantity)
+            {
                 object quantityValue = row[OrderDataTable.ColumnQuantity];
                 object pendingQuantityValue = row[OrderDataTable.ColumnPendingQuantity];
 
@@ -175,7 +175,7 @@ namespace FixClient
                 }
 
                 return;
-	        }
+            }
 
             if (column.Name == OrderDataTable.ColumnLimit)
             {
@@ -228,7 +228,7 @@ namespace FixClient
                 e.FormattingApplied = true;
                 return;
             }
-            
+
             if (column.Name == OrderDataTable.ColumnOrdStatus)
             {
                 Color color = LookAndFeel.Color.GridCellForeground;
@@ -275,7 +275,7 @@ namespace FixClient
 
                     e.Value = status.ToString();
                 }
-                
+
                 e.CellStyle.ForeColor = color;
                 e.FormattingApplied = true;
                 return;

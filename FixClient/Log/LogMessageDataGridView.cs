@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
@@ -77,7 +77,7 @@ namespace FixClient
                     if (rowView != null)
                     {
                         DataRow row = rowView.Row;
-                        
+
                         object levelValue = row[LogMessageDataTable.ColumnLevel];
                         LogLevel level = LogLevel.Info;
 
@@ -110,7 +110,7 @@ namespace FixClient
             base.OnColumnAdded(e);
 
             DataGridViewColumn column = e.Column;
-            
+
             switch (column.Name)
             {
                 case LogMessageDataTable.ColumnTimestamp:

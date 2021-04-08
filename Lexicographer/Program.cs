@@ -10,10 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 using System.IO;
 
 namespace Lexicographer
@@ -24,7 +21,7 @@ namespace Lexicographer
         {
             try
             {
-                if(args.Length != 2)
+                if (args.Length != 2)
                 {
                     Console.WriteLine("Usage: {0} <FIX Repository Path> <Output Path>", args[0]);
                     return 1;
@@ -39,13 +36,13 @@ namespace Lexicographer
                 if (!Path.IsPathRooted(outputPath))
                     outputPath = Environment.CurrentDirectory + Path.DirectorySeparatorChar + outputPath;
 
-                if(!Directory.Exists(repositoryPath))
+                if (!Directory.Exists(repositoryPath))
                 {
                     Console.WriteLine("Repository path '{0}' does not exist", repositoryPath);
                     return 1;
                 }
 
-                if(!Directory.Exists(outputPath))
+                if (!Directory.Exists(outputPath))
                 {
                     Directory.CreateDirectory(outputPath);
                 }
@@ -53,7 +50,7 @@ namespace Lexicographer
                 Console.WriteLine("Using FIX repository located in '{0}' to generate dictionary in '{1}'", repositoryPath, outputPath);
 
                 var generator = new CodeGenerator
-                { 
+                {
                     OutputPath = outputPath,
                     Repository = new Fix.Repository.Root(repositoryPath)
                 };

@@ -10,11 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 
 namespace Fix.Repository
 {
@@ -23,11 +21,11 @@ namespace Fix.Repository
         public Root(string path)
         {
             Path = path;
-            Scan();   
+            Scan();
         }
 
         public string Path { get; }
-        public IEnumerable<Version> Versions => _versions; 
+        public IEnumerable<Version> Versions => _versions;
 
         #region Private Methods
 
@@ -42,7 +40,7 @@ namespace Fix.Repository
         #region Private Members
 
         IEnumerable<Version> _versions = new List<Version>();
- 
+
         #endregion
 
     }

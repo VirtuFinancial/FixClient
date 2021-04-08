@@ -10,24 +10,20 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Text;
-using System.IO;
-using System.IO.MemoryMappedFiles;
-using System.Reflection;
-using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Threading;
 
 namespace Fix
 {
     public class PersistentSession : Session, IDisposable
     {
         readonly object _syncObject = new object();
-        
+
         Timer _writeTimer;
         JsonSerializer _serialiser;
 
@@ -47,15 +43,15 @@ namespace Fix
 
         // This constructor is only used for cloning
         public PersistentSession(PersistentSession session)
-        :   base(session)
+        : base(session)
         {
             FileName = session.FileName;
             PersistMessages = session.PersistMessages;
         }
 
         [Browsable(false)]
-        public string FileName 
-        { 
+        public string FileName
+        {
             get { return _fileName; }
             set
             {
@@ -71,7 +67,7 @@ namespace Fix
 
         [Browsable(false)]
         public bool PersistMessages { get; set; }
-        
+
         protected string GetFileNamePrefix(string filename)
         {
             return Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar +
@@ -189,7 +185,7 @@ namespace Fix
                 }
 
                 UpdateReadonlyAttributes();
-                
+
                 Reading = true;
                 ReadMessages();
                 Reading = false;
@@ -233,8 +229,8 @@ namespace Fix
                 }
 
                 PersistentSession session;
-                
-                lock(_syncObject)
+
+                lock (_syncObject)
                 {
                     session = (PersistentSession)Clone();
 
@@ -269,13 +265,13 @@ namespace Fix
                 return;
 
             int errors = 0;
-            
+
             try
             {
                 using (FileStream stream = new FileStream(MessagesFileName, FileMode.OpenOrCreate))
                 using (Reader reader = new Reader(stream))
                 {
-                    for (;;)
+                    for (; ; )
                     {
                         try
                         {
@@ -325,7 +321,7 @@ namespace Fix
         {
             if (Reading)
                 return;
-            
+
             try
             {
                 _historyWriter.WriteLine(ev.Message);

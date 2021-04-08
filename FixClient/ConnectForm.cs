@@ -11,11 +11,10 @@
 /////////////////////////////////////////////////
 
 using System;
-using System.Windows.Forms;
-using System.Threading.Tasks;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.IO;
+using System.Windows.Forms;
 
 namespace FixClient
 {
@@ -63,7 +62,7 @@ namespace FixClient
                                         MessageBoxIcon.Information);
                         DialogResult = DialogResult.Cancel;
                     }
-                    BeginInvoke(new MethodInvoker(Close), new object[] {this, null});
+                    BeginInvoke(new MethodInvoker(Close), new object[] { this, null });
                 }, null);
             }
             else
@@ -88,7 +87,7 @@ namespace FixClient
                         MessageBox.Show(null, ex.Message, "Fix Initiator", MessageBoxButtons.OK,
                                         MessageBoxIcon.Information);
                         DialogResult = DialogResult.Cancel;
-                    }       
+                    }
                     _tcpListener.Stop();
                 }, null);
             }

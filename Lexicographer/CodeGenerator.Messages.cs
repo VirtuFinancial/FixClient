@@ -10,10 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Lexicographer
 {
@@ -26,13 +25,13 @@ namespace Lexicographer
                 Attributes = MemberAttributes.Public,
                 IsPartial = true
             };
-         
+
             var versionType = new CodeTypeDeclaration(version.BeginString.Replace(".", "_"))
             {
                 Attributes = MemberAttributes.Public,
                 IsPartial = true
             };
-       
+
             var messageCollectionMember = new CodeMemberField(versionType.Name + "MessageCollection", "_messageCollection")
             {
                 Attributes = MemberAttributes.Private | MemberAttributes.Static,
@@ -57,7 +56,7 @@ namespace Lexicographer
                                                                 }
             };
             versionType.Members.Add(messagesProperty);
-            
+
             //
             // public static class Messages : IEnumerable<Message>
             //    {
@@ -103,7 +102,7 @@ namespace Lexicographer
                 // readonly is C# specific so not supported by CodeDom.
                 //
                 string name = message.Name;
-                
+
                 if (name == "SecurityStatus")
                 {
                     name = name + "Message";
@@ -112,12 +111,12 @@ namespace Lexicographer
                 var messageField = new CodeMemberField("readonly " + name, name)
                 {
                     Attributes = MemberAttributes.Public,
-                    InitExpression = new CodeObjectCreateExpression(name) 
+                    InitExpression = new CodeObjectCreateExpression(name)
                 };
 
                 messagesType.Members.Add(messageField);
             }
-        
+
             versionType.Members.Add(messagesType);
             dictionaryType.Members.Add(versionType);
 
@@ -170,7 +169,7 @@ namespace Lexicographer
                                         new CodePrimitiveExpression(name),
                                         new CodePrimitiveExpression(message.Description),
                                         new CodePrimitiveExpression(message.Added) }
-                                        
+
             };
             messageType.Members.Add(messageConstructor);
 
@@ -215,8 +214,8 @@ namespace Lexicographer
             return dictionaryType;
         }
 
-        int GenerateMessageFields(Fix.Repository.Version version, 
-                                  Fix.Repository.Message message, 
+        int GenerateMessageFields(Fix.Repository.Version version,
+                                  Fix.Repository.Message message,
                                   CodeTypeDeclaration messageType)
         {
             var fieldCollectionMember = new CodeMemberField(message.Name + "FieldCollection", "_fieldCollection")
@@ -279,7 +278,7 @@ namespace Lexicographer
             };
 
             fieldsType.Members.Add(fieldCollectionConstructor);
-       
+
             messageType.Members.Add(fieldsType);
 
             return itemsCreate.Initializers.Count;
@@ -327,18 +326,18 @@ namespace Lexicographer
                     }
 
                     definitions.Add(new FieldDefinition
-                                        {
-                                            Field = field,
-                                            Required = Convert.ToInt32(content.Reqd) != 0,
-                                            Indent = parentIndent + indent,
-                                            Added = content.Added
-                                        });
+                    {
+                        Field = field,
+                        Required = Convert.ToInt32(content.Reqd) != 0,
+                        Indent = parentIndent + indent,
+                        Added = content.Added
+                    });
                 }
                 else
                 {
                     Fix.Repository.Component component;
 
-                    if(!version.Components.TryGetValue(content.TagText, out component))
+                    if (!version.Components.TryGetValue(content.TagText, out component))
                     {
                         // TODO - better tell someone
                         continue;

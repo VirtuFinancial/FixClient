@@ -10,12 +10,12 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Reflection;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Fix
@@ -384,7 +384,7 @@ namespace Fix
         public Dictionary.Field Definition { get; set; }
         public bool Data { get; set; }
 
-        public static explicit operator bool (Field field)
+        public static explicit operator bool(Field field)
         {
             if (field.Value == "N" || field.Value == "n" || field.Value == "false" || field.Value == "0")
                 return false;
@@ -393,7 +393,7 @@ namespace Fix
             throw new Exception($"Field does not contain a valid boolean value {field}");
         }
 
-        public static explicit operator long? (Field field)
+        public static explicit operator long?(Field field)
         {
             long result;
             if (field == null || !long.TryParse(field.Value, out result))
@@ -401,12 +401,12 @@ namespace Fix
             return result;
         }
 
-        public static explicit operator string (Field field)
+        public static explicit operator string(Field field)
         {
             return field?.Value;
         }
 
-        public static explicit operator decimal? (Field field)
+        public static explicit operator decimal?(Field field)
         {
             decimal result;
             if (field == null || !decimal.TryParse(field.Value, out result))
@@ -414,7 +414,7 @@ namespace Fix
             return result;
         }
 
-        public static explicit operator DateTime? (Field field)
+        public static explicit operator DateTime?(Field field)
         {
             DateTime result;
 
@@ -432,7 +432,7 @@ namespace Fix
             return result;
         }
 
-        public static explicit operator Side? (Field field)
+        public static explicit operator Side?(Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
                 return null;
@@ -442,7 +442,7 @@ namespace Fix
             return (Fix.Side)Enum.ToObject(typeof(Fix.Side), value);
         }
 
-        public static explicit operator OrdStatus? (Field field)
+        public static explicit operator OrdStatus?(Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
                 return null;
@@ -452,7 +452,7 @@ namespace Fix
             return (Fix.OrdStatus)Enum.ToObject(typeof(Fix.OrdStatus), value);
         }
 
-        public static explicit operator TimeInForce? (Field field)
+        public static explicit operator TimeInForce?(Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
                 return null;
@@ -462,7 +462,7 @@ namespace Fix
             return (Fix.TimeInForce)Enum.ToObject(typeof(Fix.TimeInForce), value);
         }
 
-        public static explicit operator ExecType? (Field field)
+        public static explicit operator ExecType?(Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
                 return null;
@@ -472,7 +472,7 @@ namespace Fix
             return (Fix.ExecType)Enum.ToObject(typeof(Fix.ExecType), value);
         }
 
-        public static explicit operator OrdType? (Field field)
+        public static explicit operator OrdType?(Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
                 return null;
@@ -482,7 +482,7 @@ namespace Fix
             return (Fix.OrdType)Enum.ToObject(typeof(Fix.OrdType), value);
         }
 
-        public static explicit operator SecurityIDSource? (Field field)
+        public static explicit operator SecurityIDSource?(Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
                 return null;
@@ -492,7 +492,7 @@ namespace Fix
             return (Fix.SecurityIDSource)Enum.ToObject(typeof(Fix.SecurityIDSource), value);
         }
 
-        public static explicit operator ExecInst[] (Field field)
+        public static explicit operator ExecInst[](Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
                 return null;
@@ -523,7 +523,7 @@ namespace Fix
             return values.ToArray();
         }
 
-        public static explicit operator Dictionary.FIX_4_2.ExecType? (Field field)
+        public static explicit operator Dictionary.FIX_4_2.ExecType?(Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
                 return null;
@@ -533,7 +533,7 @@ namespace Fix
             return (Dictionary.FIX_4_2.ExecType)Enum.ToObject(typeof(Dictionary.FIX_4_2.ExecType), value);
         }
 
-        public static explicit operator Dictionary.FIX_4_0.ExecTransType? (Field field)
+        public static explicit operator Dictionary.FIX_4_0.ExecTransType?(Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
                 return null;
@@ -543,7 +543,7 @@ namespace Fix
             return (Dictionary.FIX_4_0.ExecTransType)Enum.ToObject(typeof(Dictionary.FIX_4_0.ExecTransType), value);
         }
 
-        public static explicit operator CxlRejResponseTo? (Field field)
+        public static explicit operator CxlRejResponseTo?(Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
                 return null;
@@ -553,7 +553,7 @@ namespace Fix
             return (Fix.CxlRejResponseTo)Enum.ToObject(typeof(Fix.CxlRejResponseTo), value);
         }
 
-        public static explicit operator TrdType? (Field field)
+        public static explicit operator TrdType?(Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
                 return null;
@@ -563,7 +563,7 @@ namespace Fix
             return (Fix.TrdType)Enum.ToObject(typeof(Fix.TrdType), value);
         }
 
-        public static explicit operator SessionStatus? (Field field)
+        public static explicit operator SessionStatus?(Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
                 return null;
@@ -673,7 +673,7 @@ namespace Fix
 
         public object Clone()
         {
-            return new Field(Tag, Value) {Definition = Definition};
+            return new Field(Tag, Value) { Definition = Definition };
         }
     }
 }

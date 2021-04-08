@@ -24,10 +24,10 @@ namespace Fix
         {
             const int DefaultInitialCapacity = 0;
 
-            static readonly string KeyTypeName = typeof (TKey).FullName;
-            static readonly string ValueTypeName = typeof (TValue).FullName;
+            static readonly string KeyTypeName = typeof(TKey).FullName;
+            static readonly string ValueTypeName = typeof(TValue).FullName;
 
-            static readonly bool ValueTypeIsReferenceType = !typeof (ValueType).IsAssignableFrom(typeof (TValue));
+            static readonly bool ValueTypeIsReferenceType = !typeof(ValueType).IsAssignableFrom(typeof(TValue));
 
             Dictionary<TKey, TValue> _dictionary;
             List<KeyValuePair<TKey, TValue>> _list;
@@ -67,7 +67,7 @@ namespace Fix
                 }
 
                 if (key is TKey)
-                    return (TKey) key;
+                    return (TKey)key;
 
                 throw new ArgumentException($"'{nameof(key)}' must be of type " + KeyTypeName, nameof(key));
             }
@@ -83,7 +83,7 @@ namespace Fix
                 }
 
                 if (value is TValue)
-                    return (TValue) value;
+                    return (TValue)value;
 
                 throw new ArgumentException($"'{nameof(value)}' must be of type " + ValueTypeName, nameof(value));
             }
@@ -245,7 +245,7 @@ namespace Fix
 
             ICollection IDictionary.Keys
             {
-                get { return (ICollection) Keys; }
+                get { return (ICollection)Keys; }
             }
 
             public int IndexOfKey(TKey key)
@@ -296,7 +296,7 @@ namespace Fix
 
             ICollection IDictionary.Values
             {
-                get { return (ICollection) Values; }
+                get { return (ICollection)Values; }
             }
 
             public TValue this[TKey key]
@@ -324,7 +324,7 @@ namespace Fix
 
             void ICollection.CopyTo(Array array, int index)
             {
-                ((ICollection) List).CopyTo(array, index);
+                ((ICollection)List).CopyTo(array, index);
             }
 
             public int Count
@@ -376,12 +376,12 @@ namespace Fix
 
             bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
             {
-                return ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).Contains(item);
+                return ((ICollection<KeyValuePair<TKey, TValue>>)Dictionary).Contains(item);
             }
 
             void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
             {
-                ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).CopyTo(array, arrayIndex);
+                ((ICollection<KeyValuePair<TKey, TValue>>)Dictionary).CopyTo(array, arrayIndex);
             }
 
             bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)

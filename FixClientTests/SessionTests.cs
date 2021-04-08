@@ -10,7 +10,6 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FixClientTests
@@ -152,7 +151,7 @@ namespace FixClientTests
             Assert.AreEqual(true, original.AutoTransactTime);
             Assert.AreEqual(true, original.AutoAllocId);
             Assert.AreEqual(true, original.AutoScrollMessages);
-            
+
             Assert.AreEqual(Fix.Behaviour.Acceptor, clone.OrderBehaviour);
             Assert.AreEqual(Fix.Dictionary.Versions.FIX_4_2, clone.BeginString);
             Assert.AreEqual(Fix.Dictionary.Versions.FIX_4_2, clone.DefaultApplVerId);
@@ -167,7 +166,7 @@ namespace FixClientTests
             Assert.AreEqual(2, clone.TestRequestId);
             Assert.AreEqual(false, clone.FragmentMessages);
             Assert.AreEqual(false, clone.AutoSendingTime);
-            Assert.AreEqual(@"D:\other\path\file.session", clone.FileName);   
+            Assert.AreEqual(@"D:\other\path\file.session", clone.FileName);
             Assert.AreEqual(Fix.Behaviour.Acceptor, clone.Behaviour);
             Assert.AreEqual("remotehost", clone.BindHost);
             Assert.AreEqual(30000, clone.BindPort);

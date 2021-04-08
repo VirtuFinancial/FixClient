@@ -10,11 +10,11 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 
 namespace FixClient
 {
-    class ToolStripRenderer : ToolStripProfessionalRenderer 
+    class ToolStripRenderer : ToolStripProfessionalRenderer
     {
         protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
         {

@@ -10,11 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fix
 {
@@ -166,28 +163,28 @@ namespace Fix
                     return false;
                 }
 
-                if(symbol == null)
+                if (symbol == null)
                 {
                     message.Status = MessageStatus.Error;
                     message.StatusMessage = StatusMessageHeader + " because there is no Symbol or SecurityID field";
                     return false;
                 }
 
-                if(lastQty == null)
+                if (lastQty == null)
                 {
                     message.Status = MessageStatus.Error;
                     message.StatusMessage = StatusMessageHeader + " because the LastQty field is missing";
                     return false;
                 }
 
-                if(lastPx == null)
+                if (lastPx == null)
                 {
                     message.Status = MessageStatus.Error;
                     message.StatusMessage = StatusMessageHeader + " because the LastPx field is missing";
                     return false;
                 }
 
-                if(trdType == null)
+                if (trdType == null)
                 {
                     message.Status = MessageStatus.Error;
                     message.StatusMessage = StatusMessageHeader + " because the TrdType field is missing";
@@ -199,9 +196,9 @@ namespace Fix
 
                 foreach (Field field in message.Fields)
                 {
-                    if(field.Tag == Dictionary.Fields.Side.Tag)
+                    if (field.Tag == Dictionary.Fields.Side.Tag)
                     {
-                        if(side != null)
+                        if (side != null)
                         {
                             report.SetSide(side);
                         }
@@ -215,7 +212,7 @@ namespace Fix
                     side?.Fields.Add(field);
                 }
 
-                if(side != null)
+                if (side != null)
                 {
                     report.SetSide(side);
                 }

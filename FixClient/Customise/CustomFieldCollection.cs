@@ -12,9 +12,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Xml;
 using System.IO;
 using System.Text;
+using System.Xml;
 
 namespace FixClient
 {
@@ -49,7 +49,7 @@ namespace FixClient
                 {
                     string category = c.Trim();
 
-                    if(category == String.Empty)
+                    if (category == String.Empty)
                         continue;
 
                     if (!_fields.ContainsKey(category))
@@ -66,11 +66,11 @@ namespace FixClient
 
         public Dictionary<string, CustomFieldCategory> Fields
         {
-            get 
-            { 
-                return _fields; 
+            get
+            {
+                return _fields;
             }
         }
-        
+
     }
 }

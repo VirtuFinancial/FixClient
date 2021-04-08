@@ -10,11 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.IO;
 
 namespace Fix.Parsers
@@ -40,24 +36,24 @@ namespace Fix.Parsers
         {
             Message message;
 
-            for (;;)
+            for (; ; )
             {
                 string line = reader.ReadLine();
 
-                if(line == null)
+                if (line == null)
                     return null;
 
                 bool incoming;
 
-                if(line.Contains("CLoggingMessageHandler::notifyOutgoing() message="))
+                if (line.Contains("CLoggingMessageHandler::notifyOutgoing() message="))
                 {
                     incoming = false;
                 }
-                else if(line.Contains("CLoggingMessageHandler::processIncoming() message="))
+                else if (line.Contains("CLoggingMessageHandler::processIncoming() message="))
                 {
                     incoming = true;
                 }
-                else 
+                else
                 {
                     continue;
                 }

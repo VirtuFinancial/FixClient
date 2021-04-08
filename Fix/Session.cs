@@ -10,15 +10,11 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+using Newtonsoft.Json;
+using System;
 using System.ComponentModel;
 using System.Reflection;
 using System.Timers;
-using Newtonsoft.Json;
 
 namespace Fix
 {
@@ -184,14 +180,14 @@ namespace Fix
 
         [Category(CategorySession)]
         [ReadOnly(false)]
-        [TypeConverter(typeof (Dictionary.BeginStringTypeConverter))]
+        [TypeConverter(typeof(Dictionary.BeginStringTypeConverter))]
         [JsonProperty]
         public Dictionary.Version BeginString { get; set; }
 
         [Category(CategorySession)]
         [DisplayName("Default Application Version")]
         [ReadOnly(false)]
-        [TypeConverter(typeof (Dictionary.ApplVerIdTypeConverter))]
+        [TypeConverter(typeof(Dictionary.ApplVerIdTypeConverter))]
         [JsonProperty]
         public Dictionary.Version DefaultApplVerId { get; set; }
 
@@ -330,13 +326,13 @@ namespace Fix
 
             var message = new Message
             {
-                Definition = definition, 
+                Definition = definition,
                 MsgType = definition.MsgType
             };
 
             foreach (Field field in template.Fields)
             {
-                if(!string.IsNullOrEmpty(field.Value))
+                if (!string.IsNullOrEmpty(field.Value))
                     message.Fields.Set(field);
             }
 
@@ -498,8 +494,8 @@ namespace Fix
 
             if (State == State.Resending)
             {
-                if(duplicate)
-                { 
+                if (duplicate)
+                {
                     if (message.MsgSeqNum != IncomingResentSeqNum)
                     {
                         OnError($"Fatal MsgSeqNum error during resend, received MsgSeqNum = {message.MsgSeqNum} when expecting {IncomingResentSeqNum} MsgType = {message.MsgType} disconnecting");
@@ -574,7 +570,7 @@ namespace Fix
             var reject = new Message { MsgType = Dictionary.Messages.Reject.MsgType };
             reject.Fields.Set(Dictionary.Fields.RefSeqNum, message.MsgSeqNum);
             reject.Fields.Set(Dictionary.Fields.Text, text);
-            Send(reject); 
+            Send(reject);
         }
 
         void SendLogout(string text)
@@ -609,12 +605,12 @@ namespace Fix
             }
             else
             {
-                if(message.BeginString != BeginString.BeginString)
-	            {
-            		OnError($"Invalid BeginString, received {message.BeginString} when expecting {BeginString.BeginString}");
-		            Close();
-		            return false;
-	            }                
+                if (message.BeginString != BeginString.BeginString)
+                {
+                    OnError($"Invalid BeginString, received {message.BeginString} when expecting {BeginString.BeginString}");
+                    Close();
+                    return false;
+                }
             }
 
             return true;
@@ -626,11 +622,11 @@ namespace Fix
 
             OnInformation($"Recoverable message sequence error, expected {beginSeqNo} received {received} - initiating recovery");
 
-            int endSeqNo = received;            
+            int endSeqNo = received;
             //
-	        // FIX 4.0 and FIX 4.1 used EndSeqNo 99999 to represent send me everthing
-	        // after BeginSeqNo, FIX 4.2 and greater use EndSeqNo 0 for the same purpose.
-	        //
+            // FIX 4.0 and FIX 4.1 used EndSeqNo 99999 to represent send me everthing
+            // after BeginSeqNo, FIX 4.2 and greater use EndSeqNo 0 for the same purpose.
+            //
             /*
 	         if (endSeqNo == 0 &&
                  (BeginString.BeginString == Dictionary.Versions.FIX_4_0.BeginString ||
@@ -647,7 +643,7 @@ namespace Fix
             Message resendRequest = ConstructMessage(Dictionary.Messages.ResendRequest);
             resendRequest.Fields.Set(Dictionary.Fields.BeginSeqNo, beginSeqNo);
             resendRequest.Fields.Set(Dictionary.Fields.EndSeqNo, endSeqNo);
-            Send(resendRequest); 
+            Send(resendRequest);
         }
 
         void ExpectResend(int beginSeqNo, int endSeqNo)
@@ -764,7 +760,7 @@ namespace Fix
 
             string computedBodyLength = Message.ComputeBodyLength(message);
 
-            if ( ! AreNumericallyEquivalent(bodyLength.Value, computedBodyLength) )
+            if (!AreNumericallyEquivalent(bodyLength.Value, computedBodyLength))
             {
                 OnError($"Received message with an invalid bodylength, expected {computedBodyLength} received {bodyLength.Value}");
                 return false;
@@ -779,7 +775,7 @@ namespace Fix
             {
                 return Convert.ToInt32(s1) == Convert.ToInt32(s2);
             }
-            catch(FormatException)
+            catch (FormatException)
             {
                 return false;
             }
@@ -857,16 +853,16 @@ namespace Fix
                 if (endSeqNo == 9999)
                     endSeqNo = 0;
             }
-	        //
-	        // When we send a GapFill the MsgSeqNum of the message must be the MsgSeqNum of the
-	        // first message being GapFilled.
-	        //
-	        bool gapFill = true;
-	        int gapFillStart = beginSeqNo;
+            //
+            // When we send a GapFill the MsgSeqNum of the message must be the MsgSeqNum of the
+            // first message being GapFilled.
+            //
+            bool gapFill = true;
+            int gapFillStart = beginSeqNo;
 
 
             var localMessages = (MessageCollection)Messages.Clone();
-            
+
             lock (localMessages)
             {
                 foreach (Message message in localMessages)
@@ -897,7 +893,7 @@ namespace Fix
                     {
                         if (message.MsgSeqNum > beginSeqNo)
                         {
-                            var reset = new Message {MsgType = Dictionary.Messages.SequenceReset.MsgType};
+                            var reset = new Message { MsgType = Dictionary.Messages.SequenceReset.MsgType };
                             reset.Fields.Set(Dictionary.Fields.MsgSeqNum, gapFillStart);
                             reset.Fields.Set(Dictionary.Fields.GapFillFlag, true);
                             reset.Fields.Set(Dictionary.Fields.PossDupFlag, true);
@@ -907,25 +903,25 @@ namespace Fix
                         gapFill = false;
                     }
 
-                    var duplicate = (Message) message.Clone();
+                    var duplicate = (Message)message.Clone();
                     duplicate.Fields.Set(Dictionary.Fields.OrigSendingTime, message.SendingTime);
                     duplicate.Fields.Set(Dictionary.Fields.PossDupFlag, true);
                     Send(duplicate, false);
                 }
             }
             //
-	        // If there were no non-admin messages at the end of the sequence make sure we send a GapFill
-	        // and set the NewSeqNo correctly.
-	        //
-	        if(gapFill)
-	        {
+            // If there were no non-admin messages at the end of the sequence make sure we send a GapFill
+            // and set the NewSeqNo correctly.
+            //
+            if (gapFill)
+            {
                 var reset = new Message { MsgType = Dictionary.Messages.SequenceReset.MsgType };
                 reset.Fields.Set(Dictionary.Fields.MsgSeqNum, gapFillStart);
                 reset.Fields.Set(Dictionary.Fields.GapFillFlag, true);
                 reset.Fields.Set(Dictionary.Fields.PossDupFlag, true);
                 reset.Fields.Set(Dictionary.Fields.NewSeqNo, OutgoingSeqNum);
                 Send(reset, false);
-	        }
+            }
         }
 
         void SendTestRequest()
@@ -970,10 +966,10 @@ namespace Fix
             _testRequestTimer = null;
 
             StopDefibrillator();
-            
+
             if (HeartBtInt == 0)
                 return;
-            
+
             _heartbeatTimer = new Timer((HeartBtInt - 1) * 1000)
             {
                 Interval = HeartBtInt * 1000,
@@ -1004,7 +1000,7 @@ namespace Fix
 
             if (heartBtInt == null)
             {
-                const string text = "Logon message does not contain a HeartBtInt"; 
+                const string text = "Logon message does not contain a HeartBtInt";
                 OnError(text);
                 SendReject(message, text);
                 SendLogout(text);
@@ -1122,7 +1118,7 @@ namespace Fix
             {
                 var text = $"MsgSeqNum too low, expecting {IncomingSeqNum} but received {message.MsgSeqNum}";
                 OnError(text);
-                SendLogout(text); 
+                SendLogout(text);
                 return false;
             }
 

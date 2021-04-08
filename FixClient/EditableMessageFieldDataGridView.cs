@@ -10,15 +10,10 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
+using System;
 using System.Data;
-using System.Linq;
-using System.Text;
+using System.Drawing;
 using System.Windows.Forms;
-using System.Reflection;
 
 namespace FixClient
 {
@@ -61,19 +56,19 @@ namespace FixClient
                 _toolTip.Hide(comboBox);
             }
         }
-       
+
         void ComboBoxDrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0)
                 return;
-            
+
             var comboBox = sender as ComboBox;
-            
+
             if (comboBox == null)
                 return;
-            
+
             string text = comboBox.GetItemText(comboBox.Items[e.Index]);
-            
+
             e.DrawBackground();
 
             using (SolidBrush br = new SolidBrush(e.ForeColor))
@@ -95,7 +90,7 @@ namespace FixClient
             {
                 _toolTip.Hide(comboBox);
             }
-            
+
             e.DrawFocusRectangle();
         }
 
@@ -105,7 +100,7 @@ namespace FixClient
             // Prevent the combobox from showing in the description column if this field
             // is not an enumeration.
             //
-            if(Columns[e.ColumnIndex].Name != FieldDataTable.ColumnDescription) 
+            if (Columns[e.ColumnIndex].Name != FieldDataTable.ColumnDescription)
                 return;
 
             Fix.Field field = FieldAtIndex(e.RowIndex);
@@ -149,7 +144,7 @@ namespace FixClient
                     cell.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
                     cell.ReadOnly = false;
                     cell.DataSource = collection;
-                    
+
                     if (EnumTypeHasNumericValues(enumType))
                     {
                         int value;
@@ -179,7 +174,7 @@ namespace FixClient
         bool EnumTypeHasNumericValues(Type enumType)
         {
             // TODO - we need a better way of doing type equality for version specific enums against the global definitions
-            return enumType.Name == typeof(Fix.TrdType).Name || 
+            return enumType.Name == typeof(Fix.TrdType).Name ||
                    enumType.Name == typeof(Fix.SessionStatus).Name;
         }
 
@@ -194,10 +189,10 @@ namespace FixClient
             DataGridViewColumn column = Columns[e.ColumnIndex];
             DataGridViewRow row = Rows[e.RowIndex];
             var rowView = row.DataBoundItem as DataRowView;
-            
+
             if (rowView == null)
                 return;
-                
+
             var dataRow = rowView.Row as FieldDataRow;
 
             if (dataRow == null)
@@ -233,15 +228,15 @@ namespace FixClient
                         converted = (Convert.ToChar(Convert.ToInt32(CurrentCell.Value))).ToString(System.Globalization.CultureInfo.InvariantCulture);
                     }
                 }
-                
+
                 dataRow[FieldDataTable.ColumnValue] = converted;
                 Message.Fields[index].Value = converted;
                 return;
             }
-                
+
             if (column.Name != FieldDataTable.ColumnValue)
                 return;
-            
+
             DataGridViewCell cell = row.Cells[FieldDataTable.ColumnValue];
 
             string value = cell.Value == null ? "" : cell.Value.ToString().Trim();
@@ -303,11 +298,11 @@ namespace FixClient
                 comboCell.DataSource = new EnumDescriptionCollection(enumType);
                 comboCell.ValueMember = FieldDataTable.ColumnValue;
                 comboCell.DisplayMember = FieldDataTable.ColumnDescription;
-                
+
                 if (EnumTypeHasNumericValues(enumType))
                 {
                     int i;
-                    if(int.TryParse(CurrentCell.Value.ToString(), out i))
+                    if (int.TryParse(CurrentCell.Value.ToString(), out i))
                     {
                         comboCell.Value = i;
                     }

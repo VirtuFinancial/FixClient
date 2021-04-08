@@ -10,10 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using System.Reflection;
 
 namespace FixClient
 {
@@ -95,7 +93,7 @@ namespace FixClient
                 SelectedObject = _options
             };
             _propertyGrid.PropertyValueChanged += PropertyGridPropertyValueChanged;
-            _propertyGrid.Layout += (sender, ev) => MoveSplitter(_propertyGrid, 190); 
+            _propertyGrid.Layout += (sender, ev) => MoveSplitter(_propertyGrid, 190);
 
             var panel1 = new BorderHidingPanel(_propertyGrid) { Dock = DockStyle.Fill };
 

@@ -10,15 +10,15 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace FixClient
 {
@@ -57,7 +57,7 @@ namespace FixClient
 
         protected void OnCustomFieldAdded(CustomField field)
         {
-             CustomFieldAdded?.Invoke(this, new CustomFieldEventArgs(field));
+            CustomFieldAdded?.Invoke(this, new CustomFieldEventArgs(field));
         }
 
         #endregion
@@ -92,7 +92,7 @@ namespace FixClient
         }
 
         public Session(Session session)
-        :   base(session)
+        : base(session)
         {
             Behaviour = session.Behaviour;
             BindHost = session.BindHost;
@@ -132,13 +132,13 @@ namespace FixClient
         [Category(CategoryNetwork)]
         [JsonProperty]
         public Fix.Behaviour Behaviour { get; set; }
-        
+
         [Category(CategoryNetwork)]
         [DisplayName("Bind Host")]
         [ReadOnly(false)]
         [JsonProperty]
         public string BindHost { get; set; }
-        
+
         [Category(CategoryNetwork)]
         [DisplayName("Bind Port")]
         [ReadOnly(false)]
@@ -148,7 +148,7 @@ namespace FixClient
         [Category(CategoryNetwork)]
         [JsonProperty]
         public string Host { get; set; }
-        
+
         [Category(CategoryNetwork)]
         [JsonProperty]
         public int Port { get; set; }
@@ -262,7 +262,7 @@ namespace FixClient
         public Fix.TradeReportBook TradeBook { get; } = new Fix.TradeReportBook();
 
         #region Options for the paste message dialog
-        
+
         [Browsable(false)]
         [JsonProperty]
         public bool PasteDefineCustomFields { get; set; } = true;
@@ -485,7 +485,7 @@ namespace FixClient
             {
                 FieldFilterChanged(this, null);
             }
-            
+
             WriteFilters();
         }
 
@@ -524,7 +524,7 @@ namespace FixClient
             {
                 filters = new Dictionary<int, bool>();
                 _fieldFilters[msgType] = filters;
-            } 
+            }
             _fieldFilters[msgType][tag] = visible;
             OnFieldFilterChanged();
         }
@@ -535,7 +535,7 @@ namespace FixClient
 
             if (!_fieldFilters.TryGetValue(msgType, out filters))
                 return true;
-            
+
             bool visible;
 
             if (!filters.TryGetValue(tag, out visible))
@@ -642,7 +642,7 @@ namespace FixClient
                         {
                             AddCustomField(new CustomField
                             {
-                               
+
                                 Tag = Convert.ToInt32(field["Tag"]),
                                 Name = field["Name"].ToString()
                             });
@@ -716,7 +716,7 @@ namespace FixClient
                                 MessageVisible(message.MsgType, false);
                                 break;
                             }
-                        }    
+                        }
                     }
                     JToken fields = filters["Fields"];
                     foreach (var entry in fields)
@@ -810,10 +810,10 @@ namespace FixClient
             try
             {
                 _messageTemplates.Clear();
-                using(Stream stream = new FileStream(TemplatesFileName, FileMode.OpenOrCreate, FileAccess.Read))
+                using (Stream stream = new FileStream(TemplatesFileName, FileMode.OpenOrCreate, FileAccess.Read))
                 using (Fix.Reader reader = new Fix.Reader(stream) { ValidateDataFields = false })
                 {
-                    for (;;)
+                    for (; ; )
                     {
                         try
                         {
@@ -847,7 +847,7 @@ namespace FixClient
 
         public void WriteTemplates()
         {
-            using (Fix.Writer writer = new Fix.Writer(new FileStream(TemplatesFileName, FileMode.Create), leaveOpen:false))
+            using (Fix.Writer writer = new Fix.Writer(new FileStream(TemplatesFileName, FileMode.Create), leaveOpen: false))
             {
                 foreach (Fix.Message message in _messageTemplates.Values)
                 {
@@ -877,7 +877,7 @@ namespace FixClient
                 if (info.GetCustomAttributes(typeof(JsonPropertyAttribute), false).Length == 0)
                     continue;
 
-                info.SetValue(this, info.GetValue(source));    
+                info.SetValue(this, info.GetValue(source));
             }
         }
 

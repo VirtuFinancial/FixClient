@@ -10,7 +10,6 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
 using System.Data;
 
 namespace FixClient
@@ -18,7 +17,7 @@ namespace FixClient
     public class FieldDataRow : DataRow
     {
         public FieldDataRow(DataRowBuilder builder)
-        :   base(builder)
+        : base(builder)
         {
         }
 

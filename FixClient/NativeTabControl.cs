@@ -10,7 +10,6 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -49,6 +48,6 @@ namespace FixClient
             public int Bottom;
         }
 
-    } 
+    }
 
 }

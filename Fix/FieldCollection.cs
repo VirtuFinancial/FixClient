@@ -10,10 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Fix
 {
@@ -225,8 +224,8 @@ namespace Fix
 
         public Field Find(int tag)
         {
-            return (from Field field in _fields 
-                    where field.Tag == tag 
+            return (from Field field in _fields
+                    where field.Tag == tag
                     select field).FirstOrDefault();
         }
 
@@ -246,7 +245,7 @@ namespace Fix
 
         public Field FindFrom(int tag, ref int index)
         {
-            if(index < 0 || index >= _fields.Count)
+            if (index < 0 || index >= _fields.Count)
                 throw new IndexOutOfRangeException();
 
             for (; index < _fields.Count; ++index)
@@ -311,7 +310,7 @@ namespace Fix
         {
             return from Field field in _fields.GetRange(index, count) select (Field)field.Clone();
         }
-   
+
         #region IEnumerable<Field>
 
         public IEnumerator<Field> GetEnumerator()

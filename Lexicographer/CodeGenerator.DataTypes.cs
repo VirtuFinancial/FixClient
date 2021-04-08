@@ -10,10 +10,6 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.CodeDom;
 
 namespace Lexicographer
@@ -76,7 +72,7 @@ namespace Lexicographer
                 };
                 dataTypesType.Members.Add(field);
             }
-         
+
             var itemsCreate = new CodeArrayCreateExpression("System.String");
             var assign = new CodeAssignStatement(new CodeVariableReferenceExpression("_dataTypes"), itemsCreate);
 
@@ -87,13 +83,13 @@ namespace Lexicographer
             dataTypeCollectionConstructor.Statements.Add(assign);
 
             dataTypesType.Members.Add(dataTypeCollectionConstructor);
-            
+
             foreach (string dataType in version.DataTypes)
             {
                 string typeName = dataType[0].ToString().ToUpper() + dataType.Substring(1);
                 itemsCreate.Initializers.Add(new CodeTypeReferenceExpression(typeName));
             }
-          
+
             versionType.Members.Add(dataTypesType);
             dictionaryType.Members.Add(versionType);
 

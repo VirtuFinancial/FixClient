@@ -20,7 +20,7 @@ namespace FixClient
     {
         readonly FlowLayoutPanel _controlPanel;
         readonly CheckBox _checkBox = new CheckBox();
-         
+
         public ToolStripCheckBox() : base(new FlowLayoutPanel())
         {
             _controlPanel = (FlowLayoutPanel)Control;
@@ -45,7 +45,7 @@ namespace FixClient
             }
         }
 
-        public event EventHandler CheckChanged;        
+        public event EventHandler CheckChanged;
 
         public bool Checked
         {
@@ -59,7 +59,7 @@ namespace FixClient
             set { _checkBox.Text = value; }
         }
 
-        
+
 
     }
 }

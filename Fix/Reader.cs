@@ -10,11 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 using System.IO;
+using System.Text;
 
 namespace Fix
 {
@@ -68,7 +66,7 @@ namespace Fix
             try
             {
                 char lastChar = ReadChar();
-                for (;;)
+                for (; ; )
                 {
                     char newChar = ReadChar();
                     if (lastChar == '\r' && newChar == '\n')
@@ -92,11 +90,11 @@ namespace Fix
                 {
                     throw new Exception($"Invalid direction prefix, expected '<' or '>', received '{direction}'");
                 }
-                
+
                 message = Read();
                 message.Incoming = direction == '<';
 
-                for (;;)
+                for (; ; )
                 {
                     char c = PeekChar();
                     if (c == '\r' || c == '\n')
@@ -119,14 +117,14 @@ namespace Fix
         {
             Field previous = null;
 
-            for (long index = 0;; ++index)
+            for (long index = 0; ; ++index)
             {
                 _tag.Length = 0;
                 _value.Length = 0;
 
                 char token;
 
-                for (;;)
+                for (; ; )
                 {
                     token = ReadChar();
 
@@ -138,7 +136,7 @@ namespace Fix
 
                 Dictionary.Field definition = null;
 
-                if (ValidateDataFields && 
+                if (ValidateDataFields &&
                     Dictionary.Fields.TryGetValue(_tag.ToString(), out definition) &&
                     definition != null &&
                     definition.DataType == Dictionary.DataTypes.Data)
@@ -154,9 +152,9 @@ namespace Fix
                     {
                         throw new Exception($"Encountered a data type field at index {index} [{definition.Tag}] but the previous field {previous} was not numeric");
                     }
-                    
+
                     byte[] bytes = new byte[dataLength];
-                    if(ReadChars(bytes, 0, bytes.Length) != bytes.Length)
+                    if (ReadChars(bytes, 0, bytes.Length) != bytes.Length)
                         throw new EndOfStreamException();
                     _value.Append(Convert.ToBase64String(bytes));
 
@@ -234,10 +232,10 @@ namespace Fix
 
             int result = _stream.ReadByte();
 
-            if(result == -1)
+            if (result == -1)
                 throw new EndOfStreamException();
 
-            return (char) result;
+            return (char)result;
         }
 
         int ReadChars(byte[] buffer, int offset, int count)
@@ -251,7 +249,7 @@ namespace Fix
 
             int result = _stream.Read(buffer, offset, count);
 
-            if(result == -1)
+            if (result == -1)
                 throw new EndOfStreamException();
 
             return result;

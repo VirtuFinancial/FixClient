@@ -10,18 +10,17 @@
 //
 /////////////////////////////////////////////////
 
-using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace FixClient
 {
-	public partial class FieldDataGridView : DataGridView
-	{
-		public FieldDataGridView()
-		{
-			InitializeComponent();
+    public partial class FieldDataGridView : DataGridView
+    {
+        public FieldDataGridView()
+        {
+            InitializeComponent();
 
             EnableHeadersVisualStyles = false;
             ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -32,19 +31,19 @@ namespace FixClient
             ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             ColumnHeadersHeight -= 3;
             BackgroundColor = LookAndFeel.Color.GridCellBackground;
-			BorderStyle = BorderStyle.None;
-			SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-			MultiSelect = false;
-			RowHeadersVisible = false;
-			DefaultCellStyle.WrapMode = DataGridViewTriState.False;
-			RowTemplate.Resizable = DataGridViewTriState.False;
-			AllowUserToAddRows = false;
+            BorderStyle = BorderStyle.None;
+            SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            MultiSelect = false;
+            RowHeadersVisible = false;
+            DefaultCellStyle.WrapMode = DataGridViewTriState.False;
+            RowTemplate.Resizable = DataGridViewTriState.False;
+            AllowUserToAddRows = false;
             AllowUserToDeleteRows = false;
-			ReadOnly = true;
-			CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            ReadOnly = true;
+            CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             GridColor = LookAndFeel.Color.Grid;
             DefaultCellStyle.BackColor = LookAndFeel.Color.GridCellBackground;
-			DefaultCellStyle.Padding = new Padding(3, 0, 3, 0);
+            DefaultCellStyle.Padding = new Padding(3, 0, 3, 0);
             DefaultCellStyle.SelectionBackColor = LookAndFeel.Color.GridCellSelectedBackground;
             DefaultCellStyle.SelectionForeColor = LookAndFeel.Color.GridCellSelectedForeground;
             DefaultCellStyle.Font = new Font("Arial", 8);
@@ -72,7 +71,7 @@ namespace FixClient
 
         protected override void OnColumnAdded(DataGridViewColumnEventArgs e)
         {
-            switch(e.Column.Name)
+            switch (e.Column.Name)
             {
                 case FieldDataTable.ColumnIndent:
                     e.Column.Width = 20;
@@ -158,5 +157,5 @@ namespace FixClient
 
             RefreshEdit();
         }
-	}
+    }
 }

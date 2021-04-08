@@ -10,11 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 using System.IO;
+using System.Text;
 
 namespace Fix
 {
@@ -89,12 +87,12 @@ namespace Fix
 
                     lock (_writer)
                     {
-                        _writer.Write(stream.GetBuffer(), 0, (int) stream.Length);
+                        _writer.Write(stream.GetBuffer(), 0, (int)stream.Length);
                     }
                 }
             }
 
-            OnMessageWritten(message);        
+            OnMessageWritten(message);
         }
 
         void Write(BinaryWriter writer, Message message)
@@ -124,8 +122,8 @@ namespace Fix
         {
             WriteMessage(message);
             _writer.Flush();
-        }   
-        
+        }
+
         public void WriteLine(Message message)
         {
             _writer.Write(Encoding.ASCII.GetBytes(message.Incoming ? "<" : ">"));

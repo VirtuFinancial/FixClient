@@ -10,11 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
 
 namespace Fix
@@ -47,7 +44,7 @@ namespace Fix
 
             public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
             {
-                if (sourceType == typeof (string))
+                if (sourceType == typeof(string))
                     return true;
                 return base.CanConvertFrom(context, sourceType);
             }

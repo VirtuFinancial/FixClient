@@ -10,13 +10,12 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Linq;
+using System;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms;
-using System.ComponentModel;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace FixClient
 {
@@ -75,7 +74,7 @@ namespace FixClient
                 DataPropertyName = FieldDataTable.ColumnTag,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells,
                 ReadOnly = true,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft}
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft }
             };
             Columns.Add(column);
 
@@ -209,7 +208,7 @@ namespace FixClient
 
             e.ToolTipText = ToolTipForCell(e.RowIndex, e.ColumnIndex, enumValue);
         }
-    
+
         protected override void OnCellFormatting(DataGridViewCellFormattingEventArgs e)
         {
             try
@@ -232,7 +231,7 @@ namespace FixClient
 
                     if (customValue != null && customValue != DBNull.Value)
                     {
-                        custom = (bool) customValue;
+                        custom = (bool)customValue;
                     }
 
                     if (custom)
@@ -242,7 +241,7 @@ namespace FixClient
                     else
                     {
                         object requiredValue = dataRow[FieldDataTable.ColumnRequired];
-                        var required = (bool) requiredValue;
+                        var required = (bool)requiredValue;
                         e.CellStyle.ForeColor = required ? LookAndFeel.Color.Incoming : LookAndFeel.Color.Outgoing;
                     }
                 }

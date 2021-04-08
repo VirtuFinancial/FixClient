@@ -32,7 +32,7 @@ namespace FixClient
                 return true;
             if (ReferenceEquals(null, rhs)) return false;
             if (ReferenceEquals(lhs, null)) return false;
-            return lhs.Tag  == rhs.Tag;
+            return lhs.Tag == rhs.Tag;
         }
 
         public static bool operator !=(CustomField lhs, CustomField rhs)
@@ -61,5 +61,5 @@ namespace FixClient
         }
     }
 
-    
+
 }

@@ -11,26 +11,25 @@
 /////////////////////////////////////////////////
 
 using System.Collections;
-using System.Resources;
 using System.Windows.Forms;
 
 namespace FixClient
 {
-	/// <summary>
-	/// Allows tabbing through items and has globalized tooltips.
-	/// </summary>
-	public class CustomPropertyGrid : PropertyGrid
-	{
-	    //ResourceManager _rm;
-	 
-	    public CustomPropertyGrid()
+    /// <summary>
+    /// Allows tabbing through items and has globalized tooltips.
+    /// </summary>
+    public class CustomPropertyGrid : PropertyGrid
+    {
+        //ResourceManager _rm;
+
+        public CustomPropertyGrid()
         {
-	        Refresh();
-	    }
-        
+            Refresh();
+        }
+
         public bool ExpandOnTab { get; set; }
 
-		/*
+        /*
 	    public override void Refresh() {
 	        if (_rm == null) {
 	            _rm = new ResourceManager(GetType());
@@ -61,61 +60,71 @@ namespace FixClient
 	    }
 		*/
 
-	 	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-		{
-			if ((keyData == Keys.Tab) || (keyData == (Keys.Tab | Keys.Shift)))
-			{
-			    GridItem selectedItem = SelectedGridItem;
-				GridItem root = selectedItem;
-				while (root.Parent != null) {
-					root = root.Parent;
-				}
-				// Find all expanded items and put them in a list.
-				var items = new ArrayList();
-				AddExpandedItems(root, items);
-			    if (selectedItem != null) {
-			        // Find selectedItem.
-			        int foundIndex = items.IndexOf(selectedItem);
-			        if ((keyData & Keys.Shift) == Keys.Shift) {
-			            foundIndex--;
-    			        if (foundIndex < 0) {
-    			            foundIndex = items.Count - 1;
-    			        }
-						SelectedGridItem = (GridItem)items[foundIndex];
-						if (ExpandOnTab && (SelectedGridItem.GridItems.Count > 0))
-						{
-							SelectedGridItem.Expanded = false;
-						}
-			        } else {
-    			        foundIndex++;
-    			        if (foundIndex >= items.Count) {
-			            	foundIndex = 0;
-    			        }
-						SelectedGridItem = (GridItem)items[foundIndex];
-						if (ExpandOnTab && (SelectedGridItem.GridItems.Count > 0))
-						{
-							SelectedGridItem.Expanded = true;
-						}
-			        }
-
-				    return true;
-			    }
-			}
-
-			return base.ProcessCmdKey(ref msg, keyData);
-		}
-
-		void AddExpandedItems(GridItem parent, IList items)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-			if (parent.PropertyDescriptor != null) {
-				items.Add(parent);
-			}
-			if (parent.Expanded) {
-				foreach (GridItem child in parent.GridItems) {
-					AddExpandedItems(child, items);
-				}
-			}
-		}
-	}
+            if ((keyData == Keys.Tab) || (keyData == (Keys.Tab | Keys.Shift)))
+            {
+                GridItem selectedItem = SelectedGridItem;
+                GridItem root = selectedItem;
+                while (root.Parent != null)
+                {
+                    root = root.Parent;
+                }
+                // Find all expanded items and put them in a list.
+                var items = new ArrayList();
+                AddExpandedItems(root, items);
+                if (selectedItem != null)
+                {
+                    // Find selectedItem.
+                    int foundIndex = items.IndexOf(selectedItem);
+                    if ((keyData & Keys.Shift) == Keys.Shift)
+                    {
+                        foundIndex--;
+                        if (foundIndex < 0)
+                        {
+                            foundIndex = items.Count - 1;
+                        }
+                        SelectedGridItem = (GridItem)items[foundIndex];
+                        if (ExpandOnTab && (SelectedGridItem.GridItems.Count > 0))
+                        {
+                            SelectedGridItem.Expanded = false;
+                        }
+                    }
+                    else
+                    {
+                        foundIndex++;
+                        if (foundIndex >= items.Count)
+                        {
+                            foundIndex = 0;
+                        }
+                        SelectedGridItem = (GridItem)items[foundIndex];
+                        if (ExpandOnTab && (SelectedGridItem.GridItems.Count > 0))
+                        {
+                            SelectedGridItem.Expanded = true;
+                        }
+                    }
+
+                    return true;
+                }
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        void AddExpandedItems(GridItem parent, IList items)
+        {
+            if (parent.PropertyDescriptor != null)
+            {
+                items.Add(parent);
+            }
+            if (parent.Expanded)
+            {
+                foreach (GridItem child in parent.GridItems)
+                {
+                    AddExpandedItems(child, items);
+                }
+            }
+        }
+    }
 }
 

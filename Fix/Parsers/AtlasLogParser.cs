@@ -10,11 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -33,7 +29,7 @@ namespace Fix.Parsers
             string direction;
             string body = string.Empty;
 
-            for (;;)
+            for (; ; )
             {
                 try
                 {

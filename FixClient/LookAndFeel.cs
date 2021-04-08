@@ -10,10 +10,6 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace FixClient
 {
@@ -40,7 +36,7 @@ namespace FixClient
             public static readonly System.Drawing.Color Grid = System.Drawing.Color.FromArgb(255, 239, 239, 242);
             public static readonly System.Drawing.Color GridCellSelectedBackground = System.Drawing.Color.FromArgb(255, 0, 122, 204);
             public static readonly System.Drawing.Color GridCellSelectedForeground = System.Drawing.Color.WhiteSmoke;
-        
+
             public static readonly System.Drawing.Color Custom = System.Drawing.Color.Brown;
             public static readonly System.Drawing.Color Incoming = System.Drawing.Color.FromArgb(255, 0, 128, 0);
             public static readonly System.Drawing.Color Outgoing = System.Drawing.Color.FromArgb(255, 0, 70, 204);

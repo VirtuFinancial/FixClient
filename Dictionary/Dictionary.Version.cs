@@ -10,11 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.ComponentModel;
 
 namespace Fix
 {
@@ -62,7 +60,7 @@ namespace Fix
 
             #endregion
 
-            public static bool operator==(Version a, Version b)
+            public static bool operator ==(Version a, Version b)
             {
                 if (ReferenceEquals(a, b))
                     return true;
@@ -93,7 +91,7 @@ namespace Fix
 
             public virtual IEnumerator<Version> GetEnumerator()
             {
-                foreach(Version version in _versions)
+                foreach (Version version in _versions)
                     yield return version;
             }
 

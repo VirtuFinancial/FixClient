@@ -10,8 +10,6 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -42,8 +40,8 @@ namespace Fix
             public virtual IEnumerator<Field> GetEnumerator() => _fields.OrderedValues.GetEnumerator();
 
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
-          
-            readonly OrderedDictionary<int, Field> _fields = new OrderedDictionary<int, Field>(); 
+
+            readonly OrderedDictionary<int, Field> _fields = new OrderedDictionary<int, Field>();
 
         }
     }

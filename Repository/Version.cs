@@ -10,11 +10,10 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace Fix.Repository
@@ -56,20 +55,20 @@ namespace Fix.Repository
                                  where Path.GetFileName(entry).ToUpper().StartsWith("EP")
                                  select Path.GetFileName(entry)).OrderByDescending(entry => entry, new DirectoryComparer()).FirstOrDefault();
 
-            if(!string.IsNullOrEmpty(mostRecent))
+            if (!string.IsNullOrEmpty(mostRecent))
             {
                 extension = mostRecent;
             }
-            
+
             directory += "/" + extension;
-            
+
             var customMessages = new List<Message>();
 
             using (FileStream fs = new FileStream(directory + "/Messages.xml", FileMode.Open))
             {
                 var ser = new XmlSerializer(typeof(Messages));
                 var m = (Messages)ser.Deserialize(fs);
-                foreach(Message message in m.Items)
+                foreach (Message message in m.Items)
                 {
                     Messages.Add((Message)message.Clone());
 
@@ -163,7 +162,7 @@ namespace Fix.Repository
                 {
                     var clone = (MsgContent)content.Clone();
                     List<MsgContent> contents;
-                    if(!MsgContents.TryGetValue(clone.ComponentID, out contents))
+                    if (!MsgContents.TryGetValue(clone.ComponentID, out contents))
                     {
                         contents = new List<MsgContent>();
                         MsgContents[clone.ComponentID] = contents;
@@ -265,9 +264,9 @@ namespace Fix.Repository
                 ["O"] = "Odd Lot - Semi - Automatic"
             };
 
-           // int tag = enums.Items.Max(e => e.Tag) + 1;
+            // int tag = enums.Items.Max(e => e.Tag) + 1;
 
-            foreach(var entry in definitions)
+            foreach (var entry in definitions)
             {
                 string symbolicName = entry.Value.Replace(" ", "").Replace("-", "");
                 var value = new Enum

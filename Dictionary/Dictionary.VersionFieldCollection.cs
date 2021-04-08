@@ -10,8 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
@@ -38,7 +37,7 @@ namespace Fix
 
             public virtual Field this[string tag]
             {
-                get 
+                get
                 {
                     Field field;
                     if (!TryGetValue(tag, out field))
@@ -88,7 +87,7 @@ namespace Fix
             {
                 FieldInfo info = GetType().GetField(tag, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
 
-                if(info != null && info.FieldType == typeof(Field))
+                if (info != null && info.FieldType == typeof(Field))
                 {
                     field = (Field)info.GetValue(this);
                     return true;

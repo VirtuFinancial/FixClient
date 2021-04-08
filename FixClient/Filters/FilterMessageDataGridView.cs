@@ -10,7 +10,6 @@
 //
 /////////////////////////////////////////////////
 
-using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -64,13 +63,14 @@ namespace FixClient
                 ReadOnly = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells,
                 Name = "Type",
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleCenter}
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             };
             Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn
             {
-                ReadOnly = true, AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                ReadOnly = true,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 Name = "Name"
             };
             Columns.Add(column);

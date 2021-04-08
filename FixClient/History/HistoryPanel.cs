@@ -10,14 +10,13 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms;
 using System.IO;
-using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 
 namespace FixClient
 {
@@ -34,10 +33,10 @@ namespace FixClient
 
         readonly SearchTextBox _messageSearchTextBox;
         readonly SearchTextBox _fieldSearchTextBox;
-       
+
         readonly TextBox _rawMessage;
         readonly TextBox _statusMessage;
-            
+
         readonly ToolStripButton _clearButton;
         readonly ToolStripButton _resendButton;
         readonly ToolStripButton _exportButton;
@@ -46,7 +45,7 @@ namespace FixClient
         readonly ToolStripMenuItem _clearMenuItem;
         readonly ToolStripMenuItem _resendMenuItem;
         readonly ToolStripMenuItem _exportMenuItem;
-    
+
         Session _session;
         //
         // This event is used by the mainform to updated the context of the dictionary view
@@ -65,35 +64,35 @@ namespace FixClient
                 BackColor = LookAndFeel.Color.ToolStrip,
                 Renderer = new ToolStripRenderer()
             };
-            
+
 
             _clearButton = new ToolStripButton
-                               {
-                                   Image = Properties.Resources.Clear,
-                                   ImageTransparentColor = Color.Magenta,
-                                   ToolTipText = "Clear all session messages"
-                               };
+            {
+                Image = Properties.Resources.Clear,
+                ImageTransparentColor = Color.Magenta,
+                ToolTipText = "Clear all session messages"
+            };
             _clearButton.Click += ClearButtonClick;
 
             _resendButton = new ToolStripButton
-                                {
-                                    Image = Properties.Resources.Send,
-                                    ImageTransparentColor = Color.White,
-                                    ToolTipText = "Resend the selected message"
-                                };
+            {
+                Image = Properties.Resources.Send,
+                ImageTransparentColor = Color.White,
+                ToolTipText = "Resend the selected message"
+            };
             _resendButton.Click += ResendButtonClick;
-         
+
             _exportButton = new ToolStripButton
-                                {
-                                    Image = Properties.Resources.Export,
-                                    ImageTransparentColor = Color.Magenta,
-                                    ToolTipText = "Export the message history to a text file"
-                                };
+            {
+                Image = Properties.Resources.Export,
+                ImageTransparentColor = Color.Magenta,
+                ToolTipText = "Export the message history to a text file"
+            };
             _exportButton.Click += ExportButtonClick;
-        
+
             _tailMessagesCheckBox = new ToolStripCheckBox();
             _tailMessagesCheckBox.CheckChanged += TailMessagesCheckBoxCheckChanged;
-            
+
             toolStrip.Items.AddRange(new ToolStripItem[]
             {
                    _clearButton,
@@ -137,15 +136,15 @@ namespace FixClient
 
             var container = new SplitContainer
             {
-                Dock = DockStyle.Fill, 
+                Dock = DockStyle.Fill,
                 Orientation = Orientation.Vertical
             };
 
             _messageGrid = new HistoryMessageDataGridView
-                               {
-                                   Dock = DockStyle.Fill,
-                                   VirtualMode = true
-                               };
+            {
+                Dock = DockStyle.Fill,
+                VirtualMode = true
+            };
             _messageGrid.SelectionChanged += MessageGridSelectionChanged;
             _messageGrid.CellValueNeeded += MessageGridCellValueNeeded;
             _messageGrid.CellFormatting += MessageGridCellFormatting;
@@ -159,7 +158,7 @@ namespace FixClient
 
             _fieldGrid = new FieldDataGridView
             {
-                Dock = DockStyle.Fill, 
+                Dock = DockStyle.Fill,
                 DataSource = _fieldView
             };
 
@@ -209,12 +208,12 @@ namespace FixClient
 
             if (view == null)
                 return;
-                
+
             var dataRow = view.Row as MessageDataRow;
 
             if (dataRow == null)
                 return;
-                    
+
             e.CellStyle.ForeColor = dataRow.Message.Incoming ? LookAndFeel.Color.Incoming : LookAndFeel.Color.Outgoing;
             e.FormattingApplied = true;
         }
@@ -229,14 +228,14 @@ namespace FixClient
             base.OnVisibleChanged(e);
             if (Visible)
             {
-               ScrollToBottom();
+                ScrollToBottom();
             }
         }
 
         void TailMessagesCheckBoxCheckChanged(object sender, EventArgs e)
         {
             _session.AutoScrollMessages = _tailMessagesCheckBox.Checked;
-            if(!string.IsNullOrEmpty(_session.FileName))
+            if (!string.IsNullOrEmpty(_session.FileName))
                 _session.Write();
             ScrollToBottom();
         }
@@ -322,7 +321,7 @@ namespace FixClient
                 dlg.RestoreDirectory = true;
                 dlg.FileName = filename;
                 dlg.Title = "Export";
-               
+
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
                     Cursor original = Cursor.Current;
@@ -334,7 +333,7 @@ namespace FixClient
                         {
                             using (StreamWriter writer = new StreamWriter(stream))
                             {
-                                foreach(Fix.Message message in Session.Messages)
+                                foreach (Fix.Message message in Session.Messages)
                                 {
                                     string timestamp = "Unknown";
                                     Fix.Field field = message.Fields.Find(Fix.Dictionary.Fields.SendingTime.Tag);
@@ -346,9 +345,9 @@ namespace FixClient
 
                                     Fix.Dictionary.Message definition = Session.Version.Messages[message.MsgType];
 
-                                    writer.WriteLine("{0} ({1}) ({2})", 
-                                                     timestamp, 
-                                                     direction, 
+                                    writer.WriteLine("{0} ({1}) ({2})",
+                                                     timestamp,
+                                                     direction,
                                                      definition.Name);
 
                                     writer.WriteLine("{");
@@ -378,7 +377,7 @@ namespace FixClient
             _messageSearchTextBox.Enabled = false;
             _fieldSearchTextBox.Enabled = false;
 
-            if(Session == null || Session.Messages == null || Session.Messages.Count < 1)
+            if (Session == null || Session.Messages == null || Session.Messages.Count < 1)
                 return;
 
             _clearButton.Enabled = true;
@@ -412,7 +411,7 @@ namespace FixClient
             // Create a new copy of the message.
             //
             var message = new Fix.Message();
-            
+
             message.Fields.Clear();
 
             foreach (Fix.Field field in source.Fields)
@@ -437,12 +436,12 @@ namespace FixClient
 
             Session.Send(message);
         }
-        
+
         void ClearButtonClick(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show(this,
-                                                  "This will clear the order history as well, are you sure", 
-                                                  Application.ProductName, 
+                                                  "This will clear the order history as well, are you sure",
+                                                  Application.ProductName,
                                                   MessageBoxButtons.YesNo,
                                                   MessageBoxIcon.Question);
 
@@ -497,12 +496,12 @@ namespace FixClient
 
                     dataRow[FieldDataTable.ColumnTag] = field.Tag;
                     dataRow[FieldDataTable.ColumnValue] = field.Value;
-                    
+
                     _fieldTable.Rows.Add(dataRow);
                 }
 
                 string text;
-                using(MemoryStream stream = new MemoryStream())
+                using (MemoryStream stream = new MemoryStream())
                 using (Fix.Writer writer = new Fix.Writer(stream, true))
                 {
                     writer.Write(message);
@@ -557,7 +556,7 @@ namespace FixClient
             }
             set
             {
-                if(_session != null)
+                if (_session != null)
                 {
                     _session.Messages.MessageAdded -= MessageAdded;
                     _session.MessageFilterChanged -= SessionMessageFilterChanged;
@@ -618,7 +617,7 @@ namespace FixClient
 
             ApplyMessageSearch();
         }
-        
+
         void ViewListChanged(object sender, ListChangedEventArgs e)
         {
             if (InvokeRequired)

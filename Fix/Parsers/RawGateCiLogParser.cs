@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -34,11 +34,11 @@ namespace Fix.Parsers
         {
             Message message;
 
-            for (;;)
+            for (; ; )
             {
                 string line = reader.ReadLine();
 
-                if(line == null)
+                if (line == null)
                     return null;
 
                 if (!line.Contains("FIX RAW")) // This makes it faster - improve the regex?

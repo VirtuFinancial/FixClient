@@ -10,11 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -86,10 +82,10 @@ namespace Fix.Parsers
 
                     if (field == null && _version == Dictionary.Versions.FIXT_1_1)
                     {
-                                    
+
                     }
                 }
-                    
+
                 if (field != null && (field.EnumeratedType != null || field.Tag == Dictionary.Fields.MsgType.Tag))
                 {
                     match = Regex.Match(value, @"\s*([a-zA-Z0-9]+)\s*-");
@@ -130,7 +126,7 @@ namespace Fix.Parsers
         protected override Message ParseMessage(TextReader reader)
         {
             var message = new Message();
-            
+
             message.Fields.Clear();
 
             bool foundStart = FindStart(reader, message);
@@ -147,9 +143,9 @@ namespace Fix.Parsers
         bool IsMessageTerminator(string line)
         {
             string trimmed = line.Trim();
-            return  trimmed == "}" || 
-                    trimmed.Contains(" Incoming ") || 
-                    trimmed.Contains(" Outgoing ") || 
+            return trimmed == "}" ||
+                    trimmed.Contains(" Incoming ") ||
+                    trimmed.Contains(" Outgoing ") ||
                     string.IsNullOrEmpty(trimmed.Trim());
         }
 

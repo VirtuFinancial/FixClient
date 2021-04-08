@@ -10,10 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Text;
 
 namespace FixTests
 {
@@ -58,7 +56,7 @@ namespace FixTests
         [TestMethod]
         public void TestNameValuePairConstructor()
         {
-            string[,] fields = 
+            string[,] fields =
             {
                 { "8", "FIX.4.0" },
                 { "9", "127" },

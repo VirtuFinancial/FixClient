@@ -11,11 +11,9 @@
 /////////////////////////////////////////////////
 
 using System;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using System.IO;
 using System.Data;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace FixClient
 {
@@ -31,7 +29,7 @@ namespace FixClient
         readonly ToolStripButton _deleteFieldButton;
         readonly ToolStripComboBox _categoryComboBox;
         readonly ToolStripButton _addCategoryButton;
-  
+
         readonly ToolStripMenuItem _newFieldMenuItem;
         readonly ToolStripMenuItem _editFieldMenuItem;
         readonly ToolStripMenuItem _deleteFieldMenuItem;
@@ -57,33 +55,33 @@ namespace FixClient
                 Renderer = new ToolStripRenderer()
             };
             TopToolStripPanel.Join(toolStrip);
-       
+
             _newFieldButton = new ToolStripButton
-                                  {
-                                      Image = Properties.Resources.NewCustomField,
-                                      ImageTransparentColor = Color.Magenta,
-                                      ToolTipText = "Create a new custom field"
-                                  };
+            {
+                Image = Properties.Resources.NewCustomField,
+                ImageTransparentColor = Color.Magenta,
+                ToolTipText = "Create a new custom field"
+            };
             _newFieldButton.Click += NewFieldButtonClick;
 
             _editFieldButton = new ToolStripButton
-                                   {
-                                       Image = Properties.Resources.EditCustomField,
-                                       ImageTransparentColor = Color.Magenta,
-                                       ToolTipText = "Edit the selected custom field"
-                                   };
+            {
+                Image = Properties.Resources.EditCustomField,
+                ImageTransparentColor = Color.Magenta,
+                ToolTipText = "Edit the selected custom field"
+            };
             _editFieldButton.Click += EditFieldButtonClick;
 
             _deleteFieldButton = new ToolStripButton
-                                     {
-                                         Image = Properties.Resources.DeleteCustomField,
-                                         ImageTransparentColor = Color.Magenta,
-                                         ToolTipText = "Delete the selected custom field"
-                                     };
+            {
+                Image = Properties.Resources.DeleteCustomField,
+                ImageTransparentColor = Color.Magenta,
+                ToolTipText = "Delete the selected custom field"
+            };
             _deleteFieldButton.Click += DeleteFieldButtonClick;
 
-            _categoryComboBox = new ToolStripComboBox 
-            { 
+            _categoryComboBox = new ToolStripComboBox
+            {
                 DropDownStyle = ComboBoxStyle.DropDownList
             };
 
@@ -100,11 +98,11 @@ namespace FixClient
             }
 
             _addCategoryButton = new ToolStripButton
-                                     {
-                                         Image = Properties.Resources.AddCategoryFields,
-                                         ImageTransparentColor = Color.Magenta,
-                                         ToolTipText = "Add custom fields for the selected category"
-                                     };
+            {
+                Image = Properties.Resources.AddCategoryFields,
+                ImageTransparentColor = Color.Magenta,
+                ToolTipText = "Add custom fields for the selected category"
+            };
             _addCategoryButton.Click += AddCategoryButtonClick;
 
             toolStrip.Items.Add(_newFieldButton);
@@ -113,7 +111,7 @@ namespace FixClient
             toolStrip.Items.Add(new ToolStripSeparator());
             toolStrip.Items.Add(_categoryComboBox);
             toolStrip.Items.Add(_addCategoryButton);
-  
+
             var menu = new ToolStripMenuItem("Action");
             SetMenuStrip(menu);
 
@@ -221,7 +219,7 @@ namespace FixClient
 
             DataGridViewRow row = _fieldGrid.SelectedRows[0];
             var view = row.DataBoundItem as DataRowView;
-            var dataRow = (CustomFieldDataRow) view.Row;
+            var dataRow = (CustomFieldDataRow)view.Row;
             CustomField customField = dataRow.Field;
             //
             // Remove the field definition.
@@ -355,7 +353,7 @@ namespace FixClient
 
                 foreach (CustomField field in _session.CustomFields.Values)
                 {
-                    AddCustomField(field);  
+                    AddCustomField(field);
                 }
             }
             finally
@@ -404,7 +402,7 @@ namespace FixClient
                 {
                     _session.CustomFieldAdded -= SessionCustomFieldAdded;
                 }
-                
+
                 _session = value;
 
                 if (_session != null)

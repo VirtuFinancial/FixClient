@@ -10,12 +10,12 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Collections;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FixTests
 {
@@ -28,13 +28,13 @@ namespace FixTests
         {
             Assert.AreEqual(expected.Length / 2, message.Fields.Count, "Field count");
 
-            for(int index = 0; index < message.Fields.Count; ++index)
+            for (int index = 0; index < message.Fields.Count; ++index)
             {
                 Fix.Field actual = message.Fields[index];
 
                 int tag;
 
-                if(!int.TryParse(expected[index, 0], out tag))
+                if (!int.TryParse(expected[index, 0], out tag))
                     Assert.Fail("Non numeric tag '{0}={1}'", expected[index, 0], expected[index, 1]);
 
                 Assert.AreEqual(tag, actual.Tag, "Tag");
@@ -47,7 +47,7 @@ namespace FixTests
         [TestMethod]
         public void TestReadEmail()
         {
-            string[,] expected = 
+            string[,] expected =
             {
                 { "8", "FIX.4.0" },
                 { "9", "127" },
@@ -70,7 +70,7 @@ namespace FixTests
 
             Assert.AreEqual(Fix.Dictionary.FIX_4_0.Messages.Email.MsgType, message.MsgType);
         }
-       
+
         [TestMethod]
         public void TestReadKodiakOrderWave()
         {
@@ -183,7 +183,7 @@ namespace FixTests
             byte[] data = Encoding.ASCII.GetBytes("8=FIX.4.09=13135=C49=KODIAK56=server34=750=kgehvwap52=20090724-07:20:4194=033=158=UserRegisterRequest#7,13,13#93=1689=\xA1\xE6\x23\x0E\xC9\x65\x95\x98\x18\x9C\x45\x30\x4C\x58\xC1\xD5\x31\x30=147");
             var message = new Fix.Message(data);
         }
-        
+
         public static byte[] StringToByteArray(string hex)
         {
             return Enumerable.Range(0, hex.Length)
@@ -228,11 +228,11 @@ namespace FixTests
             Assert.AreEqual("147", message.ComputeCheckSum());
 
             var stream = new MemoryStream();
-            using (Fix.Writer writer = new Fix.Writer(stream, leaveOpen:true))
+            using (Fix.Writer writer = new Fix.Writer(stream, leaveOpen: true))
             {
                 writer.Write(message);
             }
-           
+
             byte[] serialised = stream.ToArray();
 
             Assert.IsTrue(StructuralComparisons.StructuralEqualityComparer.Equals(data, serialised));

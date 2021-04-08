@@ -10,8 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
@@ -71,20 +70,20 @@ namespace FixClient
             };
 
             _checkAllMessagesButton = new ToolStripButton
-                                  {
-                                      Image = Properties.Resources.CheckAll,
-                                      ImageTransparentColor = Color.White,
-                                      ToolTipText = "Check all the messages"
-                                  };
+            {
+                Image = Properties.Resources.CheckAll,
+                ImageTransparentColor = Color.White,
+                ToolTipText = "Check all the messages"
+            };
             _checkAllMessagesButton.Click += (sender, ev) => SetAllMessagesVisibility(true);
             messageToolstrip.Items.Add(_checkAllMessagesButton);
 
             _uncheckAllMessagesButton = new ToolStripButton
-                                    {
-                                        Image = Properties.Resources.UnCheckAll,
-                                        ImageTransparentColor = Color.White,
-                                        ToolTipText = "UnCheck all the messages"
-                                    };
+            {
+                Image = Properties.Resources.UnCheckAll,
+                ImageTransparentColor = Color.White,
+                ToolTipText = "UnCheck all the messages"
+            };
             _uncheckAllMessagesButton.Click += (sender, ev) => SetAllMessagesVisibility(false);
             messageToolstrip.Items.Add(_uncheckAllMessagesButton);
 
@@ -160,10 +159,10 @@ namespace FixClient
             _messageGrid.CellContentClick += MessageGridCellContentClick;
 
             _fieldGrid = new FilterFieldDataGridView
-                                   {
-                                       Dock = DockStyle.Fill,
-                                       VirtualMode = true
-                                   };
+            {
+                Dock = DockStyle.Fill,
+                VirtualMode = true
+            };
             _fieldGrid.CellValueNeeded += FieldGridCellValueNeeded;
             _fieldGrid.CellContentClick += FieldGridCellContentClick;
 
@@ -205,7 +204,7 @@ namespace FixClient
         {
             if (e.RowIndex < 0)
                 return;
-            if(_messageGrid.Columns[e.ColumnIndex].Name != FilterMessageDataTable.ColumnVisible)
+            if (_messageGrid.Columns[e.ColumnIndex].Name != FilterMessageDataTable.ColumnVisible)
                 return;
             DataRowView view = _messageView[e.RowIndex];
             DataRow dataRow = view.Row;
@@ -230,8 +229,8 @@ namespace FixClient
             Fix.Dictionary.Message message = SelectedMessage;
             if (message == null)
                 return;
-            var visible = (bool) dataRow[FilterFieldDataTable.ColumnVisible];
-            var tag = (int) dataRow[FilterFieldDataTable.ColumnTag];
+            var visible = (bool)dataRow[FilterFieldDataTable.ColumnVisible];
+            var tag = (int)dataRow[FilterFieldDataTable.ColumnTag];
             dataRow[FilterFieldDataTable.ColumnVisible] = !visible;
             Session.FieldVisible(message.MsgType, tag, !visible);
         }
@@ -292,16 +291,16 @@ namespace FixClient
             {
                 Session.AutoWriteFilters = false;
                 _messageTable.BeginLoadData();
-                
+
                 string msgType = null;
-                
+
                 foreach (DataRow row in _messageTable.Rows)
                 {
                     msgType = (string)row[FilterMessageDataTable.ColumnMsgType];
                     row[FilterMessageDataTable.ColumnVisible] = visible;
                     Session.MessageVisible(msgType, visible, false);
                 }
-                
+
                 if (!string.IsNullOrEmpty(msgType))
                 {
                     Session.MessageVisible(msgType, visible);

@@ -10,15 +10,13 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Linq;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
 using System.IO;
-using System.Xml.Serialization;
 using System.Net;
-using System.Net.Sockets;
+using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace FixClient
 {
@@ -86,21 +84,21 @@ namespace FixClient
         readonly ToolStrip _viewToolStrip;
 
         Session _currentSession;
-        Session CurrentSession 
-        { 
+        Session CurrentSession
+        {
             get { return _currentSession; }
             set
             {
                 if (value == _currentSession)
                     return;
-                
+
                 if (_currentSession != null)
                 {
                     _currentSession.Dispose();
                 }
 
                 _currentSession = value;
-            } 
+            }
         }
 
         bool _expectingDisconnect;
@@ -118,63 +116,63 @@ namespace FixClient
 
             #region "Session ToolStrip"
             _newButton = new ToolStripButton
-                             {
-                                 ToolTipText = "Create a new session",
-                                 Image = Properties.Resources.New,
-                                 ImageTransparentColor = Color.Magenta
-                             };
+            {
+                ToolTipText = "Create a new session",
+                Image = Properties.Resources.New,
+                ImageTransparentColor = Color.Magenta
+            };
             _newButton.Click += NewSessionButtonClick;
             _toolStrip.Items.Add(_newButton);
 
             _openButton = new ToolStripButton
-                              {
-                                  ToolTipText = "Open an existing session",
-                                  Image = Properties.Resources.Open,
-                                  ImageTransparentColor = Color.Magenta
-                              };
+            {
+                ToolTipText = "Open an existing session",
+                Image = Properties.Resources.Open,
+                ImageTransparentColor = Color.Magenta
+            };
             _openButton.Click += OpenButtonClick;
             _toolStrip.Items.Add(_openButton);
 
             _openRecentButton = new ToolStripDropDownButton
-                                    {
-                                        ToolTipText = "Open an existing session"
-                                    };
+            {
+                ToolTipText = "Open an existing session"
+            };
             _openRecentButton.DropDownItemClicked += OpenButtonDropDownItemClicked;
             _toolStrip.Items.Add(_openRecentButton);
 
             _connectButton = new ToolStripButton
-                                 {
-                                     ToolTipText = "Connect to the remote server",
-                                     Image = Properties.Resources.Start,
-                                     ImageTransparentColor = Color.Black
-                                 };
+            {
+                ToolTipText = "Connect to the remote server",
+                Image = Properties.Resources.Start,
+                ImageTransparentColor = Color.Black
+            };
             _connectButton.Click += ConnectButtonClick;
             _toolStrip.Items.Add(_connectButton);
 
             _disconnectButton = new ToolStripButton
-                                    {
-                                        ToolTipText = "Disconnect from the remote server",
-                                        Image = Properties.Resources.Stop,
-                                        ImageTransparentColor = Color.Black
-                                    };
+            {
+                ToolTipText = "Disconnect from the remote server",
+                Image = Properties.Resources.Stop,
+                ImageTransparentColor = Color.Black
+            };
             _disconnectButton.Click += DisconnectButtonClick;
             _toolStrip.Items.Add(_disconnectButton);
 
             _editSessionButton = new ToolStripButton
-                                 {
-                                     ToolTipText = "Edit the options for the current session",
-                                     Image = Properties.Resources.Options,
-                                     ImageTransparentColor = Color.White
-                                 };
+            {
+                ToolTipText = "Edit the options for the current session",
+                Image = Properties.Resources.Options,
+                ImageTransparentColor = Color.White
+            };
             _editSessionButton.Click += EditSessionButtonClick;
             _toolStrip.Items.Add(_editSessionButton);
 
             _resetButton = new ToolStripButton
-                               {
-                                   Image = Properties.Resources.Reset,
-                                   ImageTransparentColor = Color.White,
-                                   ToolTipText = "Reset the sequence numbers of the current session"
-                               };
+            {
+                Image = Properties.Resources.Reset,
+                ImageTransparentColor = Color.White,
+                ToolTipText = "Reset the sequence numbers of the current session"
+            };
             _resetButton.Click += ResetButtonClick;
             _toolStrip.Items.Add(_resetButton);
             #endregion
@@ -192,32 +190,32 @@ namespace FixClient
             _messagesPanel.MessageSelected += MessageDefaultsPanelMessageSelected;
 
             _messagesButton = new ToolStripButton("Messages", Properties.Resources.Messages, UpdateContentPanel)
-                                  {
-                                      ImageTransparentColor = Color.White,
-                                      Tag = _messagesPanel
-                                  };
+            {
+                ImageTransparentColor = Color.White,
+                Tag = _messagesPanel
+            };
             _viewToolStrip.Items.Add(_messagesButton);
-            
+
             _ordersPanel = new OrdersPanel(_messagesPanel, _messagesButton) { Dock = DockStyle.Fill };
 
             _historyPanel = new HistoryPanel { Dock = DockStyle.Fill };
             _historyPanel.MessageSelected += MessageDefaultsPanelMessageSelected;
 
             _historyButton = new ToolStripButton("History", Properties.Resources.History, UpdateContentPanel)
-                                 {
-                                     ImageTransparentColor = Color.White,
-                                     Tag = _historyPanel
-                                 };
+            {
+                ImageTransparentColor = Color.White,
+                Tag = _historyPanel
+            };
             _viewToolStrip.Items.Add(_historyButton);
-            
+
             _ordersButton = new ToolStripButton("Orders", Properties.Resources.Orders, UpdateContentPanel)
-                                {
-                                    ImageTransparentColor = Color.White,
-                                    Tag = _ordersPanel
-                                };
+            {
+                ImageTransparentColor = Color.White,
+                Tag = _ordersPanel
+            };
             _viewToolStrip.Items.Add(_ordersButton);
 
-            _generatorPanel = new GeneratorPanel {Dock = DockStyle.Fill};
+            _generatorPanel = new GeneratorPanel { Dock = DockStyle.Fill };
             /*
             _generatorButton = new ToolStripButton("Generator", Properties.Resources.Function, UpdateContentPanel)
                                    {
@@ -229,40 +227,40 @@ namespace FixClient
             _filtersPanel = new FiltersPanel { Dock = DockStyle.Fill };
 
             _filtersButton = new ToolStripButton("Filters", Properties.Resources.Filters, UpdateContentPanel)
-                                 {
-                                     ImageTransparentColor = Color.White,
-                                     Tag = _filtersPanel
-                                 };
+            {
+                ImageTransparentColor = Color.White,
+                Tag = _filtersPanel
+            };
             _viewToolStrip.Items.Add(_filtersButton);
-            
+
             _customisePanel = new CustomisePanel { Dock = DockStyle.Fill };
 
             _customiseButton = new ToolStripButton("Customise", Properties.Resources.Customise, UpdateContentPanel)
-                                   {
-                                       ImageTransparentColor = Color.Magenta,
-                                       Tag = _customisePanel
-                                   };
+            {
+                ImageTransparentColor = Color.Magenta,
+                Tag = _customisePanel
+            };
             _viewToolStrip.Items.Add(_customiseButton);
-            
+
             _dictionaryPanel = new DictionaryPanel { Dock = DockStyle.Fill };
 
-            _dictionaryButton = new ToolStripButton("Dictionary", Properties.Resources.Dictionary, UpdateContentPanel)
-                                    {
-                                        ImageTransparentColor = Color.Magenta,
-                                        Tag = _dictionaryPanel
-                                    };
+            //_dictionaryButton = new ToolStripButton("Dictionary", Properties.Resources.Dictionary, UpdateContentPanel)
+            //{
+            //    ImageTransparentColor = Color.Magenta,
+            //    Tag = _dictionaryPanel
+            //};
             //_viewToolStrip.Items.Add(_dictionaryButton);
-            
+
             _parserPanel = new ParserPanel { Dock = DockStyle.Fill };
 
             _parserButton = new ToolStripButton("Parser", Properties.Resources.Parser, UpdateContentPanel)
-                             {
-                                 ImageTransparentColor = Color.Magenta,
-                                 Tag = _parserPanel
-                             };
+            {
+                ImageTransparentColor = Color.Magenta,
+                Tag = _parserPanel
+            };
             _viewToolStrip.Items.Add(_parserButton);
 
-            _logPanel = new LogPanel {Dock = DockStyle.Fill};
+            _logPanel = new LogPanel { Dock = DockStyle.Fill };
             _logButton = new ToolStripButton("Log", Properties.Resources.Log, UpdateContentPanel)
             {
                 ImageTransparentColor = Color.Magenta,
@@ -272,8 +270,8 @@ namespace FixClient
 
             #endregion
 
-            _mainMenu = new MenuStrip 
-            { 
+            _mainMenu = new MenuStrip
+            {
                 GripStyle = ToolStripGripStyle.Hidden,
                 BackColor = LookAndFeel.Color.ToolStrip
             };
@@ -300,7 +298,7 @@ namespace FixClient
             _fileExit = new ToolStripMenuItem("Exit");
             _fileExit.Click += FileExitClick;
             fileMenu.DropDownItems.Add(_fileExit);
-                
+
             #endregion
 
             #region "Session Menu"
@@ -327,21 +325,21 @@ namespace FixClient
             var viewMenu = new ToolStripMenuItem("View");
 
             _viewMessages = new ToolStripMenuItem(_messagesButton.Text, _messagesButton.Image, UpdateContentPanel)
-                                {
-                                    Tag = _messagesPanel
-                                };
+            {
+                Tag = _messagesPanel
+            };
             viewMenu.DropDownItems.Add(_viewMessages);
 
             _viewHistory = new ToolStripMenuItem(_historyButton.Text, _historyButton.Image, UpdateContentPanel)
-                               {
-                                   Tag = _historyPanel
-                               };
+            {
+                Tag = _historyPanel
+            };
             viewMenu.DropDownItems.Add(_viewHistory);
-            
+
             _viewOrders = new ToolStripMenuItem(_ordersButton.Text, _ordersButton.Image, UpdateContentPanel)
-                              {
-                                  Tag = _ordersPanel
-                              };
+            {
+                Tag = _ordersPanel
+            };
             viewMenu.DropDownItems.Add(_viewOrders);
 
             /*
@@ -352,27 +350,27 @@ namespace FixClient
             viewMenu.DropDownItems.Add(_viewGenerator);
             */
             _viewFilters = new ToolStripMenuItem(_filtersButton.Text, _filtersButton.Image, UpdateContentPanel)
-                               {
-                                   Tag = _filtersPanel
-                               };
+            {
+                Tag = _filtersPanel
+            };
             viewMenu.DropDownItems.Add(_viewFilters);
-            
+
             _viewCustomise = new ToolStripMenuItem(_customiseButton.Text, _customiseButton.Image, UpdateContentPanel)
-                                 {
-                                     Tag = _customisePanel
-                                 };
+            {
+                Tag = _customisePanel
+            };
             viewMenu.DropDownItems.Add(_viewCustomise);
-            
+
             //_viewDictionary = new ToolStripMenuItem(_dictionaryButton.Text, _dictionaryButton.Image, UpdateContentPanel)
             //                      {
             //                          Tag = _dictionaryPanel
             //                      };
             //viewMenu.DropDownItems.Add(_viewDictionary);
-            
+
             _viewParser = new ToolStripMenuItem(_parserButton.Text, _parserButton.Image, UpdateContentPanel)
-                           {
-                               Tag = _parserPanel
-                           };
+            {
+                Tag = _parserPanel
+            };
             viewMenu.DropDownItems.Add(_viewParser);
 
             _viewLog = new ToolStripMenuItem(_logButton.Text, _logButton.Image, UpdateContentPanel)
@@ -395,7 +393,7 @@ namespace FixClient
             _mainMenu.Items.Add(viewMenu);
             _mainMenu.Items.Add(helpMenu);
 
-            _container = new ToolStripContainer 
+            _container = new ToolStripContainer
             {
                 Dock = DockStyle.Fill,
                 BackColor = LookAndFeel.Color.ToolStrip
@@ -407,7 +405,7 @@ namespace FixClient
             Controls.Add(_container);
 
             Load += MainFormLoad;
-           
+
             Size = new Size(1280, 800);
             Text = "FIX Client";
             Icon = Properties.Resources.FixClient;
@@ -559,7 +557,7 @@ namespace FixClient
 
             DisconnectButtonClick(this, null);
             SaveSizeAndPosition();
-            Properties.Settings.Default.Save(); 
+            Properties.Settings.Default.Save();
             base.OnClosing(e);
         }
 
@@ -665,7 +663,7 @@ namespace FixClient
             {
                 Text = Path.GetFileName(filename),
                 ToolTipText = filename
-                
+
             };
             _openRecentButton.DropDownItems.Add(toolStripItem);
 
@@ -735,7 +733,7 @@ namespace FixClient
 
             if (ev.State == Fix.State.Disconnected)
             {
-                if(!_expectingDisconnect)
+                if (!_expectingDisconnect)
                 {
                     if (CurrentSession.Behaviour == Fix.Behaviour.Acceptor)
                     {
@@ -767,11 +765,11 @@ namespace FixClient
                     TargetCompId = "SERVER"
                 };
 
-                for (;;)
+                for (; ; )
                 {
                     if (form.ShowDialog() != DialogResult.OK)
                         return;
-                    
+
                     CurrentSession = form.Session;
 
                     if (SaveSessionFile())
@@ -822,7 +820,7 @@ namespace FixClient
                 dlg.FilterIndex = 2;
                 dlg.RestoreDirectory = true;
                 dlg.FileName = filename;
-                
+
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
                     CurrentSession.FileName = dlg.FileName;
@@ -859,7 +857,7 @@ namespace FixClient
 
             if (CurrentSession.Behaviour == Fix.Behaviour.Initiator)
             {
-                title = string.Format("Connecting to remote FIX server at {0}", endPoint);    
+                title = string.Format("Connecting to remote FIX server at {0}", endPoint);
             }
             else
             {
@@ -940,7 +938,7 @@ namespace FixClient
 
         void ResetButtonClick(object sender, EventArgs e)
         {
-            if(CurrentSession == null)
+            if (CurrentSession == null)
                 return;
 
             using var form = new ResetForm();
@@ -951,7 +949,7 @@ namespace FixClient
 
             CurrentSession.Reset(form.ResetGeneratedIds, form.Retain);
         }
-        
+
         void OpenButtonDropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             try
@@ -968,17 +966,17 @@ namespace FixClient
                 _ordersPanel.Session = CurrentSession;
                 _generatorPanel.Session = CurrentSession;
                 _customisePanel.Session = CurrentSession;
-                
+
                 UpdateUiState();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 CurrentSession = null;
 
-                MessageBox.Show(this, 
-                                ex.Message, 
-                                Application.ProductName, 
-                                MessageBoxButtons.OK, 
+                MessageBox.Show(this,
+                                ex.Message,
+                                Application.ProductName,
+                                MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
             }
         }

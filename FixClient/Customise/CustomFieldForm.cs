@@ -51,7 +51,7 @@ namespace FixClient
 
         void NameTextBoxValidated(object sender, EventArgs e)
         {
-            ClearErrors();    
+            ClearErrors();
         }
 
         void NameTextBoxValidating(object sender, CancelEventArgs e)
@@ -71,7 +71,7 @@ namespace FixClient
 
         void ValueTextBoxValidated(object sender, EventArgs e)
         {
-            ClearErrors();    
+            ClearErrors();
         }
 
         void ValueTextBoxValidating(object sender, CancelEventArgs e)

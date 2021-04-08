@@ -10,9 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System.IO;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
+using System.Text;
 
 namespace FixTests
 {
@@ -37,7 +37,7 @@ namespace FixTests
                 {58, "RemotedHost#Name=gateQA-p01,Ip=10.132.3.125,Port=7081#"},
             });
             var stream = new MemoryStream();
-            using (Fix.Writer writer = new Fix.Writer(stream, leaveOpen:true))
+            using (Fix.Writer writer = new Fix.Writer(stream, leaveOpen: true))
             {
                 writer.Write(message);
             }
@@ -50,7 +50,7 @@ namespace FixTests
         {
             byte[] data = Encoding.ASCII.GetBytes("8=FIX.4.09=28635=849=ITGHK56=KODIAK_KASFQA34=163357=kasfqa52=20091023-05:40:1637=712-217=420=039=055=649707154=238=100000032=031=0.00000014=06=0.00000011=296.2.240=160=20091023-05:40:1659=047=A30=DMA15=KRW6005=ALT=18500TOT=1256276416111=09886=0.0000009887=09912=09911=010=135");
             using (MemoryStream stream = new MemoryStream())
-            using (Fix.Writer writer = new Fix.Writer(stream, leaveOpen:true))
+            using (Fix.Writer writer = new Fix.Writer(stream, leaveOpen: true))
             {
                 int messagesWritten = 0;
                 writer.MessageWritten += (sender, ev) => ++messagesWritten;
@@ -65,7 +65,7 @@ namespace FixTests
         {
             byte[] data = Encoding.ASCII.GetBytes("8=FIX.4.09=28635=849=ITGHK56=KODIAK_KASFQA34=163357=kasfqa52=20091023-05:40:1637=712-217=420=039=055=649707154=238=100000032=031=0.00000014=06=0.00000011=296.2.240=160=20091023-05:40:1659=047=A30=DMA15=KRW6005=ALT=18500TOT=1256276416111=09886=0.0000009887=09912=09911=010=135");
             using (MemoryStream stream = new MemoryStream())
-            using (Fix.Writer writer = new Fix.Writer(stream, leaveOpen:true))
+            using (Fix.Writer writer = new Fix.Writer(stream, leaveOpen: true))
             {
                 int messagesWriting = 0;
                 writer.MessageWriting += (sender, ev) => ++messagesWriting;
@@ -80,7 +80,7 @@ namespace FixTests
         {
             byte[] data = Encoding.ASCII.GetBytes("8=FIX.4.09=28635=849=ITGHK56=KODIAK_KASFQA34=163357=kasfqa52=20091023-05:40:1637=712-217=420=039=055=649707154=238=100000032=031=0.00000014=06=0.00000011=296.2.240=160=20091023-05:40:1659=047=A30=DMA15=KRW6005=ALT=18500TOT=1256276416111=09886=0.0000009887=09912=09911=010=135");
             using (MemoryStream stream = new MemoryStream())
-            using (Fix.Writer writer = new Fix.Writer(stream, leaveOpen:true))
+            using (Fix.Writer writer = new Fix.Writer(stream, leaveOpen: true))
             {
                 int messagesWriting = 0;
                 int messagesWritten = 0;

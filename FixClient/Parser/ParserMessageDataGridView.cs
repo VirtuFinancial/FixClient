@@ -10,16 +10,15 @@
 //
 /////////////////////////////////////////////////
 
-using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace FixClient
 {
-	public sealed partial class ParserMessageDataGridView : DataGridView
-	{
-		public ParserMessageDataGridView()
-		{
+    public sealed partial class ParserMessageDataGridView : DataGridView
+    {
+        public ParserMessageDataGridView()
+        {
             InitializeComponent();
 
             EnableHeadersVisualStyles = false;
@@ -31,23 +30,23 @@ namespace FixClient
             ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             ColumnHeadersHeight -= 3;
             BackgroundColor = LookAndFeel.Color.GridCellBackground;
-			BorderStyle = BorderStyle.None;
-			SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-			MultiSelect = false;
-			RowHeadersVisible = false;
-			RowTemplate.Resizable = DataGridViewTriState.False;
-	        GridColor = LookAndFeel.Color.Grid;
-			AllowUserToAddRows = false;
+            BorderStyle = BorderStyle.None;
+            SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            MultiSelect = false;
+            RowHeadersVisible = false;
+            RowTemplate.Resizable = DataGridViewTriState.False;
+            GridColor = LookAndFeel.Color.Grid;
+            AllowUserToAddRows = false;
             AllowUserToDeleteRows = false;
-			ReadOnly = true;
-			CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            ReadOnly = true;
+            CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             DefaultCellStyle.WrapMode = DataGridViewTriState.False;
             DefaultCellStyle.Font = new Font("Arial", 8);
             DefaultCellStyle.BackColor = LookAndFeel.Color.GridCellBackground;
-			DefaultCellStyle.Padding = new Padding(3, 0, 3, 0);
-			DefaultCellStyle.SelectionBackColor = LookAndFeel.Color.GridCellSelectedBackground;
-			DefaultCellStyle.SelectionForeColor = LookAndFeel.Color.GridCellSelectedForeground;
-			DoubleBuffered = true;
+            DefaultCellStyle.Padding = new Padding(3, 0, 3, 0);
+            DefaultCellStyle.SelectionBackColor = LookAndFeel.Color.GridCellSelectedBackground;
+            DefaultCellStyle.SelectionForeColor = LookAndFeel.Color.GridCellSelectedForeground;
+            DoubleBuffered = true;
             RowTemplate.Height -= 3;
             ShowCellToolTips = false;
         }
@@ -58,7 +57,7 @@ namespace FixClient
 
             DataGridViewColumn column = e.Column;
 
-            switch(column.Name)
+            switch (column.Name)
             {
                 case ParserMessageDataTable.ColumnSendingTime:
                     column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
@@ -88,5 +87,5 @@ namespace FixClient
 
             base.OnColumnAdded(e);
         }
-	}
+    }
 }

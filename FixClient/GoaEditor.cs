@@ -27,13 +27,13 @@ namespace FixClient
             if (e.KeyChar == '\x02')
             {
                 goaTextBox.Paste("\x02");
-                e.Handled = true; 
+                e.Handled = true;
             }
         }
 
         public string Goa
         {
-            get 
+            get
             {
                 string goa_value = goaTextBox.Text;
                 if (ctrlBcheckbox.Checked)

@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Data;
 
 namespace FixClient
@@ -29,7 +29,7 @@ namespace FixClient
         public const string ColumnLevel = "Level";
 
         public LogMessageDataTable(string name)
-        :   base(name)
+        : base(name)
         {
             Columns.Add(ColumnTimestamp, typeof(DateTime));
             Columns.Add(ColumnMessage);

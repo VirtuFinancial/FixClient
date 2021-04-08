@@ -10,8 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System.Data;
 using Fix;
+using System.Data;
 
 namespace FixClient
 {

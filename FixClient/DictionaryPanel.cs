@@ -13,8 +13,8 @@
 using System;
 using System.Drawing;
 using System.Text;
-using System.Windows.Forms;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace FixClient
 {
@@ -45,20 +45,20 @@ namespace FixClient
             TopToolStripPanel.Join(toolStrip);
 
             _backButton = new ToolStripButton
-                              {
-                                  ToolTipText = "Back",
-                                  Image = Properties.Resources.Back,
-                                  ImageTransparentColor = Color.Magenta
-                              };
+            {
+                ToolTipText = "Back",
+                Image = Properties.Resources.Back,
+                ImageTransparentColor = Color.Magenta
+            };
             _backButton.Click += (sender, ev) => _browser.GoBack();
             toolStrip.Items.Add(_backButton);
 
             _forwardButton = new ToolStripButton
-                                 {
-                                     ToolTipText = "Forward",
-                                     Image = Properties.Resources.Forward,
-                                     ImageTransparentColor = Color.Magenta
-                                 };
+            {
+                ToolTipText = "Forward",
+                Image = Properties.Resources.Forward,
+                ImageTransparentColor = Color.Magenta
+            };
             _forwardButton.Click += (sender, ev) => _browser.GoForward();
             toolStrip.Items.Add(_forwardButton);
             #endregion
@@ -91,7 +91,7 @@ namespace FixClient
                 }
 
                 var uri = new Uri(string.Format("http://onixs.biz/fix-dictionary/{0}/msgType_{1}_{2}.html",
-                                                value.BeginString.Substring(4, 3),                                
+                                                value.BeginString.Substring(4, 3),
                                                 value.MsgType,
                                                 numeric));
 

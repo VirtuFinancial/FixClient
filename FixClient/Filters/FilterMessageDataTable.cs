@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System.Data;
+using System.Data;
 
 namespace FixClient
 {
@@ -21,7 +21,7 @@ namespace FixClient
         public const string ColumnName = "Name";
 
         public FilterMessageDataTable(string name)
-        :   base(name)
+        : base(name)
         {
             Columns.Add(ColumnVisible, typeof(bool));
             Columns.Add(ColumnMsgType);
@@ -30,7 +30,7 @@ namespace FixClient
 
         protected override System.Type GetRowType()
         {
-            return typeof (FilterMessageDataRow);
+            return typeof(FilterMessageDataRow);
         }
 
         protected override DataRow NewRowFromBuilder(DataRowBuilder builder)

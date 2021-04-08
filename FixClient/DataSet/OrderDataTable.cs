@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 
@@ -39,7 +39,7 @@ namespace FixClient
         public const string ColumnPendingLimit = "PendingLimit";
 
         public OrderDataTable(string name)
-        :   base(name)
+        : base(name)
         {
             var primaryKey = new List<DataColumn>();
 
@@ -63,7 +63,7 @@ namespace FixClient
             Columns.Add(ColumnPendingQuantity).ColumnMapping = MappingType.Hidden;
             Columns.Add(ColumnPendingLimit).ColumnMapping = MappingType.Hidden;
 
-            PrimaryKey = primaryKey.ToArray();  
+            PrimaryKey = primaryKey.ToArray();
         }
 
         protected override Type GetRowType()

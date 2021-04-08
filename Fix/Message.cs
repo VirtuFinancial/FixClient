@@ -10,11 +10,11 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
 
 namespace Fix
 {
@@ -45,7 +45,7 @@ namespace Fix
                 new Field(Dictionary.Fields.SendingTime)
             };
         }
-        
+
         public Message(Dictionary.Message definition)
         {
             Fields = new FieldCollection(definition);
@@ -53,7 +53,7 @@ namespace Fix
         }
 
         public Message(string data)
-        :  this(Encoding.ASCII.GetBytes(data))
+        : this(Encoding.ASCII.GetBytes(data))
         {
         }
 
@@ -88,7 +88,7 @@ namespace Fix
 
             foreach (Field field in Fields)
             {
-                if(field.Value != null && field.Value.Trim().Length > 0)
+                if (field.Value != null && field.Value.Trim().Length > 0)
                     message.Fields.Add(field);
             }
 
@@ -97,7 +97,7 @@ namespace Fix
 
         public static Message Parse(string text)
         {
-            var parser = new Parser {Strict = false};
+            var parser = new Parser { Strict = false };
             using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(text)))
             {
                 MessageCollection messages = parser.Parse(stream);
@@ -220,9 +220,9 @@ namespace Fix
                 string name = field.Definition == null ? string.Empty : field.Definition.Name;
                 string description = null;
                 description = field.Tag == Dictionary.Fields.MsgType.Tag ? Definition?.Name : field.ValueDescription;
-                builder.AppendFormat("    {0} {1} - {2}{3}\r\n", 
-                                     name.PadLeft(widestName), 
-                                     string.Format("({0})", field.Tag).PadLeft(6), 
+                builder.AppendFormat("    {0} {1} - {2}{3}\r\n",
+                                     name.PadLeft(widestName),
+                                     string.Format("({0})", field.Tag).PadLeft(6),
                                      field.Value,
                                      string.IsNullOrEmpty(description) ? string.Empty : " - " + description);
             }

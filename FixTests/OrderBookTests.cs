@@ -10,12 +10,11 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Linq;
-using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using System.Text;
 
 namespace FixTests
 {
@@ -40,7 +39,7 @@ namespace FixTests
             Assert.AreEqual(Fix.Side.Buy, order.Side);
             Assert.AreEqual(Fix.TimeInForce.ImmediateOrCancel, order.TimeInForce);
             Assert.AreEqual("ASX", order.ExDestination);
-        
+
             Assert.IsTrue(book.Process(ack));
             Assert.AreEqual(1, book.Orders.Count);
 
@@ -53,7 +52,7 @@ namespace FixTests
 
         [TestMethod]
         public void TestKodiakNewFilled()
-        { 
+        {
             var wave = new Fix.Message("8=FIX.4.09=26235=UWO49=KODIAK56=server34=9750=kgehvwap97=N52=20090727-05:34:1166=068=111=kgehvwap.2.215=AUD21=238=9940=244=39.60000047=A54=155=RIO.AX59=363=0100=ASX203=16000=6001=test6002=6005=ALT=41.58SS=V3M0tP0tV1tQ0tU2ASN=PACI7050=kgehvwap_test10=187");
             var ack = new Fix.Message("8=FIX.4.09=17135=849=server56=KODIAK34=11057=kgehvwap52=20090727-05:34:126=39.6011=kgehvwap.2.214=9917=320=031=39.632=9937=338=9939=240=244=39.60000054=155=RIO65=AX10=037");
 
@@ -76,7 +75,7 @@ namespace FixTests
             Assert.AreEqual(Fix.Side.Buy, order.Side);
             Assert.AreEqual(Fix.OrdStatus.Filled, order.OrdStatus);
         }
-        
+
         [TestMethod]
         public void TestTritonNewAck()
         {
@@ -105,7 +104,7 @@ namespace FixTests
             Assert.AreEqual(40m, order.Price);
             Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
         }
-        
+
         [TestMethod]
         public void TestOrderIdIsInitialised()
         {
@@ -166,7 +165,7 @@ namespace FixTests
             Assert.AreEqual(Fix.Side.Buy, order.Side);
             Assert.IsNull(order.OrderID);
         }
-        
+
         [TestMethod]
         public void TestKodiakNewAckReport()
         {
@@ -229,7 +228,7 @@ namespace FixTests
 
             var book = new Fix.OrderBook();
 
-            for(int index = 0; index < messages.Count; ++index)
+            for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
                 Assert.IsTrue(book.Process(message));
@@ -237,66 +236,66 @@ namespace FixTests
                 Fix.Order order = null;
                 Fix.Order replacement = null;
 
-                if(book.Orders.Count > 0)
+                if (book.Orders.Count > 0)
                     order = book.Orders[0];
 
-                if(book.Orders.Count > 1)
+                if (book.Orders.Count > 1)
                     replacement = book.Orders[1];
 
-                switch(index)
+                switch (index)
                 {
-                case 0: // OrderSingle
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.IsNotNull(order);
-                    Assert.IsNull(order.OrdStatus);
-                    Assert.AreEqual(5000, order.OrderQty);
-                    Assert.AreEqual(23.45m, order.Price);
-                    break;
+                    case 0: // OrderSingle
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.IsNotNull(order);
+                        Assert.IsNull(order.OrdStatus);
+                        Assert.AreEqual(5000, order.OrderQty);
+                        Assert.AreEqual(23.45m, order.Price);
+                        break;
 
-                case 1: // New
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.IsNotNull(order);
-                    Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
-                    Assert.AreEqual(5000, order.OrderQty);
-                    Assert.AreEqual(23.45m, order.Price);
-                    break;
+                    case 1: // New
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.IsNotNull(order);
+                        Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
+                        Assert.AreEqual(5000, order.OrderQty);
+                        Assert.AreEqual(23.45m, order.Price);
+                        break;
 
-                case 2: // OrderCancelReplaceRequest
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.IsNotNull(order);
-                    Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
-                    Assert.AreEqual(5000, order.OrderQty);
-                    Assert.AreEqual(23.45m, order.Price);
-                    Assert.AreEqual(6000, order.PendingOrderQty);
-                    Assert.AreEqual(23.50m, order.PendingPrice);
-                    break;
+                    case 2: // OrderCancelReplaceRequest
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.IsNotNull(order);
+                        Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
+                        Assert.AreEqual(5000, order.OrderQty);
+                        Assert.AreEqual(23.45m, order.Price);
+                        Assert.AreEqual(6000, order.PendingOrderQty);
+                        Assert.AreEqual(23.50m, order.PendingPrice);
+                        break;
 
-                case 3: // Pending Cancel Replace
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.IsNotNull(order);
-                    Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
-                    Assert.AreEqual(5000, order.OrderQty);
-                    Assert.AreEqual(23.45m, order.Price);
-                    Assert.AreEqual(6000, order.PendingOrderQty);
-                    Assert.AreEqual(23.50m, order.PendingPrice);
-                    break;
-            
-                case 4: // Replaced
-                    {
-                    Assert.AreEqual(2, book.Orders.Count);
-                    Assert.IsNotNull(order);
-                    Assert.IsNotNull(replacement);
-                    Assert.AreEqual(Fix.OrdStatus.Replaced, order.OrdStatus);
-                    Assert.AreEqual(Fix.OrdStatus.New, replacement.OrdStatus);
-                    Assert.AreEqual(5000, order.OrderQty);
-                    Assert.AreEqual(6000, replacement.OrderQty);
-                    Assert.AreEqual(23.50m, replacement.Price);
-                    Assert.IsNull(replacement.PendingOrderQty);
-                    Assert.IsNull(replacement.PendingPrice);
-                    Assert.IsNull(order.PendingOrderQty);
-                    Assert.IsNull(order.PendingPrice);
-                    }
-                    break;
+                    case 3: // Pending Cancel Replace
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.IsNotNull(order);
+                        Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
+                        Assert.AreEqual(5000, order.OrderQty);
+                        Assert.AreEqual(23.45m, order.Price);
+                        Assert.AreEqual(6000, order.PendingOrderQty);
+                        Assert.AreEqual(23.50m, order.PendingPrice);
+                        break;
+
+                    case 4: // Replaced
+                        {
+                            Assert.AreEqual(2, book.Orders.Count);
+                            Assert.IsNotNull(order);
+                            Assert.IsNotNull(replacement);
+                            Assert.AreEqual(Fix.OrdStatus.Replaced, order.OrdStatus);
+                            Assert.AreEqual(Fix.OrdStatus.New, replacement.OrdStatus);
+                            Assert.AreEqual(5000, order.OrderQty);
+                            Assert.AreEqual(6000, replacement.OrderQty);
+                            Assert.AreEqual(23.50m, replacement.Price);
+                            Assert.IsNull(replacement.PendingOrderQty);
+                            Assert.IsNull(replacement.PendingPrice);
+                            Assert.IsNull(order.PendingOrderQty);
+                            Assert.IsNull(order.PendingPrice);
+                        }
+                        break;
                 }
             }
         }
@@ -314,10 +313,10 @@ namespace FixTests
             };
 
             Assert.AreEqual(5, messages.Count);
-            
+
             var book = new Fix.OrderBook();
 
-            for(int index = 0; index < messages.Count; ++index)
+            for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
                 Assert.IsTrue(book.Process(message));
@@ -325,55 +324,55 @@ namespace FixTests
                 Fix.Order order = null;
                 Fix.Order replacement = null;
 
-                if(book.Orders.Count > 0)
+                if (book.Orders.Count > 0)
                     order = book.Orders[0];
 
-                if(book.Orders.Count > 1)
+                if (book.Orders.Count > 1)
                     replacement = book.Orders[1];
 
-                switch(index)
+                switch (index)
                 {
-                case 0: // OrderSingle
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.IsNotNull(order);
-                    Assert.AreEqual(35, order.OrderQty);
-                    Assert.AreEqual(10m, order.Price);
-                    break;
+                    case 0: // OrderSingle
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.IsNotNull(order);
+                        Assert.AreEqual(35, order.OrderQty);
+                        Assert.AreEqual(10m, order.Price);
+                        break;
 
-                case 1: // New
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.IsNotNull(order);
-                    Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
-                    Assert.AreEqual(35, order.OrderQty);
-                    Assert.AreEqual(10m, order.Price);
-                    break;
+                    case 1: // New
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.IsNotNull(order);
+                        Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
+                        Assert.AreEqual(35, order.OrderQty);
+                        Assert.AreEqual(10m, order.Price);
+                        break;
 
-                case 2: // OrderCancelReplaceRequest
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.IsNotNull(order);
-                    Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
-                    Assert.AreEqual(35, order.OrderQty);
-                    Assert.AreEqual(10m, order.Price);
-                    break;
+                    case 2: // OrderCancelReplaceRequest
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.IsNotNull(order);
+                        Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
+                        Assert.AreEqual(35, order.OrderQty);
+                        Assert.AreEqual(10m, order.Price);
+                        break;
 
-                case 3: // Pending Cancel Replace
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.IsNotNull(order);
-                    Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
-                    Assert.AreEqual(35, order.OrderQty);
-                    Assert.AreEqual(10m, order.Price);
-                    break;
-            
-                case 4: // Replaced
-                    Assert.AreEqual(2, book.Orders.Count);
-                    Assert.IsNotNull(order);
-                    Assert.IsNotNull(replacement);
-                    Assert.AreEqual(Fix.OrdStatus.Replaced, order.OrdStatus);
-                    Assert.AreEqual(Fix.OrdStatus.New, replacement.OrdStatus);
-                    Assert.AreEqual(35, order.OrderQty);
-                    Assert.AreEqual(35, replacement.OrderQty);
-                    Assert.AreEqual(10.7m, replacement.Price);
-                    break;
+                    case 3: // Pending Cancel Replace
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.IsNotNull(order);
+                        Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
+                        Assert.AreEqual(35, order.OrderQty);
+                        Assert.AreEqual(10m, order.Price);
+                        break;
+
+                    case 4: // Replaced
+                        Assert.AreEqual(2, book.Orders.Count);
+                        Assert.IsNotNull(order);
+                        Assert.IsNotNull(replacement);
+                        Assert.AreEqual(Fix.OrdStatus.Replaced, order.OrdStatus);
+                        Assert.AreEqual(Fix.OrdStatus.New, replacement.OrdStatus);
+                        Assert.AreEqual(35, order.OrderQty);
+                        Assert.AreEqual(35, replacement.OrderQty);
+                        Assert.AreEqual(10.7m, replacement.Price);
+                        break;
                 }
             }
         }
@@ -388,112 +387,112 @@ namespace FixTests
 
             var book = new Fix.OrderBook();
 
-            for(int index = 0; index < book.Orders.Count; ++index)
+            for (int index = 0; index < book.Orders.Count; ++index)
             {
                 Assert.IsTrue(book.Process(messages[index]));
 
-                switch(index)
+                switch (index)
                 {
                     case 0:		// OrderSingle
                         {
-                        Assert.AreEqual(1,book.Orders.Count);
-                        Fix.Order order = book.Orders[0];
-                        Assert.IsNull(order.OrdStatus);
-                        Assert.AreEqual(100000, order.OrderQty);
-                        Assert.AreEqual(25.42m, order.Price);
+                            Assert.AreEqual(1, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.IsNull(order.OrdStatus);
+                            Assert.AreEqual(100000, order.OrderQty);
+                            Assert.AreEqual(25.42m, order.Price);
                         }
                         break;
 
                     case 1:		// New
                         {
-                        Assert.AreEqual(1, book.Orders.Count);
-                        Fix.Order order = book.Orders[0];
-                        Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
-                        Assert.AreEqual(10000, order.OrderQty);
-                        Assert.AreEqual(25.42m, order.Price);
+                            Assert.AreEqual(1, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
+                            Assert.AreEqual(10000, order.OrderQty);
+                            Assert.AreEqual(25.42m, order.Price);
                         }
                         break;
 
                     case 10:	// OrderCancelReplaceRequest
                         {
-                        Assert.AreEqual(1, book.Orders.Count);
-                        Fix.Order order = book.Orders[0];
-                        Assert.AreEqual(Fix.OrdStatus.PendingCancel, order.OrdStatus);
-                        Assert.AreEqual(10000, order.OrderQty);
-                        Assert.AreEqual(25.42m, order.Price);
+                            Assert.AreEqual(1, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.AreEqual(Fix.OrdStatus.PendingCancel, order.OrdStatus);
+                            Assert.AreEqual(10000, order.OrderQty);
+                            Assert.AreEqual(25.42m, order.Price);
                         }
                         break;
 
                     case 11:	// PendingCancelReplace
                         {
-                        Assert.AreEqual(1, book.Orders.Count);
-                        Fix.Order order = book.Orders[0];
-                        Assert.AreEqual(10000, order.OrderQty);
-                        Assert.AreEqual(25.42m, order.Price);
+                            Assert.AreEqual(1, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.AreEqual(10000, order.OrderQty);
+                            Assert.AreEqual(25.42m, order.Price);
                         }
                         break;
 
                     case 12:	// Replaced
                         {
-                        Assert.AreEqual(2, book.Orders.Count);
-                        Fix.Order order = book.Orders[0];
-                        Assert.AreEqual(10000, order.OrderQty);
-                        Assert.AreEqual(25.42m, order.Price);
-                        order = book.Orders[1];
-                        Assert.AreEqual(10000, order.OrderQty);
-                        Assert.AreEqual(25.46, order.Price);
+                            Assert.AreEqual(2, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.AreEqual(10000, order.OrderQty);
+                            Assert.AreEqual(25.42m, order.Price);
+                            order = book.Orders[1];
+                            Assert.AreEqual(10000, order.OrderQty);
+                            Assert.AreEqual(25.46, order.Price);
                         }
                         break;
 
                     case 14:	// OrderCancelReplaceRequest
                         {
-                        Assert.AreEqual(2, book.Orders.Count);
-                        Fix.Order order = book.Orders[0];
-                        Assert.AreEqual(10000, order.OrderQty);
+                            Assert.AreEqual(2, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.AreEqual(10000, order.OrderQty);
                         }
                         break;
 
                     case 15:	// PendingCancelReplace
                         {
-                        Assert.AreEqual(2, book.Orders.Count);
-                        Fix.Order order = book.Orders[0];
-                        Assert.AreEqual(10000, order.OrderQty);
+                            Assert.AreEqual(2, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.AreEqual(10000, order.OrderQty);
                         }
                         break;
 
                     case 16:	// Replaced
                         {
-                        Assert.AreEqual(3, book.Orders.Count);
-                        Fix.Order order = book.Orders[0];
-                        Assert.AreEqual(10000, order.OrderQty);
-                        Assert.AreEqual(25.42m, order.Price);
-                        Assert.AreEqual(Fix.OrdStatus.Replaced, order.OrdStatus);
-                        order = book.Orders[1];
-                        Assert.AreEqual(10000, order.OrderQty);
-                        Assert.AreEqual(25.46m, order.Price);
-                        Assert.AreEqual(Fix.OrdStatus.Replaced, order.OrdStatus);
-                        order = book.Orders[2];
-                        Assert.AreEqual(10000, order.OrderQty);
-                        Assert.AreEqual(25.5m, order.Price);
-                        Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, order.OrdStatus);
+                            Assert.AreEqual(3, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.AreEqual(10000, order.OrderQty);
+                            Assert.AreEqual(25.42m, order.Price);
+                            Assert.AreEqual(Fix.OrdStatus.Replaced, order.OrdStatus);
+                            order = book.Orders[1];
+                            Assert.AreEqual(10000, order.OrderQty);
+                            Assert.AreEqual(25.46m, order.Price);
+                            Assert.AreEqual(Fix.OrdStatus.Replaced, order.OrdStatus);
+                            order = book.Orders[2];
+                            Assert.AreEqual(10000, order.OrderQty);
+                            Assert.AreEqual(25.5m, order.Price);
+                            Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, order.OrdStatus);
                         }
                         break;
 
                     case 19:	// Filled
                         {
-                        Assert.AreEqual(3, book.Orders.Count);
-                        Fix.Order order = book.Orders[book.Orders.Count - 1];
-                        Assert.AreEqual(Fix.OrdStatus.Filled, order.OrdStatus);
-                        Assert.AreEqual(10000, order.OrderQty);
+                            Assert.AreEqual(3, book.Orders.Count);
+                            Fix.Order order = book.Orders[book.Orders.Count - 1];
+                            Assert.AreEqual(Fix.OrdStatus.Filled, order.OrdStatus);
+                            Assert.AreEqual(10000, order.OrderQty);
                         }
                         break;
 
                     default:
                         {
-                        Assert.AreEqual(3, book.Orders.Count);
-                        Fix.Order order = book.Orders[book.Orders.Count - 1];
-                        Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, order.OrdStatus);
-                        Assert.AreEqual(10000, order.OrderQty);
+                            Assert.AreEqual(3, book.Orders.Count);
+                            Fix.Order order = book.Orders[book.Orders.Count - 1];
+                            Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, order.OrdStatus);
+                            Assert.AreEqual(10000, order.OrderQty);
                         }
                         break;
 
@@ -503,7 +502,7 @@ namespace FixTests
 
         [TestMethod]
         public void TestCancel()
-        { 
+        {
             var parser = new Fix.Parser();
             Fix.MessageCollection messages = parser.Parse(new MemoryStream(Encoding.ASCII.GetBytes(
                 "{\n" +
@@ -602,7 +601,7 @@ namespace FixTests
                 "LastPx   (31) - 0\n" +
                 "CheckSum   (10) - 126\n" +
                 "}\n" +
-                "{\n" +             
+                "{\n" +
                 "BeginString    (8) - FIX.4.2\n" +
                 "BodyLength    (9) - 166\n" +
                 "MsgType   (35) - 8\n" +
@@ -629,10 +628,10 @@ namespace FixTests
             )));
 
             Assert.AreEqual(5, messages.Count);
-    
+
             var book = new Fix.OrderBook();
 
-            foreach(Fix.Message message in messages)
+            foreach (Fix.Message message in messages)
             {
                 Assert.IsNotNull(message);
                 Assert.IsTrue(book.Process(message));
@@ -658,64 +657,64 @@ namespace FixTests
 
             var book = new Fix.OrderBook();
 
-            for(int index = 0; index < messages.Count; ++index)
+            for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
                 Assert.IsTrue(book.Process(message));
 
-                switch(index)
+                switch (index)
                 {
-                case 0: // OrderSingle
-                    {
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Fix.Order order = book.Orders[0];
-                    Assert.IsNull(order.OrdStatus);
-                    }
-                    break;
+                    case 0: // OrderSingle
+                        {
+                            Assert.AreEqual(1, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.IsNull(order.OrdStatus);
+                        }
+                        break;
 
-                case 1: // New
-                    {
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Fix.Order order = book.Orders[0];
-                    Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
-                    }
-                    break;
+                    case 1: // New
+                        {
+                            Assert.AreEqual(1, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
+                        }
+                        break;
 
-                case 2: // OrderCancelReplaceRequest
-                    {
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Fix.Order order = book.Orders[0];
-                    Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
-                    }
-                    break;
+                    case 2: // OrderCancelReplaceRequest
+                        {
+                            Assert.AreEqual(1, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
+                        }
+                        break;
 
-                case 3: // Pending Cancel Replace
-                    {
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Fix.Order order = book.Orders[0];
-                    Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
-                    }
-                    break;
+                    case 3: // Pending Cancel Replace
+                        {
+                            Assert.AreEqual(1, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
+                        }
+                        break;
 
-                case 4: // Replaced
-                    {
-                    Assert.AreEqual(2, book.Orders.Count);
-                    Fix.Order order = book.Orders[0];
-                    Assert.AreEqual(Fix.OrdStatus.Replaced, order.OrdStatus);
-                    order = book.Orders[1];
-                    Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
-                    }
-                    break;
+                    case 4: // Replaced
+                        {
+                            Assert.AreEqual(2, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.AreEqual(Fix.OrdStatus.Replaced, order.OrdStatus);
+                            order = book.Orders[1];
+                            Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
+                        }
+                        break;
 
-                case 5: // Cancelled
-                    {
-                    Assert.AreEqual(2, book.Orders.Count);
-                    Fix.Order order = book.Orders[0];
-                    Assert.AreEqual(Fix.OrdStatus.Replaced, order.OrdStatus);
-                    order = book.Orders[1];
-                    Assert.AreEqual(Fix.OrdStatus.Canceled, order.OrdStatus);
-                    }
-                    break;
+                    case 5: // Cancelled
+                        {
+                            Assert.AreEqual(2, book.Orders.Count);
+                            Fix.Order order = book.Orders[0];
+                            Assert.AreEqual(Fix.OrdStatus.Replaced, order.OrdStatus);
+                            order = book.Orders[1];
+                            Assert.AreEqual(Fix.OrdStatus.Canceled, order.OrdStatus);
+                        }
+                        break;
                 }
             }
         }
@@ -727,7 +726,7 @@ namespace FixTests
             Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_qj_kodiak.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(13, messages.Count);
-           
+
             var book = new Fix.OrderBook();
 
             foreach (Fix.Message message in messages)
@@ -760,34 +759,34 @@ namespace FixTests
 
             var book = new Fix.OrderBook();
 
-            for(int index = 0; index < messages.Count; ++index)
+            for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
                 Assert.IsTrue(book.Process(message));
                 Assert.AreEqual(1, book.Orders.Count);
                 Fix.Order order = book.Orders[0];
 
-                switch(index)
+                switch (index)
                 {
-                case 0: // OrderSingle
-                    Assert.IsNull(order.OrdStatus);
-                    break;
+                    case 0: // OrderSingle
+                        Assert.IsNull(order.OrdStatus);
+                        break;
 
-                case 1: // New
-                    Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
-                    break;
+                    case 1: // New
+                        Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
+                        break;
 
-                case 2: // OrderCancelRequest
-                    Assert.AreEqual(Fix.OrdStatus.PendingCancel, order.OrdStatus);
-                    break;
+                    case 2: // OrderCancelRequest
+                        Assert.AreEqual(Fix.OrdStatus.PendingCancel, order.OrdStatus);
+                        break;
 
-                case 3: // Pending Cancel Replace
-                    Assert.AreEqual(Fix.OrdStatus.PendingCancel, order.OrdStatus);
-                    break;
-            
-                case 4: // Rejected
-                    Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
-                    break;
+                    case 3: // Pending Cancel Replace
+                        Assert.AreEqual(Fix.OrdStatus.PendingCancel, order.OrdStatus);
+                        break;
+
+                    case 4: // Rejected
+                        Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
+                        break;
                 }
             }
         }
@@ -808,43 +807,43 @@ namespace FixTests
 
             var book = new Fix.OrderBook();
 
-            for(int index = 0; index < messages.Count; ++index)
+            for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
                 Assert.IsTrue(book.Process(message));
                 Assert.AreEqual(1, book.Orders.Count);
                 Fix.Order order = book.Orders[0];
 
-                switch(index)
+                switch (index)
                 {
-                case 0: // OrderSingle
-                    Assert.IsNull(order.OrdStatus);
-                    break;
+                    case 0: // OrderSingle
+                        Assert.IsNull(order.OrdStatus);
+                        break;
 
-                case 1: // New
-                    Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
-                    break;
+                    case 1: // New
+                        Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
+                        break;
 
-                case 2: // ExecutionReport
-                    Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, order.OrdStatus);
-                    break;
+                    case 2: // ExecutionReport
+                        Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, order.OrdStatus);
+                        break;
 
-                case 3: // OrderCancelRequest
-                    Assert.AreEqual(Fix.OrdStatus.PendingCancel, order.OrdStatus);
-                    break;
+                    case 3: // OrderCancelRequest
+                        Assert.AreEqual(Fix.OrdStatus.PendingCancel, order.OrdStatus);
+                        break;
 
-                case 4: // Pending Cancel Replace
-                    Assert.AreEqual(Fix.OrdStatus.PendingCancel, order.OrdStatus);
-                    break;
-            
-                case 5: // Rejected
-                    Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, order.OrdStatus);
-                    break;
+                    case 4: // Pending Cancel Replace
+                        Assert.AreEqual(Fix.OrdStatus.PendingCancel, order.OrdStatus);
+                        break;
+
+                    case 5: // Rejected
+                        Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, order.OrdStatus);
+                        break;
                 }
             }
         }
 
-         [TestMethod]
+        [TestMethod]
         public void TestNewReplaceRejectedAgain()
         {
             var messages = new List<Fix.Message>
@@ -859,34 +858,34 @@ namespace FixTests
 
             var book = new Fix.OrderBook();
 
-            for(int index = 0; index < messages.Count; ++index)
+            for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
                 Assert.IsTrue(book.Process(message));
                 Assert.AreEqual(1, book.Orders.Count);
                 Fix.Order order = book.Orders[0];
 
-                switch(index)
+                switch (index)
                 {
-                case 0: // OrderSingle
-                    Assert.IsNull(order.OrdStatus);
-                    break;
+                    case 0: // OrderSingle
+                        Assert.IsNull(order.OrdStatus);
+                        break;
 
-                case 1: // New
-                    Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
-                    break;
+                    case 1: // New
+                        Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
+                        break;
 
-                case 2: // OrderCancelReplaceRequest
-                    Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
-                    break;
+                    case 2: // OrderCancelReplaceRequest
+                        Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
+                        break;
 
-                case 3: // Pending Cancel Replace
-                    Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
-                    break;
-            
-                case 4: // Rejected
-                    Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
-                    break;
+                    case 3: // Pending Cancel Replace
+                        Assert.AreEqual(Fix.OrdStatus.PendingReplace, order.OrdStatus);
+                        break;
+
+                    case 4: // Rejected
+                        Assert.AreEqual(Fix.OrdStatus.New, order.OrdStatus);
+                        break;
                 }
             }
         }
@@ -898,7 +897,7 @@ namespace FixTests
             Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_fix_4_0_amend.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(6, messages.Count);
-          
+
             var book = new Fix.OrderBook();
 
             foreach (Fix.Message message in messages)
@@ -921,7 +920,7 @@ namespace FixTests
             Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_cancel_leavesqty.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(5, messages.Count);
-           
+
             var book = new Fix.OrderBook();
 
             foreach (Fix.Message message in messages)
@@ -943,7 +942,7 @@ namespace FixTests
             Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_new_amend.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(5, messages.Count);
-            
+
             var book = new Fix.OrderBook();
 
             foreach (Fix.Message message in messages)
@@ -968,61 +967,61 @@ namespace FixTests
             Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_upward_amend_filled.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(7, messages.Count);
-            
+
             var book = new Fix.OrderBook();
 
-            for(int index = 0; index < messages.Count; ++index)
+            for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
                 Assert.IsTrue(book.Process(message));
                 Fix.Order original = book.Orders[0];
                 Fix.Order replacement = null;
 
-                if(book.Orders.Count > 1)
+                if (book.Orders.Count > 1)
                 {
                     replacement = book.Orders[1];
                 }
 
-                switch(index)
+                switch (index)
                 {
-                case 0:
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.IsNull(original.OrdStatus);
-                    break;
+                    case 0:
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.IsNull(original.OrdStatus);
+                        break;
 
-                case 1:
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.AreEqual(Fix.OrdStatus.New, original.OrdStatus);
-                    break;
+                    case 1:
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.AreEqual(Fix.OrdStatus.New, original.OrdStatus);
+                        break;
 
-                case 2:
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.AreEqual(Fix.OrdStatus.Filled, original.OrdStatus);
-                    break;
+                    case 2:
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.AreEqual(Fix.OrdStatus.Filled, original.OrdStatus);
+                        break;
 
-                case 3:
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.AreEqual(Fix.OrdStatus.PendingReplace, original.OrdStatus);
-                    break;
-            
-                case 4:
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.AreEqual(Fix.OrdStatus.PendingReplace, original.OrdStatus);
-                    break;
+                    case 3:
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.AreEqual(Fix.OrdStatus.PendingReplace, original.OrdStatus);
+                        break;
 
-                case 5:
-                    Assert.AreEqual(2, book.Orders.Count);
-                    Assert.IsNotNull(replacement);
-                    Assert.AreEqual(Fix.OrdStatus.Replaced, original.OrdStatus);
-                    Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, replacement.OrdStatus);
-                    break;
+                    case 4:
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.AreEqual(Fix.OrdStatus.PendingReplace, original.OrdStatus);
+                        break;
 
-                case 6:
-                    Assert.AreEqual(2, book.Orders.Count);
-                    Assert.IsNotNull(replacement);
-                    Assert.AreEqual(Fix.OrdStatus.Replaced, original.OrdStatus);
-                    Assert.AreEqual(Fix.OrdStatus.Filled, replacement.OrdStatus);
-                    break;
+                    case 5:
+                        Assert.AreEqual(2, book.Orders.Count);
+                        Assert.IsNotNull(replacement);
+                        Assert.AreEqual(Fix.OrdStatus.Replaced, original.OrdStatus);
+                        Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, replacement.OrdStatus);
+                        break;
+
+                    case 6:
+                        Assert.AreEqual(2, book.Orders.Count);
+                        Assert.IsNotNull(replacement);
+                        Assert.AreEqual(Fix.OrdStatus.Replaced, original.OrdStatus);
+                        Assert.AreEqual(Fix.OrdStatus.Filled, replacement.OrdStatus);
+                        break;
                 }
             }
         }
@@ -1034,63 +1033,63 @@ namespace FixTests
             Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_upward_amend_filled_to_partial.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(7, messages.Count);
-            
+
             var book = new Fix.OrderBook();
 
-            for(int index = 0; index < messages.Count; ++index)
+            for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
                 Assert.IsTrue(book.Process(message));
                 Fix.Order original = book.Orders[0];
                 Fix.Order replacement = null;
 
-                if(book.Orders.Count > 1)
+                if (book.Orders.Count > 1)
                 {
                     replacement = book.Orders[1];
                 }
 
-                switch(index)
+                switch (index)
                 {
-                case 0:
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.IsNull(original.OrdStatus);
-                    break;
+                    case 0:
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.IsNull(original.OrdStatus);
+                        break;
 
-                case 1:
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.AreEqual(Fix.OrdStatus.New, original.OrdStatus);
-                    break;
+                    case 1:
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.AreEqual(Fix.OrdStatus.New, original.OrdStatus);
+                        break;
 
-                case 2:
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, original.OrdStatus);
-                    break;
+                    case 2:
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, original.OrdStatus);
+                        break;
 
-                case 3:
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.AreEqual(Fix.OrdStatus.Filled, original.OrdStatus);
-                    break;
+                    case 3:
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.AreEqual(Fix.OrdStatus.Filled, original.OrdStatus);
+                        break;
 
-                case 4:
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.AreEqual(Fix.OrdStatus.PendingReplace, original.OrdStatus);
-                    break;
-           
-                case 5:
-                    Assert.AreEqual(1, book.Orders.Count);
-                    Assert.AreEqual(Fix.OrdStatus.PendingReplace, original.OrdStatus);
-                    break;
-            
-                case 6:
-                    Assert.AreEqual(2, book.Orders.Count);
-                    Assert.IsNotNull(replacement);
-                    Assert.AreEqual(Fix.OrdStatus.Replaced, original.OrdStatus);
-                    Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, replacement.OrdStatus);
-                    break;
+                    case 4:
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.AreEqual(Fix.OrdStatus.PendingReplace, original.OrdStatus);
+                        break;
+
+                    case 5:
+                        Assert.AreEqual(1, book.Orders.Count);
+                        Assert.AreEqual(Fix.OrdStatus.PendingReplace, original.OrdStatus);
+                        break;
+
+                    case 6:
+                        Assert.AreEqual(2, book.Orders.Count);
+                        Assert.IsNotNull(replacement);
+                        Assert.AreEqual(Fix.OrdStatus.Replaced, original.OrdStatus);
+                        Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, replacement.OrdStatus);
+                        break;
                 }
             }
         }
-        
+
         [TestMethod]
         [DeploymentItem("Logs/t_fill_while_cancel_pending.log")]
         public void TestFillWhileCancelPending()
@@ -1098,16 +1097,16 @@ namespace FixTests
             Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_fill_while_cancel_pending.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(6, messages.Count);
-            
+
             var book = new Fix.OrderBook();
 
-            for(int index = 0; index < messages.Count; ++index)
+            for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
                 Assert.IsTrue(book.Process(message));
                 Fix.Order order = book.Orders[0];
 
-                switch(index)
+                switch (index)
                 {
                     case 0:
                         Assert.IsNull(order.OrdStatus);
@@ -1139,7 +1138,7 @@ namespace FixTests
                 }
             }
         }
-        
+
         [TestMethod]
         [DeploymentItem("Logs/t_fill_while_amend_pending.log")]
         public void TestFillWhileAmendPending()
@@ -1147,22 +1146,22 @@ namespace FixTests
             Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_fill_while_amend_pending.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(6, messages.Count);
-          
+
             var book = new Fix.OrderBook();
 
-            for(int index = 0; index < messages.Count; ++index)
+            for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
                 Assert.IsTrue(book.Process(message));
                 Fix.Order original = book.Orders[0];
                 Fix.Order replacement = null;
 
-                if(book.Orders.Count > 1)
+                if (book.Orders.Count > 1)
                 {
                     replacement = book.Orders[1];
                 }
 
-                switch(index)
+                switch (index)
                 {
                     case 0:
                         Assert.AreEqual(1, book.Orders.Count);

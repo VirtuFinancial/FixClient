@@ -10,10 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -38,7 +36,7 @@ namespace Fix.Repository
         [XmlElement("Message")]
         public List<Message> Items { get; } = new List<Message>();
     }
-  
+
     public class Message : ICloneable
     {
         public string ComponentID { get; set; }

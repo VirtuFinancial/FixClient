@@ -10,9 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-using System;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace FixClient
@@ -63,19 +61,19 @@ namespace FixClient
             Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn
-                         {
-                             Name = FilterFieldDataTable.ColumnTag,
-                             ReadOnly = true,
-                             AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-                         };
+            {
+                Name = FilterFieldDataTable.ColumnTag,
+                ReadOnly = true,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+            };
             Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn
-                         {
-                             Name = FilterFieldDataTable.ColumnName,
-                             ReadOnly = true,
-                             AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                         };
+            {
+                Name = FilterFieldDataTable.ColumnName,
+                ReadOnly = true,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
             Columns.Add(column);
         }
     }

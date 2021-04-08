@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace FixClient
@@ -21,7 +21,7 @@ namespace FixClient
         {
             if (s == null)
                 throw new ArgumentNullException(nameof(s));
-            
+
             if (partLength <= 0)
                 throw new ArgumentException("Part length has to be positive.", nameof(partLength));
 

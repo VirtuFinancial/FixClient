@@ -10,8 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FixTests
 {
@@ -61,12 +61,12 @@ namespace FixTests
         public void TestConstructorNoSymbolOrSecurityID()
         {
             var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.TradeCaptureReport.MsgType };
-            
+
             message.Fields.Set(Fix.Dictionary.Fields.TradeReportID, "1");
             message.Fields.Set(Fix.Dictionary.Fields.LastQty, "1000");
             message.Fields.Set(Fix.Dictionary.Fields.LastPx, "25");
             message.Fields.Set(Fix.Dictionary.Fields.TrdType, Fix.TrdType.RegularTrade);
-            
+
             var trade = new Fix.TradeReport(message);
         }
 
@@ -83,7 +83,7 @@ namespace FixTests
 
             var trade = new Fix.TradeReport(message);
         }
-        
+
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestConstructorNoLastQty()

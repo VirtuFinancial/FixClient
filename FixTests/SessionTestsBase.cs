@@ -10,21 +10,16 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Net.Sockets;
-using System.Collections.Concurrent;
-using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace FixTests
 {
-    public class SessionTestsBase<TSession> where TSession : Fix.Session, new() 
+    public class SessionTestsBase<TSession> where TSession : Fix.Session, new()
     {
         const string Host = "127.0.0.1";
         int Port = 20101;
@@ -84,7 +79,7 @@ namespace FixTests
             _listener = new TcpListener(Fix.Network.GetLocalAddress(Host), Port);
             _listener.Start();
             _listener.BeginAcceptSocket(AcceptTcpClientCallback, _listener);
-            _client = new TcpClient {NoDelay = true};
+            _client = new TcpClient { NoDelay = true };
             _client.Connect(Fix.Network.GetAddress(Host), Port);
             Initiator = new TSession
             {
@@ -240,7 +235,7 @@ namespace FixTests
             foreach (var expected in expectedFields)
             {
                 Fix.Field actual;
-                for (;;)
+                for (; ; )
                 {
                     Assert.IsTrue(fields.MoveNext(), $"Expected field {expected} is not present or is not in the expected position");
                     actual = fields.Current;

@@ -10,11 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.IO;
 
 namespace Fix
@@ -73,7 +69,7 @@ namespace Fix
             {
                 reader.ValidateDataFields = false;
 
-                for (;;)
+                for (; ; )
                 {
                     try
                     {
@@ -96,7 +92,7 @@ namespace Fix
 
         public MessageCollection Parse(Uri uri)
         {
-            if(uri.Scheme != "file")
+            if (uri.Scheme != "file")
                 throw new ArgumentException("Exepected a URI with a 'file' scheme and got '{0}'", uri.Scheme);
 
             using (FileStream stream = new FileStream(uri.LocalPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

@@ -10,11 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FixClient
 {
@@ -46,7 +43,7 @@ namespace FixClient
 
             foreach (var item in enumType.GetEnumValues())
             {
-                Add(new EnumDescription(item.ToString(), (int)item));    
+                Add(new EnumDescription(item.ToString(), (int)item));
             }
         }
     }

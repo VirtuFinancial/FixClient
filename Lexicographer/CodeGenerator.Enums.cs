@@ -10,11 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.CodeDom;
 
 namespace Lexicographer
 {
@@ -43,7 +41,7 @@ namespace Lexicographer
                 declarations.Add(dictionaryType);
             }
 
-            foreach(int tag in version.Enums.Keys)
+            foreach (int tag in version.Enums.Keys)
             {
                 Fix.Repository.Field field;
 
