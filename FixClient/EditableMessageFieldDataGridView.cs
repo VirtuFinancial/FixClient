@@ -19,7 +19,7 @@ namespace FixClient
 {
     public partial class EditableMessageFieldDataGridView : MessageFieldDataGridView
     {
-        readonly ToolTip _toolTip = new ToolTip();
+        readonly ToolTip _toolTip = new();
 
         public EditableMessageFieldDataGridView()
         {
@@ -38,20 +38,18 @@ namespace FixClient
 
         protected override void OnEditingControlShowing(DataGridViewEditingControlShowingEventArgs e)
         {
-            var comboBox = e.Control as ComboBox;
-            if (comboBox == null)
+            if (e.Control as ComboBox == null)
                 return;
-            comboBox.DrawMode = DrawMode.OwnerDrawFixed;
-            comboBox.DrawItem -= ComboBoxDrawItem;
-            comboBox.DrawItem += ComboBoxDrawItem;
-            comboBox.DropDownClosed -= ComboBoxDropDownClosed;
-            comboBox.DropDownClosed += ComboBoxDropDownClosed;
+            (e.Control as ComboBox).DrawMode = DrawMode.OwnerDrawFixed;
+            (e.Control as ComboBox).DrawItem -= ComboBoxDrawItem;
+            (e.Control as ComboBox).DrawItem += ComboBoxDrawItem;
+            (e.Control as ComboBox).DropDownClosed -= ComboBoxDropDownClosed;
+            (e.Control as ComboBox).DropDownClosed += ComboBoxDropDownClosed;
         }
 
         void ComboBoxDropDownClosed(object sender, EventArgs e)
         {
-            var comboBox = sender as ComboBox;
-            if (comboBox != null)
+            if (sender is ComboBox comboBox)
             {
                 _toolTip.Hide(comboBox);
             }
@@ -62,24 +60,21 @@ namespace FixClient
             if (e.Index < 0)
                 return;
 
-            var comboBox = sender as ComboBox;
-
-            if (comboBox == null)
+            if (sender is not ComboBox comboBox)
                 return;
 
             string text = comboBox.GetItemText(comboBox.Items[e.Index]);
 
             e.DrawBackground();
 
-            using (SolidBrush br = new SolidBrush(e.ForeColor))
+            using (SolidBrush br = new(e.ForeColor))
             {
                 e.Graphics.DrawString(text, e.Font, br, e.Bounds);
             }
 
             if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
             {
-                var enumDescription = comboBox.Items[e.Index] as EnumDescription;
-                if (enumDescription == null)
+                if (comboBox.Items[e.Index] is not EnumDescription enumDescription)
                     return;
                 string description = ToolTipForCell(CurrentCell.RowIndex, CurrentCell.ColumnIndex, Convert.ToChar(enumDescription.Value));
                 Point position = comboBox.PointToClient(Cursor.Position);
@@ -136,9 +131,7 @@ namespace FixClient
 
                 DataGridViewRow row = Rows[index];
 
-                var cell = row.Cells[FieldDataTable.ColumnDescription] as DataGridViewComboBoxCell;
-
-                if (cell != null)
+                if (row.Cells[FieldDataTable.ColumnDescription] is DataGridViewComboBoxCell cell)
                 {
                     var collection = new EnumDescriptionCollection(enumType);
                     cell.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
@@ -147,8 +140,7 @@ namespace FixClient
 
                     if (EnumTypeHasNumericValues(enumType))
                     {
-                        int value;
-                        if (int.TryParse(field.Value, out value))
+                        if (int.TryParse(field.Value, out int value))
                         {
                             InternalChange = true;
                             cell.Value = new EnumDescription(Enum.GetName(enumType, value), value);
@@ -157,8 +149,7 @@ namespace FixClient
                     }
                     else
                     {
-                        char value;
-                        if (char.TryParse(field.Value, out value))
+                        if (char.TryParse(field.Value, out char value))
                         {
                             InternalChange = true;
                             cell.Value = new EnumDescription(Enum.GetName(enumType, value), value);
@@ -171,7 +162,7 @@ namespace FixClient
 
         bool InternalChange { get; set; }
 
-        bool EnumTypeHasNumericValues(Type enumType)
+        static bool EnumTypeHasNumericValues(Type enumType)
         {
             // TODO - we need a better way of doing type equality for version specific enums against the global definitions
             return enumType.Name == typeof(Fix.TrdType).Name ||
@@ -188,14 +179,11 @@ namespace FixClient
 
             DataGridViewColumn column = Columns[e.ColumnIndex];
             DataGridViewRow row = Rows[e.RowIndex];
-            var rowView = row.DataBoundItem as DataRowView;
 
-            if (rowView == null)
+            if (row.DataBoundItem is not DataRowView rowView)
                 return;
 
-            var dataRow = rowView.Row as FieldDataRow;
-
-            if (dataRow == null)
+            if (rowView.Row is not FieldDataRow dataRow)
                 return;
             //
             // We need to get the index of the row in the underlying table not the view as the view
@@ -247,8 +235,7 @@ namespace FixClient
                     field.Definition.DataType == Fix.Dictionary.DataTypes.Length ||
                     field.Definition.DataType == Fix.Dictionary.DataTypes.SeqNum)
                 {
-                    int i;
-                    if (!int.TryParse(value, out i))
+                    if (!int.TryParse(value, out var _))
                     {
                         MessageBox.Show(this,
                                         string.Format("{0} must be an integer", field.Definition.Name),
@@ -285,9 +272,7 @@ namespace FixClient
             if (field.Definition == null)
                 return;
 
-            var comboCell = row.Cells[FieldDataTable.ColumnDescription] as DataGridViewComboBoxCell;
-
-            if (comboCell == null)
+            if (row.Cells[FieldDataTable.ColumnDescription] is not DataGridViewComboBoxCell comboCell)
                 return;
 
             if (CurrentCell != null && CurrentCell.Value != DBNull.Value && enumType != null)
@@ -301,8 +286,7 @@ namespace FixClient
 
                 if (EnumTypeHasNumericValues(enumType))
                 {
-                    int i;
-                    if (int.TryParse(CurrentCell.Value.ToString(), out i))
+                    if (int.TryParse(CurrentCell.Value.ToString(), out int i))
                     {
                         comboCell.Value = i;
                     }
@@ -313,8 +297,7 @@ namespace FixClient
                 }
                 else
                 {
-                    char c;
-                    if (char.TryParse(CurrentCell.Value.ToString(), out c))
+                    if (char.TryParse(CurrentCell.Value.ToString(), out char c))
                     {
                         comboCell.Value = Convert.ToInt32(c);
                     }

@@ -21,7 +21,7 @@ namespace FixClient
     {
         const uint MaximumMessages = 1000;
         readonly LogMessageDataGridView _messageGrid;
-        readonly LogMessageDataTable _messageTable = new LogMessageDataTable("Messages");
+        readonly LogMessageDataTable _messageTable = new("Messages");
         readonly DataView _messageView;
         readonly ToolStripButton _clearButton;
         readonly SearchTextBox _searchTextBox;

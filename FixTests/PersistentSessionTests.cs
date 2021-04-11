@@ -24,7 +24,7 @@ namespace FixTests
         const string SenderCompId = "INITIATOR";
         const string TargetCompId = "ACCEPTOR";
 
-        readonly object _serialiser = new object();
+        readonly object _serialiser = new();
 
         [TestInitialize]
         public void TestInitialize()

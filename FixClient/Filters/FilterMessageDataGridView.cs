@@ -49,9 +49,7 @@ namespace FixClient
             DefaultCellStyle.SelectionForeColor = LookAndFeel.Color.GridCellSelectedForeground;
             DoubleBuffered = true;
 
-#pragma warning disable RECS0091 // Use 'var' keyword when possible
             DataGridViewColumn column = new DataGridViewCheckBoxColumn
-#pragma warning restore RECS0091 // Use 'var' keyword when possible
             {
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells,
                 Name = "Visible"

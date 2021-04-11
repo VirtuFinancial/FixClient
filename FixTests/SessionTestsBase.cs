@@ -190,15 +190,13 @@ namespace FixTests
 
         protected void AcceptorStateChange(Fix.State expected)
         {
-            Fix.State actual;
-            Assert.IsTrue(_acceptorStates.TryTake(out actual, Timeout), $"Timeout waiting for acceptor state change {expected}");
+            Assert.IsTrue(_acceptorStates.TryTake(out Fix.State actual, Timeout), $"Timeout waiting for acceptor state change {expected}");
             Assert.AreEqual(expected, actual);
         }
 
         protected void InitiatorStateChange(Fix.State expected)
         {
-            Fix.State actual;
-            Assert.IsTrue(_initatorStates.TryTake(out actual, Timeout), $"Timeout waiting for initiator state change {expected}");
+            Assert.IsTrue(_initatorStates.TryTake(out Fix.State actual, Timeout), $"Timeout waiting for initiator state change {expected}");
             Assert.AreEqual(expected, actual);
         }
 
@@ -212,7 +210,7 @@ namespace FixTests
             return Expect(_acceptorIncomingMessages, definition, expectedFields);
         }
 
-        string MsgTypeName(string msgType)
+        static string MsgTypeName(string msgType)
         {
             Fix.Dictionary.Message definition = Fix.Dictionary.Messages[msgType];
             if (definition == null)
@@ -220,11 +218,9 @@ namespace FixTests
             return definition.Name;
         }
 
-        Fix.Message Expect(BlockingCollection<Fix.Message> messages, Fix.Dictionary.Message definition, IEnumerable<Fix.Field> expectedFields)
+        static Fix.Message Expect(BlockingCollection<Fix.Message> messages, Fix.Dictionary.Message definition, IEnumerable<Fix.Field> expectedFields)
         {
-            Fix.Message message;
-
-            Assert.IsTrue(messages.TryTake(out message, Timeout), $"Timed out waiting for MsgType={definition.Name}");
+            Assert.IsTrue(messages.TryTake(out Fix.Message message, Timeout), $"Timed out waiting for MsgType={definition.Name}");
             Assert.AreEqual(definition.MsgType, message.MsgType, $"Found MsgType={MsgTypeName(message.MsgType)} when we expected MsgType={definition.Name}\n{message}");
 
             if (expectedFields == null)

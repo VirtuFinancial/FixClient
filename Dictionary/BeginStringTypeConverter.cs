@@ -20,7 +20,7 @@ namespace Fix
     {
         public class BeginStringTypeConverter : TypeConverter
         {
-            readonly List<Version> _versions = new List<Version>();
+            readonly List<Version> _versions = new();
 
             public BeginStringTypeConverter()
             {
@@ -51,9 +51,7 @@ namespace Fix
 
             public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
             {
-                var key = value as string;
-
-                if (key != null)
+                if (value is string key)
                 {
                     foreach (var version in _versions)
                     {

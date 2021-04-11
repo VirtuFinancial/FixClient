@@ -22,7 +22,7 @@ namespace Fix
         // We need a much smarter data structure here but this will do to get things working and
         // define the interface
         //
-        readonly List<Field> _fields = new List<Field>();
+        readonly List<Field> _fields = new();
         readonly Dictionary.Message _messageDefinition;
 
         public FieldCollection(Dictionary.Message messageDefinition = null)
@@ -34,9 +34,11 @@ namespace Fix
         {
             for (int index = 0; index < data.Length / 2; ++index)
             {
-                int tag;
-                if (!int.TryParse(data[index, 0], out tag))
+                if (!int.TryParse(data[index, 0], out int tag))
+                {
                     throw new ArgumentException($"Non numeric tag '{data[index, 0]}={data[index, 1]}'");
+                }
+
                 Add(new Field(tag, data[index, 1]));
             }
         }
@@ -45,8 +47,7 @@ namespace Fix
         {
             if (field.Definition == null && _messageDefinition != null)
             {
-                Dictionary.Field definition;
-                if (_messageDefinition.Fields.TryGetValue(field.Tag, out definition))
+                if (_messageDefinition.Fields.TryGetValue(field.Tag, out Dictionary.Field definition))
                 {
                     field.Definition = definition;
                 }

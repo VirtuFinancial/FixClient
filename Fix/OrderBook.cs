@@ -448,7 +448,6 @@ namespace Fix
             Field SenderCompID = message.Fields.Find(Dictionary.Fields.SenderCompID);
             Field TargetCompID = message.Fields.Find(Dictionary.Fields.TargetCompID);
             Field ListID = message.Fields.Find(Dictionary.Fields.ListID);
-            Field ClOrdID = message.Fields.Find(Dictionary.Fields.ClOrdID);
 
             if (ListID == null)
                 return false;
@@ -693,21 +692,23 @@ namespace Fix
             }
         }
 
-        public string KeyForOrder(Order order)
+        public static string KeyForOrder(Order order)
         {
             return KeyForOrder(order.SenderCompID, order.TargetCompID, order.ClOrdID);
         }
 
-        public string KeyForOrder(string SenderCompID, string TargetCompID, string ClOrdID)
+        public static string KeyForOrder(string SenderCompID, string TargetCompID, string ClOrdID)
         {
             return $"{SenderCompID}-{TargetCompID}-{ClOrdID}";
         }
 
         Order FindOrder(string SenderCompID, string TargetCompID, string ClOrdID)
         {
-            Order order;
-            if (Orders.TryGetValue(KeyForOrder(SenderCompID, TargetCompID, ClOrdID), out order))
+            if (Orders.TryGetValue(KeyForOrder(SenderCompID, TargetCompID, ClOrdID), out Order order))
+            {
                 return order;
+            }
+
             return null;
         }
 

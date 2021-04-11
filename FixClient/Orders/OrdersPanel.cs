@@ -562,7 +562,7 @@ namespace FixClient
 
                     var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.OrderCancelRequest.MsgType };
 
-                    _messageDefaults.UpdateMessage(message, order);
+                    MessagesPanel.UpdateMessage(message, order);
 
                     message.Fields.Set(Fix.Dictionary.Fields.TransactTime, Fix.Field.TimeString(_session.MillisecondTimestamps));
                     message.Fields.Set(Fix.Dictionary.Fields.Side, order.Side.Value);
@@ -921,7 +921,7 @@ namespace FixClient
             _orderTable.Rows.Add(row);
         }
 
-        void UpdateRow(OrderDataRow row)
+        static void UpdateRow(OrderDataRow row)
         {
             Fix.Order order = row.Order;
 

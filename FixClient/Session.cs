@@ -353,7 +353,7 @@ namespace FixClient
 
         #region Custom Fields
 
-        readonly Dictionary<int, CustomField> _customFields = new Dictionary<int, CustomField>();
+        readonly Dictionary<int, CustomField> _customFields = new();
 
         [Browsable(false)]
         public Dictionary<int, CustomField> CustomFields
@@ -384,13 +384,11 @@ namespace FixClient
 
         #region Templates
 
-        readonly Dictionary<string, Fix.Message> _messageTemplates = new Dictionary<string, Fix.Message>();
+        readonly Dictionary<string, Fix.Message> _messageTemplates = new();
 
         public override Fix.Message MessageForTemplate(Fix.Dictionary.Message templateMessage)
         {
-            Fix.Message message;
-
-            if (!_messageTemplates.TryGetValue(templateMessage.MsgType, out message))
+            if (!_messageTemplates.TryGetValue(templateMessage.MsgType, out Fix.Message message))
             {
                 message = base.MessageForTemplate(templateMessage);
 
@@ -409,9 +407,7 @@ namespace FixClient
 
         public void ResetTemplateMessage(string msgType)
         {
-            Fix.Message template;
-
-            if (_messageTemplates.TryGetValue(msgType, out template))
+            if (_messageTemplates.TryGetValue(msgType, out Fix.Message template))
             {
                 Fix.Dictionary.Message definition = template.Definition;
 
@@ -458,8 +454,8 @@ namespace FixClient
 
         #region Filters
 
-        readonly Dictionary<string, bool> _messageFilters = new Dictionary<string, bool>();
-        readonly Dictionary<string, Dictionary<int, bool>> _fieldFilters = new Dictionary<string, Dictionary<int, bool>>();
+        readonly Dictionary<string, bool> _messageFilters = new();
+        readonly Dictionary<string, Dictionary<int, bool>> _fieldFilters = new();
 
         public delegate void MessageFilterDelegate(object sender, EventArgs e);
         public delegate void FieldFilterDelegate(object sender, EventArgs e);
@@ -469,10 +465,7 @@ namespace FixClient
 
         protected void OnMessageFilterChanged()
         {
-            if (MessageFilterChanged != null)
-            {
-                MessageFilterChanged(this, null);
-            }
+            MessageFilterChanged?.Invoke(this, null);
             WriteFilters();
         }
 
@@ -481,10 +474,7 @@ namespace FixClient
             if (!AutoWriteFilters)
                 return;
 
-            if (FieldFilterChanged != null)
-            {
-                FieldFilterChanged(this, null);
-            }
+            FieldFilterChanged?.Invoke(this, null);
 
             WriteFilters();
         }
@@ -500,16 +490,17 @@ namespace FixClient
 
         public bool MessageVisible(string msgType)
         {
-            bool visible;
-            if (_messageFilters.TryGetValue(msgType, out visible)) return visible;
+            if (_messageFilters.TryGetValue(msgType, out bool visible))
+            {
+                return visible;
+            }
             _messageFilters[msgType] = true;
             return true;
         }
 
         public Dictionary<int, bool> FieldFilters(string msgType)
         {
-            Dictionary<int, bool> filters;
-            if (!_fieldFilters.TryGetValue(msgType, out filters))
+            if (!_fieldFilters.TryGetValue(msgType, out Dictionary<int, bool> filters))
             {
                 filters = new Dictionary<int, bool>();
                 _fieldFilters[msgType] = filters;
@@ -520,7 +511,7 @@ namespace FixClient
         public void FieldVisible(string msgType, int tag, bool visible)
         {
             Dictionary<int, bool> filters;
-            if (!_fieldFilters.TryGetValue(msgType, out filters))
+            if (!_fieldFilters.TryGetValue(msgType, out _))
             {
                 filters = new Dictionary<int, bool>();
                 _fieldFilters[msgType] = filters;
@@ -531,15 +522,15 @@ namespace FixClient
 
         public bool FieldVisible(string msgType, int tag)
         {
-            Dictionary<int, bool> filters;
-
-            if (!_fieldFilters.TryGetValue(msgType, out filters))
+            if (!_fieldFilters.TryGetValue(msgType, out Dictionary<int, bool> filters))
+            {
                 return true;
+            }
 
-            bool visible;
-
-            if (!filters.TryGetValue(tag, out visible))
+            if (!filters.TryGetValue(tag, out bool visible))
+            {
                 return true;
+            }
 
             return visible;
         }
@@ -630,28 +621,26 @@ namespace FixClient
                 if (!File.Exists(CustomFieldsFileName))
                     return;
 
-                using (var stream = new FileStream(CustomFieldsFileName, FileMode.Open))
-                using (var sr = new StreamReader(stream))
-                using (var reader = new JsonTextReader(sr))
+                using var stream = new FileStream(CustomFieldsFileName, FileMode.Open);
+                using var sr = new StreamReader(stream);
+                using var reader = new JsonTextReader(sr);
+                JObject filters = JObject.Load(reader);
+                JToken fields = filters["Fields"];
+                foreach (var field in fields)
                 {
-                    JObject filters = JObject.Load(reader);
-                    JToken fields = filters["Fields"];
-                    foreach (var field in fields)
+                    try
                     {
-                        try
+                        AddCustomField(new CustomField
                         {
-                            AddCustomField(new CustomField
-                            {
 
-                                Tag = Convert.ToInt32(field["Tag"]),
-                                Name = field["Name"].ToString()
-                            });
-                        }
-                        catch (Exception ex)
-                        {
-                            ++errors;
-                            OnError(ex.Message);
-                        }
+                            Tag = Convert.ToInt32(field["Tag"]),
+                            Name = field["Name"].ToString()
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        ++errors;
+                        OnError(ex.Message);
                     }
                 }
             }
@@ -673,25 +662,23 @@ namespace FixClient
             if (Reading)
                 return;
 
-            using (FileStream stream = new FileStream(CustomFieldsFileName, FileMode.Create))
-            using (JsonWriter writer = new JsonTextWriter(new StreamWriter(stream)))
+            using FileStream stream = new(CustomFieldsFileName, FileMode.Create);
+            using JsonWriter writer = new JsonTextWriter(new StreamWriter(stream));
+            writer.Formatting = Formatting.Indented;
+            writer.WriteStartObject();
+            writer.WritePropertyName("Fields");
+            writer.WriteStartArray();
+            foreach (var field in CustomFields.Values)
             {
-                writer.Formatting = Formatting.Indented;
                 writer.WriteStartObject();
-                writer.WritePropertyName("Fields");
-                writer.WriteStartArray();
-                foreach (var field in CustomFields.Values)
-                {
-                    writer.WriteStartObject();
-                    writer.WritePropertyName("Tag");
-                    writer.WriteValue(field.Tag);
-                    writer.WritePropertyName("Name");
-                    writer.WriteValue(field.Name);
-                    writer.WriteEndObject();
-                }
-                writer.WriteEndArray();
+                writer.WritePropertyName("Tag");
+                writer.WriteValue(field.Tag);
+                writer.WritePropertyName("Name");
+                writer.WriteValue(field.Name);
                 writer.WriteEndObject();
             }
+            writer.WriteEndArray();
+            writer.WriteEndObject();
         }
 
         void ReadFilters()
@@ -701,37 +688,35 @@ namespace FixClient
                 if (!File.Exists(FiltersFileName))
                     return;
 
-                using (var stream = new FileStream(FiltersFileName, FileMode.Open))
-                using (var sr = new StreamReader(stream))
-                using (var reader = new JsonTextReader(sr))
+                using var stream = new FileStream(FiltersFileName, FileMode.Open);
+                using var sr = new StreamReader(stream);
+                using var reader = new JsonTextReader(sr);
+                JObject filters = JObject.Load(reader);
+                JToken messages = filters["Messages"];
+                foreach (var item in messages)
                 {
-                    JObject filters = JObject.Load(reader);
-                    JToken messages = filters["Messages"];
-                    foreach (var item in messages)
+                    foreach (Fix.Dictionary.Message message in Version.Messages)
                     {
-                        foreach (Fix.Dictionary.Message message in Version.Messages)
+                        if (message.Name == item.ToString())
                         {
-                            if (message.Name == item.ToString())
-                            {
-                                MessageVisible(message.MsgType, false);
-                                break;
-                            }
+                            MessageVisible(message.MsgType, false);
+                            break;
                         }
                     }
-                    JToken fields = filters["Fields"];
-                    foreach (var entry in fields)
+                }
+                JToken fields = filters["Fields"];
+                foreach (var entry in fields)
+                {
+                    var property = (JProperty)entry.First;
+                    Fix.Dictionary.Message message = Version.Messages.FirstOrDefault(item => item.Name == property.Name);
+                    if (message == null)
+                        continue;
+                    foreach (string fieldEntry in (JArray)property.Value)
                     {
-                        var property = (JProperty)entry.First;
-                        Fix.Dictionary.Message message = Version.Messages.FirstOrDefault(item => item.Name == property.Name);
-                        if (message == null)
+                        Fix.Dictionary.Field field = message.Fields.FirstOrDefault(item => item.Name == fieldEntry);
+                        if (field == null)
                             continue;
-                        foreach (string fieldEntry in (JArray)property.Value)
-                        {
-                            Fix.Dictionary.Field field = message.Fields.FirstOrDefault(item => item.Name == fieldEntry);
-                            if (field == null)
-                                continue;
-                            FieldVisible(message.MsgType, field.Tag, false);
-                        }
+                        FieldVisible(message.MsgType, field.Tag, false);
                     }
                 }
             }
@@ -762,46 +747,43 @@ namespace FixClient
             if (Reading || !AutoWriteFilters)
                 return;
 
-            using (FileStream stream = new FileStream(FiltersFileName, FileMode.Create))
-            using (JsonWriter writer = new JsonTextWriter(new StreamWriter(stream)))
+            using FileStream stream = new(FiltersFileName, FileMode.Create);
+            using JsonWriter writer = new JsonTextWriter(new StreamWriter(stream));
+            writer.Formatting = Formatting.Indented;
+            writer.WriteStartObject();
+            writer.WritePropertyName("Messages");
+            writer.WriteStartArray();
+            foreach (var filter in _messageFilters)
             {
-                writer.Formatting = Formatting.Indented;
-                writer.WriteStartObject();
-                writer.WritePropertyName("Messages");
-                writer.WriteStartArray();
-                foreach (var filter in _messageFilters)
+                if (!filter.Value)
                 {
-                    if (!filter.Value)
-                    {
-                        writer.WriteValue(Version.Messages[filter.Key].Name);
-                    }
+                    writer.WriteValue(Version.Messages[filter.Key].Name);
                 }
-                writer.WriteEndArray();
-                writer.WritePropertyName("Fields");
+            }
+            writer.WriteEndArray();
+            writer.WritePropertyName("Fields");
+            writer.WriteStartArray();
+            foreach (var filter in _fieldFilters)
+            {
+                if (filter.Value.Count == 0 || filter.Value.All(field => field.Value))
+                    continue;
+                writer.WriteStartObject();
+                writer.WritePropertyName(Version.Messages[filter.Key].Name);
                 writer.WriteStartArray();
-                foreach (var filter in _fieldFilters)
+                foreach (var field in filter.Value)
                 {
-                    if (filter.Value.Count == 0 || filter.Value.All(field => field.Value))
+                    if (field.Value)
                         continue;
-                    writer.WriteStartObject();
-                    writer.WritePropertyName(Version.Messages[filter.Key].Name);
-                    writer.WriteStartArray();
-                    foreach (var field in filter.Value)
+                    if (Version.Fields.TryGetValue(field.Key.ToString(), out var fieldDefinition))
                     {
-                        if (field.Value)
-                            continue;
-                        Fix.Dictionary.Field fieldDefinition;
-                        if (Version.Fields.TryGetValue(field.Key.ToString(), out fieldDefinition))
-                        {
-                            writer.WriteValue(Version.Fields[field.Key.ToString()].Name);
-                        }
+                        writer.WriteValue(Version.Fields[field.Key.ToString()].Name);
                     }
-                    writer.WriteEndArray();
-                    writer.WriteEndObject();
                 }
                 writer.WriteEndArray();
                 writer.WriteEndObject();
             }
+            writer.WriteEndArray();
+            writer.WriteEndObject();
         }
 
         void ReadTemplates()
@@ -810,25 +792,23 @@ namespace FixClient
             try
             {
                 _messageTemplates.Clear();
-                using (Stream stream = new FileStream(TemplatesFileName, FileMode.OpenOrCreate, FileAccess.Read))
-                using (Fix.Reader reader = new Fix.Reader(stream) { ValidateDataFields = false })
+                using Stream stream = new FileStream(TemplatesFileName, FileMode.OpenOrCreate, FileAccess.Read);
+                using Fix.Reader reader = new(stream) { ValidateDataFields = false };
+                for (; ; )
                 {
-                    for (; ; )
+                    try
                     {
-                        try
-                        {
-                            Fix.Message template = reader.ReadLine();
-                            if (template == null)
-                                break;
-                            template.Definition = Version.Messages[template.MsgType];
-                            _messageTemplates[template.MsgType] = template;
-                        }
-                        catch (Exception ex)
-                        {
-                            ++errors;
-                            OnError(ex.Message);
-                            reader.DiscardLine();
-                        }
+                        Fix.Message template = reader.ReadLine();
+                        if (template == null)
+                            break;
+                        template.Definition = Version.Messages[template.MsgType];
+                        _messageTemplates[template.MsgType] = template;
+                    }
+                    catch (Exception ex)
+                    {
+                        ++errors;
+                        OnError(ex.Message);
+                        reader.DiscardLine();
                     }
                 }
             }
@@ -847,12 +827,10 @@ namespace FixClient
 
         public void WriteTemplates()
         {
-            using (Fix.Writer writer = new Fix.Writer(new FileStream(TemplatesFileName, FileMode.Create), leaveOpen: false))
+            using Fix.Writer writer = new(new FileStream(TemplatesFileName, FileMode.Create), leaveOpen: false);
+            foreach (Fix.Message message in _messageTemplates.Values)
             {
-                foreach (Fix.Message message in _messageTemplates.Values)
-                {
-                    writer.WriteLine(message);
-                }
+                writer.WriteLine(message);
             }
         }
 

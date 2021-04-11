@@ -23,11 +23,9 @@ namespace Fix
         {
             long position = stream.Position;
 
-            using (NonClosingStreamDecorator decorator = new NonClosingStreamDecorator(stream))
+            using (NonClosingStreamDecorator decorator = new(stream))
             {
-#pragma warning disable RECS0091 // Use 'var' keyword when possible
                 LogParser parser = new Parsers.RawGateCiLogParser { Strict = Strict };
-#pragma warning restore RECS0091 // Use 'var' keyword when possible
                 MessageCollection result = parser.Parse(decorator);
                 if (result.Count > 0)
                     return result;
@@ -65,7 +63,7 @@ namespace Fix
 
             var messages = new MessageCollection();
 
-            using (Reader reader = new Reader(stream))
+            using (Reader reader = new(stream))
             {
                 reader.ValidateDataFields = false;
 
@@ -95,10 +93,8 @@ namespace Fix
             if (uri.Scheme != "file")
                 throw new ArgumentException("Exepected a URI with a 'file' scheme and got '{0}'", uri.Scheme);
 
-            using (FileStream stream = new FileStream(uri.LocalPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                return Parse(stream);
-            }
+            using FileStream stream = new(uri.LocalPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            return Parse(stream);
         }
     }
 }

@@ -72,9 +72,8 @@ namespace FixClient
                 //"http://onixs.biz/fixdictionary/4.2/msgType_D_68.html"
                 //
                 string numeric;
-                int result;
 
-                if (int.TryParse(value.MsgType, out result))
+                if (int.TryParse(value.MsgType, out int result))
                 {
                     numeric = value.MsgType;
                 }

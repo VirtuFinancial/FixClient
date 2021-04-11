@@ -18,7 +18,7 @@ namespace Lexicographer
 {
     partial class CodeGenerator
     {
-        public CodeTypeDeclaration GenerateMessages(Fix.Repository.Version version)
+        public static CodeTypeDeclaration GenerateMessages(Fix.Repository.Version version)
         {
             var dictionaryType = new CodeTypeDeclaration("Dictionary")
             {
@@ -81,7 +81,7 @@ namespace Lexicographer
 
                 if (name == "SecurityStatus")
                 {
-                    name = name + "Message";
+                    name += "Message";
                 }
 
                 itemsCreate.Initializers.Add(new CodeTypeReferenceExpression(name));
@@ -105,7 +105,7 @@ namespace Lexicographer
 
                 if (name == "SecurityStatus")
                 {
-                    name = name + "Message";
+                    name += "Message";
                 }
 
                 var messageField = new CodeMemberField("readonly " + name, name)
@@ -152,7 +152,7 @@ namespace Lexicographer
 
             if (name == "SecurityStatus")
             {
-                name = name + "Message";
+                name += "Message";
             }
 
             var messageType = new CodeTypeDeclaration(name)
@@ -301,9 +301,7 @@ namespace Lexicographer
 
         void PopulateFieldDefinitions(string componentId, Fix.Repository.Version version, List<FieldDefinition> definitions, int parentIndent)
         {
-            List<Fix.Repository.MsgContent> msgContents;
-
-            if (!version.MsgContents.TryGetValue(componentId, out msgContents))
+            if (!version.MsgContents.TryGetValue(componentId, out List<Fix.Repository.MsgContent> msgContents))
             {
                 // TODO
                 return;
@@ -313,13 +311,9 @@ namespace Lexicographer
             {
                 int indent = Convert.ToInt32(content.Indent);
 
-                int tag;
-
-                if (int.TryParse(content.TagText, out tag))
+                if (int.TryParse(content.TagText, out int tag))
                 {
-                    Fix.Repository.Field field;
-
-                    if (!version.Fields.TryGetValue(tag, out field))
+                    if (!version.Fields.TryGetValue(tag, out Fix.Repository.Field field))
                     {
                         // TODO - better tell someone.
                         continue;
@@ -335,9 +329,7 @@ namespace Lexicographer
                 }
                 else
                 {
-                    Fix.Repository.Component component;
-
-                    if (!version.Components.TryGetValue(content.TagText, out component))
+                    if (!version.Components.TryGetValue(content.TagText, out Fix.Repository.Component component))
                     {
                         // TODO - better tell someone
                         continue;

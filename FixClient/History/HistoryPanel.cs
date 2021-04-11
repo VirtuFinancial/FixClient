@@ -209,9 +209,7 @@ namespace FixClient
             if (view == null)
                 return;
 
-            var dataRow = view.Row as MessageDataRow;
-
-            if (dataRow == null)
+            if (view.Row is not MessageDataRow dataRow)
                 return;
 
             e.CellStyle.ForeColor = dataRow.Message.Incoming ? LookAndFeel.Color.Incoming : LookAndFeel.Color.Outgoing;
@@ -303,10 +301,9 @@ namespace FixClient
                 if (_messageGrid.SelectedRows.Count == 0)
                     return null;
                 DataRowView view = _messageView[_messageGrid.SelectedRows[0].Index];
-                var dataRow = view.Row as MessageDataRow;
-                if (dataRow == null)
+                if (view.Row as MessageDataRow == null)
                     return null;
-                return dataRow.Message;
+                return (view.Row as MessageDataRow).Message;
             }
         }
 
@@ -314,53 +311,47 @@ namespace FixClient
         {
             string filename = Session.SenderCompId + "-" + Session.TargetCompId + ".txt";
 
-            using (SaveFileDialog dlg = new SaveFileDialog())
+            using SaveFileDialog dlg = new();
+            dlg.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+            dlg.FilterIndex = 2;
+            dlg.RestoreDirectory = true;
+            dlg.FileName = filename;
+            dlg.Title = "Export";
+
+            if (dlg.ShowDialog() == DialogResult.OK)
             {
-                dlg.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-                dlg.FilterIndex = 2;
-                dlg.RestoreDirectory = true;
-                dlg.FileName = filename;
-                dlg.Title = "Export";
+                Cursor original = Cursor.Current;
+                Cursor.Current = Cursors.WaitCursor;
 
-                if (dlg.ShowDialog() == DialogResult.OK)
+                try
                 {
-                    Cursor original = Cursor.Current;
-                    Cursor.Current = Cursors.WaitCursor;
-
-                    try
+                    using FileStream stream = new(dlg.FileName, FileMode.Create);
+                    using StreamWriter writer = new(stream);
+                    foreach (Fix.Message message in Session.Messages)
                     {
-                        using (FileStream stream = new FileStream(dlg.FileName, FileMode.Create))
+                        string timestamp = "Unknown";
+                        Fix.Field field = message.Fields.Find(Fix.Dictionary.Fields.SendingTime.Tag);
+                        if (field != null)
                         {
-                            using (StreamWriter writer = new StreamWriter(stream))
-                            {
-                                foreach (Fix.Message message in Session.Messages)
-                                {
-                                    string timestamp = "Unknown";
-                                    Fix.Field field = message.Fields.Find(Fix.Dictionary.Fields.SendingTime.Tag);
-                                    if (field != null)
-                                    {
-                                        timestamp = field.Value;
-                                    }
-                                    string direction = message.Incoming ? "received" : "sent";
-
-                                    Fix.Dictionary.Message definition = Session.Version.Messages[message.MsgType];
-
-                                    writer.WriteLine("{0} ({1}) ({2})",
-                                                     timestamp,
-                                                     direction,
-                                                     definition.Name);
-
-                                    writer.WriteLine("{");
-                                    writer.WriteLine(message.ToString());
-                                    writer.WriteLine("}");
-                                }
-                            }
+                            timestamp = field.Value;
                         }
+                        string direction = message.Incoming ? "received" : "sent";
+
+                        Fix.Dictionary.Message definition = Session.Version.Messages[message.MsgType];
+
+                        writer.WriteLine("{0} ({1}) ({2})",
+                                         timestamp,
+                                         direction,
+                                         definition.Name);
+
+                        writer.WriteLine("{");
+                        writer.WriteLine(message.ToString());
+                        writer.WriteLine("}");
                     }
-                    finally
-                    {
-                        Cursor.Current = original;
-                    }
+                }
+                finally
+                {
+                    Cursor.Current = original;
                 }
             }
         }
@@ -468,10 +459,10 @@ namespace FixClient
 
                 foreach (Fix.Field field in message.Fields)
                 {
-                    var dataRow = _fieldTable.NewRow() as FieldDataRow;
-
-                    if (dataRow == null)
+                    if (_fieldTable.NewRow() is not FieldDataRow dataRow)
+                    {
                         continue;
+                    }
 
                     if (field.Definition == null)
                     {
@@ -501,8 +492,8 @@ namespace FixClient
                 }
 
                 string text;
-                using (MemoryStream stream = new MemoryStream())
-                using (Fix.Writer writer = new Fix.Writer(stream, true))
+                using (MemoryStream stream = new())
+                using (Fix.Writer writer = new(stream, true))
                 {
                     writer.Write(message);
                     writer.Close();
@@ -534,10 +525,7 @@ namespace FixClient
 
                 _statusMessage.Text = message.StatusMessage;
 
-                if (MessageSelected != null)
-                {
-                    MessageSelected(message);
-                }
+                MessageSelected?.Invoke(message);
 
                 ApplyFieldSearch();
             }
@@ -631,17 +619,13 @@ namespace FixClient
 
         Image ImageForMessageStatus(Fix.MessageStatus status)
         {
-            switch (status)
+            return status switch
             {
-                case Fix.MessageStatus.Error:
-                    return Properties.Resources.MessageStatusError;
-                case Fix.MessageStatus.Info:
-                    return Properties.Resources.MessageStatusInfo;
-                case Fix.MessageStatus.Warn:
-                    return Properties.Resources.MessageStatusWarn;
-            }
-
-            return Properties.Resources.MessageStatusNone;
+                Fix.MessageStatus.Error => Properties.Resources.MessageStatusError,
+                Fix.MessageStatus.Info => Properties.Resources.MessageStatusInfo,
+                Fix.MessageStatus.Warn => Properties.Resources.MessageStatusWarn,
+                _ => Properties.Resources.MessageStatusNone,
+            };
         }
 
         void AddMesage(Fix.Message message)
@@ -665,7 +649,7 @@ namespace FixClient
             row[MessageDataTable.ColumnStatus] = message.Status;
             row[MessageDataTable.ColumnStatusImage] = ImageForMessageStatus(message.Status);
             row[MessageDataTable.ColumnStatusMessage] = message.StatusMessage;
-            row[MessageDataTable.ColumnMsgTypeDescription] = definition == null ? null : definition.Name;
+            row[MessageDataTable.ColumnMsgTypeDescription] = definition?.Name;
             row[MessageDataTable.ColumnMsgSeqNum] = message.Fields.Find(Fix.Dictionary.Fields.MsgSeqNum).Value;
             _messageTable.Rows.Add(row);
         }

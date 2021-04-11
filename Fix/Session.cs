@@ -315,8 +315,7 @@ namespace Fix
             Dictionary.Message exemplar = Version.Messages[message.MsgType];
             if (exemplar == null)
                 return null;
-            Dictionary.Field definition;
-            exemplar.Fields.TryGetValue(field.Tag, out definition);
+            _ = exemplar.Fields.TryGetValue(field.Tag, out Dictionary.Field definition);
             return definition;
         }
 
@@ -346,9 +345,7 @@ namespace Fix
             // Insert place holders for the standard header fields. Order is important so insert them
             // now and they can be overridden as required later on.
             //
-            Dictionary.Field field;
-
-            if (definition.Fields.TryGetValue(Dictionary.Fields.BeginString.Tag, out field))
+            if (definition.Fields.TryGetValue(Dictionary.Fields.BeginString.Tag, out Dictionary.Field field))
                 message.Fields.Add(new Field(field));
 
             if (definition.Fields.TryGetValue(Dictionary.Fields.BodyLength.Tag, out field))
@@ -769,7 +766,7 @@ namespace Fix
             return true;
         }
 
-        bool AreNumericallyEquivalent(string s1, string s2)
+        static bool AreNumericallyEquivalent(string s1, string s2)
         {
             try
             {
@@ -1007,9 +1004,7 @@ namespace Fix
                 return false;
             }
 
-            int value;
-
-            if (!int.TryParse(heartBtInt.Value, out value))
+            if (!int.TryParse(heartBtInt.Value, out int value))
             {
                 var text = $"{heartBtInt.Value} is not a valid numeric HeartBtInt";
                 OnError(text);
@@ -1056,9 +1051,7 @@ namespace Fix
                     return false;
                 }
 
-                int nextExpected;
-
-                if (!int.TryParse(field.Value, out nextExpected))
+                if (!int.TryParse(field.Value, out int nextExpected))
                 {
                     var text = $"{field.Value} is not a valid value for NextExpectedMsgSeqNum";
                     OnError(text);

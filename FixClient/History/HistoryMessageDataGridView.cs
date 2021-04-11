@@ -51,9 +51,7 @@ namespace FixClient
             ShowCellToolTips = false;
             AutoGenerateColumns = false;
 
-#pragma warning disable RECS0091 // Use 'var' keyword when possible
             DataGridViewColumn column = new DataGridViewTextBoxColumn
-#pragma warning restore RECS0091 // Use 'var' keyword when possible
             {
                 Name = MessageDataTable.ColumnSendingTime,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells

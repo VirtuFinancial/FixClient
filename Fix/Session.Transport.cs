@@ -80,7 +80,7 @@ namespace Fix
             });
         }
 
-        readonly object _syncRoot = new object();
+        readonly object _syncRoot = new();
 
         public virtual void Close()
         {

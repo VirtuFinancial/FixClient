@@ -62,7 +62,7 @@ namespace FixTests
         [ExpectedException(typeof(ArgumentException))]
         public void TestInvalidStringTagConstructor()
         {
-            var field = new Fix.Field("blah", "D");
+            _ = new Fix.Field("blah", "D");
         }
 
         [TestMethod]

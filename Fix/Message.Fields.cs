@@ -112,8 +112,7 @@ namespace Fix
                 Field field = Fields.Find(Dictionary.Fields.BeginSeqNo);
                 if (field == null)
                     throw new MissingFieldException(Dictionary.Fields.BeginSeqNo);
-                int value;
-                if (!int.TryParse(field.Value, out value))
+                if (!int.TryParse(field.Value, out int value))
                     throw new Exception($"Message contains an invalid {field}");
                 return value;
             }
@@ -126,8 +125,7 @@ namespace Fix
                 Field field = Fields.Find(Dictionary.Fields.EndSeqNo);
                 if (field == null)
                     throw new MissingFieldException(Dictionary.Fields.EndSeqNo);
-                int value;
-                if (!int.TryParse(field.Value, out value))
+                if (!int.TryParse(field.Value, out int value))
                     throw new Exception($"Message contains an invalid {field}");
                 return value;
             }
@@ -162,8 +160,7 @@ namespace Fix
                 Field field = Fields.Find(Dictionary.Fields.NewSeqNo);
                 if (field == null)
                     throw new MissingFieldException(Dictionary.Fields.NewSeqNo);
-                int value;
-                if (!int.TryParse(field.Value, out value))
+                if (!int.TryParse(field.Value, out int value))
                     throw new Exception($"Message contains an invalid {field}");
                 return value;
             }

@@ -73,8 +73,7 @@ namespace FixClient
                     if (gridViewRow.IsNewRow)
                         return;
 
-                    var rowView = gridViewRow.DataBoundItem as DataRowView;
-                    if (rowView != null)
+                    if (gridViewRow.DataBoundItem is DataRowView rowView)
                     {
                         DataRow row = rowView.Row;
 

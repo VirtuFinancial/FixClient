@@ -146,9 +146,7 @@ namespace Fix
                         throw new Exception($"Encountered a data type field at index {index} [{definition.Tag}] with no previous field");
                     }
 
-                    int dataLength;
-
-                    if (!int.TryParse(previous.Value, out dataLength))
+                    if (!int.TryParse(previous.Value, out int dataLength))
                     {
                         throw new Exception($"Encountered a data type field at index {index} [{definition.Tag}] but the previous field {previous} was not numeric");
                     }
@@ -267,8 +265,8 @@ namespace Fix
 
         char? _peekChar;
         readonly Stream _stream;
-        readonly StringBuilder _tag = new StringBuilder(256);
-        readonly StringBuilder _value = new StringBuilder(256);
+        readonly StringBuilder _tag = new(256);
+        readonly StringBuilder _value = new(256);
 
     }
 }

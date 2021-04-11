@@ -39,8 +39,7 @@ namespace Fix
             {
                 get
                 {
-                    Field field;
-                    if (!TryGetValue(tag, out field))
+                    if (!TryGetValue(tag, out var field))
                         throw new ArgumentException(string.Format("Unknown tag {0}", tag));
                     return field;
                 }
@@ -65,9 +64,7 @@ namespace Fix
 
             public bool TryGetValue(string tag, out Field field)
             {
-                int index;
-
-                if (!int.TryParse(tag, out index))
+                if (!int.TryParse(tag, out var index))
                 {
                     return LookupFieldByName(tag, out field);
                 }

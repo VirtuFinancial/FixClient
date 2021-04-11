@@ -53,7 +53,6 @@ namespace Fix.Parsers
                     continue;
 
                 int tag = Convert.ToInt32(match.Groups[1].Value);
-                string separator = match.Groups[2].Value;
                 string value = match.Groups[3].Value;
 
                 // If we haven't loaded a version yet or if the version has changed. The version is unlikely to change but sometimes
@@ -140,7 +139,7 @@ namespace Fix.Parsers
             return message;
         }
 
-        bool IsMessageTerminator(string line)
+        static bool IsMessageTerminator(string line)
         {
             string trimmed = line.Trim();
             return trimmed == "}" ||

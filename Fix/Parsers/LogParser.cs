@@ -44,10 +44,8 @@ namespace Fix
             if (uri.Scheme != "file")
                 throw new ArgumentException("Exepected a URI with a 'file' scheme and got '{0}'", uri.Scheme);
 
-            using (FileStream stream = new FileStream(uri.LocalPath, FileMode.Open))
-            {
-                return Parse(stream);
-            }
+            using FileStream stream = new(uri.LocalPath, FileMode.Open);
+            return Parse(stream);
         }
 
         protected abstract Message ParseMessage(TextReader reader);

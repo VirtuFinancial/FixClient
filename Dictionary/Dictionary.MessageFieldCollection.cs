@@ -41,7 +41,7 @@ namespace Fix
 
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
-            readonly OrderedDictionary<int, Field> _fields = new OrderedDictionary<int, Field>();
+            readonly OrderedDictionary<int, Field> _fields = new();
 
         }
     }

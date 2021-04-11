@@ -37,8 +37,7 @@ namespace Fix
             {
                 get
                 {
-                    Dictionary.FIX_5_0SP2.ApplVerID result;
-                    if (!Enum.TryParse(SanitisedBeginString, out result))
+                    if (!Enum.TryParse(SanitisedBeginString, out Dictionary.FIX_5_0SP2.ApplVerID result))
                         return null;
                     return Convert.ToChar(result).ToString();
                 }
@@ -64,7 +63,7 @@ namespace Fix
             {
                 if (ReferenceEquals(a, b))
                     return true;
-                if ((object)a == null || (object)b == null)
+                if (a is null || b is null)
                     return false;
                 return a.BeginString == b.BeginString;
             }

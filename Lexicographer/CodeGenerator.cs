@@ -38,7 +38,7 @@ namespace Lexicographer
 
                     if (name == "SecurityStatus")
                     {
-                        name = name + "Message";
+                        name += "Message";
                     }
 
                     GenerateFile(version.BeginString + "_Messages_" + name, new[] { GenerateMessage(version, message) });

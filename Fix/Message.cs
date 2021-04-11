@@ -60,11 +60,9 @@ namespace Fix
         public Message(byte[] data)
         {
             Fields = new FieldCollection();
-            using (MemoryStream stream = new MemoryStream(data))
-            using (Reader reader = new Reader(stream))
-            {
-                reader.Read(this);
-            }
+            using MemoryStream stream = new(data);
+            using Reader reader = new(stream);
+            reader.Read(this);
         }
 
         public Message(string[,] data)
@@ -98,7 +96,7 @@ namespace Fix
         public static Message Parse(string text)
         {
             var parser = new Parser { Strict = false };
-            using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(text)))
+            using (MemoryStream stream = new(Encoding.ASCII.GetBytes(text)))
             {
                 MessageCollection messages = parser.Parse(stream);
                 if (messages != null && messages.Count > 0)
@@ -218,8 +216,7 @@ namespace Fix
             foreach (Field field in Fields)
             {
                 string name = field.Definition == null ? string.Empty : field.Definition.Name;
-                string description = null;
-                description = field.Tag == Dictionary.Fields.MsgType.Tag ? Definition?.Name : field.ValueDescription;
+                string description = field.Tag == Dictionary.Fields.MsgType.Tag ? Definition?.Name : field.ValueDescription;
                 builder.AppendFormat("    {0} {1} - {2}{3}\r\n",
                                      name.PadLeft(widestName),
                                      string.Format("({0})", field.Tag).PadLeft(6),

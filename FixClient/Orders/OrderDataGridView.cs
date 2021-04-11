@@ -58,8 +58,7 @@ namespace FixClient
         {
             if (ModifierKeys == Keys.Control)
             {
-                var view = DataSource as DataView;
-                if (view != null)
+                if (DataSource is DataView view)
                 {
                     view.Sort = string.Empty;
                     Refresh();
@@ -154,10 +153,11 @@ namespace FixClient
         protected override void OnCellFormatting(DataGridViewCellFormattingEventArgs e)
         {
             DataGridViewColumn column = Columns[e.ColumnIndex];
-            var rowView = Rows[e.RowIndex].DataBoundItem as DataRowView;
 
-            if (rowView == null)
+            if (Rows[e.RowIndex].DataBoundItem is not DataRowView rowView)
+            {
                 return;
+            }
 
             DataRow row = rowView.Row;
 
@@ -297,34 +297,18 @@ namespace FixClient
 
         public static string ShortTimeInForceDescription(Fix.TimeInForce timeInForce)
         {
-            switch (timeInForce)
+            return timeInForce switch
             {
-                case Fix.TimeInForce.AtTheOpening:
-                    return "ATO";
-
-                case Fix.TimeInForce.Day:
-                    return "DAY";
-
-                case Fix.TimeInForce.FillOrKill:
-                    return "FOK";
-
-                case Fix.TimeInForce.GoodTillCancel:
-                    return "GTC";
-
-                case Fix.TimeInForce.GoodTillCrossing:
-                    return "GTX";
-
-                case Fix.TimeInForce.GoodTillDate:
-                    return "GTD";
-
-                case Fix.TimeInForce.ImmediateOrCancel:
-                    return "IOC";
-
-                case Fix.TimeInForce.AtTheClose:
-                    return "ATC";
-            }
-
-            return timeInForce.ToString();
+                Fix.TimeInForce.AtTheOpening => "ATO",
+                Fix.TimeInForce.Day => "DAY",
+                Fix.TimeInForce.FillOrKill => "FOK",
+                Fix.TimeInForce.GoodTillCancel => "GTC",
+                Fix.TimeInForce.GoodTillCrossing => "GTX",
+                Fix.TimeInForce.GoodTillDate => "GTD",
+                Fix.TimeInForce.ImmediateOrCancel => "IOC",
+                Fix.TimeInForce.AtTheClose => "ATC",
+                _ => timeInForce.ToString(),
+            };
         }
     }
 }

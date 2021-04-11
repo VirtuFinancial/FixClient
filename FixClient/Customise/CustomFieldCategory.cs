@@ -17,7 +17,7 @@ namespace FixClient
     class CustomFieldCategory
     {
         readonly string _name;
-        readonly List<CustomField> _fields = new List<CustomField>();
+        readonly List<CustomField> _fields = new();
 
         public CustomFieldCategory(string name)
         {

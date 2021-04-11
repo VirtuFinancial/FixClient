@@ -23,7 +23,7 @@ namespace FixTests
         public void TestConstructorWrongMsgType()
         {
             var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.ExecutionReport.MsgType };
-            var trade = new Fix.TradeReport(message);
+            _ = new Fix.TradeReport(message);
         }
 
         [TestMethod]
@@ -52,8 +52,7 @@ namespace FixTests
             message.Fields.Set(Fix.Dictionary.Fields.LastPx, "25");
             message.Fields.Set(Fix.Dictionary.Fields.TrdType, Fix.TrdType.RegularTrade);
             message.Fields.Set(Fix.Dictionary.Fields.Side, Fix.Side.Buy);
-
-            var trade = new Fix.TradeReport(message);
+            _ = new Fix.TradeReport(message);
         }
 
         [TestMethod]
@@ -66,8 +65,7 @@ namespace FixTests
             message.Fields.Set(Fix.Dictionary.Fields.LastQty, "1000");
             message.Fields.Set(Fix.Dictionary.Fields.LastPx, "25");
             message.Fields.Set(Fix.Dictionary.Fields.TrdType, Fix.TrdType.RegularTrade);
-
-            var trade = new Fix.TradeReport(message);
+            _ = new Fix.TradeReport(message);
         }
 
         [TestMethod]
@@ -80,8 +78,7 @@ namespace FixTests
             message.Fields.Set(Fix.Dictionary.Fields.LastQty, "1000");
             message.Fields.Set(Fix.Dictionary.Fields.LastPx, "25");
             message.Fields.Set(Fix.Dictionary.Fields.TrdType, Fix.TrdType.RegularTrade);
-
-            var trade = new Fix.TradeReport(message);
+            _ = new Fix.TradeReport(message);
         }
 
         [TestMethod]
@@ -94,8 +91,7 @@ namespace FixTests
             message.Fields.Set(Fix.Dictionary.Fields.SecurityID, "BHP");
             message.Fields.Set(Fix.Dictionary.Fields.LastPx, "25");
             message.Fields.Set(Fix.Dictionary.Fields.TrdType, Fix.TrdType.RegularTrade);
-
-            var trade = new Fix.TradeReport(message);
+            _ = new Fix.TradeReport(message);
         }
 
         [TestMethod]
@@ -108,8 +104,7 @@ namespace FixTests
             message.Fields.Set(Fix.Dictionary.Fields.SecurityID, "BHP");
             message.Fields.Set(Fix.Dictionary.Fields.LastQty, "1000");
             message.Fields.Set(Fix.Dictionary.Fields.TrdType, Fix.TrdType.RegularTrade);
-
-            var trade = new Fix.TradeReport(message);
+            _ = new Fix.TradeReport(message);
         }
 
         [TestMethod]
@@ -122,8 +117,7 @@ namespace FixTests
             message.Fields.Set(Fix.Dictionary.Fields.SecurityID, "BHP");
             message.Fields.Set(Fix.Dictionary.Fields.LastQty, "1000");
             message.Fields.Set(Fix.Dictionary.Fields.LastPx, "25");
-
-            var trade = new Fix.TradeReport(message);
+            _ = new Fix.TradeReport(message);
         }
     }
 }

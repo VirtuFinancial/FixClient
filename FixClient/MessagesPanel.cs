@@ -33,7 +33,7 @@ namespace FixClient
         DataView _fieldView;
 
         readonly TabControl _tabControl;
-        readonly NativeTabControl _nativeTabControl = new NativeTabControl(new Padding(-4, -2, 4, 4));
+        readonly NativeTabControl _nativeTabControl = new(new Padding(-4, -2, 4, 4));
         readonly InspectorPanel _inspectorPanel;
         readonly MessageOptionsPanel _messageOptionsPanel;
 
@@ -81,10 +81,7 @@ namespace FixClient
                 _selectedMsgType = message.MsgType;
             }
 
-            if (MessageSelected != null)
-            {
-                MessageSelected(message);
-            }
+            MessageSelected?.Invoke(message);
         }
 
         public MessagesPanel()
@@ -411,14 +408,10 @@ namespace FixClient
                 if (_messageGrid.SelectedRows.Count == 0)
                     return null;
 
-                var rowView = _messageGrid.SelectedRows[0].DataBoundItem as DataRowView;
-
-                if (rowView == null)
+                if (_messageGrid.SelectedRows[0].DataBoundItem is not DataRowView rowView)
                     return null;
 
-                var messageRow = rowView.Row as MessageTypeDataRow;
-
-                if (messageRow == null)
+                if (rowView.Row is not MessageTypeDataRow messageRow)
                     return null;
 
                 return _session.MessageForTemplate(messageRow.Message);
@@ -432,14 +425,10 @@ namespace FixClient
                 if (_fieldGrid.SelectedRows.Count == 0)
                     return null;
 
-                var rowView = _fieldGrid.SelectedRows[0].DataBoundItem as DataRowView;
-
-                if (rowView == null)
+                if (_fieldGrid.SelectedRows[0].DataBoundItem is not DataRowView rowView)
                     return null;
 
-                var fieldRow = rowView.Row as FieldDataRow;
-
-                if (fieldRow == null)
+                if (rowView.Row is not FieldDataRow fieldRow)
                     return null;
 
                 return fieldRow.Field;
@@ -461,28 +450,24 @@ namespace FixClient
             }
 
             DataGridViewRow row = _fieldGrid.SelectedRows[0];
-            var rowView = row.DataBoundItem as DataRowView;
 
-            if (rowView == null)
+            if (row.DataBoundItem is not DataRowView rowView)
             {
                 throw new Exception(string.Format("MessageFieldDataGridView Row.DataBoundItem at index {0} is not a DataRowView ", row.Index));
             }
 
-            var dataRow = rowView.Row as FieldDataRow;
-            if (dataRow == null)
+            if (rowView.Row is not FieldDataRow dataRow)
                 return;
 
             var fieldTag = (int)dataRow[FieldDataTable.ColumnTag];
             var fieldName = (string)dataRow[FieldDataTable.ColumnName];
 
-            using (GoaEditor editor = new GoaEditor())
-            {
-                editor.Text = string.Format("{0} - {1}", fieldTag, fieldName);
-                editor.Goa = row.Cells[FieldDataTable.ColumnValue].Value.ToString();
-                if (editor.ShowDialog() != DialogResult.OK)
-                    return;
-                row.Cells[FieldDataTable.ColumnValue].Value = editor.Goa;
-            }
+            using GoaEditor editor = new();
+            editor.Text = string.Format("{0} - {1}", fieldTag, fieldName);
+            editor.Goa = row.Cells[FieldDataTable.ColumnValue].Value.ToString();
+            if (editor.ShowDialog() != DialogResult.OK)
+                return;
+            row.Cells[FieldDataTable.ColumnValue].Value = editor.Goa;
         }
 
         void FieldGridCellContextMenuStripNeeded(object sender, DataGridViewCellContextMenuStripNeededEventArgs e)
@@ -491,9 +476,10 @@ namespace FixClient
                 return;
 
             DataGridViewRow gridRow = _fieldGrid.Rows[e.RowIndex];
-            var rowView = gridRow.DataBoundItem as DataRowView;
-            if (rowView == null)
+
+            if (gridRow.DataBoundItem is not DataRowView rowView)
                 return;
+
             DataRow row = rowView.Row;
 
             ContextMenuRowIndex = _fieldTable.Rows.IndexOf(row);
@@ -743,59 +729,57 @@ namespace FixClient
                 return;
             }
 
-            using (var form = new PasteMessageForm())
+            using PasteMessageForm form = new();
+            form.DefineUnknownAsCustom = Session.PasteDefineCustomFields;
+            form.FilterEmptyFields = Session.PasteFilterEmptyFields;
+            form.SmartPaste = Session.PasteSmart;
+            form.ResetExistingMessage = Session.PasteResetExisting;
+            form.ProcessRepeatingGroups = Session.PasteProcessRepeatingGroups;
+
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            Session.PasteDefineCustomFields = form.DefineUnknownAsCustom;
+            Session.PasteFilterEmptyFields = form.FilterEmptyFields;
+            Session.PasteSmart = form.SmartPaste;
+            Session.PasteResetExisting = form.ResetExistingMessage;
+            Session.PasteProcessRepeatingGroups = form.ProcessRepeatingGroups;
+
+            Session.Write();
+
+            if (form.ResetExistingMessage)
             {
-                form.DefineUnknownAsCustom = Session.PasteDefineCustomFields;
-                form.FilterEmptyFields = Session.PasteFilterEmptyFields;
-                form.SmartPaste = Session.PasteSmart;
-                form.ResetExistingMessage = Session.PasteResetExisting;
-                form.ProcessRepeatingGroups = Session.PasteProcessRepeatingGroups;
+                _session.ResetTemplateMessage(message.MsgType);
+            }
 
-                if (form.ShowDialog() != DialogResult.OK)
-                    return;
-
-                Session.PasteDefineCustomFields = form.DefineUnknownAsCustom;
-                Session.PasteFilterEmptyFields = form.FilterEmptyFields;
-                Session.PasteSmart = form.SmartPaste;
-                Session.PasteResetExisting = form.ResetExistingMessage;
-                Session.PasteProcessRepeatingGroups = form.ProcessRepeatingGroups;
-
-                Session.Write();
-
-                if (form.ResetExistingMessage)
+            if (form.SmartPaste)
+            {
+                if (form.ProcessRepeatingGroups)
                 {
-                    _session.ResetTemplateMessage(message.MsgType);
-                }
-
-                if (form.SmartPaste)
-                {
-                    if (form.ProcessRepeatingGroups)
-                    {
-                        SmartPasteWithGroups(parsedMessage, message, form.DefineUnknownAsCustom);
-                    }
-                    else
-                    {
-                        SmartPasteWithoutGroups(parsedMessage, message, form.DefineUnknownAsCustom);
-                    }
+                    SmartPasteWithGroups(parsedMessage, message, form.DefineUnknownAsCustom);
                 }
                 else
                 {
-                    SimplePaste(parsedMessage, message, form.DefineUnknownAsCustom);
+                    SmartPasteWithoutGroups(parsedMessage, message, form.DefineUnknownAsCustom);
                 }
+            }
+            else
+            {
+                SimplePaste(parsedMessage, message, form.DefineUnknownAsCustom);
+            }
 
-                SelectMessage(message.MsgType);
-                MessageGridSelectionChanged(null, null);
-                RemoveFilterButtonClick(this, null);
+            SelectMessage(message.MsgType);
+            MessageGridSelectionChanged(null, null);
+            RemoveFilterButtonClick(this, null);
 
-                if (form.FilterEmptyFields)
-                {
-                    FilterButtonClick(this, null);
-                }
+            if (form.FilterEmptyFields)
+            {
+                FilterButtonClick(this, null);
+            }
 
-                if (form.DefineUnknownAsCustom)
-                {
-                    Session.WriteCustomFields();
-                }
+            if (form.DefineUnknownAsCustom)
+            {
+                Session.WriteCustomFields();
             }
         }
 
@@ -823,12 +807,9 @@ namespace FixClient
 
             foreach (var field in parsedMessage.Fields)
             {
-                Fix.Dictionary.Field definition;
-
-                if (!Session.Version.Fields.TryGetValue(field.Tag, out definition) || definition == null)
+                if (!Session.Version.Fields.TryGetValue(field.Tag, out Fix.Dictionary.Field definition) || definition == null)
                 {
-                    CustomField custom;
-                    if (!Session.CustomFields.TryGetValue(field.Tag, out custom) && defineUnknownAsCustom)
+                    if (!Session.CustomFields.TryGetValue(field.Tag, out CustomField custom) && defineUnknownAsCustom)
                     {
                         custom = new CustomField { Tag = field.Tag, Name = field.Tag.ToString() };
                         Session.AddCustomField(custom);
@@ -856,8 +837,7 @@ namespace FixClient
 
                     if (groupIndent == null)
                     {
-                        int index;
-                        if (indexes.TryGetValue(field.Tag, out index))
+                        if (indexes.TryGetValue(field.Tag, out int index))
                         {
                             // We've seen this tag already so this means we have a repeating group. Move back to
                             // the start of the group in the definition and continue on.
@@ -898,10 +878,10 @@ namespace FixClient
             foreach (Fix.Field field in parsedMessage.Fields)
             {
                 Fix.Dictionary.Field definition;
-                if (!Session.Version.Fields.TryGetValue(field.Tag, out definition))
+                if (!Session.Version.Fields.TryGetValue(field.Tag, out _))
                 {
                     CustomField custom;
-                    if (!Session.CustomFields.TryGetValue(field.Tag, out custom) && defineUnknownAsCustom)
+                    if (!Session.CustomFields.TryGetValue(field.Tag, out _) && defineUnknownAsCustom)
                     {
                         custom = new CustomField { Tag = field.Tag, Name = field.Tag.ToString() };
                         Session.AddCustomField(custom);
@@ -948,10 +928,10 @@ namespace FixClient
             foreach (Fix.Field field in parsedMessage.Fields)
             {
                 Fix.Dictionary.Field definition;
-                if (!Session.Version.Fields.TryGetValue(field.Tag, out definition))
+                if (!Session.Version.Fields.TryGetValue(field.Tag, out _))
                 {
                     CustomField custom;
-                    if (!Session.CustomFields.TryGetValue(field.Tag, out custom) && defineUnknownAsCustom)
+                    if (!Session.CustomFields.TryGetValue(field.Tag, out _) && defineUnknownAsCustom)
                     {
                         custom = new CustomField { Tag = field.Tag, Name = field.Tag.ToString() };
                         Session.AddCustomField(custom);
@@ -1347,9 +1327,7 @@ namespace FixClient
 
                 foreach (Fix.Dictionary.Message message in _session.Version.Messages)
                 {
-                    var row = _messageTable.NewRow() as MessageTypeDataRow;
-
-                    if (row != null)
+                    if (_messageTable.NewRow() is MessageTypeDataRow row)
                     {
                         row.Message = message;
                         row[MessageTypeDataTable.ColumnMsgType] = message.MsgType;
@@ -1524,10 +1502,10 @@ namespace FixClient
                         continue;
                     }
 
-                    var dataRow = _fieldTable.NewRow() as FieldDataRow;
-
-                    if (dataRow == null)
+                    if (_fieldTable.NewRow() is not FieldDataRow dataRow)
+                    {
                         continue;
+                    }
 
                     dataRow.Field = field;
 
@@ -1541,9 +1519,7 @@ namespace FixClient
                     }
                     else
                     {
-                        CustomField custom;
-
-                        if (Session.CustomFields.TryGetValue(field.Tag, out custom))
+                        if (Session.CustomFields.TryGetValue(field.Tag, out CustomField custom))
                         {
                             dataRow[FieldDataTable.ColumnName] = custom.Name;
                             dataRow[FieldDataTable.ColumnCustom] = true;
@@ -1603,7 +1579,7 @@ namespace FixClient
             Session.WriteTemplates();
         }
 
-        public void UpdateMessage(Fix.Message message, Fix.Order order)
+        public static void UpdateMessage(Fix.Message message, Fix.Order order)
         {
             //
             // Order.Messages are stored in arrival order so we just iterate through and get
@@ -2098,9 +2074,7 @@ namespace FixClient
 
         Fix.Message FindMessage(string msgType)
         {
-            var row = _messageTable.Rows.Find(msgType) as MessageTypeDataRow;
-
-            if (row == null)
+            if (_messageTable.Rows.Find(msgType) is not MessageTypeDataRow row)
             {
                 MessageBox.Show(this,
                                 string.Format("Unable to find the {0} message", msgType),

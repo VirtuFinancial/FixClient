@@ -135,15 +135,13 @@ namespace Fix
             return false;
         }
 
-        bool ProcessTradeCaptureReportRequestAck(Message message)
+        static bool ProcessTradeCaptureReportRequestAck(Message message)
         {
             return false;
         }
 
         bool ProcessTradeCaptureReport(Message message)
         {
-            bool result = false;
-
             try
             {
                 Field tradeReportID = message.Fields.Find(Dictionary.Fields.TradeReportID);
@@ -219,19 +217,18 @@ namespace Fix
 
                 AddTradeReport(report);
 
-                result = true;
+                return true;
             }
             catch (Exception ex)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = ex.Message;
-                result = false;
             }
 
-            return result;
+            return false;
         }
 
-        bool ProcessTradeCaptureReportAck(Message message)
+        static bool ProcessTradeCaptureReportAck(Message message)
         {
             return false;
         }

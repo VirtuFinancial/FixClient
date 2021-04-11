@@ -66,8 +66,8 @@ namespace Fix
                     throw new ArgumentNullException(nameof(key));
                 }
 
-                if (key is TKey)
-                    return (TKey)key;
+                if (key is TKey result)
+                    return result;
 
                 throw new ArgumentException($"'{nameof(key)}' must be of type " + KeyTypeName, nameof(key));
             }
@@ -77,13 +77,13 @@ namespace Fix
                 if (value == null)
                 {
                     if (ValueTypeIsReferenceType)
-                        return default(TValue);
+                        return default;
 
                     throw new ArgumentNullException(nameof(value));
                 }
 
-                if (value is TValue)
-                    return (TValue)value;
+                if (value is TValue result)
+                    return result;
 
                 throw new ArgumentException($"'{nameof(value)}' must be of type " + ValueTypeName, nameof(value));
             }
@@ -163,9 +163,7 @@ namespace Fix
                 if (Dictionary.ContainsKey(replacement))
                     throw new ArgumentException($"replacement key {replacement} is already in use", nameof(replacement));
 
-                TValue value;
-
-                if (!Dictionary.TryGetValue(existing, out value))
+                if (!Dictionary.TryGetValue(existing, out var value))
                     throw new ArgumentException($"existing key {existing} can not be found", nameof(existing));
 
                 Dictionary.Remove(existing);

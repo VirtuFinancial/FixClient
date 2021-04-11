@@ -57,8 +57,7 @@ namespace FixClient
         {
             if (ModifierKeys == Keys.Control)
             {
-                var view = DataSource as DataView;
-                if (view != null)
+                if (DataSource is DataView view)
                 {
                     view.Sort = string.Empty;
                     Refresh();
@@ -104,15 +103,15 @@ namespace FixClient
         {
             try
             {
-                var rowView = Rows[e.RowIndex].DataBoundItem as DataRowView;
-
-                if (rowView == null)
+                if (Rows[e.RowIndex].DataBoundItem is not DataRowView rowView)
+                {
                     return;
+                }
 
-                var row = rowView.Row as FieldDataRow;
-
-                if (row == null)
+                if (rowView.Row is not FieldDataRow row)
+                {
                     return;
+                }
 
                 var custom = (bool)row[FieldDataTable.ColumnCustom];
                 var required = (bool)row[FieldDataTable.ColumnRequired];
@@ -137,10 +136,10 @@ namespace FixClient
             DataGridViewColumn column = Columns[e.ColumnIndex];
             DataGridViewColumnHeaderCell header = column.HeaderCell;
 
-            var view = DataSource as DataView;
-
-            if (view == null)
+            if (DataSource is not DataView view)
+            {
                 return;
+            }
             //
             // Apply the default sort for the column data type.
             //

@@ -18,7 +18,7 @@ namespace Fix
 {
     public class MessageCollection : IEnumerable<Message>, ICloneable
     {
-        readonly List<Message> _messages = new List<Message>();
+        readonly List<Message> _messages = new();
 
         #region Events
 

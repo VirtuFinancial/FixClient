@@ -78,24 +78,22 @@ namespace Fix
             }
             else
             {
-                using (MemoryStream stream = new MemoryStream())
+                using MemoryStream stream = new();
+                using (BinaryWriter writer = new(stream, Encoding.ASCII, true))
                 {
-                    using (BinaryWriter writer = new BinaryWriter(stream, Encoding.ASCII, true))
-                    {
-                        Write(writer, message);
-                    }
+                    Write(writer, message);
+                }
 
-                    lock (_writer)
-                    {
-                        _writer.Write(stream.GetBuffer(), 0, (int)stream.Length);
-                    }
+                lock (_writer)
+                {
+                    _writer.Write(stream.GetBuffer(), 0, (int)stream.Length);
                 }
             }
 
             OnMessageWritten(message);
         }
 
-        void Write(BinaryWriter writer, Message message)
+        static void Write(BinaryWriter writer, Message message)
         {
             foreach (Field field in message.Fields)
             {

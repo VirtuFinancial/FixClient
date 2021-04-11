@@ -66,9 +66,7 @@ namespace Fix
 
         public Field(string tag, string value)
         {
-            int intTag;
-
-            if (!int.TryParse(tag, out intTag))
+            if (!int.TryParse(tag, out var intTag))
             {
                 throw new ArgumentException($"Invalid FIX tag '{tag}' is not an integer");
             }
@@ -395,8 +393,7 @@ namespace Fix
 
         public static explicit operator long?(Field field)
         {
-            long result;
-            if (field == null || !long.TryParse(field.Value, out result))
+            if (field == null || !long.TryParse(field.Value, out var result))
                 return null;
             return result;
         }
@@ -408,23 +405,23 @@ namespace Fix
 
         public static explicit operator decimal?(Field field)
         {
-            decimal result;
-            if (field == null || !decimal.TryParse(field.Value, out result))
+            if (field == null || !decimal.TryParse(field.Value, out decimal result))
+            {
                 return null;
+            }
+
             return result;
         }
 
         public static explicit operator DateTime?(Field field)
         {
-            DateTime result;
-
             string[] formats = { TimestampFormatLong, TimestampFormatShort, DateFormat };
 
             if (!DateTime.TryParseExact(field.Value,
                                         formats,
                                         CultureInfo.InvariantCulture,
                                         DateTimeStyles.None,
-                                        out result))
+                                        out var result))
             {
                 return null;
             }
@@ -573,7 +570,7 @@ namespace Fix
             return (Fix.SessionStatus)Enum.ToObject(typeof(Fix.SessionStatus), value);
         }
 
-        string EnumDescription(Type enumeratedType, object value)
+        string EnumDescription(Type enumeratedTye, object value)
         {
             string name = Enum.GetName(Definition.EnumeratedType, value);
             if (string.IsNullOrEmpty(name))
@@ -598,15 +595,19 @@ namespace Fix
                     if (string.IsNullOrEmpty(value))
                         continue;
 
-                    char charValue;
-                    if (!char.TryParse(value, out charValue))
+                    if (!char.TryParse(value, out char charValue))
+                    {
                         return null;
+                    }
+
                     string description = EnumDescription(Definition.EnumeratedType, charValue);
                     if (string.IsNullOrEmpty(description))
                     {
-                        int intValue;
-                        if (!int.TryParse(value, out intValue))
+                        if (!int.TryParse(value, out int intValue))
+                        {
                             return null;
+                        }
+
                         description = EnumDescription(Definition.EnumeratedType, intValue);
                         if (string.IsNullOrEmpty(description))
                             break;

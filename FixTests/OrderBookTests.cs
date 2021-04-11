@@ -481,7 +481,7 @@ namespace FixTests
                     case 19:	// Filled
                         {
                             Assert.AreEqual(3, book.Orders.Count);
-                            Fix.Order order = book.Orders[book.Orders.Count - 1];
+                            Fix.Order order = book.Orders[^1];
                             Assert.AreEqual(Fix.OrdStatus.Filled, order.OrdStatus);
                             Assert.AreEqual(10000, order.OrderQty);
                         }
@@ -490,7 +490,7 @@ namespace FixTests
                     default:
                         {
                             Assert.AreEqual(3, book.Orders.Count);
-                            Fix.Order order = book.Orders[book.Orders.Count - 1];
+                            Fix.Order order = book.Orders[^1];
                             Assert.AreEqual(Fix.OrdStatus.PartiallyFilled, order.OrdStatus);
                             Assert.AreEqual(10000, order.OrderQty);
                         }

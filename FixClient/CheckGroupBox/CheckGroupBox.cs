@@ -193,7 +193,7 @@ namespace FixClient
         #endregion Event Handlers
 
         #region Events
-        void checkBox_CheckedChanged(object sender, EventArgs e)
+        void CheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (m_bDisableChildrenIfUnchecked == true)
             {
@@ -207,18 +207,12 @@ namespace FixClient
                 }
             }
 
-            if (CheckedChanged != null)
-            {
-                CheckedChanged(sender, e);
-            }
+            CheckedChanged?.Invoke(sender, e);
         }
 
-        void checkBox_CheckStateChanged(object sender, EventArgs e)
+        void CheckBox_CheckStateChanged(object sender, EventArgs e)
         {
-            if (CheckStateChanged != null)
-            {
-                CheckStateChanged(sender, e);
-            }
+            CheckStateChanged?.Invoke(sender, e);
         }
 
         void CheckGroupBox_ControlAdded(object sender, ControlEventArgs e)

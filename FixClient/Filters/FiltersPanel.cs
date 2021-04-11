@@ -345,11 +345,16 @@ namespace FixClient
             get
             {
                 if (_messageGrid.SelectedRows.Count == 0)
+                {
                     return null;
+                }
+
                 DataRowView view = _messageView[_messageGrid.SelectedRows[0].Index];
-                var dataRow = view.Row as FilterMessageDataRow;
-                if (dataRow == null)
+                if (view.Row is not FilterMessageDataRow dataRow)
+                {
                     return null;
+                }
+
                 return dataRow.Message;
             }
         }

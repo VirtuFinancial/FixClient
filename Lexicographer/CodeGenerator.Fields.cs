@@ -18,7 +18,7 @@ namespace Lexicographer
 {
     partial class CodeGenerator
     {
-        CodeTypeDeclaration GenerateFields(Fix.Repository.Version version)
+        static CodeTypeDeclaration GenerateFields(Fix.Repository.Version version)
         {
             var dictionaryType = new CodeTypeDeclaration("Dictionary")
             {
@@ -95,8 +95,7 @@ namespace Lexicographer
             {
                 string enumType = null;
 
-                List<Fix.Repository.Enum> enumeratedValues;
-                if (version.Enums.TryGetValue(field.Tag, out enumeratedValues))
+                if (version.Enums.TryGetValue(field.Tag, out List<Fix.Repository.Enum> _))
                 {
                     //
                     // TODO -   just avoid multi character values for now as we would need to encode
@@ -119,7 +118,7 @@ namespace Lexicographer
                                                     ? (CodeExpression)new CodePrimitiveExpression(null)
                                                     : new CodeTypeOfExpression(enumType);
 
-                string typeName = field.Type[0].ToString().ToUpper() + field.Type.Substring(1);
+                string typeName = field.Type[0].ToString().ToUpper() + field.Type[1..];
 
                 var fieldField = new CodeMemberField("readonly FieldDefinition", field.Name + "Definition")
                 {

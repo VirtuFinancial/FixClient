@@ -78,7 +78,7 @@ namespace FixClient
         }
 
         Session _session;
-        readonly MessageOptions _options = new MessageOptions();
+        readonly MessageOptions _options = new();
         readonly PropertyGrid _propertyGrid;
 
         public MessageOptionsPanel()
@@ -102,7 +102,7 @@ namespace FixClient
             UpdateUiState();
         }
 
-        void MoveSplitter(PropertyGrid propertyGrid, int x)
+        static void MoveSplitter(PropertyGrid propertyGrid, int x)
         {
             /* TODO
             object propertyGridView = typeof(PropertyGrid).InvokeMember("gridView", 

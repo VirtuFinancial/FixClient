@@ -226,8 +226,7 @@ namespace FixClient
         void MessageGridViewCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             DataRowView view = _messageView[e.RowIndex];
-            var dataRow = view.Row as MessageDataRow;
-            if (dataRow != null)
+            if (view.Row is MessageDataRow dataRow)
             {
                 e.CellStyle.ForeColor = dataRow.Message.Incoming
                     ? LookAndFeel.Color.Incoming
@@ -362,10 +361,10 @@ namespace FixClient
         {
             Fix.Order order = e.Order;
 
-            var row = _orderTable.Rows.Find(order.ClOrdID) as OrderDataRow;
-
-            if (row == null)
+            if (_orderTable.Rows.Find(order.ClOrdID) is not OrderDataRow row)
+            {
                 return;
+            }
 
             row.Order = order;
             UpdateRow(row);
@@ -374,13 +373,12 @@ namespace FixClient
         void OrderBookOrderInserted(object sender, Fix.OrderBookEventArgs e)
         {
             Fix.Order order = e.Order;
-
-            var row = _orderTable.Rows.Find(order.ClOrdID) as OrderDataRow;
-
-            if (row != null)
+            if (_orderTable.Rows.Find(order.ClOrdID) is OrderDataRow)
+            {
                 return;
+            }
 
-            row = (OrderDataRow)_orderTable.NewRow();
+            OrderDataRow row = (OrderDataRow)_orderTable.NewRow();
             row.Order = order;
             row[OrderDataTable.ColumnClOrdId] = order.ClOrdID;
             //
@@ -393,7 +391,7 @@ namespace FixClient
             _orderTable.Rows.Add(row);
         }
 
-        void UpdateRow(OrderDataRow row)
+        static void UpdateRow(OrderDataRow row)
         {
             Fix.Order order = row.Order;
 
@@ -460,42 +458,40 @@ namespace FixClient
 
         void LoadClientMessagesButtonClick(object sender, EventArgs e)
         {
-            using (OpenFileDialog dlg = new OpenFileDialog())
+            using OpenFileDialog dlg = new();
+            if (dlg.ShowDialog() != DialogResult.OK)
+                return;
+
+            Cursor original = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+
+            try
             {
-                if (dlg.ShowDialog() != DialogResult.OK)
-                    return;
+                Fix.MessageCollection messages = Fix.MessageCollection.Parse(dlg.FileName);
 
-                Cursor original = Cursor.Current;
-                Cursor.Current = Cursors.WaitCursor;
-
-                try
-                {
-                    Fix.MessageCollection messages = Fix.MessageCollection.Parse(dlg.FileName);
-
-                    if (messages == null)
-                    {
-                        MessageBox.Show(this,
-                                        "The file could not be parsed",
-                                        Application.ProductName,
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
-                        return;
-                    }
-
-                    Messages = messages;
-                }
-                catch (Exception ex)
+                if (messages == null)
                 {
                     MessageBox.Show(this,
-                                    ex.Message,
+                                    "The file could not be parsed",
                                     Application.ProductName,
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Information);
+                    return;
                 }
-                finally
-                {
-                    Cursor.Current = original;
-                }
+
+                Messages = messages;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this,
+                                ex.Message,
+                                Application.ProductName,
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+            }
+            finally
+            {
+                Cursor.Current = original;
             }
         }
 
@@ -504,16 +500,22 @@ namespace FixClient
             get
             {
                 if (_messageGridView.SelectedRows.Count == 0)
+                {
                     return null;
+                }
+
                 DataRowView view = _messageView[_messageGridView.SelectedRows[0].Index];
-                var dataRow = view.Row as MessageDataRow;
-                if (dataRow == null)
+         
+                if (view.Row is not MessageDataRow dataRow)
+                {
                     return null;
+                }
+
                 return dataRow.Message;
             }
         }
 
-        public Fix.Dictionary.Message MessageDefinition(Fix.Message message)
+        public static Fix.Dictionary.Message MessageDefinition(Fix.Message message)
         {
             Fix.Field beginString = message.Fields.Find(Fix.Dictionary.Fields.BeginString);
             Fix.Dictionary.Version version = null;
@@ -527,10 +529,9 @@ namespace FixClient
             return exemplar;
         }
 
-        public Fix.Dictionary.Field FieldDefinition(Fix.Dictionary.Message message, Fix.Field field)
+        public static Fix.Dictionary.Field FieldDefinition(Fix.Dictionary.Message message, Fix.Field field)
         {
-            Fix.Dictionary.Field definition;
-            message.Fields.TryGetValue(field.Tag, out definition);
+            message.Fields.TryGetValue(field.Tag, out Fix.Dictionary.Field definition);
             return definition;
         }
 
@@ -571,10 +572,10 @@ namespace FixClient
 
                 foreach (Fix.Field field in message.Fields)
                 {
-                    var dataRow = _fieldTable.NewRow() as FieldDataRow;
-
-                    if (dataRow == null)
+                    if (_fieldTable.NewRow() is not FieldDataRow dataRow)
+                    {
                         continue;
+                    }
 
                     if (field.Definition == null && message.Definition != null)
                     {
@@ -611,17 +612,13 @@ namespace FixClient
 
         Image ImageForMessageStatus(Fix.MessageStatus status)
         {
-            switch (status)
+            return status switch
             {
-                case Fix.MessageStatus.Error:
-                    return messageStatusErrorImage;
-                case Fix.MessageStatus.Info:
-                    return messageStatusInfoImage;
-                case Fix.MessageStatus.Warn:
-                    return messageStatusWarnImage;
-            }
-
-            return messageStatusNoneImage;
+                Fix.MessageStatus.Error => messageStatusErrorImage,
+                Fix.MessageStatus.Info => messageStatusInfoImage,
+                Fix.MessageStatus.Warn => messageStatusWarnImage,
+                _ => messageStatusNoneImage,
+            };
         }
 
         void MessagesMessageAdded(object sender, Fix.MessageCollection.MessageEvent ev)
@@ -651,7 +648,7 @@ namespace FixClient
 
             field = message.Fields.Find(Fix.Dictionary.Fields.MsgSeqNum);
 
-            row[ParserMessageDataTable.ColumnMsgSeqNum] = field != null ? field.Value : null;
+            row[ParserMessageDataTable.ColumnMsgSeqNum] = field?.Value;
 
             _messageTable.Rows.Add(row);
         }
