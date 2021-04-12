@@ -19,10 +19,19 @@ FIX Client is a Windows desktop program designed for manually testing [FIX proto
     * **NB** FIX Client is not compatible with **.NET 5.0.4** Please see [here](https://github.com/GaryHughes/FixClient/issues/2) for details.  
 * FIX Client is distributed as .NET single file application, just download FixClient.exe from a [release](https://github.com/GaryHughes/FixClient/releases/latest) and run it.
 
-## Build Requirements
+## Building
 
-* [Visual Studio Community Edition 2019](https://visualstudio.microsoft.com/vs/community/)
-* [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-5.0.202-windows-x64-installer)
+### Command Line
+* Install the [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-5.0.202-windows-x64-installer)
+* Clone this repository and change into the repository root directory.
+* On the command line type `dotnet publish -c Release -r win-x64`
+* The resulting executable can be retrieved from `FixClient/bin/Release/net5.0-windows/win-x64/publish/FixClient.exe` 
+
+### Visual Studio
+* Install [Visual Studio Community Edition 2019](https://visualstudio.microsoft.com/vs/community/)
+* Select `Build` -> `Publish FIX Client` from the menu.
+* Client the `Publish` button.
+* The resulting executable can be retrieved from `FixClient/bin/Release/net5.0-windows/win-x64/publish/FixClient.exe` 
 
 ## Acknowledgements
 
