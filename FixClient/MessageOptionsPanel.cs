@@ -65,16 +65,6 @@ namespace FixClient
             [Description("Automatically increment the AllocID field in any messages that have it")]
             [Category(CategoryAuto)]
             public bool AutoAllocId { get; set; }
-
-            [DisplayName("TradeReportID")]
-            [Description("Automatically increment the TradeReportID field in any messages that have it")]
-            [Category(CategoryAuto)]
-            public bool AutoTradeReportId { get; set; }
-
-            [DisplayName("TradeID")]
-            [Description("Automatically increment the TradeID field in any messages that have it")]
-            [Category(CategoryAuto)]
-            public bool AutoTradeId { get; set; }
         }
 
         Session _session;
@@ -150,12 +140,6 @@ namespace FixClient
                 case "AllocID":
                     _session.AutoAllocId = value;
                     break;
-                case "TradeReportID":
-                    _session.AutoTradeReportId = value;
-                    break;
-                case "TradeID":
-                    _session.AutoTradeId = value;
-                    break;
             }
             _session.Write();
         }
@@ -167,7 +151,6 @@ namespace FixClient
             {
                 _session = value;
 
-                _options.AutoTradeReportId = _session.AutoTradeReportId;
                 _options.AutoAllocId = _session.AutoAllocId;
                 _options.AutoClOrdId = _session.AutoClOrdId;
                 _options.AutoListId = _session.AutoListId;
@@ -177,7 +160,6 @@ namespace FixClient
                 _options.AutoSetMsgSeqNum = _session.AutoSetMsgSeqNum;
                 _options.AutoTotNoOrders = _session.AutoTotNoOrders;
                 _options.AutoTransactTime = _session.AutoTransactTime;
-                _options.AutoTradeId = _session.AutoTradeId;
                 UpdateUiState();
             }
         }

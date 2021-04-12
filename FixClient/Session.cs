@@ -107,8 +107,6 @@ namespace FixClient
             AutoListSeqNo = session.AutoListSeqNo;
             AutoTransactTime = session.AutoTransactTime;
             AutoAllocId = session.AutoAllocId;
-            AutoTradeReportId = session.AutoTradeReportId;
-            AutoTradeId = session.AutoTradeId;
             AutoScrollMessages = session.AutoScrollMessages;
             OrderBook = new Fix.OrderBook();
             Reading = true; // Disable the filter write if AutoWrite == true
@@ -222,14 +220,6 @@ namespace FixClient
         [Browsable(false)]
         [JsonProperty]
         public bool AutoAllocId { get; set; } = true;
-
-        [Browsable(false)]
-        [JsonProperty]
-        public bool AutoTradeReportId { get; set; } = true;
-
-        [Browsable(false)]
-        [JsonProperty]
-        public bool AutoTradeId { get; set; } = true;
 
         [Browsable(false)]
         [JsonProperty]
