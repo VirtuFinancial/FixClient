@@ -29,6 +29,7 @@ FIX Client is a Windows desktop program designed for manually testing [FIX proto
 
 ### Visual Studio
 * Install [Visual Studio Community Edition 2019](https://visualstudio.microsoft.com/vs/community/)
+* Open `Fix.sln` in the repository root directory.
 * Select `Build` -> `Publish FIX Client` from the menu.
 * Client the `Publish` button.
 * The resulting executable can be retrieved from `FixClient/bin/Release/net5.0-windows/win-x64/publish/FixClient.exe` 
