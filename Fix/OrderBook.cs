@@ -745,7 +745,7 @@ namespace Fix
             return true;
         }
 
-        void UpdateOrder(Order order, Message message, bool replacement = false)
+        static void UpdateOrder(Order order, Message message, bool replacement = false)
         {
             Field Price = message.Fields.Find(Dictionary.Fields.Price);
             Field AvgPx = message.Fields.Find(Dictionary.Fields.AvgPx);

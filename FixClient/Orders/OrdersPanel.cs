@@ -880,10 +880,10 @@ namespace FixClient
 
             Fix.Order order = ev.Order;
 
-            var row = _orderTable.Rows.Find(order.ClOrdID) as OrderDataRow;
-
-            if (row == null)
+            if (_orderTable.Rows.Find(order.ClOrdID) is not OrderDataRow row)
+            {
                 return;
+            }
 
             row.Order = order;
             UpdateRow(row);
@@ -903,12 +903,12 @@ namespace FixClient
 
         void AddOrder(Fix.Order order)
         {
-            var row = _orderTable.Rows.Find(order.ClOrdID) as OrderDataRow;
-
-            if (row != null)
+            if (_orderTable.Rows.Find(order.ClOrdID) is OrderDataRow _)
+            {
                 return;
+            }
 
-            row = (OrderDataRow)_orderTable.NewRow();
+            var row = (OrderDataRow)_orderTable.NewRow();
             row.Order = order;
             row[OrderDataTable.ColumnClOrdId] = order.ClOrdID;
             //

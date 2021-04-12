@@ -488,7 +488,7 @@ namespace FixClient
             {
                 _insertContextMenuItem.DropDownItems.Clear();
 
-                ToolStripMenuItem[] items = new ToolStripMenuItem[Session.CustomFields.Count()];
+                ToolStripMenuItem[] items = new ToolStripMenuItem[Session.CustomFields.Count];
 
                 int index = 0;
 
@@ -877,7 +877,6 @@ namespace FixClient
         {
             foreach (Fix.Field field in parsedMessage.Fields)
             {
-                Fix.Dictionary.Field definition;
                 if (!Session.Version.Fields.TryGetValue(field.Tag, out _))
                 {
                     CustomField custom;
@@ -927,7 +926,6 @@ namespace FixClient
 
             foreach (Fix.Field field in parsedMessage.Fields)
             {
-                Fix.Dictionary.Field definition;
                 if (!Session.Version.Fields.TryGetValue(field.Tag, out _))
                 {
                     CustomField custom;
@@ -1190,37 +1188,7 @@ namespace FixClient
                     }
                 }
             }
-            else if (message.MsgType == Fix.Dictionary.Messages.TradeCaptureReport.MsgType &&
-                     Session.AutoTradeReportId &&
-                     Session.OrderBehaviour == Fix.Behaviour.Initiator)
-            {
-                for (int index = 0; index < defaults.Fields.Count; ++index)
-                {
-                    Fix.Field field = defaults.Fields[index];
-
-                    if (field.Tag == Fix.Dictionary.Fields.TradeReportID.Tag)
-                    {
-                        int tradeReportId = Session.NextTradeReportId++;
-                        defaults.Fields[index].Value = tradeReportId.ToString();
-                        updatedFields.Add(new KeyValuePair<int, string>(index, tradeReportId.ToString()));
-                    }
-                }
-            }
-            else if (message.MsgType == Fix.Dictionary.Messages.TradeCaptureReport.MsgType && Session.AutoTradeId)
-            {
-                for (int index = 0; index < defaults.Fields.Count; ++index)
-                {
-                    Fix.Field field = defaults.Fields[index];
-
-                    if (field.Tag == Fix.Dictionary.Fields.TradeID.Tag)
-                    {
-                        int tradeId = Session.NextTradeId++;
-                        defaults.Fields[index].Value = tradeId.ToString();
-                        updatedFields.Add(new KeyValuePair<int, string>(index, tradeId.ToString()));
-                    }
-                }
-            }
-
+        
             foreach (KeyValuePair<int, string> field in updatedFields)
             {
                 _fieldTable.Rows[field.Key][FieldDataTable.ColumnValue] = field.Value;
@@ -1472,14 +1440,6 @@ namespace FixClient
                             message.Fields[index].Value = nextAllocId.ToString();
                         }
                     }
-                    else if (message.MsgType == Fix.Dictionary.Messages.TradeCaptureReport.MsgType &&
-                             Session.OrderBehaviour == Fix.Behaviour.Initiator)
-                    {
-                        if (field.Tag == Fix.Dictionary.Fields.TradeReportID.Tag)
-                        {
-                            message.Fields[index].Value = Session.NextTradeReportId.ToString();
-                        }
-                    }
 
                     ++index;
                 }
@@ -1699,235 +1659,6 @@ namespace FixClient
             {
                 message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.ExecTransType, Fix.Dictionary.FIX_4_0.ExecTransType.New);
             }
-
-            SelectMessage(message.MsgType);
-        }
-
-        public void ReplyTradeReport(Fix.TradeReport.ReportSide buySide, Fix.TradeReport.ReportSide sellSide)
-        {
-            Fix.Message target = FindMessage(Fix.Dictionary.Messages.TradeCaptureReport.MsgType);
-
-            if (target == null)
-                return;
-            //
-            // This message has repeating groups so we can't just set each field we need. Construct a message with the
-            // fields we want and then just do a smart paste into the target message.
-            //
-            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.TradeCaptureReport.MsgType };
-
-            Fix.TradeReport trade = buySide?.TradeReport ?? sellSide?.TradeReport;
-
-            if (trade == null)
-                return;
-
-            message.Fields.Add(Fix.Dictionary.Fields.LastQty, trade.LastQty);
-            message.Fields.Add(Fix.Dictionary.Fields.LastPx, trade.LastPx);
-
-            message.Fields.Add(Fix.Dictionary.Fields.ExchangeTradeType, Fix.ExchangeTradeType.ManualTrade);
-            message.Fields.Add(Fix.Dictionary.Fields.ExecType, Fix.ExecType.Trade);
-
-            string securityExchange = trade.SecurityExchange;
-            if (!string.IsNullOrEmpty(securityExchange))
-                message.Fields.Add(Fix.Dictionary.Fields.SecurityExchange, securityExchange);
-
-            string securityID = trade.SecurityID;
-            if (!string.IsNullOrEmpty(securityID))
-                message.Fields.Add(Fix.Dictionary.Fields.SecurityID, securityID);
-
-            Fix.SecurityIDSource? securityIDSource = trade.SecurityIDSource;
-            if (securityIDSource != null)
-                message.Fields.Add(Fix.Dictionary.Fields.SecurityIDSource, securityIDSource.Value);
-
-            message.Fields.Add(Fix.Dictionary.Fields.TradeHandlingInstr, Fix.TradeHandlingInstr.TradeConfirmation);
-
-            message.Fields.Add(Fix.Dictionary.Fields.TradeID, Session.NextTradeId);
-            message.Fields.Add(Fix.Dictionary.Fields.TradeReportID, trade.TradeReportID);
-
-            message.Fields.Add(Fix.Dictionary.Fields.TradeReportTransType, Fix.TradeReportTransType.Replace);
-            message.Fields.Add(Fix.Dictionary.Fields.TradeReportType, Fix.TradeReportType.Submit);
-            message.Fields.Add(Fix.Dictionary.Fields.TrdRptStatus, Fix.TrdRptStatus.Accepted);
-            message.Fields.Add(Fix.Dictionary.Fields.TrdType, Fix.TrdType.PrivatelyNegotiatedTrades);
-
-
-            if (buySide != null && sellSide != null)
-            {
-                message.Fields.Add(Fix.Dictionary.Fields.NoSides, Fix.NoSides.BothSides);
-            }
-            else
-            {
-                message.Fields.Add(Fix.Dictionary.Fields.NoSides, Fix.NoSides.OneSide);
-            }
-
-            if (buySide != null)
-            {
-                message.Fields.Add(Fix.Dictionary.Fields.Side, buySide.Side);
-                message.Fields.Add(Fix.Dictionary.Fields.NoPartyIDs, 1);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyID, buySide.PartyID);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyIDSource, Fix.PartyIDSource.Proprietary);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyRole, Fix.PartyRole.ExecutingFirm);
-
-                message.Fields.Add(Fix.Dictionary.Fields.NoClearingInstructions, 1);
-                message.Fields.Add(Fix.Dictionary.Fields.ClearingInstruction, Fix.ClearingInstruction.ProcessNormally);
-                message.Fields.Add(Fix.Dictionary.Fields.OrderCategory, Fix.OrderCategory.InternalCrossOrder);
-            }
-
-            if (sellSide != null)
-            {
-                // We need to repeat the side group before doing these fields - effectively smart paste (maybe construct a message and paste it?).
-                message.Fields.Add(Fix.Dictionary.Fields.Side, sellSide.Side);
-                message.Fields.Add(Fix.Dictionary.Fields.NoPartyIDs, 1);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyID, sellSide.PartyID);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyIDSource, Fix.PartyIDSource.Proprietary);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyRole, Fix.PartyRole.ExecutingFirm);
-            }
-
-            SimplePaste(message, target, true);
-
-            SelectMessage(message.MsgType);
-        }
-
-        public void AcknowledgeTradeReport(Fix.TradeReport.ReportSide buySide, Fix.TradeReport.ReportSide sellSide)
-        {
-            Fix.Message target = FindMessage(Fix.Dictionary.Messages.TradeCaptureReportAck.MsgType);
-
-            if (target == null)
-                return;
-            //
-            // This message has repeating groups so we can't just set each field we need. Construct a message with the
-            // fields we want and then just do a smart paste into the target message.
-            //
-            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.TradeCaptureReportAck.MsgType };
-
-            Fix.TradeReport trade = buySide?.TradeReport ?? sellSide?.TradeReport;
-
-            if (trade == null)
-                return;
-
-
-
-            /*
-                                      Custom(5681): M
-                                    ExecType( 150): F
-                                      LastPx(  31): 60.05
-                                     LastQty(  32): 100
-                                     SecurityExchange( 207): XHKG
-                                  SecurityID(  48): 3699
-                                    IDSource(  22): 8
-                          TradeHandlingInstr(1123): 0
-                                     TradeID(1003): 3699000000146
-                        TradeReportTransType( 487): 0
-                             TradeReportType( 856): 0
-                                TransactTime(  60): 20150714-01:32:58.000
-                                TrdRptStatus( 939): 0 - Accepted
-                                     TrdType( 828): 22
-                                     NoSides( 552): 2
-
-                                        Side(  54): 1
-                                  NoPartyIDs( 453): 1
-                                     PartyID( 448): 7268
-                               PartyIDSource( 447): D
-                                   PartyRole( 452): 1
-
-                      NoClearingInstructions( 576): 1
-                         ClearingInstruction( 577): 0
-                               OrderCategory(1115): A
-                                  
-                                        Side(  54): 2
-                                  NoPartyIDs( 453): 1
-                                     PartyID( 448): 7268
-                               PartyIDSource( 447): D
-                                   PartyRole( 452): 17
-                            
-                                    CheckSum(  10): 130
-
-            */
-
-            /*
-            message.Fields.Set(Fix.Dictionary.Fields.TradeReportID, trade.TradeReportID);
-
-            message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.ExecType.New);
-            message.Fields.Set(Fix.Dictionary.Fields.TrdRptStatus, Fix.TrdRptStatus.Accepted);
-
-            message.Fields.Set(Fix.Dictionary.Fields.Symbol, trade.Symbol);
-            message.Fields.Set(Fix.Dictionary.Fields.LastQty, trade.LastQty);
-            message.Fields.Set(Fix.Dictionary.Fields.LastPx, trade.LastPx);
-            message.Fields.Set(Fix.Dictionary.Fields.TrdType, trade.TrdType);
-            //message.Fields.Set(Fix.Dictionary.Fields.TradeReportTransType, Fix.TradeReportTransType.New);
-
-            message.Fields.Set(Fix.Dictionary.Fields.NoSides, 1);
-            message.Fields.Set(Fix.Dictionary.Fields.Side, trade.Side);
-            message.Fields.Set(Fix.Dictionary.Fields.PartyID, trade.PartyID);
-            */
-
-            SimplePaste(message, target, true);
-
-            SelectMessage(message.MsgType);
-        }
-
-        public void RejectTradeReport(Fix.TradeReport.ReportSide buySide, Fix.TradeReport.ReportSide sellSide)
-        {
-            Fix.Message target = FindMessage(Fix.Dictionary.Messages.TradeCaptureReportAck.MsgType);
-
-            if (target == null)
-                return;
-            //
-            // This message has repeating groups so we can't just set each field we need. Construct a message with the
-            // fields we want and then just do a smart paste into the target message.
-            //
-            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.TradeCaptureReportAck.MsgType };
-
-            Fix.TradeReport trade = buySide?.TradeReport ?? sellSide?.TradeReport;
-
-            if (trade == null)
-                return;
-
-            message.Fields.Set(Fix.Dictionary.Fields.TradeReportID, trade.TradeReportID);
-
-            message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.ExecType.New);
-            message.Fields.Add(Fix.Dictionary.Fields.TradeReportType, Fix.TradeReportType.Submit);
-            message.Fields.Set(Fix.Dictionary.Fields.TrdRptStatus, Fix.TrdRptStatus.Rejected);
-            message.Fields.Set(Fix.Dictionary.Fields.TradeReportRejectReason, Fix.TradeReportRejectReason.InvalidTradeType);
-
-            message.Fields.Set(Fix.Dictionary.Fields.Symbol, trade.Symbol);
-            message.Fields.Set(Fix.Dictionary.Fields.LastQty, trade.LastQty);
-            message.Fields.Set(Fix.Dictionary.Fields.LastPx, trade.LastPx);
-            message.Fields.Set(Fix.Dictionary.Fields.TrdType, trade.TrdType);
-            //message.Fields.Set(Fix.Dictionary.Fields.TradeReportTransType, Fix.TradeReportTransType.New);
-
-            if (buySide != null && sellSide != null)
-            {
-                message.Fields.Add(Fix.Dictionary.Fields.NoSides, Fix.NoSides.BothSides);
-            }
-            else
-            {
-                message.Fields.Add(Fix.Dictionary.Fields.NoSides, Fix.NoSides.OneSide);
-            }
-
-            if (buySide != null)
-            {
-                message.Fields.Add(Fix.Dictionary.Fields.Side, buySide.Side);
-                message.Fields.Add(Fix.Dictionary.Fields.NoPartyIDs, 1);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyID, buySide.PartyID);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyIDSource, Fix.PartyIDSource.Proprietary);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyRole, Fix.PartyRole.ExecutingFirm);
-
-                message.Fields.Add(Fix.Dictionary.Fields.NoClearingInstructions, 1);
-                message.Fields.Add(Fix.Dictionary.Fields.ClearingInstruction, Fix.ClearingInstruction.ProcessNormally);
-                message.Fields.Add(Fix.Dictionary.Fields.OrderCategory, Fix.OrderCategory.InternalCrossOrder);
-            }
-
-            if (sellSide != null)
-            {
-                // We need to repeat the side group before doing these fields - effectively smart paste (maybe construct a message and paste it?).
-                message.Fields.Add(Fix.Dictionary.Fields.Side, sellSide.Side);
-                message.Fields.Add(Fix.Dictionary.Fields.NoPartyIDs, 1);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyID, sellSide.PartyID);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyIDSource, Fix.PartyIDSource.Proprietary);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyRole, Fix.PartyRole.ExecutingFirm);
-            }
-
-
-            SimplePaste(message, target, true);
 
             SelectMessage(message.MsgType);
         }

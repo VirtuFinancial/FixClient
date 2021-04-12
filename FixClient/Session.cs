@@ -77,17 +77,11 @@ namespace FixClient
             Messages.MessageAdded += (sender, ev) =>
             {
                 OrderBook.Process(ev.Message);
-
-                if (OrderBehaviour == Fix.Behaviour.Acceptor && ev.Message.Incoming)
-                {
-                    TradeBook.Process(ev.Message);
-                }
             };
 
             Messages.Reset += (sender, ev) =>
             {
                 OrderBook.Clear(_retain);
-                TradeBook.Clear();
             };
         }
 
@@ -105,8 +99,6 @@ namespace FixClient
             NextAllocId = session.NextAllocId;
             NextOrderId = session.NextOrderId;
             NextExecId = session.NextExecId;
-            NextTradeReportId = session.NextTradeReportId;
-            NextTradeId = session.NextTradeId;
             AutoSetMsgSeqNum = session.AutoSetMsgSeqNum;
             AutoTotNoOrders = session.AutoTotNoOrders;
             AutoNoOrders = session.AutoNoOrders;
@@ -187,18 +179,6 @@ namespace FixClient
         [JsonProperty]
         public int NextAllocId { get; set; } = 1;
 
-        [Category(CategoryInitiator)]
-        [DisplayName("Next TradeReportID")]
-        [ReadOnly(false)]
-        [JsonProperty]
-        public int NextTradeReportId { get; set; } = 1;
-
-        [Category(CategoryCommon)]
-        [DisplayName("Next TradeID")]
-        [JsonProperty]
-        public int NextTradeId { get; set; } = 1;
-
-
         [Category(CategoryAcceptor)]
         [DisplayName("Next OrderID")]
         [ReadOnly(false)]
@@ -258,9 +238,6 @@ namespace FixClient
         [Browsable(false)]
         public Fix.OrderBook OrderBook { get; } = new Fix.OrderBook();
 
-        [Browsable(false)]
-        public Fix.TradeReportBook TradeBook { get; } = new Fix.TradeReportBook();
-
         #region Options for the paste message dialog
 
         [Browsable(false)]
@@ -305,8 +282,6 @@ namespace FixClient
                 NextExecId = 1;
                 NextListId = 1;
                 NextOrderId = 1;
-                NextTradeReportId = 1;
-                NextTradeId = 1;
             }
 
             Reset();
@@ -327,7 +302,6 @@ namespace FixClient
             SetReadOnly("NextClOrdId", OrderBehaviour == Fix.Behaviour.Acceptor);
             SetReadOnly("NextListId", OrderBehaviour == Fix.Behaviour.Acceptor);
             SetReadOnly("NextAllocId", OrderBehaviour == Fix.Behaviour.Acceptor);
-            SetReadOnly("NextTradeReportId", OrderBehaviour == Fix.Behaviour.Acceptor);
             SetReadOnly("NextOrderId", OrderBehaviour == Fix.Behaviour.Initiator);
             SetReadOnly("NextExecId", OrderBehaviour == Fix.Behaviour.Initiator);
         }
@@ -545,7 +519,7 @@ namespace FixClient
                 if (filter.Value)
                     continue;
                 if (items)
-                    expression.Append(",");
+                    expression.Append(',');
                 items = true;
                 expression.Append(string.Format("{0}", Convert.ToInt32(filter.Key)));
             }
@@ -553,7 +527,7 @@ namespace FixClient
             if (!items)
                 return searchString;
 
-            expression.Append(")");
+            expression.Append(')');
 
             string result = searchString ?? expression.ToString();
 

@@ -19,9 +19,7 @@ namespace Fix
         public MissingFieldException(Dictionary.Field field)
         : base($"Message does not contain a {field.Name} field")
         {
-            Field = field;
         }
-        Dictionary.Field Field { get; }
     }
 
     public partial class Message
