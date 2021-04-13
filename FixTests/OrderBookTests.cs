@@ -383,7 +383,7 @@ namespace FixTests
         {
             Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_qj.log");
             Assert.IsNotNull(messages);
-            Assert.AreEqual(20, messages.Count());
+            Assert.AreEqual(20, messages.Count);
 
             var book = new Fix.OrderBook();
 

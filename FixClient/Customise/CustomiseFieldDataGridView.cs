@@ -17,8 +17,8 @@ namespace FixClient
 {
     public partial class CustomiseFieldDataGridView : DataGridView
     {
-        public static string ColumnFieldId = "Id";
-        public static string ColumnFieldName = "Name";
+        public const string ColumnFieldId = "Id";
+        public const string ColumnFieldName = "Name";
 
         public CustomiseFieldDataGridView()
         {

@@ -224,7 +224,7 @@ namespace Fix
                                      string.IsNullOrEmpty(description) ? string.Empty : " - " + description);
             }
 
-            builder.Append("}");
+            builder.Append('}');
 
             return builder.ToString();
         }
