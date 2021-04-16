@@ -46,9 +46,10 @@ namespace FixClient
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(234, 42);
+            this.cancelButton.Location = new System.Drawing.Point(273, 48);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelButton.Size = new System.Drawing.Size(88, 27);
             this.cancelButton.TabIndex = 3;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.Click += new System.EventHandler(this.CancelButtonClick);
@@ -57,21 +58,23 @@ namespace FixClient
             // 
             this.progressBar.BackColor = System.Drawing.SystemColors.Window;
             this.progressBar.ForeColor = System.Drawing.Color.CornflowerBlue;
-            this.progressBar.Location = new System.Drawing.Point(14, 12);
+            this.progressBar.Location = new System.Drawing.Point(16, 14);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(294, 17);
+            this.progressBar.Size = new System.Drawing.Size(343, 20);
             this.progressBar.Step = 1;
             this.progressBar.TabIndex = 5;
             // 
             // ConnectForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(320, 78);
+            this.ClientSize = new System.Drawing.Size(373, 90);
             this.ControlBox = false;
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.progressBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ConnectForm";
