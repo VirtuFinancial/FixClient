@@ -10,7 +10,7 @@ FIX Client is a Windows desktop program designed for manually testing [FIX proto
 
 ## Releases
 
-* Download the latest release [here](https://github.com/GaryHughes/FixClient/releases/latest).
+* Download the latest stable release [4.0.0](https://github.com/GaryHughes/FixClient/releases/tag/v4.0.0) 
 * If this is the first time you've run FIX Client follow the installation instructions below.
 
 ## Installation
