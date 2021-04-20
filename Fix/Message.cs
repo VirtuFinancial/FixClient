@@ -9,12 +9,12 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using static Fix.Dictionary;
 
 namespace Fix
 {
@@ -36,13 +36,13 @@ namespace Fix
             //
             Fields = new FieldCollection
             {
-                new Field(Dictionary.Fields.BeginString),
-                new Field(Dictionary.Fields.BodyLength),
-                new Field(Dictionary.Fields.MsgType),
-                new Field(Dictionary.Fields.SenderCompID),
-                new Field(Dictionary.Fields.TargetCompID),
-                new Field(Dictionary.Fields.MsgSeqNum),
-                new Field(Dictionary.Fields.SendingTime)
+                new Field(FIX_5_0SP2.Fields.BeginString),
+                new Field(FIX_5_0SP2.Fields.BodyLength),
+                new Field(FIX_5_0SP2.Fields.MsgType),
+                new Field(FIX_5_0SP2.Fields.SenderCompID),
+                new Field(FIX_5_0SP2.Fields.TargetCompID),
+                new Field(FIX_5_0SP2.Fields.MsgSeqNum),
+                new Field(FIX_5_0SP2.Fields.SendingTime)
             };
         }
 
@@ -117,13 +117,13 @@ namespace Fix
         {
             get
             {
-                if (MsgType == Dictionary.Messages.Heartbeat.MsgType ||
-                    MsgType == Dictionary.Messages.Logon.MsgType ||
-                    MsgType == Dictionary.Messages.Logout.MsgType ||
-                    MsgType == Dictionary.Messages.Reject.MsgType ||
-                    MsgType == Dictionary.Messages.ResendRequest.MsgType ||
-                    MsgType == Dictionary.Messages.SequenceReset.MsgType ||
-                    MsgType == Dictionary.Messages.TestRequest.MsgType)
+                if (MsgType == FIX_5_0SP2.Messages.Heartbeat.MsgType ||
+                    MsgType == FIX_5_0SP2.Messages.Logon.MsgType ||
+                    MsgType == FIX_5_0SP2.Messages.Logout.MsgType ||
+                    MsgType == FIX_5_0SP2.Messages.Reject.MsgType ||
+                    MsgType == FIX_5_0SP2.Messages.ResendRequest.MsgType ||
+                    MsgType == FIX_5_0SP2.Messages.SequenceReset.MsgType ||
+                    MsgType == FIX_5_0SP2.Messages.TestRequest.MsgType)
                 {
                     return true;
                 }
@@ -143,7 +143,7 @@ namespace Fix
             // The checksum is computed by summing all bytes with the message (except those of the
             // checksum field '10=nnn\001' itself) modulo 256.
             //
-            int value = message.Fields.Where(field => field.Tag != Dictionary.Fields.CheckSum.Tag).Sum(field => field.ComputeCheckSum()) % 256;
+            int value = message.Fields.Where(field => field.Tag != FIX_5_0SP2.Fields.CheckSum.Tag).Sum(field => field.ComputeCheckSum()) % 256;
             return value.ToString("D3");
         }
 
@@ -159,10 +159,10 @@ namespace Fix
 
             foreach (Field field in message.Fields)
             {
-                if (field.Tag == Dictionary.Fields.CheckSum.Tag)
+                if (field.Tag == FIX_5_0SP2.Fields.CheckSum.Tag)
                     continue;
 
-                if (field.Tag == Dictionary.Fields.BodyLength.Tag)
+                if (field.Tag == FIX_5_0SP2.Fields.BodyLength.Tag)
                 {
                     passedBodyLength = true;
                     continue;
@@ -196,7 +196,7 @@ namespace Fix
             {
                 if (field.Definition == null)
                 {
-                    field.Definition = Dictionary.Fields[field.Tag - 1];
+                    field.Definition = FIX_5_0SP2.Fields[field.Tag - 1];
                     if (field.Definition == null)
                     {
                         // Dictionary.Fields is the latest version so try an older version to catch deprecated fields. 
@@ -216,7 +216,7 @@ namespace Fix
             foreach (Field field in Fields)
             {
                 string name = field.Definition == null ? string.Empty : field.Definition.Name;
-                string description = field.Tag == Dictionary.Fields.MsgType.Tag ? Definition?.Name : field.ValueDescription;
+                string description = field.Tag == FIX_5_0SP2.Fields.MsgType.Tag ? Definition?.Name : field.ValueDescription;
                 builder.AppendFormat("    {0} {1} - {2}{3}\r\n",
                                      name.PadLeft(widestName),
                                      string.Format("({0})", field.Tag).PadLeft(6),

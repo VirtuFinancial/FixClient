@@ -9,10 +9,10 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.IO;
 using System.Text;
+using static Fix.Dictionary;
 
 namespace Fix
 {
@@ -61,11 +61,11 @@ namespace Fix
 
         void WriteMessage(Message message)
         {
-            message.Fields.Set(Dictionary.Fields.BodyLength.Tag, message.ComputeBodyLength());
+            message.Fields.Set(FIX_5_0SP2.Fields.BodyLength.Tag, message.ComputeBodyLength());
             // Remove any existing checksum, in the case of resends it might already be present and
             // we need to ensure it is the last field.
-            message.Fields.Remove(Dictionary.Fields.CheckSum);
-            message.Fields.Add(Dictionary.Fields.CheckSum.Tag, message.ComputeCheckSum());
+            message.Fields.Remove(FIX_5_0SP2.Fields.CheckSum);
+            message.Fields.Add(FIX_5_0SP2.Fields.CheckSum.Tag, message.ComputeCheckSum());
 
             OnMessageWriting(message);
 
@@ -97,7 +97,7 @@ namespace Fix
         {
             foreach (Field field in message.Fields)
             {
-                if (field.Tag == Dictionary.Fields.CheckSum.Tag)
+                if (field.Tag == FIX_5_0SP2.Fields.CheckSum.Tag)
                     continue;
 
                 if (field.Data)
@@ -113,7 +113,7 @@ namespace Fix
                 }
             }
 
-            writer.Write(Encoding.ASCII.GetBytes($"{(int)Dictionary.Fields.CheckSum.Tag}={message.CheckSum}\x01"));
+            writer.Write(Encoding.ASCII.GetBytes($"{(int)FIX_5_0SP2.Fields.CheckSum.Tag}={message.CheckSum}\x01"));
         }
 
         public void Write(Message message)

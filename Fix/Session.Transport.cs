@@ -9,12 +9,12 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using static Fix.Dictionary;
 
 namespace Fix
 {
@@ -121,15 +121,15 @@ namespace Fix
         {
             try
             {
-                if (message.MsgType == Dictionary.Messages.TestRequest.MsgType)
+                if (message.MsgType == FIX_5_0SP2.Messages.TestRequest.MsgType)
                 {
-                    Field testReqId = message.Fields.Find(Dictionary.Fields.TestReqID);
+                    Field testReqId = message.Fields.Find(FIX_5_0SP2.Fields.TestReqID);
                     if (testReqId != null)
                     {
                         ExpectedTestRequestId = testReqId.Value;
                     }
                 }
-                else if (message.MsgType == Dictionary.Messages.Logon.MsgType && message.ResetSeqNumFlag)
+                else if (message.MsgType == FIX_5_0SP2.Messages.Logon.MsgType && message.ResetSeqNumFlag)
                 {
                     State = State.Resetting;
                     OutgoingSeqNum = 1;
@@ -137,34 +137,34 @@ namespace Fix
                 }
 
                 message.Incoming = false;
-                message.Fields.Set(Dictionary.FIXT_1_1.Fields.BeginString, BeginString.BeginString);
+                message.Fields.Set(FIX_5_0SP2.Fields.BeginString, BeginString.BeginString);
 
-                if (BeginString.BeginString == Dictionary.Versions.FIXT_1_1.BeginString &&
-                    message.MsgType != Dictionary.Messages.Logon.MsgType)
+                if (BeginString.BeginString == "FIXT_1_1" &&
+                    message.MsgType != FIX_5_0SP2.Messages.Logon.MsgType)
                 {
                     // Remove unpopulated optional header fields.
-                    Field field = message.Fields.Find(Dictionary.Fields.ApplVerID);
+                    Field field = message.Fields.Find(FIX_5_0SP2.Fields.ApplVerID);
                     if (field != null && string.IsNullOrEmpty(field.Value))
                         message.Fields.Remove(field.Tag);
 
-                    field = message.Fields.Find(Dictionary.Fields.CstmApplVerID);
+                    field = message.Fields.Find(FIX_5_0SP2.Fields.CstmApplVerID);
                     if (field != null && string.IsNullOrEmpty(field.Value))
                         message.Fields.Remove(field.Tag);
 
-                    field = message.Fields.Find(Dictionary.Fields.ApplExtID);
+                    field = message.Fields.Find(FIX_5_0SP2.Fields.ApplExtID);
                     if (field != null && string.IsNullOrEmpty(field.Value))
                         message.Fields.Remove(field.Tag);
                 }
 
-                message.Fields.Set(Dictionary.Fields.SenderCompID, SenderCompId);
-                message.Fields.Set(Dictionary.Fields.TargetCompID, TargetCompId);
+                message.Fields.Set(FIX_5_0SP2.Fields.SenderCompID, SenderCompId);
+                message.Fields.Set(FIX_5_0SP2.Fields.TargetCompID, TargetCompId);
 
                 if (setSeqNum)
                 {
-                    message.Fields.Set(Dictionary.Fields.MsgSeqNum, AllocateOutgoingSeqNum());
+                    message.Fields.Set(FIX_5_0SP2.Fields.MsgSeqNum, AllocateOutgoingSeqNum());
                 }
 
-                message.Fields.Set(Dictionary.Fields.SendingTime, Field.TimeString(MillisecondTimestamps));
+                message.Fields.Set(FIX_5_0SP2.Fields.SendingTime, Field.TimeString(MillisecondTimestamps));
 
                 if (_writer != null)
                 {

@@ -9,10 +9,10 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.IO;
 using System.Text;
+using static Fix.Dictionary;
 
 namespace Fix
 {
@@ -134,12 +134,12 @@ namespace Fix
                     _tag.Append(token);
                 }
 
-                Dictionary.Field definition = null;
+                VersionField definition = null;
 
                 if (ValidateDataFields &&
-                    Dictionary.Fields.TryGetValue(_tag.ToString(), out definition) &&
+                    FIX_5_0SP2.Fields.TryGetValue(_tag.ToString(), out definition) &&
                     definition != null &&
-                    definition.DataType == Dictionary.DataTypes.Data)
+                    definition.DataType == FIX_5_0SP2.DataTypes.data.Name)
                 {
                     if (previous == null)
                     {
@@ -184,12 +184,12 @@ namespace Fix
 
                 var field = new Field(_tag.ToString(), _value.ToString())
                 {
-                    Data = definition != null && definition.DataType == Dictionary.DataTypes.Data
+                    Data = definition != null && definition.DataType == FIX_5_0SP2.DataTypes.data.Name
                 };
 
                 message.Fields.Add(field);
 
-                if (field.Tag == Dictionary.Fields.CheckSum.Tag)
+                if (field.Tag == FIX_5_0SP2.Fields.CheckSum.Tag)
                     break;
 
                 previous = field;

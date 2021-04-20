@@ -9,9 +9,9 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Linq;
+using static Fix.Dictionary;
 
 namespace Fix
 {
@@ -54,7 +54,7 @@ namespace Fix
 
         const string StatusMessageHeader = "This message was not processed by the order book";
 
-        public Dictionary.OrderedDictionary<string, Order> Orders { get; } = new Dictionary.OrderedDictionary<string, Order>();
+        public OrderCollection Orders { get; } = new();
 
         public bool DeleteInactiveOrders { get; set; }
         public int MaximumOrders { get; set; }
@@ -79,12 +79,12 @@ namespace Fix
             {
                 var ordersToRemove = Orders.Where(item =>
                 {
-                    if (item.Value.Active)
+                    if (item.Active)
                     {
-                        if ((options & Retain.ActiveGTC) != 0 && item.Value.TimeInForce == TimeInForce.GoodTillCancel)
+                        if ((options & Retain.ActiveGTC) != 0 && item.TimeInForce == FIX_5_0SP2.TimeInForce.GoodTillCancel)
                             return false;
 
-                        if ((options & Retain.ActiveGTD) != 0 && item.Value.TimeInForce == TimeInForce.GoodTillDate)
+                        if ((options & Retain.ActiveGTD) != 0 && item.TimeInForce == FIX_5_0SP2.TimeInForce.GoodTillDate)
                             return false;
                     }
 
@@ -117,7 +117,7 @@ namespace Fix
 
             try
             {
-                if (message.Fields.Find(Dictionary.Fields.MsgType) == null)
+                if (message.Fields.Find(FIX_5_0SP2.Fields.MsgType) == null)
                 {
                     message.Status = MessageStatus.Error;
                     message.StatusMessage = " because it does not contain a MsgType";
@@ -127,7 +127,7 @@ namespace Fix
                 if (message.Administrative)
                     return true;
 
-                Field possDupFlag = message.Fields.Find(Dictionary.Fields.PossDupFlag);
+                Field possDupFlag = message.Fields.Find(FIX_5_0SP2.Fields.PossDupFlag);
 
                 if (possDupFlag != null && (bool)possDupFlag)
                 {
@@ -136,30 +136,30 @@ namespace Fix
                     return false;
                 }
 
-                if (message.MsgType == Dictionary.Messages.NewOrderSingle.MsgType)
+                if (message.MsgType == FIX_5_0SP2.Messages.NewOrderSingle.MsgType)
                 {
                     result = ProcessNewOrderSingle(message);
                 }
-                else if (message.MsgType == Dictionary.Messages.ExecutionReport.MsgType)
+                else if (message.MsgType == FIX_5_0SP2.Messages.ExecutionReport.MsgType)
                 {
                     result = ProcessExecutionReport(message);
                 }
-                else if (message.MsgType == Dictionary.Messages.OrderCancelReject.MsgType)
+                else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelReject.MsgType)
                 {
                     result = ProcessOrderCancelReject(message);
                 }
-                else if (message.MsgType == Dictionary.Messages.NewOrderList.MsgType ||
-                         message.MsgType == Dictionary.FIX_4_0.Messages.KodiakWaveOrder.MsgType)
+                else if (message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType/* ||
+                         message.MsgType == FIX_5_0SP2.FIX_4_0.Messages.KodiakWaveOrder.MsgType*/)
                 {
                     result = ProcessOrderList(message);
                 }
-                else if (message.MsgType == Dictionary.Messages.OrderCancelReplaceRequest.MsgType ||
-                         message.MsgType == Dictionary.FIX_4_0.Messages.KodiakWaveOrderCorrectionRequest.MsgType)
+                else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelReplaceRequest.MsgType/* ||
+                         message.MsgType == FIX_5_0SP2.FIX_4_0.Messages.KodiakWaveOrderCorrectionRequest.MsgType*/)
                 {
                     result = ProcessOrderCancelReplaceRequest(message);
                 }
-                else if (message.MsgType == Dictionary.Messages.OrderCancelRequest.MsgType ||
-                         message.MsgType == Dictionary.FIX_4_0.Messages.KodiakWaveOrderCancelRequest.MsgType)
+                else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelRequest.MsgType/* ||
+                         message.MsgType == FIX_5_0SP2.FIX_4_0.Messages.KodiakWaveOrderCancelRequest.MsgType*/)
                 {
                     result = ProcessOrderCancelRequest(message);
                 }
@@ -192,7 +192,7 @@ namespace Fix
 
         bool ProcessNewOrderSingle(Message message)
         {
-            Field clOrdID = message.Fields.Find(Dictionary.Fields.ClOrdID);
+            Field clOrdID = message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID);
 
             if (clOrdID == null)
             {
@@ -235,18 +235,16 @@ namespace Fix
             }
             */
 
-            Field ordStatusField = message.Fields.Find(Dictionary.Fields.OrdStatus);
+            Field ordStatus = message.Fields.Find(FIX_5_0SP2.Fields.OrdStatus);
 
-            if (ordStatusField == null)
+            if (ordStatus == null)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the OrdStatus field is missing";
                 return false;
             }
 
-            var ordStatus = (OrdStatus)ordStatusField;
-
-            Field ClOrdID = message.Fields.Find(Dictionary.Fields.ClOrdID);
+            Field ClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID);
 
             if (ClOrdID == null)
             {
@@ -255,27 +253,27 @@ namespace Fix
                 return false;
             }
 
-            Field OrigClOrdID = message.Fields.Find(Dictionary.Fields.OrigClOrdID);
+            Field OrigClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID);
 
-            if (ordStatus == Fix.OrdStatus.Canceled && ClOrdID != null && OrigClOrdID == null)
+            if (ordStatus == FIX_5_0SP2.OrdStatus.Canceled && ClOrdID != null && OrigClOrdID == null)
             {
-                if (ProcessOrdStatusUpdate(message, ClOrdID.Value, ordStatus))
+                if (ProcessOrdStatusUpdate(message, ClOrdID.Value, new FieldValue(ordStatus.Tag, "", ordStatus.Value)))
                     return true;
             }
 
-            Field ExecType = message.Fields.Find(Dictionary.Fields.ExecType);
+            Field ExecType = message.Fields.Find(FIX_5_0SP2.Fields.ExecType);
             //
             // Use hardcoded values for ExecType because values were removed in later releases and we don't want the
             // conversion to explode.
             //
-            if (ordStatus == Fix.OrdStatus.Replaced ||
-                ordStatus == Fix.OrdStatus.PendingCancel ||
-                ordStatus == Fix.OrdStatus.PendingReplace ||
-                ordStatus == Fix.OrdStatus.Canceled ||
+            if (ordStatus == FIX_5_0SP2.OrdStatus.Replaced ||
+                ordStatus == FIX_5_0SP2.OrdStatus.PendingCancel ||
+                ordStatus == FIX_5_0SP2.OrdStatus.PendingReplace ||
+                ordStatus == FIX_5_0SP2.OrdStatus.Canceled ||
                 (ExecType != null && ExecType.Value == "5"))
             {
-                Field SenderCompID = message.Fields.Find(Dictionary.Fields.SenderCompID);
-                Field TargetCompID = message.Fields.Find(Dictionary.Fields.TargetCompID);
+                Field SenderCompID = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
+                Field TargetCompID = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
 
                 if (OrigClOrdID == null || OrigClOrdID.Value == ClOrdID.Value)
                 {
@@ -292,14 +290,14 @@ namespace Fix
                         if (order.ClOrdID == ClOrdID.Value)
                         {
                             OrigClOrdID = ClOrdID;
-                            ClOrdID = new Field(Dictionary.Fields.ClOrdID, order.NewClOrdID);
+                            ClOrdID = new Field(FIX_5_0SP2.Fields.ClOrdID, order.NewClOrdID);
                             break;
                         }
 
                         if (order.NewClOrdID == ClOrdID.Value)
                         {
-                            OrigClOrdID = new Field(Dictionary.Fields.ClOrdID, order.ClOrdID);
-                            ClOrdID = new Field(Dictionary.Fields.ClOrdID, order.NewClOrdID);
+                            OrigClOrdID = new Field(FIX_5_0SP2.Fields.ClOrdID, order.ClOrdID);
+                            ClOrdID = new Field(FIX_5_0SP2.Fields.ClOrdID, order.NewClOrdID);
                             break;
                         }
                     }
@@ -325,19 +323,19 @@ namespace Fix
                     // Use hardcoded values for ExecType because values were removed in later releases and we don't want the
                     // conversion to explode.
                     //
-                    if (ordStatus == Fix.OrdStatus.Replaced ||
-                       ordStatus == Fix.OrdStatus.PendingReplace ||
-                       ordStatus == Fix.OrdStatus.PendingCancel ||
-                       ordStatus == Fix.OrdStatus.Canceled)
+                    if (ordStatus == FIX_5_0SP2.OrdStatus.Replaced ||
+                       ordStatus == FIX_5_0SP2.OrdStatus.PendingReplace ||
+                       ordStatus == FIX_5_0SP2.OrdStatus.PendingCancel ||
+                       ordStatus == FIX_5_0SP2.OrdStatus.Canceled)
                     {
-                        ProcessOrdStatusUpdate(message, order, ordStatus);
+                        ProcessOrdStatusUpdate(message, order, new FieldValue(ordStatus.Tag, "", ordStatus.Value));
                     }
                     else if (ExecType != null && ExecType.Value == "5")
                     {
-                        ProcessOrdStatusUpdate(message, order, Fix.OrdStatus.Replaced);
+                        ProcessOrdStatusUpdate(message, order, FIX_5_0SP2.OrdStatus.Replaced);
                     }
 
-                    if (ordStatus == Fix.OrdStatus.Replaced || (ExecType != null && ExecType.Value == "5"))
+                    if (ordStatus == FIX_5_0SP2.OrdStatus.Replaced || (ExecType != null && ExecType.Value == "5"))
                     {
                         Message pending = order.PendingMessage;
 
@@ -350,7 +348,7 @@ namespace Fix
                         replacement.ClOrdID = ClOrdID.Value;
                         replacement.OrigClOrdID = OrigClOrdID.Value;
 
-                        if (ordStatus != Fix.OrdStatus.Replaced)
+                        if (ordStatus != FIX_5_0SP2.OrdStatus.Replaced)
                         {
                             replacement.OrdStatus = ordStatus;
                         }
@@ -360,10 +358,10 @@ namespace Fix
                         }
                         else
                         {
-                            replacement.OrdStatus = Fix.OrdStatus.New;
+                            replacement.OrdStatus = new Field(FIX_5_0SP2.OrdStatus.New);
                         }
 
-                        Field OrderQty = message.Fields.Find(Dictionary.Fields.OrderQty);
+                        Field OrderQty = message.Fields.Find(FIX_5_0SP2.Fields.OrderQty);
 
                         if (OrderQty != null)
                         {
@@ -378,12 +376,12 @@ namespace Fix
                 }
             }
 
-            return ProcessOrdStatusUpdate(message, ClOrdID.Value, (OrdStatus)ordStatus);
+            return ProcessOrdStatusUpdate(message, ClOrdID.Value, new FieldValue(ordStatus.Tag, "", ordStatus.Value));
         }
 
         bool ProcessOrderCancelReject(Message message)
         {
-            Field OrigClOrdID = message.Fields.Find(Dictionary.Fields.OrigClOrdID);
+            Field OrigClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID);
 
             if (OrigClOrdID == null)
             {
@@ -392,7 +390,7 @@ namespace Fix
                 return false;
             }
 
-            Field SenderCompID = message.Fields.Find(Dictionary.Fields.SenderCompID);
+            Field SenderCompID = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
 
             if (SenderCompID == null)
             {
@@ -401,7 +399,7 @@ namespace Fix
                 return false;
             }
 
-            Field TargetCompID = message.Fields.Find(Dictionary.Fields.TargetCompID);
+            Field TargetCompID = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
 
             if (TargetCompID == null)
             {
@@ -423,8 +421,8 @@ namespace Fix
                 message.StatusMessage = StatusMessageHeader + $" because a matching order with ClOrdID = {OrigClOrdID.Value} could not be found";
                 return false;
             }
-            order.OrdStatus = order.PreviousOrdStatus ?? OrdStatus.New;
-            Field Text = message.Fields.Find(Dictionary.Fields.Text);
+            order.OrdStatus = order.PreviousOrdStatus ?? new Field(FIX_5_0SP2.OrdStatus.New);
+            Field Text = message.Fields.Find(FIX_5_0SP2.Fields.Text);
 
             if (Text != null)
             {
@@ -445,9 +443,9 @@ namespace Fix
 
         bool ProcessOrderList(Message message)
         {
-            Field SenderCompID = message.Fields.Find(Dictionary.Fields.SenderCompID);
-            Field TargetCompID = message.Fields.Find(Dictionary.Fields.TargetCompID);
-            Field ListID = message.Fields.Find(Dictionary.Fields.ListID);
+            Field SenderCompID = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
+            Field TargetCompID = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
+            Field ListID = message.Fields.Find(FIX_5_0SP2.Fields.ListID);
 
             if (ListID == null)
                 return false;
@@ -456,7 +454,7 @@ namespace Fix
 
             foreach (Field field in message.Fields)
             {
-                if (field.Tag == Dictionary.Fields.ClOrdID.Tag)
+                if (field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag)
                 {
                     if (orderSingle != null)
                     {
@@ -465,7 +463,7 @@ namespace Fix
 
                     orderSingle = new Message
                     {
-                        MsgType = Dictionary.Messages.NewOrderSingle.MsgType
+                        MsgType = FIX_5_0SP2.Messages.NewOrderSingle.MsgType
                     };
                     orderSingle.Fields.Set(SenderCompID);
                     orderSingle.Fields.Set(TargetCompID);
@@ -491,7 +489,7 @@ namespace Fix
 
         bool ProcessOrderCancelReplaceRequest(Message message)
         {
-            Field ClOrdID = message.Fields.Find(Dictionary.Fields.ClOrdID);
+            Field ClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID);
 
             if (ClOrdID == null)
             {
@@ -500,7 +498,7 @@ namespace Fix
                 return false;
             }
 
-            Field OrigClOrdID = message.Fields.Find(Dictionary.Fields.OrigClOrdID);
+            Field OrigClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID);
 
             if (OrigClOrdID == null)
             {
@@ -509,7 +507,7 @@ namespace Fix
                 return false;
             }
 
-            Field SenderCompID = message.Fields.Find(Dictionary.Fields.SenderCompID);
+            Field SenderCompID = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
 
             if (SenderCompID == null)
             {
@@ -518,7 +516,7 @@ namespace Fix
                 return false;
             }
 
-            Field TargetCompID = message.Fields.Find(Dictionary.Fields.TargetCompID);
+            Field TargetCompID = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
 
             if (TargetCompID == null)
             {
@@ -539,15 +537,15 @@ namespace Fix
             }
 
             order.PreviousOrdStatus = order.OrdStatus;
-            order.OrdStatus = Fix.OrdStatus.PendingReplace;
+            order.OrdStatus = new Field(FIX_5_0SP2.OrdStatus.PendingReplace);
             order.PendingMessage = message;
             order.NewClOrdID = ClOrdID.Value;
 
-            Field OrderQty = message.Fields.Find(Dictionary.Fields.OrderQty);
+            Field OrderQty = message.Fields.Find(FIX_5_0SP2.Fields.OrderQty);
             if (OrderQty != null && (long)OrderQty != order.OrderQty)
                 order.PendingOrderQty = (long)OrderQty;
 
-            Field Price = message.Fields.Find(Dictionary.Fields.Price);
+            Field Price = message.Fields.Find(FIX_5_0SP2.Fields.Price);
             if (Price != null && (decimal)Price != order.Price)
                 order.PendingPrice = (decimal)Price;
 
@@ -560,7 +558,7 @@ namespace Fix
 
         bool ProcessOrderCancelRequest(Message message)
         {
-            Field ClOrdID = message.Fields.Find(Dictionary.Fields.ClOrdID);
+            Field ClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID);
 
             if (ClOrdID == null)
             {
@@ -569,7 +567,7 @@ namespace Fix
                 return false;
             }
 
-            Field OrigClOrdID = message.Fields.Find(Dictionary.Fields.OrigClOrdID);
+            Field OrigClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID);
 
             if (OrigClOrdID == null)
             {
@@ -578,7 +576,7 @@ namespace Fix
                 return false;
             }
 
-            Field SenderCompID = message.Fields.Find(Dictionary.Fields.SenderCompID);
+            Field SenderCompID = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
 
             if (SenderCompID == null)
             {
@@ -587,7 +585,7 @@ namespace Fix
                 return false;
             }
 
-            Field TargetCompID = message.Fields.Find(Dictionary.Fields.TargetCompID);
+            Field TargetCompID = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
 
             if (TargetCompID == null)
             {
@@ -609,14 +607,15 @@ namespace Fix
 
             order.Messages.Add(message);
             order.PreviousOrdStatus = order.OrdStatus;
-            order.OrdStatus = Fix.OrdStatus.PendingCancel;
+            order.OrdStatus = new Field(FIX_5_0SP2.OrdStatus.PendingCancel);
             order.NewClOrdID = ClOrdID.Value;
 
-            if (message.MsgType == Dictionary.FIX_4_0.Messages.KodiakWaveOrderCancelRequest.MsgType)
-            {
-                Orders.ReplaceKey(order.ClOrdID, ClOrdID.Value);
-                order.ClOrdID = ClOrdID.Value;
-            }
+            // TODO
+            //if (message.MsgType == Dictionary.FIX_4_0.Messages.KodiakWaveOrderCancelRequest.MsgType)
+            //{
+            //    Orders.ReplaceKey(order.ClOrdID, ClOrdID.Value);
+            //    order.ClOrdID = ClOrdID.Value;
+            //}
 
             OnOrderUpdated(order);
 
@@ -624,14 +623,14 @@ namespace Fix
         }
 
 
-        bool ProcessOrdStatusUpdate(Message message, string ClOrdID, OrdStatus status)
+        bool ProcessOrdStatusUpdate(Message message, string ClOrdID, FieldValue status)
         {
             //
             // When we first store the order we set the comp id's relative to the order source so we
             // need to flip them when searching for orders to match messages coming from the destination.
             //
-            Order order = FindOrder(message.Fields.Find(Dictionary.Fields.TargetCompID).Value,
-                                    message.Fields.Find(Dictionary.Fields.SenderCompID).Value,
+            Order order = FindOrder(message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID).Value,
+                                    message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID).Value,
                                    ClOrdID);
             if (order == null)
             {
@@ -645,22 +644,22 @@ namespace Fix
             return true;
         }
 
-        void ProcessOrdStatusUpdate(Message message, Order order, OrdStatus status)
+        void ProcessOrdStatusUpdate(Message message, Order order, FieldValue status)
         {
-            if (order.OrdStatus != OrdStatus.PendingReplace || (order.OrdStatus == OrdStatus.PendingReplace && status != OrdStatus.PendingCancel))
+            if (order.OrdStatus != FIX_5_0SP2.OrdStatus.PendingReplace || (order.OrdStatus == FIX_5_0SP2.OrdStatus.PendingReplace && status != FIX_5_0SP2.OrdStatus.PendingCancel))
             {
-                order.OrdStatus = status;
+                order.OrdStatus = new Field(status);
             }
 
-            if (order.OrdStatus != Fix.OrdStatus.PendingCancel &&
-               order.OrdStatus != Fix.OrdStatus.PendingReplace &&
-               order.OrdStatus != Fix.OrdStatus.Replaced)
+            if (order.OrdStatus != FIX_5_0SP2.OrdStatus.PendingCancel &&
+               order.OrdStatus != FIX_5_0SP2.OrdStatus.PendingReplace &&
+               order.OrdStatus != FIX_5_0SP2.OrdStatus.Replaced)
             {
                 UpdateOrder(order, message);
             }
             else
             {
-                Field ExecType = message.Fields.Find(Dictionary.Fields.ExecType);
+                Field ExecType = message.Fields.Find(FIX_5_0SP2.Fields.ExecType);
 
                 if (ExecType != null)
                 {
@@ -675,7 +674,7 @@ namespace Fix
                 }
             }
 
-            if (order.OrdStatus == Fix.OrdStatus.Replaced)
+            if (order.OrdStatus == FIX_5_0SP2.OrdStatus.Replaced)
             {
                 order.LeavesQty = 0;
                 order.PendingOrderQty = null;
@@ -730,7 +729,7 @@ namespace Fix
 
             if (MaximumOrders > 0 && Orders.Count >= MaximumOrders)
             {
-                Order inactive = Orders.FirstOrDefault(o => !o.Value.Active).Value;
+                Order inactive = Orders.FirstOrDefault(o => !o.Active);
                 if (inactive != null)
                 {
                     DeleteOrder(inactive);
@@ -738,7 +737,7 @@ namespace Fix
                 }
             }
 
-            Orders.Add(KeyForOrder(order), order);
+            Orders.Add(order);
 
             OnOrderInserted(order);
 
@@ -747,12 +746,12 @@ namespace Fix
 
         static void UpdateOrder(Order order, Message message, bool replacement = false)
         {
-            Field Price = message.Fields.Find(Dictionary.Fields.Price);
-            Field AvgPx = message.Fields.Find(Dictionary.Fields.AvgPx);
-            Field CumQty = message.Fields.Find(Dictionary.Fields.CumQty);
-            Field LeavesQty = message.Fields.Find(Dictionary.Fields.LeavesQty);
-            Field Text = message.Fields.Find(Dictionary.Fields.Text);
-            Field OrderID = message.Fields.Find(Dictionary.Fields.OrderID);
+            Field Price = message.Fields.Find(FIX_5_0SP2.Fields.Price);
+            Field AvgPx = message.Fields.Find(FIX_5_0SP2.Fields.AvgPx);
+            Field CumQty = message.Fields.Find(FIX_5_0SP2.Fields.CumQty);
+            Field LeavesQty = message.Fields.Find(FIX_5_0SP2.Fields.LeavesQty);
+            Field Text = message.Fields.Find(FIX_5_0SP2.Fields.Text);
+            Field OrderID = message.Fields.Find(FIX_5_0SP2.Fields.OrderID);
 
             if (Price != null && (decimal)Price > 0)
                 order.Price = (decimal)Price;
@@ -792,10 +791,10 @@ namespace Fix
 
             if (order.LeavesQty.HasValue)
             {
-                if (order.LeavesQty > 0 && order.OrdStatus == Fix.OrdStatus.Filled ||
-                   order.LeavesQty < order.OrderQty && order.OrdStatus == Fix.OrdStatus.New)
+                if (order.LeavesQty > 0 && order.OrdStatus == FIX_5_0SP2.OrdStatus.Filled ||
+                   order.LeavesQty < order.OrderQty && order.OrdStatus == FIX_5_0SP2.OrdStatus.New)
                 {
-                    order.OrdStatus = Fix.OrdStatus.PartiallyFilled;
+                    order.OrdStatus = new Fix.Field(FIX_5_0SP2.OrdStatus.PartiallyFilled);
                 }
             }
 

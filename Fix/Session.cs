@@ -15,6 +15,7 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 using System.Timers;
+using static Fix.Dictionary;
 
 namespace Fix
 {
@@ -71,14 +72,14 @@ namespace Fix
 
         public class StateEvent : EventArgs
         {
-            public StateEvent(State state, SessionStatus? sessionStatus)
+            public StateEvent(State state, Field? sessionStatus)
             {
                 State = state;
                 SessionStatus = sessionStatus;
             }
 
             public State State { get; }
-            public SessionStatus? SessionStatus { get; }
+            public Field? SessionStatus { get; }
         }
 
         public delegate void MessageDelegate(object sender, MessageEvent e);
@@ -127,7 +128,7 @@ namespace Fix
             Error?.Invoke(this, new LogEvent(format, args));
         }
 
-        protected virtual void OnStateChanged(State state, SessionStatus? status)
+        protected virtual void OnStateChanged(State state, Field? status)
         {
             StateChanged?.Invoke(this, new StateEvent(state, status));
         }
@@ -136,8 +137,8 @@ namespace Fix
 
         public Session()
         {
-            BeginString = Dictionary.Versions.FIXT_1_1;
-            DefaultApplVerId = Dictionary.Versions.FIX_5_0SP2;
+            BeginString = Versions["FIXT_1_1"];
+            DefaultApplVerId = Versions["FIX_5_0SP2"];
             HeartBtInt = 30;
             AutoSendingTime = true;
             OutgoingSeqNum = 1;
@@ -304,18 +305,18 @@ namespace Fix
         {
             get
             {
-                if (BeginString.BeginString == Dictionary.Versions.FIXT_1_1.BeginString)
+                if (BeginString.BeginString == "FIXT_1_1")
                     return DefaultApplVerId;
                 return BeginString;
             }
         }
 
-        public Dictionary.Field FieldDefinition(Message message, Field field)
+        public Dictionary.MessageField FieldDefinition(Message message, Field field)
         {
             Dictionary.Message exemplar = Version.Messages[message.MsgType];
             if (exemplar == null)
                 return null;
-            _ = exemplar.Fields.TryGetValue(field.Tag, out Dictionary.Field definition);
+            _ = exemplar.Fields.TryGetValue(field.Tag, out var definition);
             return definition;
         }
 
@@ -345,39 +346,59 @@ namespace Fix
             // Insert place holders for the standard header fields. Order is important so insert them
             // now and they can be overridden as required later on.
             //
-            if (definition.Fields.TryGetValue(Dictionary.Fields.BeginString.Tag, out Dictionary.Field field))
-                message.Fields.Add(new Field(field));
-
-            if (definition.Fields.TryGetValue(Dictionary.Fields.BodyLength.Tag, out field))
-                message.Fields.Add(new Field(field));
-
-            if (definition.Fields.TryGetValue(Dictionary.Fields.MsgType.Tag, out field))
-                message.Fields.Add(new Field(field));
-
-            if (BeginString.BeginString == Dictionary.Versions.FIXT_1_1.BeginString &&
-                message.MsgType != Dictionary.Messages.Logon.MsgType)
+            if (definition.Fields.TryGetValue(FIX_5_0SP2.Fields.BeginString.Tag, out var field))
             {
-                if (definition.Fields.TryGetValue(Dictionary.Fields.ApplVerID.Tag, out field))
-                    message.Fields.Add(new Field(field));
-
-                if (definition.Fields.TryGetValue(Dictionary.Fields.ApplExtID.Tag, out field))
-                    message.Fields.Add(new Field(field));
-
-                if (definition.Fields.TryGetValue(Dictionary.Fields.CstmApplVerID.Tag, out field))
-                    message.Fields.Add(new Field(field));
+                message.Fields.Add(new Field(field.Tag, string.Empty));
             }
 
-            if (definition.Fields.TryGetValue(Dictionary.Fields.SenderCompID.Tag, out field))
-                message.Fields.Add(new Field(field));
+            if (definition.Fields.TryGetValue(FIX_5_0SP2.Fields.BodyLength.Tag, out field))
+            {
+                message.Fields.Add(new Field(field.Tag, string.Empty));
+            }
 
-            if (definition.Fields.TryGetValue(Dictionary.Fields.TargetCompID.Tag, out field))
-                message.Fields.Add(new Field(field));
+            if (definition.Fields.TryGetValue(FIX_5_0SP2.Fields.MsgType.Tag, out field))
+            {
+                message.Fields.Add(new Field(field.Tag, string.Empty));
+            }
 
-            if (definition.Fields.TryGetValue(Dictionary.Fields.MsgSeqNum.Tag, out field))
-                message.Fields.Add(new Field(field));
+            if (BeginString.BeginString == "FIXT_1_1" &&
+                message.MsgType != FIX_5_0SP2.Messages.Logon.MsgType)
+            {
+                if (definition.Fields.TryGetValue(FIX_5_0SP2.Fields.ApplVerID.Tag, out field))
+                {
+                    message.Fields.Add(new Field(field.Tag, string.Empty));
+                }
 
-            if (definition.Fields.TryGetValue(Dictionary.Fields.SendingTime.Tag, out field))
-                message.Fields.Add(new Field(field));
+                if (definition.Fields.TryGetValue(FIX_5_0SP2.Fields.ApplExtID.Tag, out field))
+                {
+                    message.Fields.Add(new Field(field.Tag, string.Empty));
+                }
+
+                if (definition.Fields.TryGetValue(FIX_5_0SP2.Fields.CstmApplVerID.Tag, out field))
+                {
+                    message.Fields.Add(new Field(field.Tag, string.Empty));
+                }
+            }
+
+            if (definition.Fields.TryGetValue(FIX_5_0SP2.Fields.SenderCompID.Tag, out field))
+            {
+                message.Fields.Add(new Field(field.Tag, string.Empty));
+            }
+
+            if (definition.Fields.TryGetValue(FIX_5_0SP2.Fields.TargetCompID.Tag, out field))
+            {
+                message.Fields.Add(new Field(field.Tag, string.Empty));
+            }
+
+            if (definition.Fields.TryGetValue(FIX_5_0SP2.Fields.MsgSeqNum.Tag, out field))
+            { 
+                message.Fields.Add(new Field(field.Tag, string.Empty));
+            }
+
+            if (definition.Fields.TryGetValue(FIX_5_0SP2.Fields.SendingTime.Tag, out field))
+            {
+                message.Fields.Add(new Field(field.Tag, string.Empty));
+            }
 
             message.MsgType = definition.MsgType;
             message.Definition = definition;
@@ -398,43 +419,43 @@ namespace Fix
             if (LogonBehaviour != Behaviour.Initiator)
                 return;
 
-            Message logon = ConstructMessage(Dictionary.Messages.Logon);
+            Message logon = ConstructMessage(FIX_5_0SP2.Messages.Logon);
 
-            logon.Fields.Set(Dictionary.Fields.BeginString.Tag, BeginString.BeginString);
+            logon.Fields.Set(FIX_5_0SP2.Fields.BeginString.Tag, BeginString.BeginString);
 
-            logon.Fields.Set(Dictionary.Fields.SenderCompID.Tag, SenderCompId);
-            logon.Fields.Set(Dictionary.Fields.TargetCompID.Tag, TargetCompId);
-            logon.Fields.Set(Dictionary.Fields.EncryptMethod.Tag, EncryptMethod.None);
-            logon.Fields.Set(Dictionary.Fields.HeartBtInt.Tag, HeartBtInt);
+            logon.Fields.Set(FIX_5_0SP2.Fields.SenderCompID.Tag, SenderCompId);
+            logon.Fields.Set(FIX_5_0SP2.Fields.TargetCompID.Tag, TargetCompId);
+            logon.Fields.Set(FIX_5_0SP2.EncryptMethod.None);
+            logon.Fields.Set(FIX_5_0SP2.Fields.HeartBtInt.Tag, HeartBtInt);
 
             if (NextExpectedMsgSeqNum)
             {
-                logon.Fields.Set(Dictionary.Fields.NextExpectedMsgSeqNum, IncomingSeqNum);
+                logon.Fields.Set(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum, IncomingSeqNum);
             }
 
-            if (BeginString.BeginString == Dictionary.Versions.FIXT_1_1.BeginString)
+            if (BeginString.BeginString == "FIXT_1_1")
             {
-                logon.Fields.Set(Dictionary.Fields.DefaultApplVerID.Tag, DefaultApplVerId.ApplVerID);
+                logon.Fields.Set(FIX_5_0SP2.Fields.DefaultApplVerID.Tag, DefaultApplVerId.ApplVerID);
             }
 
             if (EncryptedPasswordMethod.HasValue)
             {
-                logon.Fields.Set(Dictionary.Fields.EncryptedPasswordMethod, EncryptedPasswordMethod.Value);
+                logon.Fields.Set(FIX_5_0SP2.Fields.EncryptedPasswordMethod, EncryptedPasswordMethod.Value);
             }
 
             if (!string.IsNullOrEmpty(EncryptedPassword))
             {
-                logon.Fields.Set(Dictionary.Fields.EncryptedPassword, EncryptedPassword);
+                logon.Fields.Set(FIX_5_0SP2.Fields.EncryptedPassword, EncryptedPassword);
             }
 
             if (!string.IsNullOrEmpty(EncryptedNewPassword))
             {
-                logon.Fields.Set(Dictionary.Fields.EncryptedNewPassword, EncryptedNewPassword);
+                logon.Fields.Set(FIX_5_0SP2.Fields.EncryptedNewPassword, EncryptedNewPassword);
             }
 
-            if (SessionStatus.HasValue)
+            if (SessionStatus != null)
             {
-                logon.Fields.Set(Dictionary.Fields.SessionStatus, SessionStatus.Value);
+                logon.Fields.Set(FIX_5_0SP2.Fields.SessionStatus, SessionStatus.Value);
             }
 
             Send(logon);
@@ -474,13 +495,13 @@ namespace Fix
 
             bool duplicate = message.PossDupFlag;
 
-            if (message.MsgType == Dictionary.Messages.SequenceReset.MsgType)
+            if (message.MsgType == FIX_5_0SP2.Messages.SequenceReset.MsgType)
             {
                 ProcessSequenceReset(message);
                 return;
             }
 
-            if (message.MsgType == Dictionary.Messages.Logon.MsgType)
+            if (message.MsgType == FIX_5_0SP2.Messages.Logon.MsgType)
             {
                 if (!duplicate)
                 {
@@ -507,7 +528,7 @@ namespace Fix
             {
                 if (!duplicate)
                 {
-                    if (message.MsgType == Dictionary.Messages.Logout.MsgType)
+                    if (message.MsgType == FIX_5_0SP2.Messages.Logout.MsgType)
                     {
                         ProcessLogout(message);
                         return;
@@ -523,15 +544,15 @@ namespace Fix
                 IncomingSeqNum = message.MsgSeqNum + 1;
             }
 
-            if (message.MsgType == Dictionary.Messages.Heartbeat.MsgType)
+            if (message.MsgType == FIX_5_0SP2.Messages.Heartbeat.MsgType)
             {
                 ProcessHeartbeat(message);
             }
-            else if (message.MsgType == Dictionary.Messages.TestRequest.MsgType)
+            else if (message.MsgType == FIX_5_0SP2.Messages.TestRequest.MsgType)
             {
                 ProcessTestRequest(message);
             }
-            else if (message.MsgType == Dictionary.Messages.ResendRequest.MsgType)
+            else if (message.MsgType == FIX_5_0SP2.Messages.ResendRequest.MsgType)
             {
                 ProcessResendRequest(message);
             }
@@ -545,12 +566,12 @@ namespace Fix
             if (_logonReceived)
                 return true;
 
-            if (message.MsgType == Dictionary.Messages.Logon.MsgType)
+            if (message.MsgType == FIX_5_0SP2.Messages.Logon.MsgType)
                 return true;
 
             // TODO - Can we do this better?
-            if (message.MsgType == Dictionary.Messages.Reject.MsgType ||
-                message.MsgType == Dictionary.Messages.Logout.MsgType)
+            if (message.MsgType == FIX_5_0SP2.Messages.Reject.MsgType ||
+                message.MsgType == FIX_5_0SP2.Messages.Logout.MsgType)
             {
                 return true;
             }
@@ -564,16 +585,16 @@ namespace Fix
 
         void SendReject(Message message, string text)
         {
-            var reject = new Message { MsgType = Dictionary.Messages.Reject.MsgType };
-            reject.Fields.Set(Dictionary.Fields.RefSeqNum, message.MsgSeqNum);
-            reject.Fields.Set(Dictionary.Fields.Text, text);
+            var reject = new Message { MsgType = FIX_5_0SP2.Messages.Reject.MsgType };
+            reject.Fields.Set(FIX_5_0SP2.Fields.RefSeqNum, message.MsgSeqNum);
+            reject.Fields.Set(FIX_5_0SP2.Fields.Text, text);
             Send(reject);
         }
 
         void SendLogout(string text)
         {
-            var logout = new Message { MsgType = Dictionary.Messages.Logout.MsgType };
-            logout.Fields.Set(Dictionary.Fields.Text, text);
+            var logout = new Message { MsgType = FIX_5_0SP2.Messages.Logout.MsgType };
+            logout.Fields.Set(FIX_5_0SP2.Fields.Text, text);
             Send(logout);
 
             if (State == State.LoggedOn)
@@ -637,9 +658,9 @@ namespace Fix
 
             OnInformation($"Requesting resend, BeginSeqNo {beginSeqNo} EndSeqNo {endSeqNo}");
 
-            Message resendRequest = ConstructMessage(Dictionary.Messages.ResendRequest);
-            resendRequest.Fields.Set(Dictionary.Fields.BeginSeqNo, beginSeqNo);
-            resendRequest.Fields.Set(Dictionary.Fields.EndSeqNo, endSeqNo);
+            Message resendRequest = ConstructMessage(FIX_5_0SP2.Messages.ResendRequest);
+            resendRequest.Fields.Set(FIX_5_0SP2.Fields.BeginSeqNo, beginSeqNo);
+            resendRequest.Fields.Set(FIX_5_0SP2.Fields.EndSeqNo, endSeqNo);
             Send(resendRequest);
         }
 
@@ -674,8 +695,8 @@ namespace Fix
                 return false;
             }
 
-            if (message.MsgType == Dictionary.Messages.Reject.MsgType ||
-                message.MsgType == Dictionary.Messages.Logout.MsgType)
+            if (message.MsgType == FIX_5_0SP2.Messages.Reject.MsgType ||
+                message.MsgType == FIX_5_0SP2.Messages.Logout.MsgType)
             {
                 return true;
             }
@@ -726,7 +747,7 @@ namespace Fix
 
         bool ValidateCheckSum(Message message)
         {
-            Field checkSum = message.Fields.Find(Dictionary.Fields.CheckSum.Tag);
+            Field checkSum = message.Fields.Find(FIX_5_0SP2.Fields.CheckSum.Tag);
 
             if (checkSum == null)
             {
@@ -747,7 +768,7 @@ namespace Fix
 
         bool ValidateBodyLength(Message message)
         {
-            Field bodyLength = message.Fields.Find(Dictionary.Fields.BodyLength.Tag);
+            Field bodyLength = message.Fields.Find(FIX_5_0SP2.Fields.BodyLength.Tag);
 
             if (bodyLength == null)
             {
@@ -840,8 +861,7 @@ namespace Fix
         {
             OnInformation($"Performing resend from BeginSeqNo = {beginSeqNo} to EndSeqNo {endSeqNo}");
 
-            if (BeginString.BeginString == Dictionary.Versions.FIX_4_0.BeginString ||
-                BeginString.BeginString == Dictionary.Versions.FIX_4_1.BeginString)
+            if (BeginString.BeginString == "FIX_4_0" || BeginString.BeginString == "FIX_4_1")
             {
                 //
                 // FIX 4.0 and FIX 4.1 used EndSeqNo 99999 to represent send me everthing
@@ -890,19 +910,19 @@ namespace Fix
                     {
                         if (message.MsgSeqNum > beginSeqNo)
                         {
-                            var reset = new Message { MsgType = Dictionary.Messages.SequenceReset.MsgType };
-                            reset.Fields.Set(Dictionary.Fields.MsgSeqNum, gapFillStart);
-                            reset.Fields.Set(Dictionary.Fields.GapFillFlag, true);
-                            reset.Fields.Set(Dictionary.Fields.PossDupFlag, true);
-                            reset.Fields.Set(Dictionary.Fields.NewSeqNo, message.MsgSeqNum);
+                            var reset = new Message { MsgType = FIX_5_0SP2.Messages.SequenceReset.MsgType };
+                            reset.Fields.Set(FIX_5_0SP2.Fields.MsgSeqNum, gapFillStart);
+                            reset.Fields.Set(FIX_5_0SP2.Fields.GapFillFlag, true);
+                            reset.Fields.Set(FIX_5_0SP2.Fields.PossDupFlag, true);
+                            reset.Fields.Set(FIX_5_0SP2.Fields.NewSeqNo, message.MsgSeqNum);
                             Send(reset, false);
                         }
                         gapFill = false;
                     }
 
                     var duplicate = (Message)message.Clone();
-                    duplicate.Fields.Set(Dictionary.Fields.OrigSendingTime, message.SendingTime);
-                    duplicate.Fields.Set(Dictionary.Fields.PossDupFlag, true);
+                    duplicate.Fields.Set(FIX_5_0SP2.Fields.OrigSendingTime, message.SendingTime);
+                    duplicate.Fields.Set(FIX_5_0SP2.Fields.PossDupFlag, true);
                     Send(duplicate, false);
                 }
             }
@@ -912,20 +932,20 @@ namespace Fix
             //
             if (gapFill)
             {
-                var reset = new Message { MsgType = Dictionary.Messages.SequenceReset.MsgType };
-                reset.Fields.Set(Dictionary.Fields.MsgSeqNum, gapFillStart);
-                reset.Fields.Set(Dictionary.Fields.GapFillFlag, true);
-                reset.Fields.Set(Dictionary.Fields.PossDupFlag, true);
-                reset.Fields.Set(Dictionary.Fields.NewSeqNo, OutgoingSeqNum);
+                var reset = new Message { MsgType = FIX_5_0SP2.Messages.SequenceReset.MsgType };
+                reset.Fields.Set(FIX_5_0SP2.Fields.MsgSeqNum, gapFillStart);
+                reset.Fields.Set(FIX_5_0SP2.Fields.GapFillFlag, true);
+                reset.Fields.Set(FIX_5_0SP2.Fields.PossDupFlag, true);
+                reset.Fields.Set(FIX_5_0SP2.Fields.NewSeqNo, OutgoingSeqNum);
                 Send(reset, false);
             }
         }
 
         void SendTestRequest()
         {
-            var message = new Message { MsgType = Dictionary.Messages.TestRequest.MsgType };
+            var message = new Message { MsgType = FIX_5_0SP2.Messages.TestRequest.MsgType };
             ExpectedTestRequestId = AllocateTestRequestId().ToString();
-            message.Fields.Set(Dictionary.Fields.TestReqID, ExpectedTestRequestId);
+            message.Fields.Set(FIX_5_0SP2.Fields.TestReqID, ExpectedTestRequestId);
             Send(message);
         }
 
@@ -934,7 +954,7 @@ namespace Fix
             if (State != State.LoggingOn && State != State.Resending)
                 return;
 
-            Field testReqId = message.Fields.Find(Dictionary.Fields.TestReqID);
+            Field testReqId = message.Fields.Find(FIX_5_0SP2.Fields.TestReqID);
 
             if (testReqId != null)
             {
@@ -980,7 +1000,7 @@ namespace Fix
         {
             if (State == State.LoggedOn)
             {
-                Message heartbeat = ConstructMessage(Dictionary.Messages.Heartbeat);
+                Message heartbeat = ConstructMessage(FIX_5_0SP2.Messages.Heartbeat);
                 Send(heartbeat);
             }
         }
@@ -993,7 +1013,7 @@ namespace Fix
 
         bool ExtractHeartBtInt(Message message)
         {
-            Field heartBtInt = message.Fields.Find(Dictionary.Fields.HeartBtInt);
+            Field heartBtInt = message.Fields.Find(FIX_5_0SP2.Fields.HeartBtInt);
 
             if (heartBtInt == null)
             {
@@ -1040,7 +1060,7 @@ namespace Fix
 
             if (NextExpectedMsgSeqNum)
             {
-                Field field = message.Fields.Find(Dictionary.Fields.NextExpectedMsgSeqNum);
+                Field field = message.Fields.Find(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum);
 
                 if (field == null)
                 {
@@ -1143,24 +1163,24 @@ namespace Fix
 
         void SendLogon(bool resetSeqNumFlag)
         {
-            Message logon = ConstructMessage(Dictionary.Messages.Logon);
+            Message logon = ConstructMessage(FIX_5_0SP2.Messages.Logon);
 
-            logon.Fields.Set(Dictionary.Fields.EncryptMethod, EncryptMethod.None);
-            logon.Fields.Set(Dictionary.Fields.HeartBtInt, HeartBtInt);
+            logon.Fields.Set(FIX_5_0SP2.EncryptMethod.None);
+            logon.Fields.Set(FIX_5_0SP2.Fields.HeartBtInt, HeartBtInt);
 
-            if (BeginString.BeginString == Dictionary.Versions.FIXT_1_1.BeginString)
+            if (BeginString.BeginString == "FIXT_1_1")
             {
-                logon.Fields.Set(Dictionary.Fields.DefaultApplVerID.Tag, DefaultApplVerId.ApplVerID);
+                logon.Fields.Set(FIX_5_0SP2.Fields.DefaultApplVerID.Tag, DefaultApplVerId.ApplVerID);
             }
 
             if (resetSeqNumFlag)
             {
-                logon.Fields.Set(Dictionary.Fields.ResetSeqNumFlag, "Y");
+                logon.Fields.Set(FIX_5_0SP2.Fields.ResetSeqNumFlag, "Y");
             }
 
             if (NextExpectedMsgSeqNum)
             {
-                logon.Fields.Set(Dictionary.Fields.NextExpectedMsgSeqNum, IncomingSeqNum + 1);
+                logon.Fields.Set(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum, IncomingSeqNum + 1);
             }
 
             Send(logon);
@@ -1168,9 +1188,9 @@ namespace Fix
 
         void ProcessTestRequest(Message message)
         {
-            Message heartbeat = ConstructMessage(Dictionary.Messages.Heartbeat);
+            Message heartbeat = ConstructMessage(FIX_5_0SP2.Messages.Heartbeat);
 
-            Field testReqId = message.Fields.Find(Dictionary.Fields.TestReqID);
+            Field testReqId = message.Fields.Find(FIX_5_0SP2.Fields.TestReqID);
 
             if (testReqId == null)
             {
@@ -1208,7 +1228,7 @@ namespace Fix
         public string EncryptedNewPassword { get; set; }
 
         [Browsable(false)]
-        public SessionStatus? SessionStatus { get; set; }
+        public Field? SessionStatus { get; set; }
 
         public virtual void UpdateReadonlyAttributes()
         {

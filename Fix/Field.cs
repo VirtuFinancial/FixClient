@@ -17,6 +17,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using static Fix.Dictionary;
 
 namespace Fix
 {
@@ -75,311 +76,44 @@ namespace Fix
             Value = value;
         }
 
-        public Field(Dictionary.Field definition)
+        public Field(Dictionary.VersionField definition)
         {
             Definition = definition;
             Tag = definition.Tag;
         }
 
-        public Field(Dictionary.Field definition, string value)
+        public Field(Dictionary.VersionField definition, string value)
         : this(definition.Tag, value)
         {
             Definition = definition;
         }
 
-        public Field(Dictionary.Field definition, bool value)
+        public Field(Dictionary.VersionField definition, bool value)
             : this(definition.Tag, value)
         {
             Definition = definition;
         }
 
-        public Field(Dictionary.Field definition, int value)
+        public Field(Dictionary.VersionField definition, int value)
         : this(definition.Tag, value.ToString())
         {
             Definition = definition;
         }
 
-        public Field(Dictionary.Field definition, decimal value)
+        public Field(Dictionary.VersionField definition, decimal value)
         : this(definition.Tag, value.ToString())
         {
             Definition = definition;
         }
 
-        public Field(Dictionary.Field definition, Side value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, OrdType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, SecurityIDSource value)
-            : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, TimeInForce value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, OrdStatus value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, ExecType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, HandlInst value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, TradeHandlingInstr value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, TradeReportTransType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, TradeReportType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, TradeReportRejectReason value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, NoSides value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, PartyIDSource value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, PartyRole value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, ClearingInstruction value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, OrderCategory value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, ExchangeTradeType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, CxlRejResponseTo value)
-            : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, SessionStatus value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, Dictionary.FIX_4_2.ExecType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, Dictionary.FIX_5_0.ExecType value)
-            : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, Dictionary.FIX_4_2.ExecTransType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(int tag, EncryptMethod value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, ExecType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, SessionStatus value)
-        : this(tag, ((int)value).ToString())
-        {
-        }
-
-        public Field(int tag, TrdType value)
-        : this(tag, ((int)value).ToString())
-        {
-        }
-
-        public Field(int tag, TrdRptStatus value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, TradeHandlingInstr value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, TradeReportTransType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, TradeReportType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, TradeReportRejectReason value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, NoSides value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, PartyIDSource value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, PartyRole value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, ClearingInstruction value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, OrderCategory value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, ExchangeTradeType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, Dictionary.FIX_4_2.ExecType value)
-            : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, Dictionary.FIX_5_0.ExecType value)
-            : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, Dictionary.FIX_4_0.ExecTransType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, Dictionary.FIX_4_0.CxlType value)
-            : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, Side value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, SecurityIDSource value)
-            : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, OrdStatus value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, EmailType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, CxlRejResponseTo value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, OrdType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, TimeInForce value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, HandlInst value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, Dictionary.FIX_4_2.ExecTransType value)
-            : this(tag, ((char)value).ToString())
+        public Field(Dictionary.FieldValue value)
+        : this(value.Tag, value.Value)
         {
         }
 
         public int Tag { get; }
         public string Value { get; set; }
-        public Dictionary.Field Definition { get; set; }
+        public Dictionary.VersionField Definition { get; set; }
         public bool Data { get; set; }
 
         public static explicit operator bool(Field field)
@@ -429,6 +163,10 @@ namespace Fix
             return result;
         }
 
+        public static bool operator ==(Field left, FieldValue right) => left.Tag == right.Tag && left.Value == right.Value;
+        public static bool operator !=(Field left, FieldValue right) => left.Tag != right.Tag || left.Value != right.Value;
+
+        /*
         public static explicit operator Side?(Field field)
         {
             if (string.IsNullOrEmpty(field?.Value))
@@ -569,7 +307,9 @@ namespace Fix
                 throw new ApplicationException($"{value} is not a valid value for SessionStatus");
             return (Fix.SessionStatus)Enum.ToObject(typeof(Fix.SessionStatus), value);
         }
+        */
 
+        /*
         string EnumDescription(Type enumeratedTye, object value)
         {
             string name = Enum.GetName(Definition.EnumeratedType, value);
@@ -581,11 +321,13 @@ namespace Fix
             var attributes = info[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
             return ((DescriptionAttribute)attributes[0]).Description;
         }
+        */
 
         public string ValueDescription
         {
             get
             {
+                /*
                 if (Definition?.EnumeratedType == null)
                     return null;
                 var buffer = new StringBuilder();
@@ -619,6 +361,8 @@ namespace Fix
                     buffer.Append(description);
                 }
                 return buffer.ToString();
+                */
+                return string.Empty;
             }
         }
 

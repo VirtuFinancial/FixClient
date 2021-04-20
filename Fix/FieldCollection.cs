@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static Fix.Dictionary;
 
 namespace Fix
 {
@@ -45,13 +46,16 @@ namespace Fix
 
         void UpdateDefinition(Field field)
         {
+            throw new NotImplementedException();
+            /*
             if (field.Definition == null && _messageDefinition != null)
             {
-                if (_messageDefinition.Fields.TryGetValue(field.Tag, out Dictionary.Field definition))
+                if (_messageDefinition.Fields.TryGetValue(field.Tag, out var definition))
                 {
                     field.Definition = definition;
                 }
             }
+            */
         }
 
         public void Set(Field value)
@@ -68,6 +72,7 @@ namespace Fix
             Add(value);
         }
 
+        /*
         public void Set(Dictionary.Field field, string value) => Set(field.Tag, value);
         public void Set(Dictionary.Field field, int value) => Set(field.Tag, value);
         public void Set(Dictionary.Field field, long value) => Set(field.Tag, value);
@@ -101,12 +106,23 @@ namespace Fix
         public void Set(Dictionary.Field field, HandlInst value) => Set(field.Tag, value);
         public void Set(Dictionary.Field field, Dictionary.Version value) => Set(field.Tag, value.BeginString);
         public void Set(Dictionary.Field field, ExchangeTradeType value) => Set(field.Tag, value);
+        */
 
         public void Set(int tag, string value) => Set(new Field(tag, value));
         public void Set(int tag, int value) => Set(new Field(tag, value));
         public void Set(int tag, long value) => Set(new Field(tag, value));
         public void Set(int tag, decimal value) => Set(new Field(tag, value));
         public void Set(int tag, bool value) => Set(new Field(tag, value));
+
+        public void Set(FieldValue value) => Set(new Field(value.Tag, value.Value));
+        public void Set(VersionField field, string value) => Set(new Field(field, value));
+        public void Set(VersionField field, int value) => Set(new Field(field, value));
+        public void Set(VersionField field, long value) => Set(new Field(field, value));
+        public void Set(VersionField field, decimal value) => Set(new Field(field, value));
+        public void Set(VersionField field, bool value) => Set(new Field(field, value));
+        public void Set(VersionField field, Field value) => Set(new Field(field.Tag, value.Value));
+
+        /*
         public void Set(int tag, EncryptMethod value) => Set(new Field(tag, value));
         public void Set(int tag, ExecType value) => Set(new Field(tag, value));
         public void Set(int tag, SessionStatus value) => Set(new Field(tag, value));
@@ -169,6 +185,7 @@ namespace Fix
         public void Add(Dictionary.Field field, HandlInst value) => Add(field.Tag, value);
         public void Add(Dictionary.Field field, Dictionary.Version value) => Add(field.Tag, value.BeginString);
         public void Add(Dictionary.Field field, ExchangeTradeType value) => Add(field.Tag, value);
+        */
 
 
         public void Add(int tag, string value) => Add(new Field(tag, value));
@@ -176,6 +193,8 @@ namespace Fix
         public void Add(int tag, long value) => Add(new Field(tag, value));
         public void Add(int tag, decimal value) => Add(new Field(tag, value));
         public void Add(int tag, bool value) => Add(new Field(tag, value));
+
+        /*
         public void Add(int tag, EncryptMethod value) => Add(new Field(tag, value));
         public void Add(int tag, ExecType value) => Add(new Field(tag, value));
         public void Add(int tag, SessionStatus value) => Add(new Field(tag, value));
@@ -203,6 +222,7 @@ namespace Fix
         public void Add(int tag, TimeInForce value) => Add(new Field(tag, value));
         public void Add(int tag, HandlInst value) => Add(new Field(tag, value));
         public void Add(int tag, ExchangeTradeType value) => Add(new Field(tag, value));
+        */
 
 
         public void Add(Field field)
@@ -218,7 +238,7 @@ namespace Fix
 
         public int Count => _fields.Count;
 
-        public bool Contains(Dictionary.Field field)
+        public bool Contains(Dictionary.VersionField field)
         {
             return Find(field) != null;
         }
@@ -230,7 +250,7 @@ namespace Fix
                     select field).FirstOrDefault();
         }
 
-        public Field Find(Dictionary.Field definition)
+        public Field Find(Dictionary.VersionField definition)
         {
             Field result = Find(definition.Tag);
             if (result != null)
@@ -259,13 +279,13 @@ namespace Fix
             return null;
         }
 
-        public Field FindFrom(Dictionary.Field definition, int index)
+        public Field FindFrom(Dictionary.VersionField definition, int index)
         {
             int temp = index;
             return FindFrom(definition, ref temp);
         }
 
-        public Field FindFrom(Dictionary.Field definition, ref int index)
+        public Field FindFrom(Dictionary.VersionField definition, ref int index)
         {
             Field result = FindFrom(definition.Tag, ref index);
             if (result != null)
@@ -293,7 +313,7 @@ namespace Fix
             _fields.RemoveRange(index, count);
         }
 
-        public void Remove(Dictionary.Field definition)
+        public void Remove(Dictionary.VersionField definition)
         {
             Remove(definition.Tag);
         }
