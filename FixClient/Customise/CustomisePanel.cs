@@ -141,7 +141,7 @@ namespace FixClient
             {
                 foreach (CustomField field in category.Fields)
                 {
-                    Fix.Dictionary.Field definition = _session.Version.Fields[field.Tag];
+                    var definition = _session.Version.Fields[field.Tag];
 
                     if (definition != null)
                     {

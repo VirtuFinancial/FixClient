@@ -35,6 +35,8 @@ namespace Fix
             return DateTime.UtcNow.ToString(fractionalSeconds ? TimestampFormatLong : TimestampFormatShort);
         }
 
+        public static readonly Field Invalid = new(0, string.Empty);
+
         public Field(int tag, string value)
         {
             Tag = tag;
@@ -76,34 +78,34 @@ namespace Fix
             Value = value;
         }
 
+        public Field(MessageField definition)
+        {
+            Tag = definition.Tag;
+        }
+
         public Field(VersionField definition)
         {
-            Definition = definition;
             Tag = definition.Tag;
         }
 
         public Field(VersionField definition, string value)
         : this(definition.Tag, value)
         {
-            Definition = definition;
         }
 
         public Field(VersionField definition, bool value)
             : this(definition.Tag, value)
         {
-            Definition = definition;
         }
 
         public Field(VersionField definition, int value)
         : this(definition.Tag, value.ToString())
         {
-            Definition = definition;
         }
 
         public Field(VersionField definition, decimal value)
         : this(definition.Tag, value.ToString())
         {
-            Definition = definition;
         }
 
         public Field(FieldValue value)
@@ -113,7 +115,6 @@ namespace Fix
 
         public int Tag { get; }
         public string Value { get; set; }
-        public VersionField Definition { get; set; }
         public bool Data { get; set; }
 
         public static explicit operator bool(Field field)
@@ -373,6 +374,7 @@ namespace Fix
         }
         */
 
+        /*
         public string ValueDescription
         {
             get
@@ -391,7 +393,6 @@ namespace Fix
                     //}
                 }
 
-                /*
                 if (Definition?.EnumeratedType == null)
                     return null;
                 var buffer = new StringBuilder();
@@ -425,10 +426,9 @@ namespace Fix
                     buffer.Append(description);
                 }
                 return buffer.ToString();
-                */
-                return string.Empty;
             }
         }
+        */
 
         public int ComputeCheckSum()
         {
@@ -474,6 +474,84 @@ namespace Fix
             return bodyLength;
         }
 
+        public FieldDescription Describe(Dictionary.Message? messageDefinition)
+        {
+            return Describe(messageDefinition, Tag, Value);
+        }
+
+        public static FieldDescription Describe(Dictionary.Message? messageDefinition, int tag, string value)
+        {
+            var definition = messageDefinition?.Fields.Where(f => f.Tag == tag).FirstOrDefault();
+
+            if (definition == null)
+            {
+                // This field is not defined in this message so just fall back to the global field definitions.
+                // This means we won't have values for required and indent which are message specific. We could
+                // iterator through each version and lookup the message definition and see if older versions
+                // contain the field but not worth the effort now.
+                string description = string.Empty;
+
+                if (FIX_5_0SP2.Fields.TryGetValue(tag, out var globalDefinition))
+                {
+                    if (value is string fieldValue)
+                    {
+                        description = DescribeVersionFieldValue(globalDefinition, fieldValue);
+                    }
+                }
+
+                return new FieldDescription(tag, value, globalDefinition.Name, description, false, -1);
+            }
+
+            if (definition is MessageField fieldDefinition)
+            {
+                //result.Name = fieldDefinition.Name;
+                //result.Description = DescribeMessageFieldValue(fieldDefinition, value);
+                // TODO
+                // result.Required = fieldDefinition?.Required ?? false;
+                // result.Indent = fieldDefinition?.Indent ?? 0;
+                return new FieldDescription(tag, value, fieldDefinition.Name, DescribeMessageFieldValue(fieldDefinition, value), false, -1);
+            }
+
+            // static string? DescribeFieldValue(System.Type enumType, string enumValue)
+            // {
+            //     if (enumValue.Length != 1) {
+            //         return null;
+            //     }
+
+            //     var member = System.Enum.ToObject(enumType, (int)enumValue[0]);
+
+            //     if (System.Enum.IsDefined(enumType, member)) {
+            //         return member.GetDescription();
+            //     }
+
+            //     return null;
+            // }
+
+            static string? DescribeMessageFieldValue(MessageField fieldDefinition, string fieldValue)
+            {
+                // TODO
+                // if (fieldDefinition?.EnumeratedType is Type type) {
+                //      return DescribeFieldValue(type, fieldValue);          
+                // }
+
+
+
+                return null;
+            }
+
+            static string? DescribeVersionFieldValue(VersionField fieldDefinition, string fieldValue)
+            {
+                if (fieldDefinition.Values.TryGetValue(fieldValue, out var valueDefinition))
+                {
+                    return valueDefinition.Name;
+                }
+
+                return null;
+            }
+
+            return new FieldDescription(tag, value, string.Empty, null, false, -1);
+        }
+
         #region Object
 
         public override string ToString() => $"{Tag}={Value}";
@@ -482,7 +560,7 @@ namespace Fix
 
         public object Clone()
         {
-            return new Field(Tag, Value) { Definition = Definition };
+            return new Field(Tag, Value);
         }
     }
 }

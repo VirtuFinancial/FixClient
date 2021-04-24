@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +16,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using static Fix.Dictionary;
 
 namespace FixClient
 {
@@ -330,7 +330,7 @@ namespace FixClient
                     foreach (Fix.Message message in Session.Messages)
                     {
                         string timestamp = "Unknown";
-                        Fix.Field field = message.Fields.Find(Fix.Dictionary.Fields.SendingTime.Tag);
+                        Fix.Field field = message.Fields.Find(FIX_5_0SP2.Fields.SendingTime.Tag);
                         if (field != null)
                         {
                             timestamp = field.Value;
@@ -407,15 +407,15 @@ namespace FixClient
 
             foreach (Fix.Field field in source.Fields)
             {
-                if (field.Tag == Fix.Dictionary.Fields.ClOrdID.Tag)
+                if (field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag)
                 {
                     message.Fields.Add(new Fix.Field(field.Tag, Session.FormatClOrdId(Session.NextClOrdId++)));
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.OrderID.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.OrderID.Tag)
                 {
                     message.Fields.Add(new Fix.Field(field.Tag, Session.NextOrderId++));
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.ExecID.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.ExecID.Tag)
                 {
                     message.Fields.Add(new Fix.Field(field.Tag, Session.NextExecId++));
                 }
@@ -457,6 +457,8 @@ namespace FixClient
                 if (message == null)
                     return;
 
+                var messageDefinition = FIX_5_0SP2.Messages[message.MsgType];
+
                 foreach (Fix.Field field in message.Fields)
                 {
                     if (_fieldTable.NewRow() is not FieldDataRow dataRow)
@@ -464,20 +466,15 @@ namespace FixClient
                         continue;
                     }
 
-                    if (field.Definition == null)
-                    {
-                        field.Definition = Session.FieldDefinition(message, field);
-                    }
-
                     dataRow.Field = field;
 
-                    if (field.Definition != null)
+                    if (field.Describe(messageDefinition) is Fix.FieldDescription description)
                     {
-                        dataRow[FieldDataTable.ColumnIndent] = field.Definition.Indent;
-                        dataRow[FieldDataTable.ColumnName] = field.Definition.Name;
+                        dataRow[FieldDataTable.ColumnIndent] = description.Indent;
+                        dataRow[FieldDataTable.ColumnName] = description.Name;
                         dataRow[FieldDataTable.ColumnCustom] = false;
-                        dataRow[FieldDataTable.ColumnRequired] = field.Definition.Required;
-                        dataRow[FieldDataTable.ColumnDescription] = field.ValueDescription;
+                        dataRow[FieldDataTable.ColumnRequired] = description.Required;
+                        dataRow[FieldDataTable.ColumnDescription] = description.Description;
                     }
                     else
                     {
@@ -634,23 +631,23 @@ namespace FixClient
 
             if (definition == null)
             {
-                definition = Fix.Dictionary.Messages[message.MsgType];
+                definition = FIX_5_0SP2.Messages[message.MsgType];
 
                 if (definition == null)
                 {
-                    definition = Fix.Dictionary.FIX_4_0.Messages[message.MsgType];
+                    definition = FIX_4_2.Messages[message.MsgType];
                 }
             }
 
             var row = _messageTable.NewRow() as MessageDataRow;
             row.Message = message;
-            row[MessageDataTable.ColumnSendingTime] = message.Fields.Find(Fix.Dictionary.Fields.SendingTime).Value;
+            row[MessageDataTable.ColumnSendingTime] = message.Fields.Find(FIX_5_0SP2.Fields.SendingTime).Value;
             row[MessageDataTable.ColumnMsgType] = message.MsgType;
             row[MessageDataTable.ColumnStatus] = message.Status;
             row[MessageDataTable.ColumnStatusImage] = ImageForMessageStatus(message.Status);
             row[MessageDataTable.ColumnStatusMessage] = message.StatusMessage;
             row[MessageDataTable.ColumnMsgTypeDescription] = definition?.Name;
-            row[MessageDataTable.ColumnMsgSeqNum] = message.Fields.Find(Fix.Dictionary.Fields.MsgSeqNum).Value;
+            row[MessageDataTable.ColumnMsgSeqNum] = message.Fields.Find(FIX_5_0SP2.Fields.MsgSeqNum).Value;
             _messageTable.Rows.Add(row);
         }
 

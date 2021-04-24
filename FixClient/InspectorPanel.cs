@@ -164,11 +164,12 @@ namespace FixClient
         {
             set
             {
-                Fix.Dictionary.Field definition = value?.Definition;
+                var definition = value?.Describe(null); // TODO - message definition?
 
                 _fieldPropertyGrid.SelectedObject = definition;
                 _fieldDescription.Text = definition?.Description;
 
+                /*
                 if (definition?.EnumeratedType == null)
                 {
                     _valuePropertyGrid.SelectedObject = null;
@@ -214,6 +215,7 @@ namespace FixClient
                 {
                     _valuePropertyGrid.SelectedObject = valueProperties;
                 }
+                */
             }
         }
     }

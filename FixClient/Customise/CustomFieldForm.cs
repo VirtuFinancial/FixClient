@@ -88,7 +88,7 @@ namespace FixClient
 
             int tag = Convert.ToInt32(valueTextBox.Text);
 
-            if (Version.Fields.TryGetValue(tag, out Fix.Dictionary.Field existing) && existing != null)
+            if (Version.Fields.TryGetValue(tag, out var existing) && existing != null)
             {
                 //
                 // This is a standard field, we allow the user so set these as custom fields so they can be

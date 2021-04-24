@@ -17,14 +17,14 @@ namespace FixClient
 {
     public class EnumDescription
     {
-        public EnumDescription(string description, int value)
+        public EnumDescription(string description, string value)
         {
             Description = description;
             Value = value;
         }
 
         public string Description { get; }
-        public int Value { get; }
+        public string Value { get; }
 
         public override string ToString()
         {
@@ -32,6 +32,7 @@ namespace FixClient
         }
     }
 
+    /*
     public class EnumDescriptionCollection : List<EnumDescription>
     {
         public EnumDescriptionCollection(Type enumType)
@@ -47,4 +48,5 @@ namespace FixClient
             }
         }
     }
+    */
 }

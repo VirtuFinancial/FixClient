@@ -9,11 +9,11 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using static Fix.Dictionary;
 
 namespace FixClient
 {
@@ -204,21 +204,17 @@ namespace FixClient
                 }
                 else
                 {
-                    var side = (Fix.Side)e.Value;
+                    var side = (FieldValue)e.Value;
 
-                    switch (side)
+                    if (side == FIX_5_0SP2.Side.Buy ||
+                        side == FIX_5_0SP2.Side.Cross)
                     {
-                        case Fix.Side.Buy:
-                        case Fix.Side.Cross:
-                            color = LookAndFeel.Color.Bid;
-                            break;
+                        color = LookAndFeel.Color.Bid;
+                    }
 
-                        case Fix.Side.Sell:
-                            color = LookAndFeel.Color.Ask;
-                            break;
-
-                        case Fix.Side.Undisclosed:
-                            break;
+                    if (side == FIX_5_0SP2.Side.Sell)
+                    {
+                        color = LookAndFeel.Color.Ask;
                     }
 
                     e.Value = side.ToString();
@@ -243,34 +239,36 @@ namespace FixClient
                 }
                 else
                 {
-                    var status = (Fix.OrdStatus)e.Value;
+                    var status = (FieldValue)e.Value;
 
-                    switch (status)
+                    //switch (status)
+                    //{
+                    //    case FIX_5_0SP2.OrdStatus.Calculated:
+                    //    case FIX_5_0SP2.OrdStatus.Canceled:
+                    //    case FIX_5_0SP2.OrdStatus.DoneForDay:
+                    //    case FIX_5_0SP2.OrdStatus.Filled:
+                    //    case FIX_5_0SP2.OrdStatus.Replaced:
+                    //        break;
+
+                    if (status == FIX_5_0SP2.OrdStatus.New ||
+                        status == FIX_5_0SP2.OrdStatus.PartiallyFilled)
                     {
-                        case Fix.OrdStatus.Calculated:
-                        case Fix.OrdStatus.Canceled:
-                        case Fix.OrdStatus.DoneForDay:
-                        case Fix.OrdStatus.Filled:
-                        case Fix.OrdStatus.Replaced:
-                            break;
+                        color = LookAndFeel.Color.New;
+                    }
 
-                        case Fix.OrdStatus.New:
-                        case Fix.OrdStatus.PartiallyFilled:
-                            color = LookAndFeel.Color.New;
-                            break;
+                    if (status == FIX_5_0SP2.OrdStatus.PendingNew ||
+                        status == FIX_5_0SP2.OrdStatus.PendingCancel ||
+                        status == FIX_5_0SP2.OrdStatus.PendingReplace)
+                    {
+                        color = LookAndFeel.Color.Pending;
+                    }
 
-                        case Fix.OrdStatus.PendingNew:
-                        case Fix.OrdStatus.PendingCancel:
-                        case Fix.OrdStatus.PendingReplace:
-                            color = LookAndFeel.Color.Pending;
-                            break;
-
-                        case Fix.OrdStatus.Expired:
-                        case Fix.OrdStatus.Rejected:
-                        case Fix.OrdStatus.Stopped:
-                        case Fix.OrdStatus.Suspended:
-                            color = LookAndFeel.Color.Rejected;
-                            break;
+                    if (status == FIX_5_0SP2.OrdStatus.Expired ||
+                        status == FIX_5_0SP2.OrdStatus.Rejected ||
+                        status == FIX_5_0SP2.OrdStatus.Stopped ||
+                        status == FIX_5_0SP2.OrdStatus.Suspended)
+                    {
+                        color = LookAndFeel.Color.Rejected;
                     }
 
                     e.Value = status.ToString();
@@ -285,7 +283,7 @@ namespace FixClient
             {
                 if (e.Value != null && e.Value != DBNull.Value)
                 {
-                    var timeInForce = (Fix.TimeInForce)e.Value;
+                    var timeInForce = (FieldValue)e.Value;
                     e.Value = ShortTimeInForceDescription(timeInForce);
                     e.FormattingApplied = true;
                     return;
@@ -295,20 +293,17 @@ namespace FixClient
             base.OnCellFormatting(e);
         }
 
-        public static string ShortTimeInForceDescription(Fix.TimeInForce timeInForce)
+        public static string ShortTimeInForceDescription(FieldValue timeInForce)
         {
-            return timeInForce switch
-            {
-                Fix.TimeInForce.AtTheOpening => "ATO",
-                Fix.TimeInForce.Day => "DAY",
-                Fix.TimeInForce.FillOrKill => "FOK",
-                Fix.TimeInForce.GoodTillCancel => "GTC",
-                Fix.TimeInForce.GoodTillCrossing => "GTX",
-                Fix.TimeInForce.GoodTillDate => "GTD",
-                Fix.TimeInForce.ImmediateOrCancel => "IOC",
-                Fix.TimeInForce.AtTheClose => "ATC",
-                _ => timeInForce.ToString(),
-            };
+            if (timeInForce == FIX_5_0SP2.TimeInForce.AtTheOpening) return "ATO";
+            if (timeInForce == FIX_5_0SP2.TimeInForce.Day) return "DAY";
+            if (timeInForce == FIX_5_0SP2.TimeInForce.FillOrKill) return "FOK";
+            if (timeInForce == FIX_5_0SP2.TimeInForce.GoodTillCancel) return "GTC";
+            if (timeInForce == FIX_5_0SP2.TimeInForce.GoodTillCrossing) return "GTX";
+            if (timeInForce == FIX_5_0SP2.TimeInForce.GoodTillDate) return "GTD";
+            if (timeInForce == FIX_5_0SP2.TimeInForce.ImmediateOrCancel) return "IOC";
+            if (timeInForce == FIX_5_0SP2.TimeInForce.AtTheClose) return "ATC";
+            return timeInForce.Name;
         }
     }
 }

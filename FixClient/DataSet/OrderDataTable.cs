@@ -9,10 +9,10 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Collections.Generic;
 using System.Data;
+using static Fix.Dictionary;
 
 namespace FixClient
 {
@@ -43,15 +43,15 @@ namespace FixClient
         {
             var primaryKey = new List<DataColumn>();
 
-            Columns.Add(ColumnSide, typeof(Fix.Side));
+            Columns.Add(ColumnSide, typeof(FIX_5_0SP2.Side));
             Columns.Add(ColumnSideString).ColumnMapping = MappingType.Hidden;
             Columns.Add(ColumnSymbol);
             Columns.Add(ColumnQuantity);
             Columns.Add(ColumnLimit);
             Columns.Add(ColumnExDestination);
-            Columns.Add(ColumnTimeInForce, typeof(Fix.TimeInForce));
+            Columns.Add(ColumnTimeInForce, typeof(FIX_5_0SP2.TimeInForce));
             Columns.Add(ColumnTimeInForceString).ColumnMapping = MappingType.Hidden;
-            Columns.Add(ColumnOrdStatus, typeof(Fix.OrdStatus));
+            Columns.Add(ColumnOrdStatus, typeof(FIX_5_0SP2.OrdStatus));
             Columns.Add(ColumnOrdStatusString).ColumnMapping = MappingType.Hidden;
             Columns.Add(ColumnDone);
             Columns.Add(ColumnLeaves);

@@ -9,12 +9,12 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using static Fix.Dictionary;
 
 namespace FixClient
 {
@@ -401,18 +401,18 @@ namespace FixClient
 
             if (order.TimeInForce != null)
             {
-                row[OrderDataTable.ColumnTimeInForce] = (Fix.TimeInForce)order.TimeInForce;
-                row[OrderDataTable.ColumnTimeInForceString] = OrderDataGridView.ShortTimeInForceDescription(order.TimeInForce.Value);
+                row[OrderDataTable.ColumnTimeInForce] = order.TimeInForce;
+                row[OrderDataTable.ColumnTimeInForceString] = OrderDataGridView.ShortTimeInForceDescription(order.TimeInForce);
             }
 
             if (order.OrdStatus != null)
             {
-                row[OrderDataTable.ColumnOrdStatus] = (Fix.OrdStatus)order.OrdStatus;
-                row[OrderDataTable.ColumnOrdStatusString] = ((Fix.OrdStatus)order.OrdStatus).ToString();
+                row[OrderDataTable.ColumnOrdStatus] = order.OrdStatus;
+                row[OrderDataTable.ColumnOrdStatusString] = order.OrdStatus.Name;
             }
             else
             {
-                row[OrderDataTable.ColumnOrdStatusString] = Fix.OrdStatus.PendingNew.ToString();
+                row[OrderDataTable.ColumnOrdStatusString] = FIX_5_0SP2.OrdStatus.PendingNew.Name;
             }
 
             if (order.OrigClOrdID != null)
@@ -420,8 +420,8 @@ namespace FixClient
 
             if (order.Side != null)
             {
-                row[OrderDataTable.ColumnSide] = (Fix.Side)order.Side;
-                row[OrderDataTable.ColumnSideString] = ((Fix.Side)order.Side).ToString();
+                row[OrderDataTable.ColumnSide] = order.Side;
+                row[OrderDataTable.ColumnSideString] = order.Side.Name;
             }
 
             long cumQty = order.CumQty ?? 0;
@@ -517,7 +517,7 @@ namespace FixClient
 
         public static Fix.Dictionary.Message MessageDefinition(Fix.Message message)
         {
-            Fix.Field beginString = message.Fields.Find(Fix.Dictionary.Fields.BeginString);
+            Fix.Field beginString = message.Fields.Find(FIX_5_0SP2.Fields.BeginString);
             Fix.Dictionary.Version version = null;
             if (beginString != null && !beginString.Value.StartsWith("FIXT."))
                 version = Fix.Dictionary.Versions[beginString.Value];
@@ -525,13 +525,13 @@ namespace FixClient
                 version = Fix.Dictionary.Versions.Default;
             Fix.Dictionary.Message exemplar = version.Messages[message.MsgType];
             if (exemplar == null)
-                return Fix.Dictionary.Messages[message.MsgType];
+                return FIX_5_0SP2.Messages[message.MsgType];
             return exemplar;
         }
 
-        public static Fix.Dictionary.Field FieldDefinition(Fix.Dictionary.Message message, Fix.Field field)
+        public static MessageField FieldDefinition(Fix.Dictionary.Message message, Fix.Field field)
         {
-            message.Fields.TryGetValue(field.Tag, out Fix.Dictionary.Field definition);
+            message.Fields.TryGetValue(field.Tag, out var definition);
             return definition;
         }
 
@@ -570,6 +570,8 @@ namespace FixClient
 
                 _statusMessage.Text = message.StatusMessage;
 
+                var messageDefinition = FIX_5_0SP2.Messages[message.MsgType];
+
                 foreach (Fix.Field field in message.Fields)
                 {
                     if (_fieldTable.NewRow() is not FieldDataRow dataRow)
@@ -577,20 +579,17 @@ namespace FixClient
                         continue;
                     }
 
-                    if (field.Definition == null && message.Definition != null)
-                    {
-                        field.Definition = FieldDefinition(message.Definition, field);
-                    }
+                    var description = field.Describe(messageDefinition);
 
                     dataRow.Field = field;
 
-                    if (field.Definition != null)
+                    if (description != null)
                     {
-                        dataRow[FieldDataTable.ColumnIndent] = field.Definition.Indent;
-                        dataRow[FieldDataTable.ColumnName] = field.Definition.Name;
+                        dataRow[FieldDataTable.ColumnIndent] = description.Indent;
+                        dataRow[FieldDataTable.ColumnName] = description.Name;
                         dataRow[FieldDataTable.ColumnCustom] = false;
-                        dataRow[FieldDataTable.ColumnRequired] = field.Definition.Required;
-                        dataRow[FieldDataTable.ColumnDescription] = field.ValueDescription;
+                        dataRow[FieldDataTable.ColumnRequired] = description.Required;
+                        dataRow[FieldDataTable.ColumnDescription] = description.Description;
                     }
                     else
                     {
@@ -625,7 +624,7 @@ namespace FixClient
         {
             Fix.Message message = ev.Message;
 
-            Fix.Field field = message.Fields.Find(Fix.Dictionary.Fields.MsgType);
+            Fix.Field field = message.Fields.Find(FIX_5_0SP2.Fields.MsgType);
 
             if (field == null)
                 return;
@@ -646,7 +645,7 @@ namespace FixClient
             row[ParserMessageDataTable.ColumnMsgTypeDescription] = message.Definition == null ? string.Empty : message.Definition.Name;
             row[ParserMessageDataTable.ColumnAdministrative] = message.Administrative;
 
-            field = message.Fields.Find(Fix.Dictionary.Fields.MsgSeqNum);
+            field = message.Fields.Find(FIX_5_0SP2.Fields.MsgSeqNum);
 
             row[ParserMessageDataTable.ColumnMsgSeqNum] = field?.Value;
 

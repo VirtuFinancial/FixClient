@@ -9,13 +9,13 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using static Fix.Dictionary;
 
 namespace FixClient
 {
@@ -580,7 +580,7 @@ namespace FixClient
             //
             // Update some fields automatically to make life easier for the user.
             //
-            if (message.MsgType == Fix.Dictionary.Messages.NewOrderList.MsgType || message.MsgType == Fix.Dictionary.FIX_4_0.Messages.KodiakWaveOrder.MsgType)
+            if (message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType)
             {
                 //
                 // In the OrderList message the ClOrdID is the delimiter for a repeating group
@@ -588,21 +588,21 @@ namespace FixClient
                 //
                 int clOrdIdCount = (from FieldDataRow row
                                     in _fieldTable.Rows
-                                    where row.Field.Tag == Fix.Dictionary.Fields.ClOrdID.Tag
+                                    where row.Field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag
                                     select row).Count();
 
-                Fix.Field totNoOrders = message.Fields.Find(Fix.Dictionary.Fields.TotNoOrders);
+                Fix.Field totNoOrders = message.Fields.Find(FIX_5_0SP2.Fields.TotNoOrders);
 
                 if (totNoOrders != null)
                 {
                     if (Session.AutoTotNoOrders)
                     {
-                        message.Fields.Set(Fix.Dictionary.Fields.TotNoOrders, clOrdIdCount);
+                        message.Fields.Set(FIX_5_0SP2.Fields.TotNoOrders, clOrdIdCount);
                     }
 
                     if (Session.AutoNoOrders)
                     {
-                        message.Fields.Set(Fix.Dictionary.Fields.NoOrders, clOrdIdCount);
+                        message.Fields.Set(FIX_5_0SP2.Fields.NoOrders, clOrdIdCount);
                     }
                 }
             }
@@ -660,7 +660,7 @@ namespace FixClient
             //
             // Update some fields automatically to make life easier for the user.
             //
-            if (message.MsgType == Fix.Dictionary.Messages.NewOrderList.MsgType || message.MsgType == Fix.Dictionary.FIX_4_0.Messages.KodiakWaveOrder.MsgType)
+            if (message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType)
             {
                 //
                 // In the OrderList message the ClOrdID is the delimiter for a repeating group
@@ -671,9 +671,9 @@ namespace FixClient
                                     into rowView
                                     select rowView.Row
                                     into dataRow
-                                    select (int)dataRow[FieldDataTable.ColumnTag]).Count(tag => tag == Fix.Dictionary.Fields.ClOrdID.Tag);
+                                    select (int)dataRow[FieldDataTable.ColumnTag]).Count(tag => tag == FIX_5_0SP2.Fields.ClOrdID.Tag);
 
-                Fix.Field totNoOrders = message.Fields.Find(Fix.Dictionary.Fields.TotNoOrders);
+                Fix.Field totNoOrders = message.Fields.Find(FIX_5_0SP2.Fields.TotNoOrders);
 
                 if (totNoOrders != null && totNoOrders.Value != null && totNoOrders.Value.Trim() != string.Empty)
                 {
@@ -685,17 +685,17 @@ namespace FixClient
                     // If the TotNoOrders was not set at all then we have to scan the entire message
                     // to get it right.
                     //
-                    clOrdIdCount = message.Fields.Count(field => field.Tag == Fix.Dictionary.Fields.ClOrdID.Tag);
+                    clOrdIdCount = message.Fields.Count(field => field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag);
                 }
 
                 if (Session.AutoTotNoOrders)
                 {
-                    message.Fields.Set(Fix.Dictionary.Fields.TotNoOrders, clOrdIdCount);
+                    message.Fields.Set(FIX_5_0SP2.Fields.TotNoOrders, clOrdIdCount);
                 }
 
                 if (Session.AutoNoOrders)
                 {
-                    message.Fields.Set(Fix.Dictionary.Fields.NoOrders, clOrdIdCount);
+                    message.Fields.Set(FIX_5_0SP2.Fields.NoOrders, clOrdIdCount);
                 }
             }
             //
@@ -807,7 +807,7 @@ namespace FixClient
 
             foreach (var field in parsedMessage.Fields)
             {
-                if (!Session.Version.Fields.TryGetValue(field.Tag, out Fix.Dictionary.Field definition) || definition == null)
+                if (!Session.Version.Fields.TryGetValue(field.Tag, out var fieldDefinition) || fieldDefinition == null)
                 {
                     if (!Session.CustomFields.TryGetValue(field.Tag, out CustomField custom) && defineUnknownAsCustom)
                     {
@@ -818,9 +818,10 @@ namespace FixClient
                     continue;
                 }
 
-                for (; exemplarIndex < exemplar.FieldCount; ++exemplarIndex)
+                /* TODO
+                for (; exemplarIndex < exemplar.Fields.Count; ++exemplarIndex)
                 {
-                    definition = exemplar.Fields[exemplarIndex];
+                    var definition = exemplar.Fields[exemplarIndex];
 
                     if (indents.Count == 0 || indents.Peek().Indent < definition.Indent)
                     {
@@ -860,6 +861,7 @@ namespace FixClient
 
                     message.Fields.Add(definition, string.Empty);
                 }
+                */
             }
 
             /*
@@ -887,27 +889,27 @@ namespace FixClient
                     }
                 }
 
-                if (field.Tag == Fix.Dictionary.Fields.ClOrdID.Tag)
+                if (field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag)
                 {
                     message.Fields.Set(field.Tag, Session.AutoClOrdId ? Session.FormatClOrdId(Session.NextClOrdId) : field.Value);
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.OrderID.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.OrderID.Tag)
                 {
                     message.Fields.Set(field.Tag, Session.NextOrderId);
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.ExecID.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.ExecID.Tag)
                 {
                     message.Fields.Set(field.Tag, Session.NextExecId);
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.ListID.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.ListID.Tag)
                 {
                     message.Fields.Set(field.Tag, Session.NextListId);
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.AllocID.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.AllocID.Tag)
                 {
                     message.Fields.Set(field.Tag, Session.NextAllocId);
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.NextExpectedMsgSeqNum.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.NextExpectedMsgSeqNum.Tag)
                 {
                     message.Fields.Set(field.Tag, Session.IncomingSeqNum);
                 }
@@ -936,27 +938,27 @@ namespace FixClient
                     }
                 }
 
-                if (field.Tag == Fix.Dictionary.Fields.ClOrdID.Tag)
+                if (field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag)
                 {
                     message.Fields.Add(field.Tag, Session.AutoClOrdId ? Session.FormatClOrdId(Session.NextClOrdId) : field.Value);
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.OrderID.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.OrderID.Tag)
                 {
                     message.Fields.Add(field.Tag, Session.NextOrderId);
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.ExecID.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.ExecID.Tag)
                 {
                     message.Fields.Add(field.Tag, Session.NextExecId);
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.ListID.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.ListID.Tag)
                 {
                     message.Fields.Add(field.Tag, Session.NextListId);
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.AllocID.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.AllocID.Tag)
                 {
                     message.Fields.Add(field.Tag, Session.NextAllocId);
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.NextExpectedMsgSeqNum.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.NextExpectedMsgSeqNum.Tag)
                 {
                     message.Fields.Add(field.Tag, Session.IncomingSeqNum);
                 }
@@ -1001,6 +1003,8 @@ namespace FixClient
             if (message == null)
                 return;
 
+            var messageDefinition = FIX_5_0SP2.Messages[message.MsgType];
+
             try
             {
                 Session.AutoWriteFilters = false;
@@ -1010,10 +1014,12 @@ namespace FixClient
                     //if (message.CustomFields.Contains(field.Id))
                     //    continue;
 
-                    if (field.Definition == null)
+                    var description = field.Describe(messageDefinition);
+
+                    if (description == null)
                         continue;
 
-                    if (field.Definition.Required)
+                    if (description.Required)
                         continue;
 
                     if (field.Value != null && !String.IsNullOrEmpty(field.Value.Trim()))
@@ -1061,7 +1067,7 @@ namespace FixClient
                 //
                 // Only allocate a ClOrdId if we are actually sending that field.
                 //
-                if (field.Tag == Fix.Dictionary.Fields.ClOrdID.Tag)
+                if (field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag)
                     ++clOrdIdCount;
 
                 message.Fields.Add(new Fix.Field(field.Tag, field.Value));
@@ -1106,14 +1112,11 @@ namespace FixClient
 
             var updatedFields = new List<KeyValuePair<int, string>>();
 
-            if (message.MsgType == Fix.Dictionary.Messages.NewOrderSingle.MsgType ||
-                message.MsgType == Fix.Dictionary.Messages.NewOrderList.MsgType ||
-                message.MsgType == Fix.Dictionary.Messages.OrderCancelRequest.MsgType ||
-                message.MsgType == Fix.Dictionary.Messages.OrderCancelReplaceRequest.MsgType ||
-                message.MsgType == Fix.Dictionary.FIX_4_0.Messages.KodiakWaveOrder.MsgType ||
-                message.MsgType == Fix.Dictionary.FIX_4_0.Messages.KodiakWaveOrderCancelRequest.MsgType ||
-                message.MsgType == Fix.Dictionary.FIX_4_0.Messages.KodiakWaveOrderCorrectionRequest.MsgType ||
-                message.MsgType == Fix.Dictionary.Messages.AllocationInstruction.MsgType)
+            if (message.MsgType == FIX_5_0SP2.Messages.NewOrderSingle.MsgType ||
+                message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType ||
+                message.MsgType == FIX_5_0SP2.Messages.OrderCancelRequest.MsgType ||
+                message.MsgType == FIX_5_0SP2.Messages.OrderCancelReplaceRequest.MsgType ||
+                message.MsgType == FIX_5_0SP2.Messages.AllocationInstruction.MsgType)
             {
                 //
                 // Allocate any ClOrdIds that were used.
@@ -1133,29 +1136,29 @@ namespace FixClient
                 {
                     Fix.Field field = defaults.Fields[index];
 
-                    if (field.Tag == Fix.Dictionary.Fields.MsgSeqNum.Tag)
+                    if (field.Tag == FIX_5_0SP2.Fields.MsgSeqNum.Tag)
                     {
                         defaults.Fields[index].Value = Session.OutgoingSeqNum.ToString();
                         updatedFields.Add(new KeyValuePair<int, string>(index, Session.OutgoingSeqNum.ToString()));
                     }
-                    else if (field.Tag == Fix.Dictionary.Fields.ClOrdID.Tag && Session.AutoClOrdId)
+                    else if (field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag && Session.AutoClOrdId)
                     {
                         string value = Session.FormatClOrdId(nextClOrdId);
                         defaults.Fields[index].Value = value;
                         updatedFields.Add(new KeyValuePair<int, string>(index, value));
                         ++nextClOrdId;
                     }
-                    else if (field.Tag == Fix.Dictionary.Fields.ListID.Tag && Session.AutoListId)
+                    else if (field.Tag == FIX_5_0SP2.Fields.ListID.Tag && Session.AutoListId)
                     {
-                        if (message.MsgType != Fix.Dictionary.Messages.OrderCancelRequest.MsgType &&
-                            message.MsgType != Fix.Dictionary.Messages.OrderCancelReplaceRequest.MsgType)
+                        if (message.MsgType != FIX_5_0SP2.Messages.OrderCancelRequest.MsgType &&
+                            message.MsgType != FIX_5_0SP2.Messages.OrderCancelReplaceRequest.MsgType)
                         {
                             int listId = Session.NextListId++;
                             defaults.Fields[index].Value = listId.ToString();
                             updatedFields.Add(new KeyValuePair<int, string>(index, listId.ToString()));
                         }
                     }
-                    else if (field.Tag == Fix.Dictionary.Fields.AllocID.Tag && Session.AutoAllocId)
+                    else if (field.Tag == FIX_5_0SP2.Fields.AllocID.Tag && Session.AutoAllocId)
                     {
                         int allocId = Session.NextAllocId++;
                         defaults.Fields[index].Value = allocId.ToString();
@@ -1163,24 +1166,24 @@ namespace FixClient
                     }
                 }
             }
-            else if (message.MsgType == Fix.Dictionary.Messages.ExecutionReport.MsgType)
+            else if (message.MsgType == FIX_5_0SP2.Messages.ExecutionReport.MsgType)
             {
                 for (int index = 0; index < defaults.Fields.Count; ++index)
                 {
                     Fix.Field field = defaults.Fields[index];
 
-                    if (field.Tag == Fix.Dictionary.Fields.MsgSeqNum.Tag)
+                    if (field.Tag == FIX_5_0SP2.Fields.MsgSeqNum.Tag)
                     {
                         defaults.Fields[index].Value = Session.OutgoingSeqNum.ToString();
                         updatedFields.Add(new KeyValuePair<int, string>(index, Session.OutgoingSeqNum.ToString()));
                     }
-                    else if (field.Tag == Fix.Dictionary.Fields.OrderID.Tag)
+                    else if (field.Tag == FIX_5_0SP2.Fields.OrderID.Tag)
                     {
                         int orderId = Session.NextOrderId++;
                         defaults.Fields[index].Value = orderId.ToString();
                         updatedFields.Add(new KeyValuePair<int, string>(index, orderId.ToString()));
                     }
-                    else if (field.Tag == Fix.Dictionary.Fields.ExecID.Tag)
+                    else if (field.Tag == FIX_5_0SP2.Fields.ExecID.Tag)
                     {
                         int execId = Session.NextExecId++;
                         defaults.Fields[index].Value = execId.ToString();
@@ -1341,22 +1344,22 @@ namespace FixClient
                 if (message == null)
                     return;
 
-                message.Fields.Set(Fix.Dictionary.Fields.BeginString, _session.BeginString);
+                message.Fields.Set(FIX_5_0SP2.Fields.BeginString, _session.BeginString.BeginString);
 
-                if (_session.BeginString.BeginString == Fix.Dictionary.Versions.FIXT_1_1.BeginString &&
-                    message.MsgType == Fix.Dictionary.Messages.Logon.MsgType)
+                if (_session.BeginString.BeginString == "FIXT.1.1" &&
+                    message.MsgType == FIX_5_0SP2.Messages.Logon.MsgType)
                 {
-                    message.Fields.Set(Fix.Dictionary.Fields.DefaultApplVerID, _session.DefaultApplVerId.ApplVerID);
-                    message.Fields.Set(Fix.Dictionary.Fields.EncryptMethod, Fix.EncryptMethod.None);
-                    message.Fields.Set(Fix.Dictionary.Fields.HeartBtInt, _session.HeartBtInt);
+                    message.Fields.Set(FIX_5_0SP2.Fields.DefaultApplVerID, _session.DefaultApplVerId.ApplVerID);
+                    message.Fields.Set(FIX_5_0SP2.Fields.EncryptMethod, FIX_5_0SP2.EncryptMethod.None.Value);
+                    message.Fields.Set(FIX_5_0SP2.Fields.HeartBtInt, _session.HeartBtInt);
                 }
 
-                message.Fields.Set(Fix.Dictionary.Fields.SenderCompID, _session.SenderCompId);
-                message.Fields.Set(Fix.Dictionary.Fields.TargetCompID, _session.TargetCompId);
+                message.Fields.Set(FIX_5_0SP2.Fields.SenderCompID, _session.SenderCompId);
+                message.Fields.Set(FIX_5_0SP2.Fields.TargetCompID, _session.TargetCompId);
 
                 if (_session.AutoSetMsgSeqNum)
                 {
-                    message.Fields.Set(Fix.Dictionary.Fields.MsgSeqNum, Session.OutgoingSeqNum);
+                    message.Fields.Set(FIX_5_0SP2.Fields.MsgSeqNum, Session.OutgoingSeqNum);
                 }
                 //
                 // We may have multiple ClOrdIds in one message such as order list but we don't want to
@@ -1375,21 +1378,16 @@ namespace FixClient
                     {
                         _session.FieldVisible(message.MsgType, field.Tag, true);
                     }
-
-                    if (field.Definition == null)
-                    {
-                        field.Definition = Session.FieldDefinition(message, field);
-                    }
                     //
                     // Update any time fields as required.
                     //
-                    if ((field.Tag == Fix.Dictionary.Fields.SendingTime.Tag && Session.AutoSendingTime) ||
-                        (field.Tag == Fix.Dictionary.Fields.TransactTime.Tag && Session.AutoTransactTime))
+                    if ((field.Tag == FIX_5_0SP2.Fields.SendingTime.Tag && Session.AutoSendingTime) ||
+                        (field.Tag == FIX_5_0SP2.Fields.TransactTime.Tag && Session.AutoTransactTime))
                     {
                         message.Fields[index].Value = time;
                     }
 
-                    if (field.Tag == Fix.Dictionary.Fields.NextExpectedMsgSeqNum.Tag &&
+                    if (field.Tag == FIX_5_0SP2.Fields.NextExpectedMsgSeqNum.Tag &&
                         Session.NextExpectedMsgSeqNum)
                     {
                         message.Fields[index].Value = Session.IncomingSeqNum.ToString();
@@ -1398,44 +1396,43 @@ namespace FixClient
                     //
                     // Update any of the various ID's as required
                     //
-                    if (message.MsgType == Fix.Dictionary.Messages.NewOrderSingle.MsgType ||
-                        message.MsgType == Fix.Dictionary.Messages.NewOrderList.MsgType ||
-                        message.MsgType == Fix.Dictionary.FIX_4_0.Messages.KodiakWaveOrder.MsgType)
+                    if (message.MsgType == FIX_5_0SP2.Messages.NewOrderSingle.MsgType ||
+                        message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType)
                     {
 
-                        if (field.Tag == Fix.Dictionary.Fields.ClOrdID.Tag)
+                        if (field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag)
                         {
                             message.Fields[index].Value = Session.FormatClOrdId(nextClOrdId);
                             ++nextClOrdId;
                         }
-                        else if (field.Tag == Fix.Dictionary.Fields.OrderID.Tag)
+                        else if (field.Tag == FIX_5_0SP2.Fields.OrderID.Tag)
                         {
                             message.Fields[index].Value = Session.NextOrderId.ToString();
                         }
-                        else if (field.Tag == Fix.Dictionary.Fields.ExecID.Tag)
+                        else if (field.Tag == FIX_5_0SP2.Fields.ExecID.Tag)
                         {
                             message.Fields[index].Value = Session.NextExecId.ToString();
                         }
-                        else if (field.Tag == Fix.Dictionary.Fields.ListID.Tag)
+                        else if (field.Tag == FIX_5_0SP2.Fields.ListID.Tag)
                         {
                             message.Fields[index].Value = Session.NextListId.ToString();
                         }
-                        else if (field.Tag == Fix.Dictionary.Fields.ListSeqNo.Tag)
+                        else if (field.Tag == FIX_5_0SP2.Fields.ListSeqNo.Tag)
                         {
-                            if (Session.AutoListSeqNo && message.MsgType != Fix.Dictionary.FIX_4_0.Messages.KodiakWaveOrder.MsgType)
+                            if (Session.AutoListSeqNo)
                             {
                                 message.Fields[index].Value = nextListSeqNo.ToString();
                                 ++nextListSeqNo;
                             }
                         }
-                        else if (field.Tag == Fix.Dictionary.Fields.AllocID.Tag)
+                        else if (field.Tag == FIX_5_0SP2.Fields.AllocID.Tag)
                         {
                             message.Fields[index].Value = nextAllocId.ToString();
                         }
                     }
-                    else if (message.MsgType == Fix.Dictionary.Messages.AllocationInstruction.MsgType)
+                    else if (message.MsgType == FIX_5_0SP2.Messages.AllocationInstruction.MsgType)
                     {
-                        if (field.Tag == Fix.Dictionary.Fields.AllocID.Tag)
+                        if (field.Tag == FIX_5_0SP2.Fields.AllocID.Tag)
                         {
                             message.Fields[index].Value = nextAllocId.ToString();
                         }
@@ -1444,16 +1441,18 @@ namespace FixClient
                     ++index;
                 }
 
-                message.Fields.Set(Fix.Dictionary.Fields.BodyLength, message.ComputeBodyLength());
+                message.Fields.Set(FIX_5_0SP2.Fields.BodyLength, message.ComputeBodyLength());
 
                 //
                 // Now the message is ready populate the field view
                 //
                 int previousIndent = 0;
 
+                var messageDefinition = FIX_5_0SP2.Messages[message.MsgType];
+
                 foreach (Fix.Field field in message.Fields)
                 {
-                    if (field.Tag == Fix.Dictionary.Fields.CheckSum.Tag)
+                    if (field.Tag == FIX_5_0SP2.Fields.CheckSum.Tag)
                     {
                         //
                         // This gets set automatically by the library when sending a message across
@@ -1469,13 +1468,15 @@ namespace FixClient
 
                     dataRow.Field = field;
 
-                    if (field.Definition != null)
+                    var description = field.Describe(messageDefinition);
+
+                    if (description != null)
                     {
-                        dataRow[FieldDataTable.ColumnIndent] = field.Definition.Indent;
-                        dataRow[FieldDataTable.ColumnName] = field.Definition.Name;
-                        dataRow[FieldDataTable.ColumnRequired] = field.Definition.Required;
+                        dataRow[FieldDataTable.ColumnIndent] = description.Indent;
+                        dataRow[FieldDataTable.ColumnName] = description.Name;
+                        dataRow[FieldDataTable.ColumnRequired] = description.Required;
                         dataRow[FieldDataTable.ColumnCustom] = false;
-                        previousIndent = field.Definition.Indent;
+                        previousIndent = description.Indent;
                     }
                     else
                     {
@@ -1529,8 +1530,8 @@ namespace FixClient
             foreach (FieldDataRow row in _fieldTable.Rows)
             {
                 Fix.Field field = row.Field;
-                if ((field.Tag == Fix.Dictionary.Fields.SendingTime.Tag && Session.AutoSendingTime) ||
-                    (field.Tag == Fix.Dictionary.Fields.TransactTime.Tag && Session.AutoTransactTime))
+                if ((field.Tag == FIX_5_0SP2.Fields.SendingTime.Tag && Session.AutoSendingTime) ||
+                    (field.Tag == FIX_5_0SP2.Fields.TransactTime.Tag && Session.AutoTransactTime))
                 {
                     row[FieldDataTable.ColumnValue] = time;
                 }
@@ -1547,7 +1548,7 @@ namespace FixClient
             //
             foreach (Fix.Field field in message.Fields)
             {
-                if (field.Tag == Fix.Dictionary.Fields.MsgType.Tag)
+                if (field.Tag == FIX_5_0SP2.Fields.MsgType.Tag)
                     continue;
 
                 foreach (Fix.Message source in order.Messages)
@@ -1564,7 +1565,7 @@ namespace FixClient
 
         public void AcknowledgeAmend(Fix.Order order)
         {
-            Fix.Message message = FindMessage(Fix.Dictionary.Messages.ExecutionReport.MsgType);
+            Fix.Message message = FindMessage(FIX_5_0SP2.Messages.ExecutionReport.MsgType);
 
             if (message == null)
                 return;
@@ -1574,49 +1575,49 @@ namespace FixClient
 
             Fix.Message lastMessage = order.Messages.LastOrDefault();
 
-            Fix.OrdStatus ordStatus = Fix.OrdStatus.Replaced;
-            Fix.ExecType execType = Fix.ExecType.Replaced;
+            var ordStatus = FIX_5_0SP2.OrdStatus.Replaced;
+            var execType = FIX_5_0SP2.ExecType.Replaced;
 
-            if (lastMessage != null && lastMessage.MsgType == Fix.Dictionary.Messages.OrderCancelReplaceRequest.MsgType)
+            if (lastMessage != null && lastMessage.MsgType == FIX_5_0SP2.Messages.OrderCancelReplaceRequest.MsgType)
             {
-                ordStatus = Fix.OrdStatus.PendingReplace;
-                execType = Fix.ExecType.PendingReplace;
-                message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, ClOrdID);
-                message.Fields.Set(Fix.Dictionary.Fields.OrigClOrdID, OrigClOrdID);
+                ordStatus = FIX_5_0SP2.OrdStatus.PendingReplace;
+                execType = FIX_5_0SP2.ExecType.PendingReplace;
+                message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, ClOrdID);
+                message.Fields.Set(FIX_5_0SP2.Fields.OrigClOrdID, OrigClOrdID);
             }
             else
             {
-                message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, ClOrdID);
-                message.Fields.Set(Fix.Dictionary.Fields.OrigClOrdID, OrigClOrdID);
+                message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, ClOrdID);
+                message.Fields.Set(FIX_5_0SP2.Fields.OrigClOrdID, OrigClOrdID);
             }
 
-            if (order.Side.HasValue)
+            if (order.Side is FieldValue sideValue)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
+                message.Fields.Set(sideValue);
             }
 
-            message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
-            message.Fields.Set(Fix.Dictionary.Fields.OrderQty, order.OrderQty);
-            message.Fields.Set(Fix.Dictionary.Fields.OrdStatus, ordStatus);
+            message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
+            message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, order.OrderQty);
+            message.Fields.Set(ordStatus);
             if (order.OrderID != null)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.OrderID, order.OrderID);
+                message.Fields.Set(FIX_5_0SP2.Fields.OrderID, order.OrderID);
             }
-            message.Fields.Set(Fix.Dictionary.Fields.ExecID, Session.NextExecId.ToString());
-            message.Fields.Set(Fix.Dictionary.Fields.LastQty, 0);
-            message.Fields.Set(Fix.Dictionary.Fields.LastPx, 0);
-            message.Fields.Set(Fix.Dictionary.Fields.CumQty, order.CumQty ?? 0);
-            message.Fields.Set(Fix.Dictionary.Fields.AvgPx, order.AvgPx ?? 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.ExecID, Session.NextExecId.ToString());
+            message.Fields.Set(FIX_5_0SP2.Fields.LastQty, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.LastPx, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.CumQty, order.CumQty ?? 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.AvgPx, order.AvgPx ?? 0);
 
-            if (Session.Version.BeginString != Fix.Dictionary.Versions.FIX_4_0.BeginString)
+            if (Session.Version.BeginString != "FIX.4.0")
             {
-                message.Fields.Set(Fix.Dictionary.Fields.ExecType, execType);
-                message.Fields.Set(Fix.Dictionary.Fields.LeavesQty, 0);
+                message.Fields.Set(execType);
+                message.Fields.Set(FIX_5_0SP2.Fields.LeavesQty, 0);
             }
 
             if (Session.Version.BeginString.StartsWith("FIX.4."))
             {
-                message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.ExecTransType, Fix.Dictionary.FIX_4_0.ExecTransType.New);
+                message.Fields.Set(FIX_4_2.ExecTransType.New);
             }
 
             SelectMessage(message.MsgType);
@@ -1624,40 +1625,40 @@ namespace FixClient
 
         public void AcknowledgeCancel(Fix.Order order)
         {
-            Fix.Message message = FindMessage(Fix.Dictionary.Messages.ExecutionReport.MsgType);
+            Fix.Message message = FindMessage(FIX_5_0SP2.Messages.ExecutionReport.MsgType);
 
             if (message == null)
                 return;
 
-            message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, order.ClOrdID);
+            message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, order.ClOrdID);
 
-            if (order.Side.HasValue)
+            if (order.Side is FieldValue sideValue)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
+                message.Fields.Set(sideValue);
             }
 
-            message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
-            message.Fields.Set(Fix.Dictionary.Fields.OrderQty, order.OrderQty);
-            message.Fields.Set(Fix.Dictionary.Fields.OrdStatus, Fix.OrdStatus.Canceled);
+            message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
+            message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, order.OrderQty);
+            message.Fields.Set(FIX_5_0SP2.OrdStatus.Canceled);
             if (order.OrderID != null)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.OrderID, order.OrderID);
+                message.Fields.Set(FIX_5_0SP2.Fields.OrderID, order.OrderID);
             }
-            message.Fields.Set(Fix.Dictionary.Fields.ExecID, Session.NextExecId.ToString());
-            message.Fields.Set(Fix.Dictionary.Fields.LastQty, 0);
-            message.Fields.Set(Fix.Dictionary.Fields.LastPx, 0);
-            message.Fields.Set(Fix.Dictionary.Fields.CumQty, order.CumQty ?? 0);
-            message.Fields.Set(Fix.Dictionary.Fields.AvgPx, order.AvgPx ?? 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.ExecID, Session.NextExecId.ToString());
+            message.Fields.Set(FIX_5_0SP2.Fields.LastQty, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.LastPx, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.CumQty, order.CumQty ?? 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.AvgPx, order.AvgPx ?? 0);
 
-            if (Session.Version.BeginString != Fix.Dictionary.Versions.FIX_4_0.BeginString)
+            if (Session.Version.BeginString != "FIX.4.0")
             {
-                message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.ExecType.Canceled);
-                message.Fields.Set(Fix.Dictionary.Fields.LeavesQty, 0);
+                message.Fields.Set(FIX_5_0SP2.ExecType.Canceled);
+                message.Fields.Set(FIX_5_0SP2.Fields.LeavesQty, 0);
             }
 
             if (Session.Version.BeginString.StartsWith("FIX.4."))
             {
-                message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.ExecTransType, Fix.Dictionary.FIX_4_0.ExecTransType.New);
+                message.Fields.Set(FIX_4_2.ExecTransType.New);
             }
 
             SelectMessage(message.MsgType);
@@ -1665,43 +1666,43 @@ namespace FixClient
 
         public void AcknowledgeOrder(Fix.Order order)
         {
-            Fix.Message message = FindMessage(Fix.Dictionary.Messages.ExecutionReport.MsgType);
+            Fix.Message message = FindMessage(FIX_5_0SP2.Messages.ExecutionReport.MsgType);
 
             if (message == null)
                 return;
 
-            message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, order.ClOrdID);
+            message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, order.ClOrdID);
 
-            if (order.Side.HasValue)
+            if (order.Side is FieldValue sideValue)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
+                message.Fields.Set(sideValue);
             }
 
-            message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
-            message.Fields.Set(Fix.Dictionary.Fields.OrderQty, order.OrderQty);
-            message.Fields.Set(Fix.Dictionary.Fields.OrdStatus, Fix.OrdStatus.New);
+            message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
+            message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, order.OrderQty);
+            message.Fields.Set(FIX_5_0SP2.OrdStatus.New);
 
             if (order.OrderID == null)
             {
                 order.OrderID = Session.NextOrderId.ToString();
             }
 
-            message.Fields.Set(Fix.Dictionary.Fields.OrderID, order.OrderID);
-            message.Fields.Set(Fix.Dictionary.Fields.ExecID, Session.NextExecId.ToString());
-            message.Fields.Set(Fix.Dictionary.Fields.LastQty, 0);
-            message.Fields.Set(Fix.Dictionary.Fields.LastPx, 0);
-            message.Fields.Set(Fix.Dictionary.Fields.CumQty, 0);
-            message.Fields.Set(Fix.Dictionary.Fields.AvgPx, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.OrderID, order.OrderID);
+            message.Fields.Set(FIX_5_0SP2.Fields.ExecID, Session.NextExecId.ToString());
+            message.Fields.Set(FIX_5_0SP2.Fields.LastQty, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.LastPx, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.CumQty, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.AvgPx, 0);
 
-            if (Session.Version.BeginString != Fix.Dictionary.Versions.FIX_4_0.BeginString)
+            if (Session.Version.BeginString != "FIX.4.0")
             {
-                message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.ExecType.New);
-                message.Fields.Set(Fix.Dictionary.Fields.LeavesQty, order.OrderQty);
+                message.Fields.Set(FIX_5_0SP2.ExecType.New);
+                message.Fields.Set(FIX_5_0SP2.Fields.LeavesQty, order.OrderQty);
             }
 
             if (Session.Version.BeginString.StartsWith("FIX.4."))
             {
-                message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.ExecTransType, Fix.Dictionary.FIX_4_0.ExecTransType.New);
+                message.Fields.Set(FIX_4_2.ExecTransType.New);
             }
 
             SelectMessage(message.MsgType);
@@ -1709,43 +1710,43 @@ namespace FixClient
 
         public void RejectOrder(Fix.Order order)
         {
-            Fix.Message message = FindMessage(Fix.Dictionary.Messages.ExecutionReport.MsgType);
+            Fix.Message message = FindMessage(FIX_5_0SP2.Messages.ExecutionReport.MsgType);
 
             if (message == null)
                 return;
 
-            message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, order.ClOrdID);
+            message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, order.ClOrdID);
 
-            if (order.Side.HasValue)
+            if (order.Side is FieldValue sideValue)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
+                message.Fields.Set(sideValue);
             }
 
-            message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
-            message.Fields.Set(Fix.Dictionary.Fields.OrderQty, order.OrderQty);
-            message.Fields.Set(Fix.Dictionary.Fields.OrdStatus, Fix.OrdStatus.Rejected);
+            message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
+            message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, order.OrderQty);
+            message.Fields.Set(FIX_5_0SP2.OrdStatus.Rejected);
 
             if (order.OrderID == null)
             {
                 order.OrderID = Session.NextOrderId.ToString();
             }
 
-            message.Fields.Set(Fix.Dictionary.Fields.OrderID, order.OrderID);
-            message.Fields.Set(Fix.Dictionary.Fields.ExecID, Session.NextExecId.ToString());
-            message.Fields.Set(Fix.Dictionary.Fields.LastQty, 0);
-            message.Fields.Set(Fix.Dictionary.Fields.LastPx, 0);
-            message.Fields.Set(Fix.Dictionary.Fields.CumQty, 0);
-            message.Fields.Set(Fix.Dictionary.Fields.AvgPx, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.OrderID, order.OrderID);
+            message.Fields.Set(FIX_5_0SP2.Fields.ExecID, Session.NextExecId.ToString());
+            message.Fields.Set(FIX_5_0SP2.Fields.LastQty, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.LastPx, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.CumQty, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.AvgPx, 0);
 
-            if (Session.Version.BeginString != Fix.Dictionary.Versions.FIX_4_0.BeginString)
+            if (Session.Version.BeginString != "FIX.4.0")
             {
-                message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.ExecType.Rejected);
-                message.Fields.Set(Fix.Dictionary.Fields.LeavesQty, 0);
+                message.Fields.Set(FIX_5_0SP2.ExecType.Rejected);
+                message.Fields.Set(FIX_5_0SP2.Fields.LeavesQty, 0);
             }
 
             if (Session.Version.BeginString.StartsWith("FIX.4."))
             {
-                message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.ExecTransType, Fix.Dictionary.FIX_4_0.ExecTransType.New);
+                message.Fields.Set(FIX_4_2.ExecTransType.New);
             }
 
             SelectMessage(message.MsgType);
@@ -1753,51 +1754,51 @@ namespace FixClient
 
         public void ReportOrder(Fix.Order order)
         {
-            Fix.Message message = FindMessage(Fix.Dictionary.Messages.ExecutionReport.MsgType);
+            Fix.Message message = FindMessage(FIX_5_0SP2.Messages.ExecutionReport.MsgType);
 
             if (message == null)
                 return;
 
-            message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, order.ClOrdID);
+            message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, order.ClOrdID);
 
-            if (order.Side.HasValue)
+            if (order.Side is FieldValue sideValue)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
+                message.Fields.Set(sideValue);
             }
 
-            message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
-            message.Fields.Set(Fix.Dictionary.Fields.OrderQty, order.OrderQty);
-            message.Fields.Set(Fix.Dictionary.Fields.OrdStatus, Fix.OrdStatus.Filled);
+            message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
+            message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, order.OrderQty);
+            message.Fields.Set(FIX_5_0SP2.OrdStatus.Filled);
 
             if (order.OrderID == null)
             {
                 order.OrderID = Session.NextOrderId.ToString();
             }
 
-            message.Fields.Set(Fix.Dictionary.Fields.OrderID, order.OrderID);
-            message.Fields.Set(Fix.Dictionary.Fields.ExecID, Session.NextExecId.ToString());
-            message.Fields.Set(Fix.Dictionary.Fields.LastQty, order.LeavesQty ?? order.OrderQty);
-            message.Fields.Set(Fix.Dictionary.Fields.LastPx, order.Price ?? 0);
-            message.Fields.Set(Fix.Dictionary.Fields.CumQty, order.OrderQty);
-            message.Fields.Set(Fix.Dictionary.Fields.AvgPx, order.Price ?? 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.OrderID, order.OrderID);
+            message.Fields.Set(FIX_5_0SP2.Fields.ExecID, Session.NextExecId.ToString());
+            message.Fields.Set(FIX_5_0SP2.Fields.LastQty, order.LeavesQty ?? order.OrderQty);
+            message.Fields.Set(FIX_5_0SP2.Fields.LastPx, order.Price ?? 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.CumQty, order.OrderQty);
+            message.Fields.Set(FIX_5_0SP2.Fields.AvgPx, order.Price ?? 0);
 
-            if (Session.Version.BeginString != Fix.Dictionary.Versions.FIX_4_0.BeginString)
+            if (Session.Version.BeginString != "FIX.4.0")
             {
-                if (Session.Version.BeginString == Fix.Dictionary.Versions.FIX_4_1.BeginString ||
-                    Session.Version.BeginString == Fix.Dictionary.Versions.FIX_4_2.BeginString)
+                if (Session.Version.BeginString == "FIX.4.1" ||
+                    Session.Version.BeginString == "FIX.4.2")
                 {
-                    message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.Dictionary.FIX_4_2.ExecType.Fill);
+                    message.Fields.Set(FIX_4_2.ExecType.Fill);
                 }
                 else
                 {
-                    message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.Dictionary.FIX_5_0.ExecType.Trade);
+                    message.Fields.Set(FIX_5_0SP2.ExecType.Trade);
                 }
-                message.Fields.Set(Fix.Dictionary.Fields.LeavesQty, 0);
+                message.Fields.Set(FIX_5_0SP2.Fields.LeavesQty, 0);
             }
 
             if (Session.Version.BeginString.StartsWith("FIX.4."))
             {
-                message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.ExecTransType, Fix.Dictionary.FIX_4_0.ExecTransType.New);
+                message.Fields.Set(FIX_4_2.ExecTransType.New);
             }
 
             SelectMessage(message.MsgType);
@@ -1832,43 +1833,43 @@ namespace FixClient
 
         public void UnsolicitedCancelOrder(Fix.Order order)
         {
-            Fix.Message message = FindMessage(Fix.Dictionary.Messages.ExecutionReport.MsgType);
+            Fix.Message message = FindMessage(FIX_5_0SP2.Messages.ExecutionReport.MsgType);
 
             if (message == null)
                 return;
 
-            message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, order.ClOrdID);
+            message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, order.ClOrdID);
 
-            if (order.Side.HasValue)
+            if (order.Side is FieldValue sideValue)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
+                message.Fields.Set(sideValue);
             }
 
-            message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
-            message.Fields.Set(Fix.Dictionary.Fields.OrderQty, order.OrderQty);
-            message.Fields.Set(Fix.Dictionary.Fields.OrdStatus, Fix.OrdStatus.Canceled);
+            message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
+            message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, order.OrderQty);
+            message.Fields.Set(FIX_5_0SP2.OrdStatus.Canceled);
 
             if (order.OrderID == null)
             {
                 order.OrderID = Session.NextOrderId.ToString();
             }
 
-            message.Fields.Set(Fix.Dictionary.Fields.OrderID, order.OrderID);
-            message.Fields.Set(Fix.Dictionary.Fields.ExecID, Session.NextExecId.ToString());
-            message.Fields.Set(Fix.Dictionary.Fields.LastQty, 0);
-            message.Fields.Set(Fix.Dictionary.Fields.LastPx, 0);
-            message.Fields.Set(Fix.Dictionary.Fields.CumQty, order.OrderQty);
-            message.Fields.Set(Fix.Dictionary.Fields.AvgPx, order.Price ?? 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.OrderID, order.OrderID);
+            message.Fields.Set(FIX_5_0SP2.Fields.ExecID, Session.NextExecId.ToString());
+            message.Fields.Set(FIX_5_0SP2.Fields.LastQty, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.LastPx, 0);
+            message.Fields.Set(FIX_5_0SP2.Fields.CumQty, order.OrderQty);
+            message.Fields.Set(FIX_5_0SP2.Fields.AvgPx, order.Price ?? 0);
 
-            if (Session.Version.BeginString != Fix.Dictionary.Versions.FIX_4_0.BeginString)
+            if (Session.Version.BeginString != "FIX.4.0")
             {
-                message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.Dictionary.FIX_4_2.ExecType.Canceled);
-                message.Fields.Set(Fix.Dictionary.Fields.LeavesQty, 0);
+                message.Fields.Set(FIX_4_2.ExecType.Canceled);
+                message.Fields.Set(FIX_5_0SP2.Fields.LeavesQty, 0);
             }
 
             if (Session.Version.BeginString.StartsWith("FIX.4."))
             {
-                message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.ExecTransType, Fix.Dictionary.FIX_4_0.ExecTransType.New);
+                message.Fields.Set(FIX_4_2.ExecTransType.New);
             }
 
             SelectMessage(message.MsgType);
@@ -1876,23 +1877,23 @@ namespace FixClient
 
         public void CancelOrder(Fix.Order order)
         {
-            Fix.Message message = FindMessage(Fix.Dictionary.Messages.OrderCancelRequest.MsgType);
+            Fix.Message message = FindMessage(FIX_5_0SP2.Messages.OrderCancelRequest.MsgType);
 
             if (message == null)
                 return;
 
             UpdateMessage(message, order);
 
-            message.Fields.Set(Fix.Dictionary.Fields.OrigClOrdID, order.ClOrdID);
-            message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, Session.FormatClOrdId(Session.NextClOrdId));
+            message.Fields.Set(FIX_5_0SP2.Fields.OrigClOrdID, order.ClOrdID);
+            message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, Session.FormatClOrdId(Session.NextClOrdId));
             //
             // This field was removed from later versions.
             //
-            Fix.Field beginString = message.Fields.Find(Fix.Dictionary.Fields.BeginString);
+            Fix.Field beginString = message.Fields.Find(FIX_5_0SP2.Fields.BeginString);
 
-            if (beginString != null && beginString.Value == Fix.Dictionary.Versions.FIX_4_0.BeginString)
+            if (beginString != null && beginString.Value == "FIX.4.0")
             {
-                message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.CxlType, "F");
+                message.Fields.Set(FIX_4_2.Fields.CxlType, "F");
             }
             //
             // If we've previously cancelled an order from an OrderList in this session the
@@ -1901,7 +1902,7 @@ namespace FixClient
             //
             if (order.ListID == null)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.ListID, "");
+                message.Fields.Set(FIX_5_0SP2.Fields.ListID, "");
             }
 
             SelectMessage(message.MsgType);
@@ -1909,15 +1910,15 @@ namespace FixClient
 
         public void AmendOrder(Fix.Order order)
         {
-            Fix.Message message = FindMessage(Fix.Dictionary.Messages.OrderCancelReplaceRequest.MsgType);
+            Fix.Message message = FindMessage(FIX_5_0SP2.Messages.OrderCancelReplaceRequest.MsgType);
 
             if (message == null)
                 return;
 
             UpdateMessage(message, order);
 
-            message.Fields.Set(Fix.Dictionary.Fields.OrigClOrdID, order.ClOrdID);
-            message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, Session.FormatClOrdId(Session.NextClOrdId));
+            message.Fields.Set(FIX_5_0SP2.Fields.OrigClOrdID, order.ClOrdID);
+            message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, Session.FormatClOrdId(Session.NextClOrdId));
             //
             // This field is not required in OrderList but it is in OrderCancelReplaceRequest so set it
             // to a default if it was not set.
@@ -1936,7 +1937,7 @@ namespace FixClient
             //
             if (order.ListID == null)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.ListID, "");
+                message.Fields.Set(FIX_5_0SP2.Fields.ListID, "");
             }
 
             SelectMessage(message.MsgType);
@@ -1944,7 +1945,7 @@ namespace FixClient
 
         public void OrderStatus(Fix.Order order)
         {
-            Fix.Message message = FindMessage(Fix.Dictionary.Messages.OrderStatusRequest.MsgType);
+            Fix.Message message = FindMessage(FIX_5_0SP2.Messages.OrderStatusRequest.MsgType);
 
             if (message == null)
                 return;
@@ -1956,36 +1957,36 @@ namespace FixClient
 
         public void ListExecute(string listId)
         {
-            Fix.Message message = FindMessage(Fix.Dictionary.Messages.ListExecute.MsgType);
+            Fix.Message message = FindMessage(FIX_5_0SP2.Messages.ListExecute.MsgType);
 
             if (message == null)
                 return;
 
-            message.Fields.Set(Fix.Dictionary.Fields.ListID, listId);
+            message.Fields.Set(FIX_5_0SP2.Fields.ListID, listId);
 
             SelectMessage(message.MsgType);
         }
 
         public void ListStatus(string listId)
         {
-            Fix.Message message = FindMessage(Fix.Dictionary.Messages.ListStatusRequest.MsgType);
+            Fix.Message message = FindMessage(FIX_5_0SP2.Messages.ListStatusRequest.MsgType);
 
             if (message == null)
                 return;
 
-            message.Fields.Set(Fix.Dictionary.Fields.ListID, listId);
+            message.Fields.Set(FIX_5_0SP2.Fields.ListID, listId);
 
             SelectMessage(message.MsgType);
         }
 
         public void ListCancel(string listId)
         {
-            Fix.Message message = FindMessage(Fix.Dictionary.Messages.ListCancelRequest.MsgType);
+            Fix.Message message = FindMessage(FIX_5_0SP2.Messages.ListCancelRequest.MsgType);
 
             if (message == null)
                 return;
 
-            message.Fields.Set(Fix.Dictionary.Fields.ListID, listId);
+            message.Fields.Set(FIX_5_0SP2.Fields.ListID, listId);
 
             SelectMessage(message.MsgType);
         }

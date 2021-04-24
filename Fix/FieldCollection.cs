@@ -238,7 +238,51 @@ namespace Fix
 
         public int Count => _fields.Count;
 
-        public bool Contains(Dictionary.VersionField field)
+        public bool TryGetValue(Dictionary.VersionField definition, out Field result)
+        {
+            return TryGetValue(definition.Tag, out result);
+        }
+
+        public bool TryGetValue(int tag, out Field result)
+        {
+            if (_fields is null)
+            {
+                result = Field.Invalid;
+                return false;
+            }
+
+            var found = (from field in _fields
+                         where field.Tag == tag
+                         select field).FirstOrDefault();
+
+            if (found is null)
+            {
+                result = Field.Invalid;
+                return false;
+            }
+
+            result = found;
+
+            return true;
+        }
+        public Field? TryGetValue(Dictionary.VersionField definition)
+
+        {
+            return TryGetValue(definition.Tag);
+        }
+
+        public Field? TryGetValue(int tag)
+        {
+            if (TryGetValue(tag, out var field))
+            {
+                return field;
+            }
+
+            return null;
+        }
+
+
+        public bool Contains(VersionField field)
         {
             return Find(field) != null;
         }
@@ -250,14 +294,8 @@ namespace Fix
                     select field).FirstOrDefault();
         }
 
-        public Field Find(Dictionary.VersionField definition)
-        {
-            Field result = Find(definition.Tag);
-            if (result != null)
-                result.Definition = definition;
-            return result;
-        }
-
+        public Field Find(VersionField definition) => Find(definition.Tag);
+        
         public Field FindFrom(int tag, int index)
         {
             int temp = index;
@@ -285,13 +323,7 @@ namespace Fix
             return FindFrom(definition, ref temp);
         }
 
-        public Field FindFrom(Dictionary.VersionField definition, ref int index)
-        {
-            Field result = FindFrom(definition.Tag, ref index);
-            if (result != null)
-                result.Definition = definition;
-            return result;
-        }
+        public Field FindFrom(Dictionary.VersionField definition, ref int index) => FindFrom(definition.Tag, ref index);
 
         public Field this[int index]
         {

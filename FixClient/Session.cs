@@ -286,7 +286,7 @@ namespace FixClient
 
         public override void UpdateReadonlyAttributes()
         {
-            SetReadOnly("DefaultApplVerId", BeginString.BeginString != Fix.Dictionary.Versions.FIXT_1_1.BeginString);
+            SetReadOnly("DefaultApplVerId", BeginString.BeginString != "FIXT.1.1");
             SetReadOnly("BindHost", Behaviour == Fix.Behaviour.Acceptor);
             SetReadOnly("BindPort", Behaviour == Fix.Behaviour.Acceptor);
             SetReadOnly("NextClOrdId", OrderBehaviour == Fix.Behaviour.Acceptor);
@@ -677,7 +677,7 @@ namespace FixClient
                         continue;
                     foreach (string fieldEntry in (JArray)property.Value)
                     {
-                        Fix.Dictionary.Field field = message.Fields.FirstOrDefault(item => item.Name == fieldEntry);
+                        var field = message.Fields.FirstOrDefault(item => item.Name == fieldEntry);
                         if (field == null)
                             continue;
                         FieldVisible(message.MsgType, field.Tag, false);

@@ -181,53 +181,84 @@ namespace Fix
 
         #region Object
 
-        public override string ToString()
+        public MessageDescription Describe(Dictionary.Version? version = null)
         {
-            var builder = new StringBuilder(Incoming ? "Incoming" : "Outgoing");
+            if (version == null)
+            {
+                if (Fields.TryGetValue(FIX_5_0SP2.Fields.BeginString, out var beginString))
+                {
+                    version = Dictionary.Versions[beginString.Value];
+                }
 
-            builder.Append("\r\n{\r\n");
+                if (version == null)
+                {
+                    version = Versions.Default;
+                }
+            }
 
-            //
-            // Determine the width of the widest field name so we can format the log message nicely.
-            //
+            var messageDefinition = version.Messages[MsgType];
+
+            var description = new MessageDescription
+            {
+                Version = version,
+                Definition = messageDefinition,
+                MsgType = MsgType,
+                MsgTypeDescription = version.Messages[MsgType]?.Name,
+                Fields = from field in Fields select field.Describe(messageDefinition)
+            };
+
+            if (Fields.TryGetValue(FIX_5_0SP2.Fields.SendingTime, out var sendingTime))
+            {
+                try
+                {
+                    description.SendingTime = (DateTime)sendingTime;
+                }
+                catch
+                {
+                }
+            }
+
+            return description;
+        }
+
+        public string PrettyPrint()
+        {
+            var stream = new MemoryStream();
+            PrettyPrint(stream);
+            return Encoding.UTF8.GetString(stream.GetBuffer());
+        }
+
+        public void PrettyPrint(Stream stream)
+        {
+            using var writer = new StreamWriter(stream, Encoding.ASCII, 4096, true);
+            var description = Describe();
+
+            writer.WriteLine(description.MsgTypeDescription + " (" + (Incoming ? "incoming" : "outgoing") + ")\n{");
+
             int widestName = 0;
 
-            foreach (Field field in Fields)
+            foreach (var field in description.Fields)
             {
-                if (field.Definition == null)
+                if (field.Name?.Length > widestName)
                 {
-                    field.Definition = FIX_5_0SP2.Fields[field.Tag - 1];
-                    if (field.Definition == null)
-                    {
-                        // Dictionary.Fields is the latest version so try an older version to catch deprecated fields. 
-                        // TODO - Walk the versions in reverse order until we find a match
-                        field.Definition = Dictionary.FIX_4_2.Fields[field.Tag - 1];
-                        if (field.Definition == null)
-                        {
-                            continue;
-                        }
-                    }
+                    widestName = field.Name.Length;
                 }
-                int length = field.Definition.Name.Length;
-                if (length > widestName)
-                    widestName = length;
             }
 
-            foreach (Field field in Fields)
+            foreach (var field in description.Fields)
             {
-                string name = field.Definition == null ? string.Empty : field.Definition.Name;
-                string description = field.Tag == FIX_5_0SP2.Fields.MsgType.Tag ? Definition?.Name : field.ValueDescription;
-                builder.AppendFormat("    {0} {1} - {2}{3}\r\n",
-                                     name.PadLeft(widestName),
-                                     string.Format("({0})", field.Tag).PadLeft(6),
-                                     field.Value,
-                                     string.IsNullOrEmpty(description) ? string.Empty : " - " + description);
+                writer.WriteLine("    {0} {1} - {2}{3}",
+                                 (field.Name ?? "").PadLeft(widestName),
+                                 string.Format("({0})", field.Tag).PadLeft(6),
+                                 field.Value,
+                                 string.IsNullOrEmpty(field.Description) ? string.Empty : " - " + field.Description);
             }
 
-            builder.Append('}');
-
-            return builder.ToString();
+            writer.WriteLine("}");
         }
+
+        public override string ToString() => PrettyPrint();
+       
 
         #endregion
 

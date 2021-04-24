@@ -9,13 +9,13 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
+using static Fix.Dictionary;
 
 namespace FixClient
 {
@@ -155,37 +155,41 @@ namespace FixClient
 
             Fix.Field field = dataRow.Field;
 
-            if (field.Definition == null)
-                {
+            var definition = FIX_5_0SP2.Fields[field.Tag];
+
+            if (definition == null)
+            {
                 return null;
             }
 
+            /*
             Type type = field.Definition.EnumeratedType;
 
             if (type == null)
-                {
+            {
                 return null;
             }
 
             string name = type.GetEnumName(value);
 
             if (string.IsNullOrEmpty(name))
-                {
+            {
                 return null;
             }
 
             MemberInfo[] info = type.GetMember(name);
 
             if (info.Length < 1)
-                {
+            {
                 return null;
             }
 
             var attributes = info[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             string description = ((DescriptionAttribute)attributes[0]).Description;
+            */
 
-            return string.Join("\n", description.SplitInParts(80));
+            return string.Join("\n", definition.Description.SplitInParts(80));
         }
 
         protected override void OnCellToolTipTextNeeded(DataGridViewCellToolTipTextNeededEventArgs e)

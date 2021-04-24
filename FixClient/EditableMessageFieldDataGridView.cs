@@ -9,11 +9,11 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using static Fix.Dictionary;
 
 namespace FixClient
 {
@@ -100,7 +100,9 @@ namespace FixClient
 
             Fix.Field field = FieldAtIndex(e.RowIndex);
 
-            if (field.Definition == null || field.Definition.EnumeratedType == null)
+            var definition = FIX_5_0SP2.Fields[field.Tag];
+
+            if (definition == null || definition.Values.Count == 0)
             {
                 e.Cancel = true;
             }
@@ -121,23 +123,33 @@ namespace FixClient
             {
                 Fix.Field field = FieldAtIndex(index);
 
-                if (field == null || field.Definition == null)
+                if (field is null)
                     continue;
 
-                Type enumType = field.Definition.EnumeratedType;
+                var definition = FIX_5_0SP2.Fields[field.Tag];
 
-                if (enumType == null)
+                if (definition == null)
+                    continue;
+
+                //Type enumType = field.Definition.EnumeratedType;
+
+                if (definition.Values.Count == 0)
                     continue;
 
                 DataGridViewRow row = Rows[index];
 
                 if (row.Cells[FieldDataTable.ColumnDescription] is DataGridViewComboBoxCell cell)
                 {
-                    var collection = new EnumDescriptionCollection(enumType);
+                    //var collection = new EnumDescriptionCollection(enumType);
                     cell.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
                     cell.ReadOnly = false;
-                    cell.DataSource = collection;
+                    // TODO
+                    //cell.DataSource = definition.Values;
 
+                    InternalChange = true;
+                    cell.Value = new EnumDescription(definition.Name, field.Value);
+                    InternalChange = false;
+                    /*
                     if (EnumTypeHasNumericValues(enumType))
                     {
                         if (int.TryParse(field.Value, out int value))
@@ -156,6 +168,7 @@ namespace FixClient
                             InternalChange = false;
                         }
                     }
+                    */
                 }
             }
         }
@@ -165,8 +178,8 @@ namespace FixClient
         static bool EnumTypeHasNumericValues(Type enumType)
         {
             // TODO - we need a better way of doing type equality for version specific enums against the global definitions
-            return enumType.Name == typeof(Fix.TrdType).Name ||
-                   enumType.Name == typeof(Fix.SessionStatus).Name;
+            return enumType.Name == typeof(FIX_5_0SP2.TrdType).Name ||
+                   enumType.Name == typeof(FIX_5_0SP2.SessionStatus).Name;
         }
 
         protected override void OnCellValueChanged(DataGridViewCellEventArgs e)
@@ -194,7 +207,7 @@ namespace FixClient
             int index = table.Rows.IndexOf(dataRow);
 
             Fix.Field field = dataRow.Field;
-            Type enumType = field.Definition?.EnumeratedType;
+            //Type enumType = field.Definition?.EnumeratedType;
 
             if (column.Name == FieldDataTable.ColumnDescription)
             {
@@ -202,6 +215,7 @@ namespace FixClient
                 // The user has selected an item in a combo box for an field with an enumerated value so
                 // update the source field as well.
                 //
+                /* TODO
                 object raw = CurrentCell.Value;
                 string converted = CurrentCell.Value.ToString();
 
@@ -219,6 +233,7 @@ namespace FixClient
 
                 dataRow[FieldDataTable.ColumnValue] = converted;
                 Message.Fields[index].Value = converted;
+                */
                 return;
             }
 
@@ -229,16 +244,18 @@ namespace FixClient
 
             string value = cell.Value == null ? "" : cell.Value.ToString().Trim();
 
-            if (!string.IsNullOrEmpty(value) && field.Definition != null)
+            var definition = FIX_5_0SP2.Fields[field.Tag];
+
+            if (!string.IsNullOrEmpty(value) && definition != null)
             {
-                if (field.Definition.DataType == Fix.Dictionary.DataTypes.Int ||
-                    field.Definition.DataType == Fix.Dictionary.DataTypes.Length ||
-                    field.Definition.DataType == Fix.Dictionary.DataTypes.SeqNum)
+                if (definition.DataType == FIX_5_0SP2.DataTypes.Int.Name ||
+                    definition.DataType == FIX_5_0SP2.DataTypes.Length.Name ||
+                    definition.DataType == FIX_5_0SP2.DataTypes.SeqNum.Name)
                 {
                     if (!int.TryParse(value, out var _))
                     {
                         MessageBox.Show(this,
-                                        string.Format("{0} must be an integer", field.Definition.Name),
+                                        string.Format("{0} must be an integer", definition.Name),
                                         Application.ProductName,
                                         MessageBoxButtons.OK,
                                         MessageBoxIcon.Information);
@@ -252,7 +269,7 @@ namespace FixClient
             //
             // The bodylength changes whenever the message fields change so update it.
             //
-            if (field.Tag == Fix.Dictionary.Fields.BodyLength.Tag)
+            if (field.Tag == FIX_5_0SP2.Fields.BodyLength.Tag)
                 return;
 
             foreach (DataGridViewRow r in Rows)
@@ -260,7 +277,7 @@ namespace FixClient
                 var rv = r.DataBoundItem as DataRowView;
                 dataRow = rv.Row as FieldDataRow;
 
-                if (dataRow.Field.Tag == Fix.Dictionary.Fields.BodyLength.Tag)
+                if (dataRow.Field.Tag == FIX_5_0SP2.Fields.BodyLength.Tag)
                 {
                     dataRow[FieldDataTable.ColumnValue] = Message.ComputeBodyLength();
                     break;
@@ -269,14 +286,15 @@ namespace FixClient
             //
             // Enumerated values such as 'OrderSingle.Side' have a description.
             //
-            if (field.Definition == null)
+            if (definition == null)
                 return;
 
             if (row.Cells[FieldDataTable.ColumnDescription] is not DataGridViewComboBoxCell comboCell)
                 return;
 
-            if (CurrentCell != null && CurrentCell.Value != DBNull.Value && enumType != null)
+            if (CurrentCell != null && CurrentCell.Value != DBNull.Value && definition.Values.Count > 0)
             {
+                /* TODO
                 comboCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
                 comboCell.FlatStyle = FlatStyle.Flat;
                 comboCell.ReadOnly = false;
@@ -306,6 +324,7 @@ namespace FixClient
                         comboCell.Value = null;
                     }
                 }
+                */
             }
             else
             {
