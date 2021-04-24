@@ -9,10 +9,10 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Threading;
+using static Fix.Dictionary;
 
 namespace FixTests
 {
@@ -82,8 +82,8 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon);
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logon);
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon);
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logon);
 
             AcceptorStateChange(Fix.State.LoggedOn);
             InitiatorStateChange(Fix.State.LoggedOn);
@@ -104,9 +104,9 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logout, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logout, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.Text, string.Format("NextExpectedMsgSeqNum too high, expecting 1 but received 1086"))
+                new Fix.Field(FIX_5_0SP2.Fields.Text, string.Format("NextExpectedMsgSeqNum too high, expecting 1 but received 1086"))
             });
 
             AcceptorStateChange(Fix.State.Disconnected);
@@ -123,9 +123,9 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logout, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logout, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.Text, string.Format("NextExpectedMsgSeqNum too high, expecting 1 but received 1086"))
+                new Fix.Field(FIX_5_0SP2.Fields.Text, string.Format("NextExpectedMsgSeqNum too high, expecting 1 but received 1086"))
             });
 
             AcceptorStateChange(Fix.State.Disconnected);

@@ -76,44 +76,44 @@ namespace Fix
             Value = value;
         }
 
-        public Field(Dictionary.VersionField definition)
+        public Field(VersionField definition)
         {
             Definition = definition;
             Tag = definition.Tag;
         }
 
-        public Field(Dictionary.VersionField definition, string value)
+        public Field(VersionField definition, string value)
         : this(definition.Tag, value)
         {
             Definition = definition;
         }
 
-        public Field(Dictionary.VersionField definition, bool value)
+        public Field(VersionField definition, bool value)
             : this(definition.Tag, value)
         {
             Definition = definition;
         }
 
-        public Field(Dictionary.VersionField definition, int value)
+        public Field(VersionField definition, int value)
         : this(definition.Tag, value.ToString())
         {
             Definition = definition;
         }
 
-        public Field(Dictionary.VersionField definition, decimal value)
+        public Field(VersionField definition, decimal value)
         : this(definition.Tag, value.ToString())
         {
             Definition = definition;
         }
 
-        public Field(Dictionary.FieldValue value)
+        public Field(FieldValue value)
         : this(value.Tag, value.Value)
         {
         }
 
         public int Tag { get; }
         public string Value { get; set; }
-        public Dictionary.VersionField Definition { get; set; }
+        public VersionField Definition { get; set; }
         public bool Data { get; set; }
 
         public static explicit operator bool(Field field)
@@ -163,8 +163,58 @@ namespace Fix
             return result;
         }
 
-        public static bool operator ==(Field left, FieldValue right) => left.Tag == right.Tag && left.Value == right.Value;
-        public static bool operator !=(Field left, FieldValue right) => left.Tag != right.Tag || left.Value != right.Value;
+        public static explicit operator FieldValue?(Field field)
+        {
+            if (field is null)
+            {
+                return null;
+            }
+
+            return new FieldValue(field.Tag, "", field.Value);
+        }
+
+        public static bool operator ==(Field left, FieldValue right)
+        {
+            return (left, right) switch
+            {
+                (null, null) => true,
+                (Field, null) => false,
+                (null, FieldValue) => false,
+                (Field field, FieldValue value) => field.Tag == value.Tag && field.Value == value.Value
+            };
+        }
+
+        public static bool operator !=(Field left, FieldValue right) => !(left == right);
+     
+        public override bool Equals(object other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(other, this))
+            {
+                return true;
+            }
+
+            if (other is Field field)
+            {
+                return Tag == field.Tag && Value == field.Value;
+            }
+
+            if (other is FieldValue fieldValue)
+            {
+                return Tag == fieldValue.Tag && Value == fieldValue.Value;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         /*
         public static explicit operator Side?(Field field)
@@ -327,6 +377,20 @@ namespace Fix
         {
             get
             {
+                if (FIX_5_0SP2.Fields.TryGetValue(Tag, out var definition))
+                {
+                    if (definition.Values.TryGetValue(Value, out var description))
+                    {
+                        return description.Name;
+                    }
+                    
+                    //result.Name = globalDefinition.Name;
+                    //if (value is string fieldValue)
+                    //{
+                    //    result.Description = DescribeVersionFieldValue(globalDefinition, fieldValue);
+                    //}
+                }
+
                 /*
                 if (Definition?.EnumeratedType == null)
                     return null;

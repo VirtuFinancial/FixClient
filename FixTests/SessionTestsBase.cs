@@ -9,13 +9,13 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
+using static Fix.Dictionary;
 
 namespace FixTests
 {
@@ -130,61 +130,61 @@ namespace FixTests
         {
             // Always specify the comp id's using the initiator values because we have tests that
             // don't set them in the acceptor.
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.SenderCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.TargetCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.SenderCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.TargetCompId)
             });
 
-            SentFromAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            SentFromAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.TargetCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.SenderCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.TargetCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.SenderCompId)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.TargetCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.SenderCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.TargetCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.SenderCompId)
             });
 
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            SentFromAcceptor(Fix.Dictionary.Messages.TestRequest, new[]
+            SentFromAcceptor(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.TargetCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.SenderCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.TargetCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.SenderCompId)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.TestRequest, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.TargetCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.SenderCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.TargetCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.SenderCompId)
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.TestRequest, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.SenderCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.TargetCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.SenderCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.TargetCompId)
             });
 
-            SentFromAcceptor(Fix.Dictionary.Messages.Heartbeat, new[]
+            SentFromAcceptor(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.TargetCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.SenderCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.TargetCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.SenderCompId)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.TargetCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.SenderCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.TargetCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.SenderCompId)
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.SenderCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.TargetCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.SenderCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.TargetCompId)
             });
         }
 
@@ -212,9 +212,11 @@ namespace FixTests
 
         static string MsgTypeName(string msgType)
         {
-            Fix.Dictionary.Message definition = Fix.Dictionary.Messages[msgType];
+            var definition = FIX_5_0SP2.Messages[msgType];
             if (definition == null)
+            {
                 return msgType;
+            }
             return definition.Name;
         }
 
@@ -273,7 +275,7 @@ namespace FixTests
             {
                 foreach (Fix.Field field in fields)
                 {
-                    if (field.Tag == Fix.Dictionary.Fields.MsgSeqNum.Tag)
+                    if (field.Tag == FIX_5_0SP2.Fields.MsgSeqNum.Tag)
                     {
                         message.Fields.Set(field.Tag, field.Value);
                     }

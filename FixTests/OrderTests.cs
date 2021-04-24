@@ -9,9 +9,9 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using static Fix.Dictionary;
 
 namespace FixTests
 {
@@ -22,7 +22,7 @@ namespace FixTests
         [ExpectedException(typeof(ArgumentException))]
         public void TestConstructorWrongMsgType()
         {
-            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.ExecutionReport.MsgType };
+            var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.ExecutionReport.MsgType };
             var order = new Fix.Order(message);
             Assert.IsNotNull(order);
         }
@@ -31,7 +31,7 @@ namespace FixTests
         [ExpectedException(typeof(ArgumentException))]
         public void TestConstructorNoSenderCompId()
         {
-            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType };
+            var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.NewOrderSingle.MsgType };
             var order = new Fix.Order(message);
             Assert.IsNotNull(order);
         }
@@ -40,8 +40,8 @@ namespace FixTests
         [ExpectedException(typeof(ArgumentException))]
         public void TestConstructorNoTargetCompId()
         {
-            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType };
-            message.Fields.Set(Fix.Dictionary.Fields.SenderCompID, "SENDER");
+            var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.NewOrderSingle.MsgType };
+            message.Fields.Set(FIX_5_0SP2.Fields.SenderCompID, "SENDER");
             var order = new Fix.Order(message);
             Assert.IsNotNull(order);
         }
@@ -50,9 +50,9 @@ namespace FixTests
         [ExpectedException(typeof(ArgumentException))]
         public void TestConstructorNoSymbol()
         {
-            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType };
-            message.Fields.Set(Fix.Dictionary.Fields.SenderCompID, "SENDER");
-            message.Fields.Set(Fix.Dictionary.Fields.TargetCompID, "TARGET");
+            var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.NewOrderSingle.MsgType };
+            message.Fields.Set(FIX_5_0SP2.Fields.SenderCompID, "SENDER");
+            message.Fields.Set(FIX_5_0SP2.Fields.TargetCompID, "TARGET");
             var order = new Fix.Order(message);
             Assert.IsNotNull(order);
         }
@@ -61,10 +61,10 @@ namespace FixTests
         [ExpectedException(typeof(ArgumentException))]
         public void TestConstructorNoClOrdId()
         {
-            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType };
-            message.Fields.Set(Fix.Dictionary.Fields.SenderCompID, "SENDER");
-            message.Fields.Set(Fix.Dictionary.Fields.TargetCompID, "TARGET");
-            message.Fields.Set(Fix.Dictionary.Fields.Symbol, "BHP");
+            var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.NewOrderSingle.MsgType };
+            message.Fields.Set(FIX_5_0SP2.Fields.SenderCompID, "SENDER");
+            message.Fields.Set(FIX_5_0SP2.Fields.TargetCompID, "TARGET");
+            message.Fields.Set(FIX_5_0SP2.Fields.Symbol, "BHP");
             var order = new Fix.Order(message);
             Assert.IsNotNull(order);
         }
@@ -72,12 +72,12 @@ namespace FixTests
         [TestMethod]
         public void TestConstructorAllMinimumRequirementsMet()
         {
-            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType };
-            message.Fields.Set(Fix.Dictionary.Fields.SenderCompID, "SENDER");
-            message.Fields.Set(Fix.Dictionary.Fields.TargetCompID, "TARGET");
-            message.Fields.Set(Fix.Dictionary.Fields.Symbol, "BHP");
-            message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, "1.2.3");
-            message.Fields.Set(Fix.Dictionary.Fields.OrderQty, 5000);
+            var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.NewOrderSingle.MsgType };
+            message.Fields.Set(FIX_5_0SP2.Fields.SenderCompID, "SENDER");
+            message.Fields.Set(FIX_5_0SP2.Fields.TargetCompID, "TARGET");
+            message.Fields.Set(FIX_5_0SP2.Fields.Symbol, "BHP");
+            message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, "1.2.3");
+            message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, 5000);
             var order = new Fix.Order(message);
             Assert.IsNotNull(order);
             Assert.AreEqual("SENDER", order.SenderCompID);

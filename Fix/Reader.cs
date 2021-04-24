@@ -137,7 +137,7 @@ namespace Fix
                 VersionField definition = null;
 
                 if (ValidateDataFields &&
-                    FIX_5_0SP2.Fields.TryGetValue(_tag.ToString(), out definition) &&
+                    FIX_5_0SP2.Fields.TryGetValue(int.Parse(_tag.ToString()), out definition) &&
                     definition != null &&
                     definition.DataType == FIX_5_0SP2.DataTypes.data.Name)
                 {

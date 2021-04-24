@@ -9,10 +9,10 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
+using static Fix.Dictionary;
 
 namespace FixTests
 {
@@ -110,9 +110,9 @@ namespace FixTests
                                 }";
             Fix.Message message = Fix.Message.Parse(text);
             Assert.IsNotNull(message);
-            Fix.Field msgType = message.Fields.Find(Fix.Dictionary.Fields.MsgType);
+            Fix.Field msgType = message.Fields.Find(FIX_5_0SP2.Fields.MsgType);
             Assert.IsNotNull(msgType);
-            Assert.AreEqual(Fix.Dictionary.Messages.ExecutionReport.MsgType, msgType.Value);
+            Assert.AreEqual(FIX_5_0SP2.Messages.ExecutionReport.MsgType, msgType.Value);
 
         }
     }

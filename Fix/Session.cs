@@ -137,8 +137,8 @@ namespace Fix
 
         public Session()
         {
-            BeginString = Versions["FIXT_1_1"];
-            DefaultApplVerId = Versions["FIX_5_0SP2"];
+            BeginString = Versions["FIXT.1.1"];
+            DefaultApplVerId = Versions["FIX.5.0SP2"];
             HeartBtInt = 30;
             AutoSendingTime = true;
             OutgoingSeqNum = 1;
@@ -305,7 +305,7 @@ namespace Fix
         {
             get
             {
-                if (BeginString.BeginString == "FIXT_1_1")
+                if (BeginString.BeginString == "FIXT.1.1")
                     return DefaultApplVerId;
                 return BeginString;
             }
@@ -361,7 +361,7 @@ namespace Fix
                 message.Fields.Add(new Field(field.Tag, string.Empty));
             }
 
-            if (BeginString.BeginString == "FIXT_1_1" &&
+            if (BeginString.BeginString == "FIXT.1.1" &&
                 message.MsgType != FIX_5_0SP2.Messages.Logon.MsgType)
             {
                 if (definition.Fields.TryGetValue(FIX_5_0SP2.Fields.ApplVerID.Tag, out field))
@@ -433,7 +433,7 @@ namespace Fix
                 logon.Fields.Set(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum, IncomingSeqNum);
             }
 
-            if (BeginString.BeginString == "FIXT_1_1")
+            if (BeginString.BeginString == "FIXT.1.1")
             {
                 logon.Fields.Set(FIX_5_0SP2.Fields.DefaultApplVerID.Tag, DefaultApplVerId.ApplVerID);
             }
@@ -861,7 +861,7 @@ namespace Fix
         {
             OnInformation($"Performing resend from BeginSeqNo = {beginSeqNo} to EndSeqNo {endSeqNo}");
 
-            if (BeginString.BeginString == "FIX_4_0" || BeginString.BeginString == "FIX_4_1")
+            if (BeginString.BeginString == "FIX.4.0" || BeginString.BeginString == "FIX.4.1")
             {
                 //
                 // FIX 4.0 and FIX 4.1 used EndSeqNo 99999 to represent send me everthing
@@ -1168,7 +1168,7 @@ namespace Fix
             logon.Fields.Set(FIX_5_0SP2.EncryptMethod.None);
             logon.Fields.Set(FIX_5_0SP2.Fields.HeartBtInt, HeartBtInt);
 
-            if (BeginString.BeginString == "FIXT_1_1")
+            if (BeginString.BeginString == "FIXT.1.1")
             {
                 logon.Fields.Set(FIX_5_0SP2.Fields.DefaultApplVerID.Tag, DefaultApplVerId.ApplVerID);
             }

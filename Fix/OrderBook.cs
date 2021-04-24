@@ -148,18 +148,15 @@ namespace Fix
                 {
                     result = ProcessOrderCancelReject(message);
                 }
-                else if (message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType/* ||
-                         message.MsgType == FIX_5_0SP2.FIX_4_0.Messages.KodiakWaveOrder.MsgType*/)
+                else if (message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType)
                 {
                     result = ProcessOrderList(message);
                 }
-                else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelReplaceRequest.MsgType/* ||
-                         message.MsgType == FIX_5_0SP2.FIX_4_0.Messages.KodiakWaveOrderCorrectionRequest.MsgType*/)
+                else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelReplaceRequest.MsgType)
                 {
                     result = ProcessOrderCancelReplaceRequest(message);
                 }
-                else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelRequest.MsgType/* ||
-                         message.MsgType == FIX_5_0SP2.FIX_4_0.Messages.KodiakWaveOrderCancelRequest.MsgType*/)
+                else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelRequest.MsgType)
                 {
                     result = ProcessOrderCancelRequest(message);
                 }
@@ -180,7 +177,7 @@ namespace Fix
 
                     if (string.IsNullOrEmpty(message.StatusMessage))
                     {
-                        message.StatusMessage = StatusMessageHeader + " - please send your session to gary.hughes@itg.com so he can improve the error message";
+                        message.StatusMessage = StatusMessageHeader + " - please create an issue here https://github.com/GaryHughes/FixClient/issues and attach your session files";
                     }
                 }
 
@@ -235,14 +232,16 @@ namespace Fix
             }
             */
 
-            Field ordStatus = message.Fields.Find(FIX_5_0SP2.Fields.OrdStatus);
+            Field ordStatusField = message.Fields.Find(FIX_5_0SP2.Fields.OrdStatus);
 
-            if (ordStatus == null)
+            if (ordStatusField == null)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the OrdStatus field is missing";
                 return false;
             }
+
+            var ordStatus = (FieldValue)ordStatusField;
 
             Field ClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID);
 
@@ -257,7 +256,7 @@ namespace Fix
 
             if (ordStatus == FIX_5_0SP2.OrdStatus.Canceled && ClOrdID != null && OrigClOrdID == null)
             {
-                if (ProcessOrdStatusUpdate(message, ClOrdID.Value, new FieldValue(ordStatus.Tag, "", ordStatus.Value)))
+                if (ProcessOrdStatusUpdate(message, ClOrdID.Value, ordStatus))
                     return true;
             }
 
@@ -328,7 +327,7 @@ namespace Fix
                        ordStatus == FIX_5_0SP2.OrdStatus.PendingCancel ||
                        ordStatus == FIX_5_0SP2.OrdStatus.Canceled)
                     {
-                        ProcessOrdStatusUpdate(message, order, new FieldValue(ordStatus.Tag, "", ordStatus.Value));
+                        ProcessOrdStatusUpdate(message, order, ordStatus);
                     }
                     else if (ExecType != null && ExecType.Value == "5")
                     {
@@ -347,6 +346,7 @@ namespace Fix
 
                         replacement.ClOrdID = ClOrdID.Value;
                         replacement.OrigClOrdID = OrigClOrdID.Value;
+                        
 
                         if (ordStatus != FIX_5_0SP2.OrdStatus.Replaced)
                         {
@@ -358,7 +358,7 @@ namespace Fix
                         }
                         else
                         {
-                            replacement.OrdStatus = new Field(FIX_5_0SP2.OrdStatus.New);
+                            replacement.OrdStatus = FIX_5_0SP2.OrdStatus.New;
                         }
 
                         Field OrderQty = message.Fields.Find(FIX_5_0SP2.Fields.OrderQty);
@@ -376,7 +376,7 @@ namespace Fix
                 }
             }
 
-            return ProcessOrdStatusUpdate(message, ClOrdID.Value, new FieldValue(ordStatus.Tag, "", ordStatus.Value));
+            return ProcessOrdStatusUpdate(message, ClOrdID.Value, ordStatus);
         }
 
         bool ProcessOrderCancelReject(Message message)
@@ -421,7 +421,7 @@ namespace Fix
                 message.StatusMessage = StatusMessageHeader + $" because a matching order with ClOrdID = {OrigClOrdID.Value} could not be found";
                 return false;
             }
-            order.OrdStatus = order.PreviousOrdStatus ?? new Field(FIX_5_0SP2.OrdStatus.New);
+            order.OrdStatus = order.PreviousOrdStatus ?? FIX_5_0SP2.OrdStatus.New;
             Field Text = message.Fields.Find(FIX_5_0SP2.Fields.Text);
 
             if (Text != null)
@@ -537,7 +537,7 @@ namespace Fix
             }
 
             order.PreviousOrdStatus = order.OrdStatus;
-            order.OrdStatus = new Field(FIX_5_0SP2.OrdStatus.PendingReplace);
+            order.OrdStatus = FIX_5_0SP2.OrdStatus.PendingReplace;
             order.PendingMessage = message;
             order.NewClOrdID = ClOrdID.Value;
 
@@ -607,7 +607,7 @@ namespace Fix
 
             order.Messages.Add(message);
             order.PreviousOrdStatus = order.OrdStatus;
-            order.OrdStatus = new Field(FIX_5_0SP2.OrdStatus.PendingCancel);
+            order.OrdStatus = FIX_5_0SP2.OrdStatus.PendingCancel;
             order.NewClOrdID = ClOrdID.Value;
 
             // TODO
@@ -648,7 +648,7 @@ namespace Fix
         {
             if (order.OrdStatus != FIX_5_0SP2.OrdStatus.PendingReplace || (order.OrdStatus == FIX_5_0SP2.OrdStatus.PendingReplace && status != FIX_5_0SP2.OrdStatus.PendingCancel))
             {
-                order.OrdStatus = new Field(status);
+                order.OrdStatus = status;
             }
 
             if (order.OrdStatus != FIX_5_0SP2.OrdStatus.PendingCancel &&
@@ -737,6 +737,8 @@ namespace Fix
                 }
             }
 
+            //Orders.Add(KeyForOrder(order), order);
+            order.UpdateKey();
             Orders.Add(order);
 
             OnOrderInserted(order);
@@ -791,10 +793,10 @@ namespace Fix
 
             if (order.LeavesQty.HasValue)
             {
-                if (order.LeavesQty > 0 && order.OrdStatus == FIX_5_0SP2.OrdStatus.Filled ||
-                   order.LeavesQty < order.OrderQty && order.OrdStatus == FIX_5_0SP2.OrdStatus.New)
+                if (order.LeavesQty > 0 && order.OrdStatus.Value == FIX_5_0SP2.OrdStatus.Filled.Value ||
+                   order.LeavesQty < order.OrderQty && order.OrdStatus.Value == FIX_5_0SP2.OrdStatus.New.Value)
                 {
-                    order.OrdStatus = new Fix.Field(FIX_5_0SP2.OrdStatus.PartiallyFilled);
+                    order.OrdStatus = FIX_5_0SP2.OrdStatus.PartiallyFilled;
                 }
             }
 

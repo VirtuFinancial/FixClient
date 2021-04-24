@@ -9,9 +9,9 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
+using static Fix.Dictionary;
 
 namespace FixTests
 {
@@ -77,7 +77,7 @@ namespace FixTests
         [TestMethod]
         public void TestMsgTypeIsSetFromDefinition()
         {
-            var message = new Fix.Message(Fix.Dictionary.Messages.NewOrderSingle);
+            var message = new Fix.Message(FIX_5_0SP2.Messages.NewOrderSingle);
             Assert.AreEqual("D", message.MsgType);
         }
     }

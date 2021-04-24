@@ -20,6 +20,7 @@ using System.Net.Sockets;
 using System.IO;
 using System.Timers;
 using static System.Console;
+using static Fix.Dictionary;
 
 namespace FixPersistentSessionPerformanceTest
 {
@@ -47,8 +48,8 @@ namespace FixPersistentSessionPerformanceTest
         {
             for (long testRequestId = 1; testRequestId <= long.MaxValue; ++testRequestId)
             {
-                var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.TestRequest.MsgType };
-                message.Fields.Set(Fix.Dictionary.Fields.TestReqID.Tag, testRequestId);
+                var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.TestRequest.MsgType };
+                message.Fields.Set(FIX_5_0SP2.Fields.TestReqID.Tag, testRequestId);
                 Initiator.Send(message);
             }
         }

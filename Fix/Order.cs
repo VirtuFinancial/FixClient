@@ -82,8 +82,8 @@ namespace Fix
             }
 
             Price = (decimal?)message.Fields.Find(FIX_5_0SP2.Fields.Price);
-            Side = message.Fields.Find(FIX_5_0SP2.Fields.Side);
-            TimeInForce = message.Fields.Find(FIX_5_0SP2.Fields.TimeInForce);
+            Side = (FieldValue?)message.Fields.Find(FIX_5_0SP2.Fields.Side);
+            TimeInForce = (FieldValue?)message.Fields.Find(FIX_5_0SP2.Fields.TimeInForce);
             Text = message.Fields.Find(FIX_5_0SP2.Fields.Text)?.Value;
 
             field = message.Fields.Find(FIX_5_0SP2.Fields.ListID);
@@ -104,7 +104,7 @@ namespace Fix
 
             var sendingTimeField = message.Fields.Find(FIX_5_0SP2.Fields.SendingTime);
             
-            if (sendingTimeField != null)
+            if (sendingTimeField != null && !string.IsNullOrEmpty(sendingTimeField.Value))
             {
                 SendingTime = (DateTime)sendingTimeField;
             }
@@ -132,10 +132,10 @@ namespace Fix
         public string OrigClOrdID { get; set; }
         public decimal? Price { get; set; }
         public decimal? AvgPx { get; set; }
-        public Field? Side { get; set; }
-        public Field? TimeInForce { get; set; }
-        public Field? OrdStatus { get; set; }
-        public Field? PreviousOrdStatus { get; set; }
+        public FieldValue? Side { get; set; }
+        public FieldValue? TimeInForce { get; set; }
+        public FieldValue? OrdStatus { get; set; }
+        public FieldValue? PreviousOrdStatus { get; set; }
         public string OrderID { get; set; }
         public string Text { get; set; }
         public string ExDestination { get; set; }
@@ -182,6 +182,11 @@ namespace Fix
         }
 
         public string Key { get; private set; }
+
+        public void UpdateKey()
+        {
+            Key = CreateKey(SenderCompID, TargetCompID, ClOrdID);
+        }
 
         static string CreateKey(string SenderCompID, string TargetCompID, string ClOrdID)
         {

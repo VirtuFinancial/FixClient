@@ -46,7 +46,7 @@ namespace Fix
 
         void UpdateDefinition(Field field)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             /*
             if (field.Definition == null && _messageDefinition != null)
             {
