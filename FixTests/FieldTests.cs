@@ -18,13 +18,6 @@ namespace FixTests
     [TestClass]
     public class FieldTests
     {
-        [TestMethod]
-        public void TestFieldValueDescriptionWithNumericEnumDefinition()
-        {
-            var field = new Fix.Field(FIX_5_0SP2.SessionStatus.SessionActive);
-            Assert.AreEqual("SessionActive", field.ValueDescription);
-        }
-
         /*
         [TestMethod]
         public void TestDescriptionOfExecInstWithMultipleValues()
