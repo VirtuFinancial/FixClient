@@ -46,7 +46,7 @@ namespace FixClientTests
             {
                 OrderBehaviour = Fix.Behaviour.Initiator,
                 BeginString = Fix.Dictionary.Versions["FIXT.1.1"],
-                DefaultApplVerId = Fix.Dictionary.Versions["FIX.5.0"],
+                DefaultApplVerId = Fix.Dictionary.Versions["FIX.5.0SP2"],
                 LogonBehaviour = Fix.Behaviour.Initiator,
                 SenderCompId = "SENDER",
                 TargetCompId = "TARGET",
