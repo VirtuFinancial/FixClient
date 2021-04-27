@@ -504,28 +504,10 @@ namespace Fix
 
             if (definition is MessageField fieldDefinition)
             {
-                //result.Name = fieldDefinition.Name;
-                //result.Description = DescribeMessageFieldValue(fieldDefinition, value);
                 // TODO
-                // result.Required = fieldDefinition?.Required ?? false;
                 // result.Indent = fieldDefinition?.Indent ?? 0;
-                return new FieldDescription(tag, value, fieldDefinition.Name, DescribeMessageFieldValue(fieldDefinition, value), false, -1);
+                return new FieldDescription(tag, value, fieldDefinition.Name, DescribeMessageFieldValue(fieldDefinition, value), fieldDefinition.Required, -1);
             }
-
-            // static string? DescribeFieldValue(System.Type enumType, string enumValue)
-            // {
-            //     if (enumValue.Length != 1) {
-            //         return null;
-            //     }
-
-            //     var member = System.Enum.ToObject(enumType, (int)enumValue[0]);
-
-            //     if (System.Enum.IsDefined(enumType, member)) {
-            //         return member.GetDescription();
-            //     }
-
-            //     return null;
-            // }
 
             static string? DescribeMessageFieldValue(MessageField fieldDefinition, string fieldValue)
             {
@@ -549,6 +531,7 @@ namespace Fix
                 return null;
             }
 
+            // TODO
             return new FieldDescription(tag, value, string.Empty, null, false, -1);
         }
 
