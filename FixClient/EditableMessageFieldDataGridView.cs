@@ -10,8 +10,13 @@
 //
 /////////////////////////////////////////////////
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static Fix.Dictionary;
 
@@ -75,11 +80,15 @@ namespace FixClient
             if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
             {
                 if (comboBox.Items[e.Index] is not EnumDescription enumDescription)
+                {
                     return;
-                string description = ToolTipForCell(CurrentCell.RowIndex, CurrentCell.ColumnIndex, Convert.ToChar(enumDescription.Value));
+                }
+
+                var tooltipText = $"{enumDescription.Value} - {enumDescription.Description}".SplitInParts(100);
+
                 Point position = comboBox.PointToClient(Cursor.Position);
                 position.Y += 40;
-                _toolTip.Show(description, comboBox, position);
+                _toolTip.Show(tooltipText, comboBox, position);
             }
             else
             {
@@ -131,8 +140,6 @@ namespace FixClient
                 if (definition == null)
                     continue;
 
-                //Type enumType = field.Definition.EnumeratedType;
-
                 if (definition.Values.Count == 0)
                     continue;
 
@@ -140,47 +147,22 @@ namespace FixClient
 
                 if (row.Cells[FieldDataTable.ColumnDescription] is DataGridViewComboBoxCell cell)
                 {
-                    //var collection = new EnumDescriptionCollection(enumType);
+                    var collection = new EnumDescriptionCollection(definition);
                     cell.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
                     cell.ReadOnly = false;
-                    // TODO
-                    //cell.DataSource = definition.Values;
+                    cell.DataSource = collection;
 
-                    InternalChange = true;
-                    cell.Value = new EnumDescription(definition.Name, field.Value);
-                    InternalChange = false;
-                    /*
-                    if (EnumTypeHasNumericValues(enumType))
+                    if (field.Value != null && definition.Values.TryGetValue(field.Value, out var valueDefinition))
                     {
-                        if (int.TryParse(field.Value, out int value))
-                        {
-                            InternalChange = true;
-                            cell.Value = new EnumDescription(Enum.GetName(enumType, value), value);
-                            InternalChange = false;
-                        }
+                        InternalChange = true;
+                        cell.Value = new EnumDescription(valueDefinition.Name, field.Value, valueDefinition.Description);
+                        InternalChange = false;
                     }
-                    else
-                    {
-                        if (char.TryParse(field.Value, out char value))
-                        {
-                            InternalChange = true;
-                            cell.Value = new EnumDescription(Enum.GetName(enumType, value), value);
-                            InternalChange = false;
-                        }
-                    }
-                    */
                 }
             }
         }
 
         bool InternalChange { get; set; }
-
-        static bool EnumTypeHasNumericValues(Type enumType)
-        {
-            // TODO - we need a better way of doing type equality for version specific enums against the global definitions
-            return enumType.Name == typeof(FIX_5_0SP2.TrdType).Name ||
-                   enumType.Name == typeof(FIX_5_0SP2.SessionStatus).Name;
-        }
 
         protected override void OnCellValueChanged(DataGridViewCellEventArgs e)
         {
@@ -207,7 +189,6 @@ namespace FixClient
             int index = table.Rows.IndexOf(dataRow);
 
             Fix.Field field = dataRow.Field;
-            //Type enumType = field.Definition?.EnumeratedType;
 
             if (column.Name == FieldDataTable.ColumnDescription)
             {
@@ -215,25 +196,8 @@ namespace FixClient
                 // The user has selected an item in a combo box for an field with an enumerated value so
                 // update the source field as well.
                 //
-                /* TODO
-                object raw = CurrentCell.Value;
-                string converted = CurrentCell.Value.ToString();
-
-                if (EnumTypeHasNumericValues(enumType))
-                {
-                    converted = Convert.ToInt32(CurrentCell.Value).ToString(System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    if (raw is int)
-                    {
-                        converted = (Convert.ToChar(Convert.ToInt32(CurrentCell.Value))).ToString(System.Globalization.CultureInfo.InvariantCulture);
-                    }
-                }
-
-                dataRow[FieldDataTable.ColumnValue] = converted;
-                Message.Fields[index].Value = converted;
-                */
+                dataRow[FieldDataTable.ColumnValue] = (string)CurrentCell.Value;
+                Message.Fields[index].Value = (string)CurrentCell.Value;
                 return;
             }
 
@@ -294,37 +258,13 @@ namespace FixClient
 
             if (CurrentCell != null && CurrentCell.Value != DBNull.Value && definition.Values.Count > 0)
             {
-                /* TODO
                 comboCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
                 comboCell.FlatStyle = FlatStyle.Flat;
                 comboCell.ReadOnly = false;
-                comboCell.DataSource = new EnumDescriptionCollection(enumType);
+                comboCell.DataSource = new EnumDescriptionCollection(definition);
                 comboCell.ValueMember = FieldDataTable.ColumnValue;
-                comboCell.DisplayMember = FieldDataTable.ColumnDescription;
-
-                if (EnumTypeHasNumericValues(enumType))
-                {
-                    if (int.TryParse(CurrentCell.Value.ToString(), out int i))
-                    {
-                        comboCell.Value = i;
-                    }
-                    else
-                    {
-                        comboCell.Value = null;
-                    }
-                }
-                else
-                {
-                    if (char.TryParse(CurrentCell.Value.ToString(), out char c))
-                    {
-                        comboCell.Value = Convert.ToInt32(c);
-                    }
-                    else
-                    {
-                        comboCell.Value = null;
-                    }
-                }
-                */
+                comboCell.DisplayMember = FieldDataTable.ColumnName;
+                comboCell.Value = CurrentCell.Value;
             }
             else
             {

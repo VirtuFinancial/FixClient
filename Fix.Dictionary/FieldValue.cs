@@ -4,7 +4,7 @@ namespace Fix
 {
     public partial class Dictionary
     {
-        public sealed record FieldValue(int Tag, string Name, string Value)
+        public sealed record FieldValue(int Tag, string Name, string Value, string Description)
         {
             public override int GetHashCode()
             {

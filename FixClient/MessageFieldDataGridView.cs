@@ -98,8 +98,8 @@ namespace FixClient
             var comboColumn = new DataGridViewComboBoxColumn
             {
                 Name = FieldDataTable.ColumnDescription,
-                DisplayMember = "Description",
-                ValueMember = "Value",
+                DisplayMember = FieldDataTable.ColumnName,
+                ValueMember = FieldDataTable.ColumnValue,
                 FlatStyle = FlatStyle.Flat,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing
@@ -142,7 +142,8 @@ namespace FixClient
             return dataRow.Field;
         }
 
-        protected string ToolTipForCell(int rowIndex, int columnIndex, char value)
+        /*
+        protected string ToolTipForCell(int rowIndex, int columnIndex, string value)
         {
             DataGridViewRow row = Rows[rowIndex];
 
@@ -162,40 +163,20 @@ namespace FixClient
                 return null;
             }
 
-            /*
-            Type type = field.Definition.EnumeratedType;
-
-            if (type == null)
+            if (definition.Values.Count == 0)
             {
                 return null;
             }
 
-            string name = type.GetEnumName(value);
-
-            if (string.IsNullOrEmpty(name))
-            {
-                return null;
-            }
-
-            MemberInfo[] info = type.GetMember(name);
-
-            if (info.Length < 1)
-            {
-                return null;
-            }
-
-            var attributes = info[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-
-            string description = ((DescriptionAttribute)attributes[0]).Description;
-            */
-
-            return string.Join("\n", definition.Description.SplitInParts(80));
+            return string.Join("\n", definition.Description.SplitInParts(100));
         }
-
+        */
+       
+        /*
         protected override void OnCellToolTipTextNeeded(DataGridViewCellToolTipTextNeededEventArgs e)
         {
             if (e.RowIndex < 0)
-                {
+            {
                 return;
             }
 
@@ -222,8 +203,10 @@ namespace FixClient
                 enumValue = Convert.ToChar(cell.Value);
             }
 
-            e.ToolTipText = ToolTipForCell(e.RowIndex, e.ColumnIndex, enumValue);
+            // TODO
+            //e.ToolTipText = ToolTipForCell(e.RowIndex, e.ColumnIndex, enumValue);
         }
+        */
 
         protected override void OnCellFormatting(DataGridViewCellFormattingEventArgs e)
         {

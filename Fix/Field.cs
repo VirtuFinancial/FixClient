@@ -171,7 +171,7 @@ namespace Fix
                 return null;
             }
 
-            return new FieldValue(field.Tag, "", field.Value);
+            return new FieldValue(field.Tag, "", field.Value, "");
         }
 
         public static bool operator ==(Field left, FieldValue right)

@@ -9,44 +9,30 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Collections.Generic;
+using static Fix.Dictionary;
 
 namespace FixClient
 {
-    public class EnumDescription
+    public record EnumDescription(string Name, string Value, string Description)
     {
-        public EnumDescription(string description, string value)
-        {
-            Description = description;
-            Value = value;
-        }
-
-        public string Description { get; }
-        public string Value { get; }
-
-        public override string ToString()
-        {
-            return Description;
-        }
+        public override string ToString() => Name;
     }
 
-    /*
     public class EnumDescriptionCollection : List<EnumDescription>
     {
-        public EnumDescriptionCollection(Type enumType)
+        public EnumDescriptionCollection(VersionField field)
         {
-            if (!enumType.IsEnum)
+            if (field.Values.Count == 0)
             {
-                throw new ArgumentException(string.Format("enumType must be an enum! you passed a {0}", enumType));
+                throw new ArgumentException(string.Format("Field type must be enumerated! you passed {0}", field.Name));
             }
 
-            foreach (var item in enumType.GetEnumValues())
+            foreach (var item in field.Values)
             {
-                Add(new EnumDescription(item.ToString(), (int)item));
+                Add(new EnumDescription(item.Value.Name, item.Value.Value, item.Value.Description));
             }
         }
     }
-    */
 }

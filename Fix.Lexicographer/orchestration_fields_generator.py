@@ -30,7 +30,7 @@ def generate_orchestration_fields(namespace, prefix, orchestration):
                         before = name
                         name = name[0].upper() + name[1:]
                         print('renaming field value from {} to {} which is a builtin C# typename'.format(before, name))
-                    values.append((name, code.value))
+                    values.append((name, code.value, code.synopsis))
             except KeyError:
                 # TODO - maybe check that its an expected built in type
                 pass
@@ -41,13 +41,13 @@ def generate_orchestration_fields(namespace, prefix, orchestration):
             file.write('                    public {}()\n'.format(field.name))
             file.write('                    : base({}, "{}", "{}", "{}", {}'.format(field.id, field.name, field.type, sanitise(field.synopsis), format_pedigree(field.pedigree)))
             if len(values):
-                file.write(', ' + ', '.join([name for (name, _) in values]))
+                file.write(', ' + ', '.join([name for (name, _, _) in values]))
             file.write(')\n')
             file.write('                    {\n')
             file.write('                    }\n')
 
-            for (name, value) in values:
-                file.write('                    public static readonly FieldValue {} = new FieldValue({}, "{}", "{}");\n'.format(name, field.id, name, value))
+            for (name, value, synopsis) in values:
+                file.write('                    public static readonly FieldValue {} = new FieldValue({}, "{}", "{}", "{}");\n'.format(name, field.id, name, value, sanitise(synopsis)))
             
             file.write('                }\n')
 
