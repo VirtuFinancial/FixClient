@@ -241,15 +241,6 @@ namespace FixClient
                 {
                     var status = (FieldValue)e.Value;
 
-                    //switch (status)
-                    //{
-                    //    case FIX_5_0SP2.OrdStatus.Calculated:
-                    //    case FIX_5_0SP2.OrdStatus.Canceled:
-                    //    case FIX_5_0SP2.OrdStatus.DoneForDay:
-                    //    case FIX_5_0SP2.OrdStatus.Filled:
-                    //    case FIX_5_0SP2.OrdStatus.Replaced:
-                    //        break;
-
                     if (status == FIX_5_0SP2.OrdStatus.New ||
                         status == FIX_5_0SP2.OrdStatus.PartiallyFilled)
                     {

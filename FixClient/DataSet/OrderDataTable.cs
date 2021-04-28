@@ -43,15 +43,15 @@ namespace FixClient
         {
             var primaryKey = new List<DataColumn>();
 
-            Columns.Add(ColumnSide, typeof(FIX_5_0SP2.Side));
+            Columns.Add(ColumnSide, typeof(FieldValue));
             Columns.Add(ColumnSideString).ColumnMapping = MappingType.Hidden;
             Columns.Add(ColumnSymbol);
             Columns.Add(ColumnQuantity);
             Columns.Add(ColumnLimit);
             Columns.Add(ColumnExDestination);
-            Columns.Add(ColumnTimeInForce, typeof(FIX_5_0SP2.TimeInForce));
+            Columns.Add(ColumnTimeInForce, typeof(FieldValue));
             Columns.Add(ColumnTimeInForceString).ColumnMapping = MappingType.Hidden;
-            Columns.Add(ColumnOrdStatus, typeof(FIX_5_0SP2.OrdStatus));
+            Columns.Add(ColumnOrdStatus, typeof(FieldValue));
             Columns.Add(ColumnOrdStatusString).ColumnMapping = MappingType.Hidden;
             Columns.Add(ColumnDone);
             Columns.Add(ColumnLeaves);

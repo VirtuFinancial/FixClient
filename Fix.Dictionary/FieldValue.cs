@@ -6,6 +6,8 @@ namespace Fix
     {
         public sealed record FieldValue(int Tag, string Name, string Value, string Description)
         {
+            public string Name { get; private set; } = Name;
+
             public override int GetHashCode()
             {
                 return HashCode.Combine(Tag, Value);
@@ -19,6 +21,20 @@ namespace Fix
                 }
 
                 return false;
+            }
+
+            public override string ToString()
+            {
+                if (string.IsNullOrEmpty(Name))
+                {
+                    if (FIX_5_0SP2.Fields.TryGetValue(Tag, out var fieldDfinition) && 
+                        fieldDfinition.Values.TryGetValue(Value, out var valueDefinition))
+                    {
+                        Name = valueDefinition.Name;
+                    }
+                }
+
+                return Name;
             }
         }
     }

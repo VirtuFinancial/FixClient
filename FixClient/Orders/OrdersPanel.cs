@@ -116,8 +116,7 @@ namespace FixClient
             _listStatusButton = new ToolStripButton
             {
                 Text = "ListStatus",
-                ToolTipText =
-                                            "Request the status of the Order List associated with the selected order"
+                ToolTipText = "Request the status of the Order List associated with the selected order"
             };
             _listStatusButton.Click += ListStatusButtonClick;
 
