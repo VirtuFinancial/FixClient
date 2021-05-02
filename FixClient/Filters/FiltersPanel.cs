@@ -289,7 +289,7 @@ namespace FixClient
         {
             try
             {
-                Session.AutoWriteFilters = false;
+                //Session.AutoWriteFilters = false;
                 _messageTable.BeginLoadData();
 
                 string msgType = null;
@@ -310,7 +310,7 @@ namespace FixClient
             {
                 _messageTable.EndLoadData();
                 _messageGrid.Refresh();
-                Session.AutoWriteFilters = true;
+                //Session.AutoWriteFilters = true;
                 Session.WriteFilters();
             }
         }
@@ -319,7 +319,7 @@ namespace FixClient
         {
             try
             {
-                Session.AutoWriteFilters = false;
+                //Session.AutoWriteFilters = false;
                 _fieldTable.BeginLoadData();
                 Fix.Dictionary.Message message = SelectedMessage;
                 if (message == null)
@@ -335,7 +335,7 @@ namespace FixClient
             {
                 _fieldTable.EndLoadData();
                 _fieldGrid.Refresh();
-                Session.AutoWriteFilters = true;
+                //Session.AutoWriteFilters = true;
                 Session.WriteFilters();
             }
         }

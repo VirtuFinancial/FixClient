@@ -165,7 +165,7 @@ namespace Fix
             WriteSession();
         }
 
-        protected bool Reading;
+        private bool Reading { get; set; }
 
         public virtual void Read()
         {

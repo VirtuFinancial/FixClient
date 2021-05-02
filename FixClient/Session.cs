@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 
 namespace FixClient
 {
@@ -70,9 +71,9 @@ namespace FixClient
             UpdateReadonlyAttributes();
 
             _messageFilters = new Dictionary<string, bool>();
-            Reading = true;
-            AutoWriteFilters = true;
-            Reading = false;
+            //Reading = true;
+            //AutoWriteFilters = true;
+            //Reading = false;
 
             Messages.MessageAdded += (sender, ev) =>
             {
@@ -109,9 +110,9 @@ namespace FixClient
             AutoAllocId = session.AutoAllocId;
             AutoScrollMessages = session.AutoScrollMessages;
             OrderBook = new Fix.OrderBook();
-            Reading = true; // Disable the filter write if AutoWrite == true
-            AutoWriteFilters = session.AutoWriteFilters;
-            Reading = false;
+            //Reading = true; // Disable the filter write if AutoWrite == true
+            //AutoWriteFilters = session.AutoWriteFilters;
+            //Reading = false;
             PasteDefineCustomFields = session.PasteDefineCustomFields;
             PasteFilterEmptyFields = session.PasteFilterEmptyFields;
             PasteSmart = session.PasteSmart;
@@ -430,17 +431,19 @@ namespace FixClient
         protected void OnMessageFilterChanged()
         {
             MessageFilterChanged?.Invoke(this, null);
-            WriteFilters();
+            // This cannot happen automatically
+            //WriteFilters();
         }
 
         protected void OnFieldFilterChanged()
         {
-            if (!AutoWriteFilters)
-                return;
+            //if (!AutoWriteFilters)
+            //    return;
 
             FieldFilterChanged?.Invoke(this, null);
 
-            WriteFilters();
+            // This cannot happen automatically
+            //WriteFilters();
         }
 
         public void MessageVisible(string msgType, bool visible, bool raiseEvent = true)
@@ -481,7 +484,8 @@ namespace FixClient
                 _fieldFilters[msgType] = filters;
             }
             _fieldFilters[msgType][tag] = visible;
-            OnFieldFilterChanged();
+            // TODO
+            //OnFieldFilterChanged();
         }
 
         public bool FieldVisible(string msgType, int tag)
@@ -570,11 +574,11 @@ namespace FixClient
         public override void Read()
         {
             base.Read();
-            Reading = true;
+            //Reading = true;
             ReadTemplates();
             ReadFilters();
             ReadCustomFields();
-            Reading = false;
+            //Reading = false;
         }
 
         void ReadCustomFields()
@@ -623,8 +627,8 @@ namespace FixClient
 
         public void WriteCustomFields()
         {
-            if (Reading)
-                return;
+            //if (Reading)
+            //    return;
 
             using FileStream stream = new(CustomFieldsFileName, FileMode.Create);
             using JsonWriter writer = new JsonTextWriter(new StreamWriter(stream));
@@ -690,6 +694,7 @@ namespace FixClient
             }
         }
 
+        /*
         bool _autoWriteFilters;
 
         [Browsable(false)]
@@ -705,15 +710,32 @@ namespace FixClient
                 }
             }
         }
+        */
 
         public void WriteFilters()
         {
-            if (Reading || !AutoWriteFilters)
-                return;
+            //if (Reading || !AutoWriteFilters)
+            //    return;
+
+            // TODO - This is SLOW
+            // Possible Improvements
+            // 1. If a message has no filters applied either way then don't store it.
+            // 2. Only store feild tags not the names.
+            // 3. Store the fields we are keeping not the fields we are hiding
+            //      - How does this play with the filter view? It's good for the messages view.
+            //      - Maybe provide both as options and have a flag to show which format. 
+            //          - Messages view shows keepers
+            //          - Filters view shows losers
 
             using FileStream stream = new(FiltersFileName, FileMode.Create);
-            using JsonWriter writer = new JsonTextWriter(new StreamWriter(stream));
-            writer.Formatting = Formatting.Indented;
+       
+            var options = new JsonWriterOptions()
+            {
+                Indented = true,
+                SkipValidation = true
+            };
+            
+            using var writer = new Utf8JsonWriter(stream, options);
             writer.WriteStartObject();
             writer.WritePropertyName("Messages");
             writer.WriteStartArray();
@@ -721,7 +743,7 @@ namespace FixClient
             {
                 if (!filter.Value)
                 {
-                    writer.WriteValue(Version.Messages[filter.Key].Name);
+                    writer.WriteStringValue(Version.Messages[filter.Key].Name);
                 }
             }
             writer.WriteEndArray();
@@ -736,12 +758,13 @@ namespace FixClient
                 writer.WriteStartArray();
                 foreach (var field in filter.Value)
                 {
-                    if (field.Value)
+                    if (!field.Value)
                         continue;
-                    if (Version.Fields.TryGetValue(field.Key.ToString(), out var fieldDefinition))
-                    {
-                        writer.WriteValue(Version.Fields[field.Key.ToString()].Name);
-                    }
+                    //if (Version.Fields.TryGetValue(field.Key.ToString(), out var fieldDefinition))
+                    //{
+                    //writer.WriteValue(Version.Fields[field.Key.ToString()].Name);
+                    //}
+                    writer.WriteNumberValue(field.Key);
                 }
                 writer.WriteEndArray();
                 writer.WriteEndObject();

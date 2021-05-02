@@ -980,7 +980,7 @@ namespace FixClient
 
             try
             {
-                _session.AutoWriteFilters = false;
+                //_session.AutoWriteFilters = false;
 
                 foreach (Fix.Field field in message.Fields)
                 {
@@ -989,7 +989,7 @@ namespace FixClient
             }
             finally
             {
-                Session.AutoWriteFilters = true;
+                //Session.AutoWriteFilters = true;
                 Session.WriteFilters();
             }
 
@@ -1007,7 +1007,7 @@ namespace FixClient
 
             try
             {
-                Session.AutoWriteFilters = false;
+                //Session.AutoWriteFilters = false;
 
                 foreach (Fix.Field field in message.Fields)
                 {
@@ -1030,7 +1030,10 @@ namespace FixClient
             }
             finally
             {
-                Session.AutoWriteFilters = true;
+                // TODO
+                //Session.Reading = true;
+                //Session.AutoWriteFilters = true;
+                //Session.Reading = false;
                 Session.WriteFilters();
             }
             //
@@ -1537,7 +1540,7 @@ namespace FixClient
                 }
             }
 
-            Session.WriteTemplates();
+            //Session.WriteTemplates();
         }
 
         public static void UpdateMessage(Fix.Message message, Fix.Order order)
