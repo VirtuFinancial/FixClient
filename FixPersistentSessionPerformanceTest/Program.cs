@@ -50,7 +50,7 @@ namespace FixPersistentSessionPerformanceTest
             {
                 var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.TestRequest.MsgType };
                 message.Fields.Set(FIX_5_0SP2.Fields.TestReqID.Tag, testRequestId);
-                Initiator.Send(message);
+                Initiator?.Send(message);
             }
         }
 
@@ -66,6 +66,10 @@ namespace FixPersistentSessionPerformanceTest
 
         static void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            if (Acceptor is null)
+            {
+                return;
+            }
             long currentAcceptorOutgoingMsgSeqNum = Acceptor.OutgoingSeqNum;
             long currentAcceptorIncomingMsgSeqNum = Acceptor.IncomingSeqNum;
             long outAcceptorMessages = currentAcceptorOutgoingMsgSeqNum - _lastAcceptorOutgoingMsgSeqNum;
@@ -85,14 +89,14 @@ namespace FixPersistentSessionPerformanceTest
 
         const string Host = "127.0.0.1";
         static int Port = 20101;
-        static TcpListener _listener;
-        static TcpClient _client;
-        static Socket _socket;
-        static ManualResetEventSlim _connectionEstablished;
-        static ManualResetEventSlim _loggedOn;
-        static Fix.PersistentSession Initiator;
-        static Fix.PersistentSession Acceptor;
-        static System.Timers.Timer _timer;
+        static TcpListener? _listener;
+        static TcpClient? _client;
+        static Socket? _socket;
+        static ManualResetEventSlim? _connectionEstablished;
+        static ManualResetEventSlim? _loggedOn;
+        static Fix.PersistentSession? Initiator;
+        static Fix.PersistentSession? Acceptor;
+        static System.Timers.Timer? _timer;
 
         static void Acceptor_Error(object sender, Fix.Session.LogEvent ev)
         {
@@ -126,7 +130,10 @@ namespace FixPersistentSessionPerformanceTest
 
         static void AcceptTcpClientCallback(IAsyncResult ar)
         {
-            var listener = (TcpListener)ar.AsyncState;
+            if (ar.AsyncState is not TcpListener listener)
+            {
+                return;
+            }
             _socket = listener.EndAcceptSocket(ar);
             _socket.NoDelay = true;
             Acceptor = new Fix.PersistentSession
@@ -139,7 +146,10 @@ namespace FixPersistentSessionPerformanceTest
             Acceptor.Warning += Acceptor_Warning;
             Acceptor.Information += Acceptor_Information;
 
-            _connectionEstablished.Set();
+            if (_connectionEstablished is ManualResetEventSlim)
+            {
+                _connectionEstablished.Set();
+            }
         }
 
         static void Connect()
@@ -148,7 +158,12 @@ namespace FixPersistentSessionPerformanceTest
             Port = random.Next(1024, UInt16.MaxValue);
             _connectionEstablished = new ManualResetEventSlim(false);
 
-            _listener = new TcpListener(Fix.Network.GetLocalAddress(Host), Port);
+            if (Fix.Network.GetLocalAddress(Host) is not System.Net.IPAddress address)
+            {
+                throw new Exception($"Could not resolve IP Address for '{Host}'");
+            }
+
+            _listener = new TcpListener(address, Port);
             _listener.Start();
             _listener.BeginAcceptSocket(AcceptTcpClientCallback, _listener);
             _client = new TcpClient { NoDelay = true };
@@ -168,6 +183,16 @@ namespace FixPersistentSessionPerformanceTest
 
         static void Logon()
         {
+            if (Acceptor is null)
+            {
+                throw new Exception("Acceptor is null");
+            }
+
+            if (Initiator is null)
+            {
+                throw new Exception("Initiator is null");
+            }
+
             Acceptor.SenderCompId = "ACCEPTOR";
             Acceptor.TargetCompId = "INITIATOR";
 
@@ -192,7 +217,10 @@ namespace FixPersistentSessionPerformanceTest
 
         static void Initiator_StateChanged(object sender, Fix.Session.StateEvent ev)
         {
-            _loggedOn.Set();
+            if (_loggedOn is ManualResetEventSlim)
+            {
+                _loggedOn.Set();
+            }
         }
     }
 }
