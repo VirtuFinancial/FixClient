@@ -33,9 +33,10 @@ namespace Fix
         }
 
         public delegate void MessageDelegate(object sender, MessageEvent e);
+        public delegate void ResetDelegate(object sender);
 
-        public event MessageDelegate MessageAdded;
-        public event MessageDelegate Reset;
+        public event MessageDelegate? MessageAdded;
+        public event ResetDelegate? Reset;
 
         protected void OnMessageAdded(Message message)
         {
@@ -44,7 +45,7 @@ namespace Fix
 
         protected void OnReset()
         {
-            Reset?.Invoke(this, null);
+            Reset?.Invoke(this);
         }
 
         #endregion

@@ -31,9 +31,9 @@ namespace Fix
 
         public delegate void OrderDelegate(object sender, OrderBookEventArgs e);
 
-        public event OrderDelegate OrderInserted;
-        public event OrderDelegate OrderUpdated;
-        public event OrderDelegate OrderDeleted;
+        public event OrderDelegate? OrderInserted;
+        public event OrderDelegate? OrderUpdated;
+        public event OrderDelegate? OrderDeleted;
 
         protected void OnOrderInserted(Order order)
         {
@@ -117,7 +117,7 @@ namespace Fix
 
             try
             {
-                if (message.Fields.Find(FIX_5_0SP2.Fields.MsgType) == null)
+                if (message.Fields.Find(FIX_5_0SP2.Fields.MsgType) is not Field)
                 {
                     message.Status = MessageStatus.Error;
                     message.StatusMessage = " because it does not contain a MsgType";
@@ -127,9 +127,7 @@ namespace Fix
                 if (message.Administrative)
                     return true;
 
-                Field possDupFlag = message.Fields.Find(FIX_5_0SP2.Fields.PossDupFlag);
-
-                if (possDupFlag != null && (bool)possDupFlag)
+                if (message.Fields.Find(FIX_5_0SP2.Fields.PossDupFlag) is Field field && (bool)field)
                 {
                     message.Status = MessageStatus.Warn;
                     message.StatusMessage = StatusMessageHeader + " because it is a possible duplicate";
@@ -189,9 +187,7 @@ namespace Fix
 
         bool ProcessNewOrderSingle(Message message)
         {
-            Field clOrdID = message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID);
-
-            if (clOrdID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID) is null)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the ClOrdID field is missing";
@@ -232,9 +228,7 @@ namespace Fix
             }
             */
 
-            Field ordStatusField = message.Fields.Find(FIX_5_0SP2.Fields.OrdStatus);
-
-            if (ordStatusField == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.OrdStatus) is not Field ordStatusField)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the OrdStatus field is missing";
@@ -243,24 +237,24 @@ namespace Fix
 
             var ordStatus = (FieldValue)ordStatusField;
 
-            Field ClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID);
-
-            if (ClOrdID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID) is not Field ClOrdID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the ClOrdID field is missing";
                 return false;
             }
 
-            Field OrigClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID);
+            var OrigClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID);
 
-            if (ordStatus == FIX_5_0SP2.OrdStatus.Canceled && ClOrdID != null && OrigClOrdID == null)
+            if (ordStatus == FIX_5_0SP2.OrdStatus.Canceled  && OrigClOrdID is not Field)
             {
                 if (ProcessOrdStatusUpdate(message, ClOrdID.Value, ordStatus))
+                {
                     return true;
+                }
             }
 
-            Field ExecType = message.Fields.Find(FIX_5_0SP2.Fields.ExecType);
+            Field? ExecType = message.Fields.Find(FIX_5_0SP2.Fields.ExecType);
             //
             // Use hardcoded values for ExecType because values were removed in later releases and we don't want the
             // conversion to explode.
@@ -269,22 +263,26 @@ namespace Fix
                 ordStatus == FIX_5_0SP2.OrdStatus.PendingCancel ||
                 ordStatus == FIX_5_0SP2.OrdStatus.PendingReplace ||
                 ordStatus == FIX_5_0SP2.OrdStatus.Canceled ||
-                (ExecType != null && ExecType.Value == "5"))
+                ExecType?.Value == "5")
             {
-                Field SenderCompID = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
-                Field TargetCompID = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
+                var SenderCompID = message.SenderCompID;
+                var TargetCompID = message.TargetCompID;
 
-                if (OrigClOrdID == null || OrigClOrdID.Value == ClOrdID.Value)
+                if (OrigClOrdID is not Field || OrigClOrdID.Value == ClOrdID.Value)
                 {
                     for (int index = Orders.Count - 1; index >= 0; --index)
                     {
                         Order order = Orders[index];
 
                         if (order.NewClOrdID == null)
+                        {
                             continue;
+                        }
 
-                        if (order.SenderCompID != TargetCompID.Value || order.TargetCompID != SenderCompID.Value)
+                        if (order.SenderCompID != TargetCompID || order.TargetCompID != SenderCompID)
+                        {
                             continue;
+                        }
 
                         if (order.ClOrdID == ClOrdID.Value)
                         {
@@ -302,15 +300,15 @@ namespace Fix
                     }
                 }
 
-                if (OrigClOrdID != null)
+                if (OrigClOrdID is Field)
                 {
                     //
                     // When we first store the order we set the comp id's relative to the order source so we
                     // need to flip them when searching for orders to match messages coming from the destination.
                     //
-                    Order order = FindOrder(TargetCompID.Value,
-                                            SenderCompID.Value,
-                                            OrigClOrdID.Value);
+                    Order? order = FindOrder(TargetCompID,
+                                             SenderCompID,
+                                             OrigClOrdID.Value);
 
                     if (order == null)
                     {
@@ -329,17 +327,19 @@ namespace Fix
                     {
                         ProcessOrdStatusUpdate(message, order, ordStatus);
                     }
-                    else if (ExecType != null && ExecType.Value == "5")
+                    else if (ExecType?.Value == "5")
                     {
                         ProcessOrdStatusUpdate(message, order, FIX_5_0SP2.OrdStatus.Replaced);
                     }
 
-                    if (ordStatus == FIX_5_0SP2.OrdStatus.Replaced || (ExecType != null && ExecType.Value == "5"))
+                    if (ordStatus == FIX_5_0SP2.OrdStatus.Replaced || ExecType?.Value == "5")
                     {
-                        Message pending = order.PendingMessage;
+                        Message? pending = order.PendingMessage;
 
                         if (pending == null)
+                        {
                             return false;
+                        }
 
                         var replacement = (Order)order.Clone();
                         replacement.Messages.Add(message);
@@ -361,11 +361,9 @@ namespace Fix
                             replacement.OrdStatus = FIX_5_0SP2.OrdStatus.New;
                         }
 
-                        Field OrderQty = message.Fields.Find(FIX_5_0SP2.Fields.OrderQty);
-
-                        if (OrderQty != null)
+                        if (message.Fields.Find(FIX_5_0SP2.Fields.OrderQty) is Field OrderQtyField && (long?)OrderQtyField is long OrderQty)
                         {
-                            replacement.OrderQty = (long)OrderQty;
+                            replacement.OrderQty = OrderQty;
                         }
 
                         UpdateOrder(replacement, message, true);
@@ -381,27 +379,21 @@ namespace Fix
 
         bool ProcessOrderCancelReject(Message message)
         {
-            Field OrigClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID);
-
-            if (OrigClOrdID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID) is not Field OrigClOrdID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the OrigClOrdID field is missing";
                 return false;
             }
 
-            Field SenderCompID = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
-
-            if (SenderCompID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID) is not Field SenderCompID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the SenderCompID field is missing";
                 return false;
             }
 
-            Field TargetCompID = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
-
-            if (TargetCompID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID) is not Field TargetCompID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the TargetCompID field is missing";
@@ -411,9 +403,9 @@ namespace Fix
             // When we first store the order we set the comp id's relative to the order source so we
             // need to flip them when searching for orders to match messages coming from the destination.
             //
-            Order order = FindOrder(TargetCompID.Value,
-                                    SenderCompID.Value,
-                                    OrigClOrdID.Value);
+            Order? order = FindOrder(TargetCompID.Value,
+                                     SenderCompID.Value,
+                                     OrigClOrdID.Value);
 
             if (order == null)
             {
@@ -422,9 +414,8 @@ namespace Fix
                 return false;
             }
             order.OrdStatus = order.PreviousOrdStatus ?? FIX_5_0SP2.OrdStatus.New;
-            Field Text = message.Fields.Find(FIX_5_0SP2.Fields.Text);
 
-            if (Text != null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.Text) is Field Text)
             {
                 order.Text = Text.Value;
             }
@@ -443,14 +434,16 @@ namespace Fix
 
         bool ProcessOrderList(Message message)
         {
-            Field SenderCompID = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
-            Field TargetCompID = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
-            Field ListID = message.Fields.Find(FIX_5_0SP2.Fields.ListID);
+            Field? SenderCompID = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
+            Field? TargetCompID = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
+            Field? ListID = message.Fields.Find(FIX_5_0SP2.Fields.ListID);
 
-            if (ListID == null)
+            if (ListID is null)
+            {
                 return false;
+            }
 
-            Message orderSingle = null;
+            Message? orderSingle = null;
 
             foreach (Field field in message.Fields)
             {
@@ -465,8 +458,17 @@ namespace Fix
                     {
                         MsgType = FIX_5_0SP2.Messages.NewOrderSingle.MsgType
                     };
-                    orderSingle.Fields.Set(SenderCompID);
-                    orderSingle.Fields.Set(TargetCompID);
+
+                    if (SenderCompID is Field sender)
+                    {
+                        orderSingle.Fields.Set(sender);
+                    }
+
+                    if (TargetCompID is Field target)
+                    {
+                        orderSingle.Fields.Set(target);
+                    }
+
                     orderSingle.Fields.Set(ListID);
                     orderSingle.Fields.Set(field);
 
@@ -489,45 +491,37 @@ namespace Fix
 
         bool ProcessOrderCancelReplaceRequest(Message message)
         {
-            Field ClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID);
-
-            if (ClOrdID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID) is not Field ClOrdID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the ClOrdID field is missing";
                 return false;
             }
 
-            Field OrigClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID);
-
-            if (OrigClOrdID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID) is not Field OrigClOrdID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the OrigClOrdID field is missing";
                 return false;
             }
 
-            Field SenderCompID = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
-
-            if (SenderCompID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID) is not Field SenderCompID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the SenderCompID field is missing";
                 return false;
             }
 
-            Field TargetCompID = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
-
-            if (TargetCompID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID) is not Field TargetCompID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the TargetCompID field is missing";
                 return false;
             }
 
-            Order order = FindOrder(SenderCompID.Value,
-                                    TargetCompID.Value,
-                                    OrigClOrdID.Value);
+            Order? order = FindOrder(SenderCompID.Value,
+                                     TargetCompID.Value,
+                                     OrigClOrdID.Value);
 
             if (order == null)
             {
@@ -541,13 +535,19 @@ namespace Fix
             order.PendingMessage = message;
             order.NewClOrdID = ClOrdID.Value;
 
-            Field OrderQty = message.Fields.Find(FIX_5_0SP2.Fields.OrderQty);
-            if (OrderQty != null && (long)OrderQty != order.OrderQty)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.OrderQty) is Field OrderQtyField && 
+                (long?)OrderQtyField is long OrderQty && 
+                OrderQty != order.OrderQty)
+            {
                 order.PendingOrderQty = (long)OrderQty;
+            }
 
-            Field Price = message.Fields.Find(FIX_5_0SP2.Fields.Price);
-            if (Price != null && (decimal)Price != order.Price)
-                order.PendingPrice = (decimal)Price;
+            if (message.Fields.Find(FIX_5_0SP2.Fields.Price) is Field PriceField &&
+                (decimal?)PriceField is decimal Price &&
+                Price != order.Price)
+            {
+                order.PendingPrice = Price;
+            }
 
             order.Messages.Add(message);
 
@@ -558,45 +558,37 @@ namespace Fix
 
         bool ProcessOrderCancelRequest(Message message)
         {
-            Field ClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID);
-
-            if (ClOrdID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID) is not Field ClOrdID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the ClOrdID field is missing";
                 return false;
             }
 
-            Field OrigClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID);
-
-            if (OrigClOrdID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID) is not Field OrigClOrdID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the OrigClOrdID field is missing";
                 return false;
             }
 
-            Field SenderCompID = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
-
-            if (SenderCompID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID) is not Field SenderCompID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the SenderCompID field is missing";
                 return false;
             }
 
-            Field TargetCompID = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
-
-            if (TargetCompID == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID) is not Field TargetCompID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the TargetCompID field is missing";
                 return false;
             }
 
-            Order order = FindOrder(SenderCompID.Value,
-                                    TargetCompID.Value,
-                                    OrigClOrdID.Value);
+            Order? order = FindOrder(SenderCompID.Value,
+                                     TargetCompID.Value,
+                                     OrigClOrdID.Value);
 
             if (order == null)
             {
@@ -629,9 +621,9 @@ namespace Fix
             // When we first store the order we set the comp id's relative to the order source so we
             // need to flip them when searching for orders to match messages coming from the destination.
             //
-            Order order = FindOrder(message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID).Value,
-                                    message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID).Value,
-                                   ClOrdID);
+            Order? order = FindOrder(message.TargetCompID,
+                                     message.SenderCompID,
+                                     ClOrdID);
             if (order == null)
             {
                 message.Status = MessageStatus.Error;
@@ -659,9 +651,9 @@ namespace Fix
             }
             else
             {
-                Field ExecType = message.Fields.Find(FIX_5_0SP2.Fields.ExecType);
+                Field? ExecType = message.Fields.Find(FIX_5_0SP2.Fields.ExecType);
 
-                if (ExecType != null)
+                if (ExecType is not null)
                 {
                     //
                     // Use hardcoded values for ExecType because values were removed in later releases and we don't want the
@@ -701,9 +693,9 @@ namespace Fix
             return $"{SenderCompID}-{TargetCompID}-{ClOrdID}";
         }
 
-        Order FindOrder(string SenderCompID, string TargetCompID, string ClOrdID)
+        Order? FindOrder(string SenderCompID, string TargetCompID, string ClOrdID)
         {
-            if (Orders.TryGetValue(KeyForOrder(SenderCompID, TargetCompID, ClOrdID), out Order order))
+            if (Orders.TryGetValue(KeyForOrder(SenderCompID, TargetCompID, ClOrdID), out var order))
             {
                 return order;
             }
@@ -718,7 +710,7 @@ namespace Fix
 
         bool AddOrder(Order order)
         {
-            Order existing = FindOrder(order.SenderCompID, order.TargetCompID, order.ClOrdID);
+            Order? existing = FindOrder(order.SenderCompID, order.TargetCompID, order.ClOrdID);
 
             if (existing != null)
             {
@@ -729,7 +721,7 @@ namespace Fix
 
             if (MaximumOrders > 0 && Orders.Count >= MaximumOrders)
             {
-                Order inactive = Orders.FirstOrDefault(o => !o.Active);
+                Order? inactive = Orders.FirstOrDefault(o => !o.Active);
                 if (inactive != null)
                 {
                     DeleteOrder(inactive);
@@ -748,25 +740,24 @@ namespace Fix
 
         static void UpdateOrder(Order order, Message message, bool replacement = false)
         {
-            Field Price = message.Fields.Find(FIX_5_0SP2.Fields.Price);
-            Field AvgPx = message.Fields.Find(FIX_5_0SP2.Fields.AvgPx);
-            Field CumQty = message.Fields.Find(FIX_5_0SP2.Fields.CumQty);
-            Field LeavesQty = message.Fields.Find(FIX_5_0SP2.Fields.LeavesQty);
-            Field Text = message.Fields.Find(FIX_5_0SP2.Fields.Text);
-            Field OrderID = message.Fields.Find(FIX_5_0SP2.Fields.OrderID);
-
-            if (Price != null && (decimal)Price > 0)
-                order.Price = (decimal)Price;
-
-            if (AvgPx != null)
-                order.AvgPx = (decimal)AvgPx;
-
-            if (CumQty != null)
-                order.CumQty = (long)CumQty;
-
-            if (LeavesQty != null && !replacement)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.Price) is Field PriceField && (decimal?)PriceField is decimal Price && Price > 0)
             {
-                order.LeavesQty = (long)LeavesQty;
+                order.Price = Price;
+            }
+
+            if (message.Fields.Find(FIX_5_0SP2.Fields.AvgPx) is Field AvgPxField && (decimal?)AvgPxField is decimal AvgPx)
+            {
+                order.AvgPx = AvgPx;
+            }
+
+            if (message.Fields.Find(FIX_5_0SP2.Fields.CumQty) is Field CumQtyField && (long?)CumQtyField is long CumQty)
+            {
+                order.CumQty = CumQty;
+            }
+
+            if (!replacement && message.Fields.Find(FIX_5_0SP2.Fields.LeavesQty) is Field LeavesQtyField && (long?)LeavesQtyField is long LeavesQty)
+            {
+                order.LeavesQty = LeavesQty;
             }
             else
             {
@@ -793,18 +784,22 @@ namespace Fix
 
             if (order.LeavesQty.HasValue)
             {
-                if (order.LeavesQty > 0 && order.OrdStatus.Value == FIX_5_0SP2.OrdStatus.Filled.Value ||
-                   order.LeavesQty < order.OrderQty && order.OrdStatus.Value == FIX_5_0SP2.OrdStatus.New.Value)
+                if (order.LeavesQty > 0 && order.OrdStatus?.Value == FIX_5_0SP2.OrdStatus.Filled.Value ||
+                    order.LeavesQty < order.OrderQty && order.OrdStatus?.Value == FIX_5_0SP2.OrdStatus.New.Value)
                 {
                     order.OrdStatus = FIX_5_0SP2.OrdStatus.PartiallyFilled;
                 }
             }
 
-            if (Text != null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.Text) is Field Text)
+            {
                 order.Text = Text.Value;
+            }
 
-            if (OrderID != null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.OrderID) is Field OrderID)
+            {
                 order.OrderID = OrderID.Value;
+            }
         }
     }
 }

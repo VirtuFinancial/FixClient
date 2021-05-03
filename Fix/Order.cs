@@ -4,7 +4,7 @@
 //
 // Copyright @ 2021 VIRTU Financial Inc.
 // All rights reserved.
-//
+// 
 // Filename: Order.cs
 // Author:   Gary Hughes
 //
@@ -24,89 +24,87 @@ namespace Fix
                 throw new ArgumentException("Message is not an NewOrderSingle");
             }
 
-            Field field = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
-
-            if (string.IsNullOrEmpty(field?.Value))
+            if (message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID) is not Field senderField || string.IsNullOrEmpty(senderField.Value))
             {
                 throw new ArgumentException("Message does not contain a SenderCompID");
             }
 
-            SenderCompID = field.Value;
+            SenderCompID = senderField.Value;
 
-            field = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
-
-            if (string.IsNullOrEmpty(field?.Value))
+            if (message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID) is not Field targetField || string.IsNullOrEmpty(targetField.Value))
             {
                 throw new ArgumentException("Message does not contain a TargetCompID");
             }
 
-            TargetCompID = field.Value;
+            TargetCompID = targetField.Value;
 
-            field = message.Fields.Find(FIX_5_0SP2.Fields.Symbol);
-
-            if (string.IsNullOrEmpty(field?.Value))
+            if (message.Fields.Find(FIX_5_0SP2.Fields.Symbol) is Field symbolField && !string.IsNullOrEmpty(symbolField.Value))
             {
-                field = message.Fields.Find(FIX_5_0SP2.Fields.SecurityID);
-
-                if (string.IsNullOrEmpty(field?.Value))
+                Symbol = symbolField.Value;
+            }
+            else
+            {
+                if (message.Fields.Find(FIX_5_0SP2.Fields.SecurityID) is not Field securityIdField || string.IsNullOrEmpty(securityIdField.Value))
                 {
                     throw new ArgumentException("Message does not contain a Symbol or SecurityID");
                 }
+
+                Symbol = securityIdField.Value;
             }
 
-            Symbol = field.Value;
-
-            field = message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID);
-
-            if (string.IsNullOrEmpty(field?.Value))
+            if (message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID) is not Field clOrdIdField || string.IsNullOrEmpty(clOrdIdField.Value))
             {
                 throw new ArgumentException("Message does not contain a ClOrdID");
             }
 
-            ClOrdID = field.Value;
+            ClOrdID = clOrdIdField.Value;
 
-            field = message.Fields.Find(FIX_5_0SP2.Fields.OrderQty);
-
-            if (string.IsNullOrEmpty(field?.Value))
+            if (message.Fields.Find(FIX_5_0SP2.Fields.OrderQty) is not Field orderQtyField || string.IsNullOrEmpty(orderQtyField.Value))
             {
                 throw new ArgumentException("Message does not contain an OrderQty");
             }
 
-            OrderQty = (long)field;
+            if ((long?)orderQtyField is long qty)
+            {
+                OrderQty = qty;
+            }
 
-            field = message.Fields.Find(FIX_5_0SP2.Fields.ExDestination);
-
-            if (field != null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.ExDestination) is Field field)
             {
                 ExDestination = field.Value;
             }
 
-            Price = (decimal?)message.Fields.Find(FIX_5_0SP2.Fields.Price);
-            Side = (FieldValue?)message.Fields.Find(FIX_5_0SP2.Fields.Side);
-            TimeInForce = (FieldValue?)message.Fields.Find(FIX_5_0SP2.Fields.TimeInForce);
-            Text = message.Fields.Find(FIX_5_0SP2.Fields.Text)?.Value;
-
-            field = message.Fields.Find(FIX_5_0SP2.Fields.ListID);
-
-            if (field != null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.Price) is Field priceField)
             {
-                ListID = field.Value;
+                Price = (decimal?)priceField;
             }
-            /*
-	        mOrdType = order_single->find_field(fix::field::OrdType);
-	        mPrice = order_single->find_field(fix::field::Price);
-	        mListID = order_single->find_field(fix::field::ListID);
-	        mOrdStatus = order_single->find_field(fix::field::OrdStatus);
-	        mAvgPx = order_single->find_field(fix::field::AvgPx);
-	        mCumQty = order_single->find_field(fix::field::CumQty);
-	        mLeavesQty = order_single->find_field(fix::field::LeavesQty);
-             */
 
-            var sendingTimeField = message.Fields.Find(FIX_5_0SP2.Fields.SendingTime);
-            
-            if (sendingTimeField != null && !string.IsNullOrEmpty(sendingTimeField.Value))
+            if (message.Fields.Find(FIX_5_0SP2.Fields.Side) is Field sideField)
             {
-                SendingTime = (DateTime)sendingTimeField;
+                Side = (FieldValue?)sideField;
+            }
+
+            if (message.Fields.Find(FIX_5_0SP2.Fields.TimeInForce) is Field timeInForceField)
+            {
+                TimeInForce = (FieldValue?)timeInForceField;
+            }
+
+            if (message.Fields.Find(FIX_5_0SP2.Fields.Text) is Field textField)
+            {
+                Text = textField?.Value;
+            }
+
+            if (message.Fields.Find(FIX_5_0SP2.Fields.ListID) is Field listIdField)
+            {
+                ListID = listIdField.Value;
+            }
+        
+            if (message.Fields.Find(FIX_5_0SP2.Fields.SendingTime) is Field sendingTimeField && !string.IsNullOrEmpty(sendingTimeField.Value))
+            {
+                if ((DateTime?)sendingTimeField is DateTime sendingTime)
+                {
+                    SendingTime = sendingTime;
+                }
             }
 
             Messages = new List<Message>
@@ -122,25 +120,25 @@ namespace Fix
         public string SenderCompID { get; set; }
         public string TargetCompID { get; set; }
         public string ClOrdID { get; set; }
-        public string NewClOrdID { get; set; } // This is for replaced orders, it is the reverse of OrigClOrdID
+        public string? NewClOrdID { get; set; } // This is for replaced orders, it is the reverse of OrigClOrdID
         public string Symbol { get; set; }
         public long OrderQty { get; set; }
 
         public long? CumQty { get; set; }
         public long? LeavesQty { get; set; }
-        public string ListID { get; set; }
-        public string OrigClOrdID { get; set; }
+        public string? ListID { get; set; }
+        public string? OrigClOrdID { get; set; }
         public decimal? Price { get; set; }
         public decimal? AvgPx { get; set; }
         public FieldValue? Side { get; set; }
         public FieldValue? TimeInForce { get; set; }
         public FieldValue? OrdStatus { get; set; }
         public FieldValue? PreviousOrdStatus { get; set; }
-        public string OrderID { get; set; }
-        public string Text { get; set; }
-        public string ExDestination { get; set; }
+        public string? OrderID { get; set; }
+        public string? Text { get; set; }
+        public string? ExDestination { get; set; }
 
-        public Message PendingMessage { get; set; }
+        public Message? PendingMessage { get; set; }
         public long? PendingOrderQty { get; set; }
         public decimal? PendingPrice { get; set; }
         public DateTime SendingTime { get; private set; }

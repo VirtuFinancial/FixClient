@@ -27,13 +27,13 @@ namespace Fix.Parsers
         //  21:51:50.538833 YSFIXDRV/em0.Y Detail      Sending  8=FIX.4.2^A9=64^A35=A^A34=734^A49=YSDRV^A56=YSDEST^A52=20100915-04:51:50^A98=0^A108=30^A10=018^A {6 usec}
         //  21:51:50.539114 YSFIXDRV/em0.Y Detail      <YSDRV:YSDEST> Outgoing LOGON: {6 usec}
         //
-        protected override Message ParseMessage(TextReader reader)
+        protected override Message? ParseMessage(TextReader reader)
         {
             Message message;
 
             for (; ; )
             {
-                string line = reader.ReadLine();
+                var line = reader.ReadLine();
 
                 if (line == null)
                     return null;

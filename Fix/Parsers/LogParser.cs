@@ -27,7 +27,7 @@ namespace Fix
             {
                 while (true)
                 {
-                    Message message = ParseMessage(reader);
+                    Message? message = ParseMessage(reader);
 
                     if (message == null)
                         break;
@@ -48,7 +48,7 @@ namespace Fix
             return Parse(stream);
         }
 
-        protected abstract Message ParseMessage(TextReader reader);
+        protected abstract Message? ParseMessage(TextReader reader);
 
     }
 }

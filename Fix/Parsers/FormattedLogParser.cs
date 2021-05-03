@@ -31,14 +31,14 @@ namespace Fix.Parsers
         //   BodyLength   (9) - 142
         //      MsgType  (35) - 8
         //
-        string _leftOvers;
-        Dictionary.Version _version;
+        string? _leftOvers;
+        Dictionary.Version? _version;
 
         protected bool ParseBody(TextReader reader, Message message)
         {
             while (true)
             {
-                string line = string.IsNullOrEmpty(_leftOvers) ? reader.ReadLine() : _leftOvers;
+                var line = string.IsNullOrEmpty(_leftOvers) ? reader.ReadLine() : _leftOvers;
                 _leftOvers = null;
 
                 if (line == null)
@@ -122,7 +122,7 @@ namespace Fix.Parsers
             return message.Fields.Count > 0;
         }
 
-        protected override Message ParseMessage(TextReader reader)
+        protected override Message? ParseMessage(TextReader reader)
         {
             var message = new Message();
 
@@ -154,7 +154,7 @@ namespace Fix.Parsers
 
             while (true)
             {
-                string line = reader.ReadLine();
+                string? line = reader.ReadLine();
 
                 if (line == null)
                     return false;

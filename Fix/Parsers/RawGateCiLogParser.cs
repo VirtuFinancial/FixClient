@@ -30,13 +30,13 @@ namespace Fix.Parsers
         //  00:31:00.642240 YSDEST         Detail      Incoming FIX RAW 8=FIX.4.2^A9=49^A35=0^A34=4^A49=ITGI^A56=YSDEST^A52=20100915-07:31:00^A10=018^A {10 usec}
         //  00:31:00.642657 YSDEST         Detail      Outgoing FIX RAW 8=FIX.4.2^A9=49^A35=0^A34=4^A49=YSDEST^A56=ITGI^A52=20100915-07:31:00^A10=018^A {237 usec}
         //
-        protected override Message ParseMessage(TextReader reader)
+        protected override Message? ParseMessage(TextReader reader)
         {
             Message message;
 
             for (; ; )
             {
-                string line = reader.ReadLine();
+                var line = reader.ReadLine();
 
                 if (line == null)
                     return null;

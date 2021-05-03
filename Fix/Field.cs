@@ -114,7 +114,7 @@ namespace Fix
         }
 
         public int Tag { get; }
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
         public bool Data { get; set; }
 
         public static explicit operator bool(Field field)
@@ -128,19 +128,22 @@ namespace Fix
 
         public static explicit operator long?(Field field)
         {
-            if (field == null || !long.TryParse(field.Value, out var result))
+            if (!long.TryParse(field.Value, out var result))
+            {
                 return null;
+            }
+
             return result;
         }
 
         public static explicit operator string(Field field)
         {
-            return field?.Value;
+            return field.Value;
         }
 
         public static explicit operator decimal?(Field field)
         {
-            if (field == null || !decimal.TryParse(field.Value, out decimal result))
+            if (!decimal.TryParse(field.Value, out decimal result))
             {
                 return null;
             }
@@ -164,17 +167,12 @@ namespace Fix
             return result;
         }
 
-        public static explicit operator FieldValue?(Field field)
+        public static explicit operator FieldValue(Field field)
         {
-            if (field is null)
-            {
-                return null;
-            }
-
             return new FieldValue(field.Tag, "", field.Value, "");
         }
 
-        public static bool operator ==(Field left, FieldValue right)
+        public static bool operator ==(Field left, FieldValue? right)
         {
             return (left, right) switch
             {
@@ -185,9 +183,9 @@ namespace Fix
             };
         }
 
-        public static bool operator !=(Field left, FieldValue right) => !(left == right);
+        public static bool operator !=(Field left, FieldValue? right) => !(left == right);
      
-        public override bool Equals(object other)
+        public override bool Equals(object? other)
         {
             if (other is null)
             {
@@ -509,7 +507,7 @@ namespace Fix
                 return new FieldDescription(tag, value, fieldDefinition.Name, DescribeMessageFieldValue(fieldDefinition, value), fieldDefinition.Required, -1);
             }
 
-            static string? DescribeMessageFieldValue(MessageField fieldDefinition, string fieldValue)
+            static string DescribeMessageFieldValue(MessageField fieldDefinition, string fieldValue)
             {
                 // TODO
                 // if (fieldDefinition?.EnumeratedType is Type type) {
@@ -517,22 +515,21 @@ namespace Fix
                 // }
 
 
-
-                return null;
+                return string.Empty;
             }
 
-            static string? DescribeVersionFieldValue(VersionField fieldDefinition, string fieldValue)
+            static string DescribeVersionFieldValue(VersionField fieldDefinition, string fieldValue)
             {
                 if (fieldDefinition.Values.TryGetValue(fieldValue, out var valueDefinition))
                 {
                     return valueDefinition.Name;
                 }
 
-                return null;
+                return string.Empty;
             }
 
             // TODO
-            return new FieldDescription(tag, value, string.Empty, null, false, -1);
+            return new FieldDescription(tag, value, string.Empty, string.Empty, false, -1);
         }
 
         #region Object

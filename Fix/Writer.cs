@@ -32,8 +32,8 @@ namespace Fix
 
         public delegate void MessageDelegate(object sender, MessageEvent e);
 
-        public event MessageDelegate MessageWriting;
-        public event MessageDelegate MessageWritten;
+        public event MessageDelegate? MessageWriting;
+        public event MessageDelegate? MessageWritten;
 
         protected void OnMessageWriting(Message message)
         {

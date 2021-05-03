@@ -27,23 +27,26 @@ namespace Fix
         }
 
         [Browsable(false)]
-        public Stream Stream
+        public Stream? Stream
         {
             get { return _stream; }
             set
             {
                 _stream = value;
-                State = State.Connected;
-                _reader = new Reader(_stream)
+                if (_stream is Stream)
                 {
-                    ValidateDataFields = ValidateDataFields
-                };
-                if (_writer != null)
-                {
-                    _writer.MessageWriting -= WriterMessageWriting;
+                    State = State.Connected;
+                    _reader = new Reader(_stream)
+                    {
+                        ValidateDataFields = ValidateDataFields
+                    };
+                    if (_writer != null)
+                    {
+                        _writer.MessageWriting -= WriterMessageWriting;
+                    }
+                    _writer = new Writer(_stream, true);
+                    _writer.MessageWriting += WriterMessageWriting;
                 }
-                _writer = new Writer(_stream, true);
-                _writer.MessageWriting += WriterMessageWriting;
             }
         }
 
@@ -123,8 +126,7 @@ namespace Fix
             {
                 if (message.MsgType == FIX_5_0SP2.Messages.TestRequest.MsgType)
                 {
-                    Field testReqId = message.Fields.Find(FIX_5_0SP2.Fields.TestReqID);
-                    if (testReqId != null)
+                    if (message.Fields.Find(FIX_5_0SP2.Fields.TestReqID) is Field testReqId)
                     {
                         ExpectedTestRequestId = testReqId.Value;
                     }
@@ -143,17 +145,20 @@ namespace Fix
                     message.MsgType != FIX_5_0SP2.Messages.Logon.MsgType)
                 {
                     // Remove unpopulated optional header fields.
-                    Field field = message.Fields.Find(FIX_5_0SP2.Fields.ApplVerID);
-                    if (field != null && string.IsNullOrEmpty(field.Value))
-                        message.Fields.Remove(field.Tag);
+                    if (message.Fields.Find(FIX_5_0SP2.Fields.ApplVerID) is Field ApplVerID && string.IsNullOrEmpty(ApplVerID.Value))
+                    {
+                        message.Fields.Remove(ApplVerID.Tag);
+                    }
 
-                    field = message.Fields.Find(FIX_5_0SP2.Fields.CstmApplVerID);
-                    if (field != null && string.IsNullOrEmpty(field.Value))
-                        message.Fields.Remove(field.Tag);
+                    if (message.Fields.Find(FIX_5_0SP2.Fields.CstmApplVerID) is Field CstmApplVerID && string.IsNullOrEmpty(CstmApplVerID.Value))
+                    {
+                        message.Fields.Remove(CstmApplVerID.Tag);
+                    }
 
-                    field = message.Fields.Find(FIX_5_0SP2.Fields.ApplExtID);
-                    if (field != null && string.IsNullOrEmpty(field.Value))
-                        message.Fields.Remove(field.Tag);
+                    if (message.Fields.Find(FIX_5_0SP2.Fields.ApplExtID) is Field ApplExtID && string.IsNullOrEmpty(ApplExtID.Value))
+                    {
+                        message.Fields.Remove(ApplExtID.Tag);
+                    }
                 }
 
                 message.Fields.Set(FIX_5_0SP2.Fields.SenderCompID, SenderCompId);
@@ -186,8 +191,8 @@ namespace Fix
             }
         }
 
-        Stream _stream;
-        Reader _reader;
-        Writer _writer;
+        Stream? _stream;
+        Reader? _reader;
+        Writer? _writer;
     }
 }

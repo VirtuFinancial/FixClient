@@ -29,11 +29,16 @@ namespace Fix
             get
             {
                 if (Definition != null)
+                {
                     return Definition.MsgType;
-                Field field = Fields.Find(FIX_5_0SP2.Fields.MsgType);
-                if (field == null)
-                    throw new MissingFieldException(FIX_5_0SP2.Fields.MsgType);
-                return field.Value;
+                }
+
+                if (Fields.Find(FIX_5_0SP2.Fields.MsgType) is Field field)
+                {
+                    return field.Value;
+                }
+
+                throw new MissingFieldException(FIX_5_0SP2.Fields.MsgType);
             }
             set
             {
@@ -46,10 +51,12 @@ namespace Fix
         {
             get
             {
-                Field field = Fields.Find(FIX_5_0SP2.Fields.BeginString);
-                if (field == null)
-                    throw new MissingFieldException(FIX_5_0SP2.Fields.BeginString);
-                return field.Value;
+                if (Fields.Find(FIX_5_0SP2.Fields.BeginString) is Field field)
+                {
+                    return field.Value;
+                }
+
+                throw new MissingFieldException(FIX_5_0SP2.Fields.BeginString);
             }
         }
 
@@ -57,10 +64,12 @@ namespace Fix
         {
             get
             {
-                Field field = Fields.Find(FIX_5_0SP2.Fields.BodyLength);
-                if (field == null)
-                    throw new MissingFieldException(FIX_5_0SP2.Fields.BodyLength);
-                return Convert.ToInt32(field.Value);
+                if (Fields.Find(FIX_5_0SP2.Fields.BodyLength) is Field field)
+                {
+                    return Convert.ToInt32(field.Value);
+                }
+
+                throw new MissingFieldException(FIX_5_0SP2.Fields.BodyLength);
             }
         }
 
@@ -68,20 +77,22 @@ namespace Fix
         {
             get
             {
-                Field field = Fields.Find(FIX_5_0SP2.Fields.MsgSeqNum);
-                if (field == null)
-                    throw new MissingFieldException(FIX_5_0SP2.Fields.MsgSeqNum);
-                return Convert.ToInt32(field.Value);
+                if (Fields.Find(FIX_5_0SP2.Fields.MsgSeqNum) is Field field)
+                {
+                    return Convert.ToInt32(field.Value);
+                }
+
+                throw new MissingFieldException(FIX_5_0SP2.Fields.MsgSeqNum);
             }
         }
 
-        public string CheckSum => Fields.Find(FIX_5_0SP2.Fields.CheckSum)?.Value;
+        public string? CheckSum => Fields.Find(FIX_5_0SP2.Fields.CheckSum)?.Value;
 
         public string SenderCompID
         {
             get
             {
-                return Fields.Find(FIX_5_0SP2.Fields.SenderCompID)?.Value;
+                return Fields.Find(FIX_5_0SP2.Fields.SenderCompID)?.Value ?? string.Empty;
             }
             set
             {
@@ -93,7 +104,7 @@ namespace Fix
         {
             get
             {
-                return Fields.Find(FIX_5_0SP2.Fields.TargetCompID)?.Value;
+                return Fields.Find(FIX_5_0SP2.Fields.TargetCompID)?.Value ?? string.Empty;
             }
             set
             {
@@ -101,18 +112,23 @@ namespace Fix
             }
         }
 
-        public string SendingTime => Fields.Find(FIX_5_0SP2.Fields.SendingTime)?.Value;
+        public string? SendingTime => Fields.Find(FIX_5_0SP2.Fields.SendingTime)?.Value;
 
         public int BeginSeqNo
         {
             get
             {
-                Field field = Fields.Find(FIX_5_0SP2.Fields.BeginSeqNo);
-                if (field == null)
-                    throw new MissingFieldException(FIX_5_0SP2.Fields.BeginSeqNo);
-                if (!int.TryParse(field.Value, out int value))
-                    throw new Exception($"Message contains an invalid {field}");
-                return value;
+                if (Fields.Find(FIX_5_0SP2.Fields.BeginSeqNo) is Field field)
+                {
+                    if (!int.TryParse(field.Value, out int value))
+                    {
+                        throw new Exception($"Message contains an invalid {field}");
+                    }
+                    
+                    return value;
+                }
+
+                throw new MissingFieldException(FIX_5_0SP2.Fields.BeginSeqNo);
             }
         }
 
@@ -120,12 +136,17 @@ namespace Fix
         {
             get
             {
-                Field field = Fields.Find(FIX_5_0SP2.Fields.EndSeqNo);
-                if (field == null)
-                    throw new MissingFieldException(FIX_5_0SP2.Fields.EndSeqNo);
-                if (!int.TryParse(field.Value, out int value))
-                    throw new Exception($"Message contains an invalid {field}");
-                return value;
+                if (Fields.Find(FIX_5_0SP2.Fields.EndSeqNo) is Field field)
+                {
+                    if (!int.TryParse(field.Value, out int value))
+                    {
+                        throw new Exception($"Message contains an invalid {field}");
+                    }
+
+                    return value;
+                }
+
+                throw new MissingFieldException(FIX_5_0SP2.Fields.EndSeqNo);
             }
         }
 
@@ -133,10 +154,12 @@ namespace Fix
         {
             get
             {
-                Field field = Fields.Find(FIX_5_0SP2.Fields.GapFillFlag);
-                if (field == null)
-                    return false;
-                return (bool)field;
+                if (Fields.Find(FIX_5_0SP2.Fields.GapFillFlag) is Field field)
+                {
+                    return (bool)field;
+                }
+
+                return false;
             }
         }
 
@@ -144,10 +167,12 @@ namespace Fix
         {
             get
             {
-                Field field = Fields.Find(FIX_5_0SP2.Fields.ResetSeqNumFlag);
-                if (field == null)
-                    return false;
-                return (bool)field;
+                if (Fields.Find(FIX_5_0SP2.Fields.ResetSeqNumFlag) is Field field)
+                {
+                    return (bool)field;
+                }
+
+                return false;
             }
         }
 
@@ -155,12 +180,17 @@ namespace Fix
         {
             get
             {
-                Field field = Fields.Find(FIX_5_0SP2.Fields.NewSeqNo);
-                if (field == null)
-                    throw new MissingFieldException(FIX_5_0SP2.Fields.NewSeqNo);
-                if (!int.TryParse(field.Value, out int value))
-                    throw new Exception($"Message contains an invalid {field}");
-                return value;
+                if (Fields.Find(FIX_5_0SP2.Fields.NewSeqNo) is Field field)
+                {
+                    if (!int.TryParse(field.Value, out int value))
+                    {
+                        throw new Exception($"Message contains an invalid {field}");
+                    }
+
+                    return value;
+                }
+
+                throw new MissingFieldException(FIX_5_0SP2.Fields.NewSeqNo);
             }
         }
 
@@ -168,10 +198,12 @@ namespace Fix
         {
             get
             {
-                Field field = Fields.Find(FIX_5_0SP2.Fields.PossDupFlag);
-                if (field == null)
-                    return false;
-                return (bool)field;
+                if (Fields.Find(FIX_5_0SP2.Fields.PossDupFlag) is Field field)
+                {
+                    return (bool)field;
+                }
+
+                return false;
             }
         }
 
@@ -179,9 +211,9 @@ namespace Fix
 
         public Field? SessionStatus => Fields.Find(FIX_5_0SP2.Fields.SessionStatus);
 
-        public string ClOrdID => Fields.Find(FIX_5_0SP2.Fields.ClOrdID)?.Value;
+        public string? ClOrdID => Fields.Find(FIX_5_0SP2.Fields.ClOrdID)?.Value;
 
-        public string OrigClOrdID => Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID)?.Value;
+        public string? OrigClOrdID => Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID)?.Value;
 
     }
 }

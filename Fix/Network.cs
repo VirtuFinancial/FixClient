@@ -29,7 +29,9 @@ namespace Fix
             foreach (IPAddress address in hostAddresses)
             {
                 if (address.AddressFamily != AddressFamily.InterNetwork)
+                {
                     continue;
+                }
 
                 return address;
             }
@@ -37,12 +39,14 @@ namespace Fix
             throw new Exception($"Unable to retrieve address for the host {name}");
         }
 
-        public static IPAddress GetLocalAddress(string name)
+        public static IPAddress? GetLocalAddress(string name)
         {
-            name = name?.Trim();
+            name = name.Trim();
 
             if (string.IsNullOrEmpty(name))
+            {
                 return null;
+            }
 
             try
             {
@@ -52,13 +56,19 @@ namespace Fix
                 foreach (IPAddress address in hostAddresses)
                 {
                     if (address.AddressFamily != AddressFamily.InterNetwork)
+                    {
                         continue;
+                    }
 
                     if (IPAddress.IsLoopback(address))
+                    {
                         return address;
+                    }
 
                     if (localAddresses.Contains(address))
+                    {
                         return address;
+                    }
                 }
             }
             catch (Exception)

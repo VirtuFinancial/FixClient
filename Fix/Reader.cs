@@ -32,7 +32,7 @@ namespace Fix
 
         public delegate void MessageDelegate(object sender, MessageEvent e);
 
-        public event MessageDelegate MessageRead;
+        public event MessageDelegate? MessageRead;
 
         protected void OnMessageRead(Message message)
         {
@@ -79,9 +79,9 @@ namespace Fix
             }
         }
 
-        public Message ReadLine()
+        public Message? ReadLine()
         {
-            Message message = null;
+            Message? message = null;
             try
             {
                 char direction = ReadChar();
@@ -115,7 +115,7 @@ namespace Fix
 
         public void Read(Message message)
         {
-            Field previous = null;
+            Field? previous = null;
 
             for (long index = 0; ; ++index)
             {
@@ -134,14 +134,14 @@ namespace Fix
                     _tag.Append(token);
                 }
 
-                VersionField definition = null;
+                VersionField? definition = null;
 
                 if (ValidateDataFields &&
                     FIX_5_0SP2.Fields.TryGetValue(int.Parse(_tag.ToString()), out definition) &&
                     definition != null &&
                     definition.DataType == FIX_5_0SP2.DataTypes.data.Name)
                 {
-                    if (previous == null)
+                    if (previous is null)
                     {
                         throw new Exception($"Encountered a data type field at index {index} [{definition.Tag}] with no previous field");
                     }
@@ -152,8 +152,12 @@ namespace Fix
                     }
 
                     byte[] bytes = new byte[dataLength];
+
                     if (ReadChars(bytes, 0, bytes.Length) != bytes.Length)
+                    {
                         throw new EndOfStreamException();
+                    }
+
                     _value.Append(Convert.ToBase64String(bytes));
 
                     char trailing = ReadChar();

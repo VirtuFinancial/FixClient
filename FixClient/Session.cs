@@ -80,7 +80,7 @@ namespace FixClient
                 OrderBook.Process(ev.Message);
             };
 
-            Messages.Reset += (sender, ev) =>
+            Messages.Reset += sender =>
             {
                 OrderBook.Clear(_retain);
             };

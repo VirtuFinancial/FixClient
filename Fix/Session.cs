@@ -42,8 +42,8 @@ namespace Fix
         protected const string CategoryCommon = "Common Message Generation";
         protected const string CategoryNetwork = "Network";
         State _state = State.Disconnected;
-        Timer _heartbeatTimer;
-        Timer _testRequestTimer;
+        Timer? _heartbeatTimer;
+        Timer? _testRequestTimer;
         bool _logonReceived;
 
         #region Events
@@ -88,15 +88,15 @@ namespace Fix
 
         public delegate void StateDelegate(object sender, StateEvent e);
 
-        public event MessageDelegate MessageSending;
-        public event MessageDelegate MessageSent;
-        public event MessageDelegate MessageReceived;
+        public event MessageDelegate? MessageSending = null;
+        public event MessageDelegate? MessageSent = null;
+        public event MessageDelegate? MessageReceived = null;
 
-        public event LogDelegate Information;
-        public event LogDelegate Warning;
-        public event LogDelegate Error;
+        public event LogDelegate? Information = null;
+        public event LogDelegate? Warning = null;
+        public event LogDelegate? Error = null;
 
-        public event StateDelegate StateChanged;
+        public event StateDelegate? StateChanged = null;
 
         protected virtual void OnMessageSending(Message message)
         {
@@ -137,8 +137,18 @@ namespace Fix
 
         public Session()
         {
-            BeginString = Versions["FIXT.1.1"];
-            DefaultApplVerId = Versions["FIX.5.0SP2"];
+            if (Versions["FIXT.1.1"] is not Dictionary.Version FIXT_1_1)
+            {
+                throw new Exception("Could not resolve FIXT.1.1");
+            }
+
+            if (Versions["FIX.5.0SP2"] is not Dictionary.Version FIX_5_0SP2)
+            {
+                throw new Exception("Could not resolve FIX.5.0SP2");
+            }
+
+            BeginString = FIXT_1_1;
+            DefaultApplVerId = FIX_5_0SP2;
             HeartBtInt = 30;
             AutoSendingTime = true;
             OutgoingSeqNum = 1;
@@ -205,12 +215,12 @@ namespace Fix
         [Category(CategorySession)]
         [DisplayName("SenderCompID")]
         [JsonProperty]
-        public string SenderCompId { get; set; }
+        public string SenderCompId { get; set; } = string.Empty;
 
         [Category(CategorySession)]
         [DisplayName("TargetCompID")]
         [JsonProperty]
-        public string TargetCompId { get; set; }
+        public string TargetCompId { get; set; } = string.Empty;
 
         [Category(CategorySession)]
         [DisplayName("Heartbeat Interval")]
@@ -259,7 +269,7 @@ namespace Fix
         public bool ValidateDataFields { get; set; }
 
         [Browsable(false)]
-        public string ExpectedTestRequestId { get; set; }
+        public string? ExpectedTestRequestId { get; set; }
 
         [Category(CategoryNetwork)]
         [DisplayName("Fragment Messages")]
@@ -311,10 +321,10 @@ namespace Fix
             }
         }
 
-        public Dictionary.MessageField FieldDefinition(Message message, Field field)
+        public MessageField? FieldDefinition(Message message, Field field)
         {
-            Dictionary.Message exemplar = Version.Messages[message.MsgType];
-            if (exemplar == null)
+            Dictionary.Message? exemplar = Version.Messages[message.MsgType];
+            if (exemplar is null)
                 return null;
             _ = exemplar.Fields.TryGetValue(field.Tag, out var definition);
             return definition;
@@ -453,7 +463,7 @@ namespace Fix
                 logon.Fields.Set(FIX_5_0SP2.Fields.EncryptedNewPassword, EncryptedNewPassword);
             }
 
-            if (SessionStatus != null)
+            if (SessionStatus is not null)
             {
                 logon.Fields.Set(FIX_5_0SP2.Fields.SessionStatus, SessionStatus.Value);
             }
@@ -612,13 +622,14 @@ namespace Fix
             {
                 // This is the first message we have received from the other end of the connection and we are
                 // letting them specify the FIX version to use.
-                BeginString = Dictionary.Versions[message.BeginString];
-                if (BeginString == null)
+                if (Versions[message.BeginString] is not Dictionary.Version version)
                 {
                     OnError($"Unknown FIX version '{message.BeginString}' specified in BeginString - disconnecting");
                     Close();
                     return false;
                 }
+
+                BeginString = version;
                 // TODO - validate DefaultApplVerId
             }
             else
@@ -722,7 +733,7 @@ namespace Fix
             }
             else
             {
-                string error = null;
+                string? error = null;
 
                 if (message.TargetCompID != SenderCompId)
                 {
@@ -747,9 +758,7 @@ namespace Fix
 
         bool ValidateCheckSum(Message message)
         {
-            Field checkSum = message.Fields.Find(FIX_5_0SP2.Fields.CheckSum.Tag);
-
-            if (checkSum == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.CheckSum.Tag) is not Field checkSum)
             {
                 OnError($"Received message without a checksum {message}");
                 return false;
@@ -768,9 +777,7 @@ namespace Fix
 
         bool ValidateBodyLength(Message message)
         {
-            Field bodyLength = message.Fields.Find(FIX_5_0SP2.Fields.BodyLength.Tag);
-
-            if (bodyLength == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.BodyLength.Tag) is not Field bodyLength)
             {
                 OnError($"Received message without a bodylength {message}");
                 return false;
@@ -921,7 +928,13 @@ namespace Fix
                     }
 
                     var duplicate = (Message)message.Clone();
-                    duplicate.Fields.Set(FIX_5_0SP2.Fields.OrigSendingTime, message.SendingTime);
+                    
+                    if (message.SendingTime is string sendingTime)
+                    {
+                        // TODO - throw?
+                        duplicate.Fields.Set(FIX_5_0SP2.Fields.OrigSendingTime, message.SendingTime);
+                    }
+
                     duplicate.Fields.Set(FIX_5_0SP2.Fields.PossDupFlag, true);
                     Send(duplicate, false);
                 }
@@ -954,9 +967,7 @@ namespace Fix
             if (State != State.LoggingOn && State != State.Resending)
                 return;
 
-            Field testReqId = message.Fields.Find(FIX_5_0SP2.Fields.TestReqID);
-
-            if (testReqId != null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.TestReqID) is Field testReqId)
             {
                 if (ExpectedTestRequestId == null)
                 {
@@ -1013,9 +1024,7 @@ namespace Fix
 
         bool ExtractHeartBtInt(Message message)
         {
-            Field heartBtInt = message.Fields.Find(FIX_5_0SP2.Fields.HeartBtInt);
-
-            if (heartBtInt == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.HeartBtInt) is not Field heartBtInt)
             {
                 const string text = "Logon message does not contain a HeartBtInt";
                 OnError(text);
@@ -1040,9 +1049,9 @@ namespace Fix
 
         void ProcessLogout(Message message)
         {
-            if (message.SessionStatus != null)
+            if (message.SessionStatus is Field sessionStatus)
             {
-                SessionStatus = message.SessionStatus;
+                SessionStatus = sessionStatus;
             }
 
             Close();
@@ -1060,9 +1069,7 @@ namespace Fix
 
             if (NextExpectedMsgSeqNum)
             {
-                Field field = message.Fields.Find(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum);
-
-                if (field == null)
+                if (message.Fields.Find(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum) is not Field field)
                 {
                     const string text = "Logon does not contain NextExpectedMsgSeqNum";
                     OnError(text);
@@ -1190,9 +1197,7 @@ namespace Fix
         {
             Message heartbeat = ConstructMessage(FIX_5_0SP2.Messages.Heartbeat);
 
-            Field testReqId = message.Fields.Find(FIX_5_0SP2.Fields.TestReqID);
-
-            if (testReqId == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.TestReqID) is not Field testReqId)
             {
                 // TODO - error
                 return;
@@ -1222,10 +1227,10 @@ namespace Fix
         public int? EncryptedPasswordMethod { get; set; }
 
         [Browsable(false)]
-        public string EncryptedPassword { get; set; }
+        public string? EncryptedPassword { get; set; }
 
         [Browsable(false)]
-        public string EncryptedNewPassword { get; set; }
+        public string? EncryptedNewPassword { get; set; }
 
         [Browsable(false)]
         public Field? SessionStatus { get; set; }
@@ -1238,7 +1243,9 @@ namespace Fix
         {
             PropertyDescriptor descriptor = TypeDescriptor.GetProperties(GetType())[name];
             var attribute = (ReadOnlyAttribute)descriptor.Attributes[typeof(ReadOnlyAttribute)];
-            FieldInfo field = attribute.GetType().GetField("isReadOnly", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            FieldInfo? field = attribute.GetType().GetField("isReadOnly", BindingFlags.NonPublic | BindingFlags.Instance);
+            
             if (field != null)
             {
                 field.SetValue(attribute, value);

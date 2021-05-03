@@ -44,7 +44,7 @@ namespace Fix
             // TODO - sendingTimeIndex
         }
 
-        public bool TryGetValue(string key, out Order result)
+        public bool TryGetValue(string key, out Order? result)
         {
             return _keyIndex.TryGetValue(key, out result);
         }

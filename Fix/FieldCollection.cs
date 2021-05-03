@@ -24,9 +24,9 @@ namespace Fix
         // define the interface
         //
         readonly List<Field> _fields = new();
-        readonly Dictionary.Message _messageDefinition;
+        readonly Dictionary.Message? _messageDefinition;
 
-        public FieldCollection(Dictionary.Message messageDefinition = null)
+        public FieldCollection(Dictionary.Message? messageDefinition = null)
         {
             _messageDefinition = messageDefinition;
         }
@@ -238,7 +238,7 @@ namespace Fix
 
         public int Count => _fields.Count;
 
-        public bool TryGetValue(Dictionary.VersionField definition, out Field result)
+        public bool TryGetValue(VersionField definition, out Field result)
         {
             return TryGetValue(definition.Tag, out result);
         }
@@ -284,25 +284,30 @@ namespace Fix
 
         public bool Contains(VersionField field)
         {
-            return Find(field) != null;
+            var result = Find(field);
+            if (result is null)
+            {
+                return false;
+            }
+            return true;
         }
 
-        public Field Find(int tag)
+        public Field? Find(int tag)
         {
             return (from Field field in _fields
                     where field.Tag == tag
                     select field).FirstOrDefault();
         }
 
-        public Field Find(VersionField definition) => Find(definition.Tag);
+        public Field? Find(VersionField definition) => Find(definition.Tag);
         
-        public Field FindFrom(int tag, int index)
+        public Field? FindFrom(int tag, int index)
         {
             int temp = index;
             return FindFrom(tag, ref temp);
         }
 
-        public Field FindFrom(int tag, ref int index)
+        public Field? FindFrom(int tag, ref int index)
         {
             if (index < 0 || index >= _fields.Count)
                 throw new IndexOutOfRangeException();
@@ -317,13 +322,13 @@ namespace Fix
             return null;
         }
 
-        public Field FindFrom(Dictionary.VersionField definition, int index)
+        public Field? FindFrom(Dictionary.VersionField definition, int index)
         {
             int temp = index;
             return FindFrom(definition, ref temp);
         }
 
-        public Field FindFrom(Dictionary.VersionField definition, ref int index) => FindFrom(definition.Tag, ref index);
+        public Field? FindFrom(Dictionary.VersionField definition, ref int index) => FindFrom(definition.Tag, ref index);
 
         public Field this[int index]
         {
@@ -352,8 +357,7 @@ namespace Fix
 
         public void Remove(int tag)
         {
-            Field existing = _fields.Find(f => f.Tag == tag);
-            if (existing != null)
+            if (_fields.Find(f => f.Tag == tag) is Field existing)
             {
                 _fields.Remove(existing);
             }

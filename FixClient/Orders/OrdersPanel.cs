@@ -843,11 +843,11 @@ namespace FixClient
             Reload();
         }
 
-        void MessagesReset(object sender, Fix.MessageCollection.MessageEvent ev)
+        void MessagesReset(object sender)
         {
             if (InvokeRequired)
             {
-                BeginInvoke(new MethodInvoker(() => MessagesReset(sender, ev)));
+                BeginInvoke(new MethodInvoker(() => MessagesReset(sender)));
                 return;
             }
 

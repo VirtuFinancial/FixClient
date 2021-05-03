@@ -93,7 +93,7 @@ namespace Fix
             return message;
         }
 
-        public static Message Parse(string text)
+        public static Message? Parse(string text)
         {
             var parser = new Parser { Strict = false };
             using (MemoryStream stream = new(Encoding.ASCII.GetBytes(text)))
@@ -106,9 +106,9 @@ namespace Fix
         }
 
         public MessageStatus Status { get; set; }
-        public string StatusMessage { get; set; }
+        public string? StatusMessage { get; set; }
 
-        public Dictionary.Message Definition { get; set; }
+        public Dictionary.Message? Definition { get; set; }
 
         public FieldCollection Fields { get; }
 
@@ -211,7 +211,7 @@ namespace Fix
             {
                 try
                 {
-                    description.SendingTime = (DateTime)sendingTime;
+                    description.SendingTime = (DateTime?)sendingTime;
                 }
                 catch
                 {
