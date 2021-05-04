@@ -108,11 +108,11 @@ namespace FixTests
                                                AvgPx    (6) - 0
                                              OrdType   (40) - 2 - Limit
                                 }";
-            Fix.Message message = Fix.Message.Parse(text);
+            Fix.Message? message = Fix.Message.Parse(text);
             Assert.IsNotNull(message);
-            Fix.Field msgType = message.Fields.Find(FIX_5_0SP2.Fields.MsgType);
+            Fix.Field? msgType = message?.Fields.Find(FIX_5_0SP2.Fields.MsgType);
             Assert.IsNotNull(msgType);
-            Assert.AreEqual(FIX_5_0SP2.Messages.ExecutionReport.MsgType, msgType.Value);
+            Assert.AreEqual(FIX_5_0SP2.Messages.ExecutionReport.MsgType, msgType?.Value);
 
         }
     }

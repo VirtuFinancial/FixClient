@@ -71,7 +71,7 @@ namespace FixTests
                 { "10", "128" }
             };
             var message = new Fix.Message(fields);
-            Assert.AreEqual("ITGHK", message.Fields.Find(49).Value);
+            Assert.AreEqual("ITGHK", message.Fields.Find(49)?.Value);
         }
 
         [TestMethod]
