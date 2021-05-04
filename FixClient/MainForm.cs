@@ -435,7 +435,7 @@ namespace FixClient
             }
         }
 
-        void MainFormLoad(object sender, EventArgs e)
+        void MainFormLoad(object? sender, EventArgs e)
         {
             RestoreSizeAndPosition();
             //
@@ -448,18 +448,18 @@ namespace FixClient
             UpdateContentPanel(_messagesButton, null);
         }
 
-        static void HelpAboutClick(object sender, EventArgs e)
+        static void HelpAboutClick(object? sender, EventArgs e)
         {
             using AboutForm form = new();
             form.ShowDialog();
         }
 
-        void FileExitClick(object sender, EventArgs e)
+        void FileExitClick(object? sender, EventArgs e)
         {
             Close();
         }
 
-        void UpdateContentPanel(object sender, EventArgs e)
+        void UpdateContentPanel(object? sender, EventArgs e)
         {
             Control control = null;
 
@@ -685,7 +685,7 @@ namespace FixClient
             SaveMru();
         }
 
-        void OpenButtonClick(object sender, EventArgs e)
+        void OpenButtonClick(object? sender, EventArgs e)
         {
             using OpenFileDialog dlg = new();
             if (dlg.ShowDialog() != DialogResult.OK)
@@ -723,7 +723,7 @@ namespace FixClient
             }
         }
 
-        void CurrentSessionStateChanged(object sender, Fix.Session.StateEvent ev)
+        void CurrentSessionStateChanged(object? sender, Fix.Session.StateEvent ev)
         {
             if (InvokeRequired)
             {
@@ -755,7 +755,7 @@ namespace FixClient
             }
         }
 
-        void NewSessionButtonClick(object sender, EventArgs e)
+        void NewSessionButtonClick(object? sender, EventArgs e)
         {
             using (SessionForm form = new())
             {
@@ -801,7 +801,7 @@ namespace FixClient
             return true;
         }
 
-        bool FileSaveAsClick(object sender, EventArgs e)
+        bool FileSaveAsClick(object? sender, EventArgs e)
         {
             string filename;
 
@@ -833,7 +833,7 @@ namespace FixClient
             return false;
         }
 
-        void ConnectButtonClick(object sender, EventArgs e)
+        void ConnectButtonClick(object? sender, EventArgs e)
         {
             IPEndPoint endPoint;
             IPEndPoint bindEndPoint;
@@ -888,7 +888,7 @@ namespace FixClient
             }
         }
 
-        void DisconnectButtonClick(object sender, EventArgs e)
+        void DisconnectButtonClick(object? sender, EventArgs e)
         {
             if (CurrentSession != null)
             {
@@ -898,7 +898,7 @@ namespace FixClient
             UpdateUiState();
         }
 
-        void EditSessionButtonClick(object sender, EventArgs e)
+        void EditSessionButtonClick(object? sender, EventArgs e)
         {
             using SessionForm form = new();
             form.Readonly = CurrentSession != null && CurrentSession.Connected;
@@ -936,7 +936,7 @@ namespace FixClient
             _messagesPanel.Session = CurrentSession;
         }
 
-        void ResetButtonClick(object sender, EventArgs e)
+        void ResetButtonClick(object? sender, EventArgs e)
         {
             if (CurrentSession == null)
                 return;
@@ -950,7 +950,7 @@ namespace FixClient
             CurrentSession.Reset(form.ResetGeneratedIds, form.Retain);
         }
 
-        void OpenButtonDropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        void OpenButtonDropDownItemClicked(object? sender, ToolStripItemClickedEventArgs e)
         {
             try
             {

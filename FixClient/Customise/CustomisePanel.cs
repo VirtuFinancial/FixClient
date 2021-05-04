@@ -132,7 +132,7 @@ namespace FixClient
             UpdateUiState();
         }
 
-        void AddCategoryButtonClick(object sender, EventArgs e)
+        void AddCategoryButtonClick(object? sender, EventArgs e)
         {
             if (_categoryComboBox.SelectedItem == null)
                 return;
@@ -166,7 +166,7 @@ namespace FixClient
             }
         }
 
-        void FieldGridSelectionChanged(object sender, EventArgs e)
+        void FieldGridSelectionChanged(object? sender, EventArgs e)
         {
             if (_fieldGrid.SelectedRows.Count < 1)
             {
@@ -177,7 +177,7 @@ namespace FixClient
             UpdateUiState();
         }
 
-        void EditFieldButtonClick(object sender, EventArgs e)
+        void EditFieldButtonClick(object? sender, EventArgs e)
         {
             if (_fieldGrid.SelectedRows.Count < 1)
                 return;
@@ -203,7 +203,7 @@ namespace FixClient
             Session.WriteCustomFields();
         }
 
-        void DeleteFieldButtonClick(object sender, EventArgs e)
+        void DeleteFieldButtonClick(object? sender, EventArgs e)
         {
             if (_fieldGrid.SelectedRows.Count < 1)
                 return;
@@ -249,7 +249,7 @@ namespace FixClient
             Session.WriteCustomFields();
         }
 
-        void NewFieldButtonClick(object sender, EventArgs e)
+        void NewFieldButtonClick(object? sender, EventArgs e)
         {
             using CustomFieldForm form = new(Session.Version, false);
 
@@ -371,7 +371,7 @@ namespace FixClient
             _fieldTable.Rows.Add(row);
         }
 
-        void SessionCustomFieldAdded(object sender, Session.CustomFieldEventArgs ev)
+        void SessionCustomFieldAdded(object? sender, Session.CustomFieldEventArgs ev)
         {
             if (InvokeRequired)
             {

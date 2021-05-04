@@ -314,7 +314,7 @@ namespace FixClient
             _orderSearchTextBox.Focus();
         }
 
-        void AcknowledgeAllButtonClick(object sender, EventArgs e)
+        void AcknowledgeAllButtonClick(object? sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show(this,
                                                   "This will acknowledge all pending orders, are you sure?",
@@ -328,7 +328,7 @@ namespace FixClient
             AcknowledgeAllPendingOrders();
         }
 
-        void RejectAllButtonClick(object sender, EventArgs e)
+        void RejectAllButtonClick(object? sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show(this,
                                                   "This will reject all pending orders, are you sure?",
@@ -456,7 +456,7 @@ namespace FixClient
             }
         }
 
-        void CancelAllButtonClick(object sender, EventArgs e)
+        void CancelAllButtonClick(object? sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show(this,
                 "This will cancel all open orders, are you sure?",
@@ -587,7 +587,7 @@ namespace FixClient
             }
         }
 
-        void ListCancelButtonClick(object sender, EventArgs e)
+        void ListCancelButtonClick(object? sender, EventArgs e)
         {
             Fix.Order order = SelectedOrder;
 
@@ -608,7 +608,7 @@ namespace FixClient
             _messageDefaults.ListCancel(order.ListID);
         }
 
-        void ListStatusButtonClick(object sender, EventArgs e)
+        void ListStatusButtonClick(object? sender, EventArgs e)
         {
             Fix.Order order = SelectedOrder;
 
@@ -629,7 +629,7 @@ namespace FixClient
             _messageDefaults.ListStatus(order.ListID);
         }
 
-        void ListExecuteButtonClick(object sender, EventArgs e)
+        void ListExecuteButtonClick(object? sender, EventArgs e)
         {
             Fix.Order order = SelectedOrder;
 
@@ -650,7 +650,7 @@ namespace FixClient
             _messageDefaults.ListExecute(order.ListID);
         }
 
-        void ReportButtonClick(object sender, EventArgs e)
+        void ReportButtonClick(object? sender, EventArgs e)
         {
             Fix.Order order = SelectedOrder;
 
@@ -661,7 +661,7 @@ namespace FixClient
             _messageDefaults.ReportOrder(order);
         }
 
-        void RejectButtonClick(object sender, EventArgs e)
+        void RejectButtonClick(object? sender, EventArgs e)
         {
             Fix.Order order = SelectedOrder;
 
@@ -672,7 +672,7 @@ namespace FixClient
             _messageDefaults.RejectOrder(order);
         }
 
-        void AckButtonClick(object sender, EventArgs e)
+        void AckButtonClick(object? sender, EventArgs e)
         {
             Fix.Order order = SelectedOrder;
 
@@ -695,7 +695,7 @@ namespace FixClient
             }
         }
 
-        void StatusButtonClick(object sender, EventArgs e)
+        void StatusButtonClick(object? sender, EventArgs e)
         {
             Fix.Order order = SelectedOrder;
 
@@ -706,7 +706,7 @@ namespace FixClient
             _messageDefaults.OrderStatus(order);
         }
 
-        void AmendButtonClick(object sender, EventArgs e)
+        void AmendButtonClick(object? sender, EventArgs e)
         {
             Fix.Order order = SelectedOrder;
 
@@ -717,7 +717,7 @@ namespace FixClient
             _messageDefaults.AmendOrder(order);
         }
 
-        void CancelButtonClick(object sender, EventArgs e)
+        void CancelButtonClick(object? sender, EventArgs e)
         {
             Fix.Order order = SelectedOrder;
 
@@ -832,7 +832,7 @@ namespace FixClient
             }
         }
 
-        void SessionSessionReset(object sender, EventArgs ev)
+        void SessionSessionReset(object? sender, EventArgs ev)
         {
             if (InvokeRequired)
             {
@@ -843,7 +843,7 @@ namespace FixClient
             Reload();
         }
 
-        void MessagesReset(object sender)
+        void MessagesReset(object? sender)
         {
             if (InvokeRequired)
             {
@@ -854,7 +854,7 @@ namespace FixClient
             Reload();
         }
 
-        void SessionStateChanged(object sender, Fix.Session.StateEvent ev)
+        void SessionStateChanged(object? sender, Fix.Session.StateEvent ev)
         {
             if (InvokeRequired)
             {
@@ -865,7 +865,7 @@ namespace FixClient
             UpdateUiState();
         }
 
-        void OrderBookOrderUpdated(object sender, Fix.OrderBookEventArgs ev)
+        void OrderBookOrderUpdated(object? sender, Fix.OrderBookEventArgs ev)
         {
             if (InvokeRequired)
             {
@@ -885,7 +885,7 @@ namespace FixClient
             _orderGrid.RefreshEdit();
         }
 
-        void OrderBookOrderInserted(object sender, Fix.OrderBookEventArgs ev)
+        void OrderBookOrderInserted(object? sender, Fix.OrderBookEventArgs ev)
         {
             if (InvokeRequired)
             {

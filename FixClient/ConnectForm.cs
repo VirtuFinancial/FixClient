@@ -20,7 +20,7 @@ namespace FixClient
 {
     public partial class ConnectForm : Form
     {
-        Timer _timer;
+        Timer? _timer;
         readonly IPEndPoint _endPoint;
         readonly IPEndPoint _bindEndPoint;
         readonly Fix.Behaviour _behaviour;
@@ -38,7 +38,7 @@ namespace FixClient
 
         public Stream Stream { get; private set; }
 
-        void ConnectFormLoad(object sender, EventArgs e)
+        void ConnectFormLoad(object? sender, EventArgs e)
         {
             _timer = new Timer { Interval = 100 };
             _timer.Tick += TimerTick;
@@ -93,7 +93,7 @@ namespace FixClient
             }
         }
 
-        void TimerTick(object sender, EventArgs e)
+        void TimerTick(object? sender, EventArgs e)
         {
             if (progressBar.Value == progressBar.Maximum)
             {

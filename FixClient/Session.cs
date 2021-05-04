@@ -42,9 +42,9 @@ namespace FixClient
         public delegate void ResetDelegate(object sender, EventArgs e);
         public delegate void CustomFieldDelegate(object sender, CustomFieldEventArgs e);
 
-        public event ResetDelegate SessionReset;
-        public event ResetDelegate MessagesReset;
-        public event CustomFieldDelegate CustomFieldAdded;
+        public event ResetDelegate? SessionReset;
+        public event ResetDelegate? MessagesReset;
+        public event CustomFieldDelegate? CustomFieldAdded;
 
         protected void OnMessagesReset()
         {
@@ -425,8 +425,8 @@ namespace FixClient
         public delegate void MessageFilterDelegate(object sender, EventArgs e);
         public delegate void FieldFilterDelegate(object sender, EventArgs e);
 
-        public event MessageFilterDelegate MessageFilterChanged;
-        public event FieldFilterDelegate FieldFilterChanged;
+        public event MessageFilterDelegate? MessageFilterChanged;
+        public event FieldFilterDelegate? FieldFilterChanged;
 
         protected void OnMessageFilterChanged()
         {

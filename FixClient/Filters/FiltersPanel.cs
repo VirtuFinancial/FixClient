@@ -200,7 +200,7 @@ namespace FixClient
             UpdateUiState();
         }
 
-        void MessageGridCellContentClick(object sender, DataGridViewCellEventArgs e)
+        void MessageGridCellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0)
                 return;
@@ -216,7 +216,7 @@ namespace FixClient
             Session.MessageVisible(msgType, !visible);
         }
 
-        void FieldGridCellContentClick(object sender, DataGridViewCellEventArgs e)
+        void FieldGridCellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0)
                 return;
@@ -235,7 +235,7 @@ namespace FixClient
             Session.FieldVisible(message.MsgType, tag, !visible);
         }
 
-        void FieldSearchTextBoxTextChanged(object sender, EventArgs e)
+        void FieldSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             string search = null;
             if (string.IsNullOrEmpty(_fieldSearchTextBox.Text))
@@ -255,7 +255,7 @@ namespace FixClient
             _fieldSearchTextBox.Focus();
         }
 
-        void MessageSearchTextBoxTextChanged(object sender, EventArgs e)
+        void MessageSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             string search = null;
             if (string.IsNullOrEmpty(_messageSearchTextBox.Text))
@@ -275,12 +275,12 @@ namespace FixClient
             _messageSearchTextBox.Focus();
         }
 
-        void MessageGridCellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        void MessageGridCellValueNeeded(object? sender, DataGridViewCellValueEventArgs e)
         {
             e.Value = _messageView[e.RowIndex][e.ColumnIndex];
         }
 
-        void FieldGridCellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        void FieldGridCellValueNeeded(object? sender, DataGridViewCellValueEventArgs e)
         {
             e.Value = _fieldView[e.RowIndex][e.ColumnIndex];
         }
@@ -359,7 +359,7 @@ namespace FixClient
             }
         }
 
-        void MessageGridSelectionChanged(object sender, EventArgs e)
+        void MessageGridSelectionChanged(object? sender, EventArgs e)
         {
             try
             {

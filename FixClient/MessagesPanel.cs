@@ -72,7 +72,7 @@ namespace FixClient
         // This event is used by the mainform to updated the context of the dictionary view
         //
         public delegate void MessageDelegate(Fix.Message message);
-        public event MessageDelegate MessageSelected;
+        public event MessageDelegate? MessageSelected;
 
         protected void OnMessageSelected(Fix.Message message)
         {
@@ -373,7 +373,7 @@ namespace FixClient
             _fieldView.RowFilter = _session.FieldRowFilter(SelectedMessage.MsgType, search);
         }
 
-        void FieldSearchTextBoxTextChanged(object sender, EventArgs e)
+        void FieldSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             if (_fieldView == null || SelectedMessage == null)
                 return;
@@ -381,7 +381,7 @@ namespace FixClient
             _fieldSearchTextBox.Focus();
         }
 
-        void MessageSearchTextBoxTextChanged(object sender, EventArgs e)
+        void MessageSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             if (_messageView == null)
                 return;
@@ -435,7 +435,7 @@ namespace FixClient
             }
         }
 
-        void EditGoaButtonClick(object sender, EventArgs e)
+        void EditGoaButtonClick(object? sender, EventArgs e)
         {
             Fix.Message message = SelectedMessage;
 
@@ -470,7 +470,7 @@ namespace FixClient
             row.Cells[FieldDataTable.ColumnValue].Value = editor.Goa;
         }
 
-        void FieldGridCellContextMenuStripNeeded(object sender, DataGridViewCellContextMenuStripNeededEventArgs e)
+        void FieldGridCellContextMenuStripNeeded(object? sender, DataGridViewCellContextMenuStripNeededEventArgs e)
         {
             if (e.RowIndex < 0)
                 return;
@@ -512,7 +512,7 @@ namespace FixClient
 
         int ContextMenuRowIndex { get; set; }
 
-        void InsertCustomFieldClick(object sender, EventArgs e)
+        void InsertCustomFieldClick(object? sender, EventArgs e)
         {
             Fix.Message message = SelectedMessage;
 
@@ -527,7 +527,7 @@ namespace FixClient
             MessageGridSelectionChanged(this, null);
         }
 
-        void ResetButtonClick(object sender, EventArgs e)
+        void ResetButtonClick(object? sender, EventArgs e)
         {
             try
             {
@@ -551,7 +551,7 @@ namespace FixClient
             }
         }
 
-        void RemoveButtonClick(object sender, EventArgs e)
+        void RemoveButtonClick(object? sender, EventArgs e)
         {
             if (_fieldGrid.SelectedRows.Count == 0)
                 return;
@@ -614,7 +614,7 @@ namespace FixClient
             MessageGridSelectionChanged(this, null);
         }
 
-        void FieldGridSelectionChanged(object sender, EventArgs e)
+        void FieldGridSelectionChanged(object? sender, EventArgs e)
         {
             Fix.Field field = SelectedField;
 
@@ -629,7 +629,7 @@ namespace FixClient
             _insertContextMenuItem.Enabled = field != null;
         }
 
-        void RepeatButtonClick(object sender, EventArgs e)
+        void RepeatButtonClick(object? sender, EventArgs e)
         {
             if (_fieldGrid.SelectedRows.Count == 0)
                 return;
@@ -704,7 +704,7 @@ namespace FixClient
             MessageGridSelectionChanged(this, null);
         }
 
-        void PasteButtonClick(object sender, EventArgs e)
+        void PasteButtonClick(object? sender, EventArgs e)
         {
             if (!Clipboard.ContainsText(TextDataFormat.Text))
                 return;
@@ -971,7 +971,7 @@ namespace FixClient
             Session.WriteCustomFields();
         }
 
-        void RemoveFilterButtonClick(object sender, EventArgs e)
+        void RemoveFilterButtonClick(object? sender, EventArgs e)
         {
             Fix.Message message = SelectedMessage;
 
@@ -996,7 +996,7 @@ namespace FixClient
             ApplyFieldSearch();
         }
 
-        void FilterButtonClick(object sender, EventArgs e)
+        void FilterButtonClick(object? sender, EventArgs e)
         {
             Fix.Message message = SelectedMessage;
 
@@ -1042,7 +1042,7 @@ namespace FixClient
             ApplyFieldSearch();
         }
 
-        void SendButtonClick(object sender, EventArgs e)
+        void SendButtonClick(object? sender, EventArgs e)
         {
             Fix.Message defaults = SelectedMessage;
 
@@ -1265,7 +1265,7 @@ namespace FixClient
             }
         }
 
-        void SessionSessionReset(object sender, EventArgs e)
+        void SessionSessionReset(object? sender, EventArgs e)
         {
             if (InvokeRequired)
             {
@@ -1276,12 +1276,12 @@ namespace FixClient
             MessageGridSelectionChanged(this, null);
         }
 
-        void SessionMessageFilterChanged(object sender, EventArgs e)
+        void SessionMessageFilterChanged(object? sender, EventArgs e)
         {
             _messageView.RowFilter = Session.MessageRowFilter();
         }
 
-        void SessionFieldFilterChanged(object sender, EventArgs e)
+        void SessionFieldFilterChanged(object? sender, EventArgs e)
         {
             if (Session == null)
                 return;
@@ -1332,7 +1332,7 @@ namespace FixClient
             _messageOptionsPanel.Session = Session;
         }
 
-        void MessageGridSelectionChanged(object sender, EventArgs e)
+        void MessageGridSelectionChanged(object? sender, EventArgs e)
         {
             Fix.Message message = SelectedMessage;
 
@@ -1520,7 +1520,7 @@ namespace FixClient
             OnMessageSelected(message);
         }
 
-        void TimerTick(object sender, EventArgs e)
+        void TimerTick(object? sender, EventArgs e)
         {
             if (_session == null || string.IsNullOrEmpty(_session.FileName))
                 return;

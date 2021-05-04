@@ -97,15 +97,15 @@ namespace FixClient
             UpdateUiState();
         }
 
-        static void StopButtonClick(object sender, EventArgs e)
+        static void StopButtonClick(object? sender, EventArgs e)
         {
         }
 
-        static void PauseButtonClick(object sender, EventArgs e)
+        static void PauseButtonClick(object? sender, EventArgs e)
         {
         }
 
-        static void StartButtonClick(object sender, EventArgs e)
+        static void StartButtonClick(object? sender, EventArgs e)
         {
         }
 

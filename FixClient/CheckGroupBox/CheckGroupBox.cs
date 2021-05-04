@@ -167,13 +167,13 @@ namespace FixClient
         /// Occurs whenever the Checked property of the CheckBox is changed.
         /// </summary>
         [Description("Occurs whenever the Checked property of the CheckBox is changed.")]
-        public event EventHandler CheckedChanged;
+        public event EventHandler? CheckedChanged;
 
         /// <summary>
         /// Occurs whenever the CheckState property of the CheckBox is changed.
         /// </summary>
         [Description("Occurs whenever the CheckState property of the CheckBox is changed.")]
-        public event EventHandler CheckStateChanged;
+        public event EventHandler? CheckStateChanged;
 
         /// <summary>
         /// Raises the System.Windows.Forms.CheckBox.checkBox_CheckedChanged event.

@@ -202,7 +202,7 @@ namespace FixClient
             UpdateUiState();
         }
 
-        void MessageGridCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        void MessageGridCellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
             DataRowView view = _messageView[e.RowIndex];
 
@@ -216,7 +216,7 @@ namespace FixClient
             e.FormattingApplied = true;
         }
 
-        void MessageGridCellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        void MessageGridCellValueNeeded(object? sender, DataGridViewCellValueEventArgs e)
         {
             e.Value = _messageView[e.RowIndex][e.ColumnIndex];
         }
@@ -230,7 +230,7 @@ namespace FixClient
             }
         }
 
-        void TailMessagesCheckBoxCheckChanged(object sender, EventArgs e)
+        void TailMessagesCheckBoxCheckChanged(object? sender, EventArgs e)
         {
             _session.AutoScrollMessages = _tailMessagesCheckBox.Checked;
             if (!string.IsNullOrEmpty(_session.FileName))
@@ -256,7 +256,7 @@ namespace FixClient
             _fieldView.RowFilter = search;
         }
 
-        void FieldSearchTextBoxTextChanged(object sender, EventArgs e)
+        void FieldSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             if (_fieldView == null || SelectedMessage == null)
                 return;
@@ -284,7 +284,7 @@ namespace FixClient
             _messageGrid.RowCount = _messageView.Count;
         }
 
-        void MessageSearchTextBoxTextChanged(object sender, EventArgs e)
+        void MessageSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             ApplyMessageSearch();
             if (_messageView.Sort == string.Empty)
@@ -307,7 +307,7 @@ namespace FixClient
             }
         }
 
-        void ExportButtonClick(object sender, EventArgs e)
+        void ExportButtonClick(object? sender, EventArgs e)
         {
             string filename = Session.SenderCompId + "-" + Session.TargetCompId + ".txt";
 
@@ -392,7 +392,7 @@ namespace FixClient
             }
         }
 
-        void ResendButtonClick(object sender, EventArgs e)
+        void ResendButtonClick(object? sender, EventArgs e)
         {
             Fix.Message source = SelectedMessage;
 
@@ -428,7 +428,7 @@ namespace FixClient
             Session.Send(message);
         }
 
-        void ClearButtonClick(object sender, EventArgs e)
+        void ClearButtonClick(object? sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show(this,
                                                   "This will clear the order history as well, are you sure",
@@ -445,7 +445,7 @@ namespace FixClient
             }
         }
 
-        void MessageGridSelectionChanged(object sender, EventArgs e)
+        void MessageGridSelectionChanged(object? sender, EventArgs e)
         {
             try
             {
@@ -563,7 +563,7 @@ namespace FixClient
             }
         }
 
-        void MessageAdded(object sender, Fix.MessageCollection.MessageEvent ev)
+        void MessageAdded(object? sender, Fix.MessageCollection.MessageEvent ev)
         {
             if (InvokeRequired)
             {
@@ -592,7 +592,7 @@ namespace FixClient
             }
         }
 
-        void SessionMessageFilterChanged(object sender, EventArgs e)
+        void SessionMessageFilterChanged(object? sender, EventArgs e)
         {
             if (InvokeRequired)
             {
@@ -603,7 +603,7 @@ namespace FixClient
             ApplyMessageSearch();
         }
 
-        void ViewListChanged(object sender, ListChangedEventArgs e)
+        void ViewListChanged(object? sender, ListChangedEventArgs e)
         {
             if (InvokeRequired)
             {

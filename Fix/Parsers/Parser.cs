@@ -71,7 +71,7 @@ namespace Fix
                 {
                     try
                     {
-                        Message message = reader.ReadLine();
+                        Message? message = reader.ReadLine();
                         if (message == null)
                             break;
                         messages.Add(message);

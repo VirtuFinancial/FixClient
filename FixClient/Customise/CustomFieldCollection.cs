@@ -31,6 +31,7 @@ namespace FixClient
         {
             using var stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
             using var reader = new XmlTextReader(stream);
+            
             while (!reader.EOF)
             {
                 reader.MoveToContent();

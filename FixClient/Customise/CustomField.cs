@@ -14,17 +14,9 @@ namespace FixClient
 {
     public class CustomField
     {
-        public int Tag
-        {
-            get;
-            set;
-        }
+        public int Tag { get; set; }
 
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; } = string.Empty;
 
         public static bool operator ==(CustomField lhs, CustomField rhs)
         {
@@ -51,10 +43,9 @@ namespace FixClient
             return !(lhs == rhs);
         }
 
-        public override bool Equals(object rhs)
+        public override bool Equals(object? rhs)
         {
-            var field = rhs as CustomField;
-            if (field != null)
+            if (rhs is CustomField field)
             {
                 return this == field;
             }

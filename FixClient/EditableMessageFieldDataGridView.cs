@@ -52,7 +52,7 @@ namespace FixClient
             (e.Control as ComboBox).DropDownClosed += ComboBoxDropDownClosed;
         }
 
-        void ComboBoxDropDownClosed(object sender, EventArgs e)
+        void ComboBoxDropDownClosed(object? sender, EventArgs e)
         {
             if (sender is ComboBox comboBox)
             {
@@ -60,7 +60,7 @@ namespace FixClient
             }
         }
 
-        void ComboBoxDrawItem(object sender, DrawItemEventArgs e)
+        void ComboBoxDrawItem(object? sender, DrawItemEventArgs e)
         {
             if (e.Index < 0)
                 return;

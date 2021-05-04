@@ -223,7 +223,7 @@ namespace FixClient
             ShowAdminMessageCheckBoxCheckChanged(this, null);
         }
 
-        void MessageGridViewCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        void MessageGridViewCellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
             DataRowView view = _messageView[e.RowIndex];
             if (view.Row is MessageDataRow dataRow)
@@ -235,17 +235,17 @@ namespace FixClient
             }
         }
 
-        void MessageGridViewCellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        void MessageGridViewCellValueNeeded(object? sender, DataGridViewCellValueEventArgs e)
         {
             e.Value = _messageView[e.RowIndex][e.ColumnIndex];
         }
 
-        void StatusMenuItemClick(object sender, EventArgs e)
+        void StatusMenuItemClick(object? sender, EventArgs e)
         {
             UpdateMessageFilter();
         }
 
-        void OrderSearchTextBoxTextChanged(object sender, EventArgs e)
+        void OrderSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             var textBox = (TextBox)sender;
             if (string.IsNullOrEmpty(textBox.Text))
@@ -273,7 +273,7 @@ namespace FixClient
             textBox.Focus();
         }
 
-        void FieldSearchTextBoxTextChanged(object sender, EventArgs e)
+        void FieldSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             if (_fieldView == null)
                 return;
@@ -294,7 +294,7 @@ namespace FixClient
             textBox.Focus();
         }
 
-        void MessageSearchTextBoxTextChanged(object sender, EventArgs e)
+        void MessageSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             UpdateMessageFilter();
         }
@@ -357,7 +357,7 @@ namespace FixClient
             _messageSearchTextBox.Focus();
         }
 
-        void OrderBookOrderUpdated(object sender, Fix.OrderBookEventArgs e)
+        void OrderBookOrderUpdated(object? sender, Fix.OrderBookEventArgs e)
         {
             Fix.Order order = e.Order;
 
@@ -370,7 +370,7 @@ namespace FixClient
             UpdateRow(row);
         }
 
-        void OrderBookOrderInserted(object sender, Fix.OrderBookEventArgs e)
+        void OrderBookOrderInserted(object? sender, Fix.OrderBookEventArgs e)
         {
             Fix.Order order = e.Order;
             if (_orderTable.Rows.Find(order.ClOrdID) is OrderDataRow)
@@ -451,12 +451,12 @@ namespace FixClient
                 row[OrderDataTable.ColumnText] = order.Text;
         }
 
-        void ShowAdminMessageCheckBoxCheckChanged(object sender, EventArgs e)
+        void ShowAdminMessageCheckBoxCheckChanged(object? sender, EventArgs e)
         {
             UpdateMessageFilter();
         }
 
-        void LoadClientMessagesButtonClick(object sender, EventArgs e)
+        void LoadClientMessagesButtonClick(object? sender, EventArgs e)
         {
             using OpenFileDialog dlg = new();
             if (dlg.ShowDialog() != DialogResult.OK)
@@ -535,7 +535,7 @@ namespace FixClient
             return definition;
         }
 
-        void ClientMessageGridGridSelectionChanged(object sender, EventArgs e)
+        void ClientMessageGridGridSelectionChanged(object? sender, EventArgs e)
         {
             try
             {
@@ -620,7 +620,7 @@ namespace FixClient
             };
         }
 
-        void MessagesMessageAdded(object sender, Fix.MessageCollection.MessageEvent ev)
+        void MessagesMessageAdded(object? sender, Fix.MessageCollection.MessageEvent ev)
         {
             Fix.Message message = ev.Message;
 
