@@ -10,11 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.Windows.Forms;
 
 namespace FixClient
@@ -22,7 +18,7 @@ namespace FixClient
     public class DataGridViewIndentColumn : DataGridViewColumn
     {
         public DataGridViewIndentColumn()
-        :   base(new DataGridViewIndentCell())
+        : base(new DataGridViewIndentCell())
         {
         }
 

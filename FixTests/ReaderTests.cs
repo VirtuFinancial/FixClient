@@ -10,12 +10,12 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Collections;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FixTests
 {
@@ -24,18 +24,18 @@ namespace FixTests
     {
         #region Private Methods
 
-        void FieldsEqual(string[,] expected, Fix.Message message)
+        static void FieldsEqual(string[,] expected, Fix.Message message)
         {
             Assert.AreEqual(expected.Length / 2, message.Fields.Count, "Field count");
 
-            for(int index = 0; index < message.Fields.Count; ++index)
+            for (int index = 0; index < message.Fields.Count; ++index)
             {
                 Fix.Field actual = message.Fields[index];
 
-                int tag;
-
-                if(!int.TryParse(expected[index, 0], out tag))
+                if (!int.TryParse(expected[index, 0], out int tag))
+                {
                     Assert.Fail("Non numeric tag '{0}={1}'", expected[index, 0], expected[index, 1]);
+                }
 
                 Assert.AreEqual(tag, actual.Tag, "Tag");
                 Assert.AreEqual(expected[index, 1], actual.Value, "Value");
@@ -47,7 +47,7 @@ namespace FixTests
         [TestMethod]
         public void TestReadEmail()
         {
-            string[,] expected = 
+            string[,] expected =
             {
                 { "8", "FIX.4.0" },
                 { "9", "127" },
@@ -70,7 +70,7 @@ namespace FixTests
 
             Assert.AreEqual(Fix.Dictionary.FIX_4_0.Messages.Email.MsgType, message.MsgType);
         }
-       
+
         [TestMethod]
         public void TestReadKodiakOrderWave()
         {
@@ -165,7 +165,7 @@ namespace FixTests
         public void TestDataFieldWithNoPrecedingSize()
         {
             byte[] data = Encoding.ASCII.GetBytes("89=��#�e���E0LX��10=147");
-            var message = new Fix.Message(data);
+            _ = new Fix.Message(data);
         }
 
         [TestMethod]
@@ -173,7 +173,7 @@ namespace FixTests
         public void TestDataFieldWithNonNumericPrevious()
         {
             byte[] data = Encoding.ASCII.GetBytes("8=FIX.4.09=13135=C49=KODIAK56=server34=750=kgehvwap52=20090724-07:20:4194=033=158=UserRegisterRequest#7,13,13#93=XX89=\xA1\xE6\x23\x0E\xC9\x65\x95\x98\x18\x9C\x45\x30\x4C\x58\xC1\xD5\x01\x31\x30=147");
-            var message = new Fix.Message(data);
+            _ = new Fix.Message(data);
         }
 
         [TestMethod]
@@ -181,9 +181,9 @@ namespace FixTests
         public void TestDataFieldWithNoTrailingSeparator()
         {
             byte[] data = Encoding.ASCII.GetBytes("8=FIX.4.09=13135=C49=KODIAK56=server34=750=kgehvwap52=20090724-07:20:4194=033=158=UserRegisterRequest#7,13,13#93=1689=\xA1\xE6\x23\x0E\xC9\x65\x95\x98\x18\x9C\x45\x30\x4C\x58\xC1\xD5\x31\x30=147");
-            var message = new Fix.Message(data);
+            _ = new Fix.Message(data);
         }
-        
+
         public static byte[] StringToByteArray(string hex)
         {
             return Enumerable.Range(0, hex.Length)
@@ -228,11 +228,11 @@ namespace FixTests
             Assert.AreEqual("147", message.ComputeCheckSum());
 
             var stream = new MemoryStream();
-            using (Fix.Writer writer = new Fix.Writer(stream, leaveOpen:true))
+            using (Fix.Writer writer = new(stream, leaveOpen: true))
             {
                 writer.Write(message);
             }
-           
+
             byte[] serialised = stream.ToArray();
 
             Assert.IsTrue(StructuralComparisons.StructuralEqualityComparer.Equals(data, serialised));
@@ -287,15 +287,13 @@ namespace FixTests
         public void TestMessageReadEvent()
         {
             byte[] data = Encoding.ASCII.GetBytes("8=FIX.4.09=28635=849=ITGHK56=KODIAK_KASFQA34=163357=kasfqa52=20091023-05:40:1637=712-217=420=039=055=649707154=238=100000032=031=0.00000014=06=0.00000011=296.2.240=160=20091023-05:40:1659=047=A30=DMA15=KRW6005=ALT=18500TOT=1256276416111=09886=0.0000009887=09912=09911=010=135");
-            using (MemoryStream stream = new MemoryStream(data))
-            using (Fix.Reader reader = new Fix.Reader(stream))
-            {
-                int messagesRead = 0;
-                reader.MessageRead += (sender, ev) => ++messagesRead;
-                var message = new Fix.Message();
-                reader.Read(message);
-                Assert.AreEqual(1, messagesRead);
-            }
+            using MemoryStream stream = new(data);
+            using Fix.Reader reader = new(stream);
+            int messagesRead = 0;
+            reader.MessageRead += (sender, ev) => ++messagesRead;
+            var message = new Fix.Message();
+            reader.Read(message);
+            Assert.AreEqual(1, messagesRead);
         }
     }
 }

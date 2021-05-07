@@ -10,12 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Threading;
-using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Threading;
 
 namespace FixTests
 {
@@ -27,7 +24,7 @@ namespace FixTests
         const string SenderCompId = "INITIATOR";
         const string TargetCompId = "ACCEPTOR";
 
-        readonly object _serialiser = new object();
+        readonly object _serialiser = new();
 
         [TestInitialize]
         public void TestInitialize()
@@ -118,7 +115,7 @@ namespace FixTests
 
             AcceptorStateChange(Fix.State.LoggedOn);
             InitiatorStateChange(Fix.State.LoggedOn);
-        
+
             // TODO - generate a heap of orders
 
             // TODO - initate a resend
@@ -205,9 +202,9 @@ namespace FixTests
 
             ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon);
             ReceiveAtInitiator(Fix.Dictionary.Messages.Logon);
-           
+
             AcceptorStateChange(Fix.State.LoggedOn);
-            InitiatorStateChange(Fix.State.LoggedOn);        
+            InitiatorStateChange(Fix.State.LoggedOn);
         }
 
         [TestMethod]
@@ -232,7 +229,7 @@ namespace FixTests
             AcceptorStateChange(Fix.State.Disconnected);
             InitiatorStateChange(Fix.State.Disconnected);
         }
-        
+
         [TestMethod]
         public void TestNextExpectedMsgSeqNumMissingAtInitiator()
         {
@@ -549,7 +546,7 @@ namespace FixTests
 
             ReceiveAtInitiator(Fix.Dictionary.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 1),  
+                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 1),
                 new Fix.Field(Fix.Dictionary.Fields.ResetSeqNumFlag, "Y")
             });
 
@@ -597,7 +594,7 @@ namespace FixTests
 
             ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 1),  
+                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 1),
                 new Fix.Field(Fix.Dictionary.Fields.ResetSeqNumFlag, "Y")
             });
 
@@ -668,7 +665,7 @@ namespace FixTests
             SendFromInitiator(Fix.Dictionary.Messages.Heartbeat);
             ReceiveAtAcceptor(Fix.Dictionary.Messages.Heartbeat);
 
-            SentFromAcceptor(Fix.Dictionary.Messages.ResendRequest, new []
+            SentFromAcceptor(Fix.Dictionary.Messages.ResendRequest, new[]
             {
                  new Fix.Field(Fix.Dictionary.Fields.BeginSeqNo, beginSeqNum),
                  new Fix.Field(Fix.Dictionary.Fields.EndSeqNo, endSeqNo)
@@ -700,7 +697,7 @@ namespace FixTests
             Initiator.Open();
 
             StandardLogonSequence();
-            
+
             AcceptorStateChange(Fix.State.LoggedOn);
             InitiatorStateChange(Fix.State.LoggedOn);
         }
@@ -811,7 +808,7 @@ namespace FixTests
 
             AcceptorStateChange(Fix.State.LoggedOn);
             InitiatorStateChange(Fix.State.LoggedOn);
-        
+
             Assert.AreEqual(10, Acceptor.HeartBtInt);
         }
 
@@ -908,7 +905,7 @@ namespace FixTests
             {
                 new Fix.Field(Fix.Dictionary.Fields.Text, string.Format("MsgSeqNum too low, expecting 5 but received 1"))
             });
-            
+
             AcceptorStateChange(Fix.State.Disconnected);
             InitiatorStateChange(Fix.State.Disconnected);
         }
@@ -939,7 +936,7 @@ namespace FixTests
 
             Acceptor.Send(new Fix.Message
             {
-                MsgType =  Fix.Dictionary.Messages.Logon.MsgType,
+                MsgType = Fix.Dictionary.Messages.Logon.MsgType,
                 Fields = {
                     new Fix.Field(Fix.Dictionary.Fields.HeartBtInt, 30),
                     new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 5002)
@@ -1088,7 +1085,7 @@ namespace FixTests
                 }
             };
             message.Fields.Set(new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6243));
-           
+
             Initiator.Send(message, false);
             /*
             2014-09-01 13:57:40.1545|INFO|AwesomO.Execution.FixClient|[GEH_DESK,GATE] 10.132.100.2:65371 SeqenceReset GapFill received, NewSeqNo = 6247
@@ -1203,7 +1200,7 @@ namespace FixTests
         public void TestFirstMessageNotLogon()
         {
             Initiator.LogonBehaviour = Fix.Behaviour.Acceptor;
-           
+
             Assert.AreEqual(Fix.State.Connected, Acceptor.State);
             Assert.AreEqual(Fix.State.Connected, Initiator.State);
 
@@ -1283,9 +1280,9 @@ namespace FixTests
             InitiatorStateChange(Fix.State.LoggingOn);
             AcceptorStateChange(Fix.State.LoggingOn);
 
-            SendFromInitiator(Fix.Dictionary.Messages.Logon, new []
+            SendFromInitiator(Fix.Dictionary.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.HeartBtInt, "DODGY") 
+                new Fix.Field(Fix.Dictionary.Fields.HeartBtInt, "DODGY")
             });
             ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon);
 
@@ -1384,7 +1381,7 @@ namespace FixTests
                 AutoSendingTime = true
             };
 
-            var clone = (Fix.Session) original.Clone();
+            var clone = (Fix.Session)original.Clone();
 
             clone.OrderBehaviour = Fix.Behaviour.Acceptor;
             clone.BeginString = Fix.Dictionary.Versions.FIX_4_2;

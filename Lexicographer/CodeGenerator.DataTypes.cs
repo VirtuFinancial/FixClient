@@ -10,17 +10,13 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.CodeDom;
 
 namespace Lexicographer
 {
     partial class CodeGenerator
     {
-        CodeTypeDeclaration GenerateDataTypes(Fix.Repository.Version version)
+        static CodeTypeDeclaration GenerateDataTypes(Fix.Repository.Version version)
         {
             var dictionaryType = new CodeTypeDeclaration("Dictionary")
             {
@@ -68,7 +64,7 @@ namespace Lexicographer
 
             foreach (string dataType in version.DataTypes)
             {
-                string typeName = dataType[0].ToString().ToUpper() + dataType.Substring(1);
+                string typeName = dataType[0].ToString().ToUpper() + dataType[1..];
                 var field = new CodeMemberField("readonly string", typeName)
                 {
                     Attributes = MemberAttributes.Public,
@@ -76,7 +72,7 @@ namespace Lexicographer
                 };
                 dataTypesType.Members.Add(field);
             }
-         
+
             var itemsCreate = new CodeArrayCreateExpression("System.String");
             var assign = new CodeAssignStatement(new CodeVariableReferenceExpression("_dataTypes"), itemsCreate);
 
@@ -87,13 +83,13 @@ namespace Lexicographer
             dataTypeCollectionConstructor.Statements.Add(assign);
 
             dataTypesType.Members.Add(dataTypeCollectionConstructor);
-            
+
             foreach (string dataType in version.DataTypes)
             {
-                string typeName = dataType[0].ToString().ToUpper() + dataType.Substring(1);
+                string typeName = dataType[0].ToString().ToUpper() + dataType[1..];
                 itemsCreate.Initializers.Add(new CodeTypeReferenceExpression(typeName));
             }
-          
+
             versionType.Members.Add(dataTypesType);
             dictionaryType.Members.Add(versionType);
 

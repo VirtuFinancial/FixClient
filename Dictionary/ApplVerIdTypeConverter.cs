@@ -10,20 +10,17 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
 
 namespace Fix
 {
-    public static partial class Dictionary
+    public partial class Dictionary
     {
         public class ApplVerIdTypeConverter : TypeConverter
         {
-            readonly List<Version> _versions = new List<Version>();
+            readonly List<Version> _versions = new();
 
             public ApplVerIdTypeConverter()
             {
@@ -47,20 +44,18 @@ namespace Fix
 
             public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
             {
-                if (sourceType == typeof (string))
+                if (sourceType == typeof(string))
                     return true;
                 return base.CanConvertFrom(context, sourceType);
             }
 
             public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
             {
-                var key = value as string;
-
-                if (key != null)
+                if (value as string != null)
                 {
                     foreach (var version in _versions)
                     {
-                        if (version.BeginString == key)
+                        if (version.BeginString == value as string)
                             return version;
                     }
                 }

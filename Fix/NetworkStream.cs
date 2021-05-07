@@ -10,18 +10,13 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fix
 {
-    public class NetworkStream : System.Net.Sockets.NetworkStream 
+    public class NetworkStream : System.Net.Sockets.NetworkStream
     {
         public NetworkStream(System.Net.Sockets.Socket socket, bool ownsSocket)
-        :   base(socket, ownsSocket)
+        : base(socket, ownsSocket)
         {
         }
 

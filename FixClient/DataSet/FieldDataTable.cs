@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Data;
 
 namespace FixClient
@@ -28,7 +28,7 @@ namespace FixClient
         public FieldDataTable(string name)
             : base(name)
         {
-            Columns.Add(ColumnIndent, typeof (Int32)).ColumnMapping = MappingType.Hidden;
+            Columns.Add(ColumnIndent, typeof(Int32)).ColumnMapping = MappingType.Hidden;
             Columns.Add(ColumnTag, typeof(Int32));
             Columns.Add(ColumnName);
             Columns.Add(ColumnValue);

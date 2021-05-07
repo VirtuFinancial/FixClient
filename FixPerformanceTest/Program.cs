@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////
+﻿/////////////////////////////////////////////////
 //
 // FIX Client
 //
@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +33,7 @@ namespace FixPerformanceTest
             Console.WriteLine("{0} - {1}", stopwatch.Elapsed, label);
         }
 
-        static void Main(string[] args)
+        static void Main()
         {
             TimeOperation(TestMessageFieldAccess, "Message Field Access");
             TimeOperation(TestReadHistoryFile, "Read History File");
@@ -53,7 +53,7 @@ namespace FixPerformanceTest
             for (int i = 0; i < 100000; ++i)
             {
                 int tag = tags[random.Next(tags.Length)];
-                Fix.Field field = message.Fields.Find(tag);
+                _ = message.Fields.Find(tag);
             }
         }
 
@@ -68,7 +68,7 @@ namespace FixPerformanceTest
                 long count = 0;
                 long exceptions = 0;
                 using (var stream = new FileStream(filename, FileMode.Open))
-                using(var reader = new Fix.Reader(stream))
+                using (var reader = new Fix.Reader(stream))
                 {
                     for (; ; )
                     {
@@ -76,7 +76,7 @@ namespace FixPerformanceTest
                         {
                             Fix.Message message = reader.ReadLine();
 
-                            if(message == null)
+                            if (message == null)
                                 break;
 
                             messages.Add(message);

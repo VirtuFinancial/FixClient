@@ -10,12 +10,12 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.ComponentModel;
 
 namespace Fix
 {
-    public static partial class Dictionary
+    public partial class Dictionary
     {
         public class Field
         {
@@ -31,10 +31,10 @@ namespace Fix
             {
                 _definition = definition;
             }
-            
+
             // This constructor is for the message fields
             public Field(FieldDefinition definition, bool required, int indent, string added)
-            :   this(definition)
+            : this(definition)
             {
                 Required = required;
                 Indent = indent;
@@ -44,7 +44,7 @@ namespace Fix
             [Category(Category)]
             public int Tag => _definition.Tag;
 
-            [Category(Category)] 
+            [Category(Category)]
             public string Name => _definition.Name;
 
             [Browsable(false)]

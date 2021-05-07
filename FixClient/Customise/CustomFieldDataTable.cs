@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System.Data;
+using System.Data;
 
 namespace FixClient
 {
@@ -20,16 +20,16 @@ namespace FixClient
         public const string ColumnNameTag = "Tag";
 
         public CustomFieldDataTable(string name)
-        :   base(name)
+        : base(name)
         {
             DataColumn columnTag = Columns.Add(ColumnNameTag);
             Columns.Add(ColumnNameName);
-            PrimaryKey = new[] {columnTag};
+            PrimaryKey = new[] { columnTag };
         }
 
         protected override System.Type GetRowType()
         {
-            return typeof (CustomFieldDataRow);
+            return typeof(CustomFieldDataRow);
         }
 
         protected override DataRow NewRowFromBuilder(DataRowBuilder builder)

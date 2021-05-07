@@ -10,9 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-using System;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace FixClient
@@ -53,9 +51,7 @@ namespace FixClient
             DefaultCellStyle.SelectionForeColor = LookAndFeel.Color.GridCellSelectedForeground;
             DoubleBuffered = true;
 
-#pragma warning disable RECS0091 // Use 'var' keyword when possible
             DataGridViewColumn column = new DataGridViewCheckBoxColumn
-#pragma warning restore RECS0091 // Use 'var' keyword when possible
             {
                 Name = FilterFieldDataTable.ColumnVisible,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
@@ -63,19 +59,19 @@ namespace FixClient
             Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn
-                         {
-                             Name = FilterFieldDataTable.ColumnTag,
-                             ReadOnly = true,
-                             AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-                         };
+            {
+                Name = FilterFieldDataTable.ColumnTag,
+                ReadOnly = true,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+            };
             Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn
-                         {
-                             Name = FilterFieldDataTable.ColumnName,
-                             ReadOnly = true,
-                             AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                         };
+            {
+                Name = FilterFieldDataTable.ColumnName,
+                ReadOnly = true,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            };
             Columns.Add(column);
         }
     }

@@ -10,10 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Text;
 
 namespace FixTests
 {
@@ -26,7 +24,7 @@ namespace FixTests
         {
             byte[] data = Encoding.ASCII.GetBytes("8=FIX.4.09=12749=ITGHK56=KODIAK_KGEHVWAP34=452=20090630-23:37:1294=033=158=RemotedHost#Name=gateQA-p01,Ip=10.132.3.125,Port=7081#10=128");
             var message = new Fix.Message(data);
-            string msgType = message.MsgType;
+            _ = message.MsgType;
         }
 
         [TestMethod]
@@ -58,7 +56,7 @@ namespace FixTests
         [TestMethod]
         public void TestNameValuePairConstructor()
         {
-            string[,] fields = 
+            string[,] fields =
             {
                 { "8", "FIX.4.0" },
                 { "9", "127" },

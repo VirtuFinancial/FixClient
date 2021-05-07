@@ -10,9 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-using System;
-using System.Windows.Forms;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace FixClient
 {
@@ -26,16 +25,15 @@ namespace FixClient
             //  Change assembly information settings for your application through either:
             //  - Project->Properties->Application->Assembly Information
             //  - AssemblyInfo.cs
-            Text = String.Format("About {0}", "FIX Client");
+            Text = string.Format("About {0}", "FIX Client");
             labelProductName.Text = "FIX Client";
-            labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
-            labelCopyright.Text = AssemblyCopyright;
-            labelCompanyName.Text = AssemblyCompany;
+            labelVersion.Text = string.Format("Version {0}", AssemblyVersion);
+            labelCopyright.Text = string.Format("Original work Copyright VIRTU Financial 2021\r\n\r\nModified work Copyright Gary Hughes 2021");
         }
 
         #region Assembly Attribute Accessors
 
-        public string AssemblyTitle
+        public static string AssemblyTitle
         {
             get
             {
@@ -51,11 +49,11 @@ namespace FixClient
                         return titleAttribute.Title;
                 }
                 // If there was no Title attribute, or if the Title attribute was the empty string, return the .exe name
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+                return System.IO.Path.GetFileNameWithoutExtension(System.AppContext.BaseDirectory);
             }
         }
 
-        public string AssemblyVersion
+        public static string AssemblyVersion
         {
             get
             {
@@ -63,7 +61,7 @@ namespace FixClient
             }
         }
 
-        public string AssemblyDescription
+        public static string AssemblyDescription
         {
             get
             {
@@ -77,7 +75,7 @@ namespace FixClient
             }
         }
 
-        public string AssemblyProduct
+        public static string AssemblyProduct
         {
             get
             {
@@ -91,7 +89,7 @@ namespace FixClient
             }
         }
 
-        public string AssemblyCopyright
+        public static string AssemblyCopyright
         {
             get
             {
@@ -105,7 +103,7 @@ namespace FixClient
             }
         }
 
-        public string AssemblyCompany
+        public static string AssemblyCompany
         {
             get
             {

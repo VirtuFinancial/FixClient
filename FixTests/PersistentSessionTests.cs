@@ -10,10 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using System.Threading;
 
 namespace FixTests
 {
@@ -25,7 +24,7 @@ namespace FixTests
         const string SenderCompId = "INITIATOR";
         const string TargetCompId = "ACCEPTOR";
 
-        readonly object _serialiser = new object();
+        readonly object _serialiser = new();
 
         [TestInitialize]
         public void TestInitialize()

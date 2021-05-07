@@ -10,10 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FixTests
 {
@@ -30,7 +28,7 @@ namespace FixTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof (ArgumentException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void TestConstructorNoSenderCompId()
         {
             var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType };
@@ -39,20 +37,20 @@ namespace FixTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof (ArgumentException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void TestConstructorNoTargetCompId()
         {
-            var message = new Fix.Message {MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType};
+            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType };
             message.Fields.Set(Fix.Dictionary.Fields.SenderCompID, "SENDER");
             var order = new Fix.Order(message);
             Assert.IsNotNull(order);
         }
 
         [TestMethod]
-        [ExpectedException(typeof (ArgumentException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void TestConstructorNoSymbol()
         {
-            var message = new Fix.Message {MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType};
+            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType };
             message.Fields.Set(Fix.Dictionary.Fields.SenderCompID, "SENDER");
             message.Fields.Set(Fix.Dictionary.Fields.TargetCompID, "TARGET");
             var order = new Fix.Order(message);
@@ -60,10 +58,10 @@ namespace FixTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof (ArgumentException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void TestConstructorNoClOrdId()
         {
-            var message = new Fix.Message {MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType};
+            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType };
             message.Fields.Set(Fix.Dictionary.Fields.SenderCompID, "SENDER");
             message.Fields.Set(Fix.Dictionary.Fields.TargetCompID, "TARGET");
             message.Fields.Set(Fix.Dictionary.Fields.Symbol, "BHP");
@@ -74,7 +72,7 @@ namespace FixTests
         [TestMethod]
         public void TestConstructorAllMinimumRequirementsMet()
         {
-            var message = new Fix.Message {MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType};
+            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.NewOrderSingle.MsgType };
             message.Fields.Set(Fix.Dictionary.Fields.SenderCompID, "SENDER");
             message.Fields.Set(Fix.Dictionary.Fields.TargetCompID, "TARGET");
             message.Fields.Set(Fix.Dictionary.Fields.Symbol, "BHP");
@@ -89,7 +87,7 @@ namespace FixTests
             Assert.AreEqual(5000, order.OrderQty);
             Assert.AreEqual(1, order.Messages.Count);
         }
-        
+
 
     }
 }

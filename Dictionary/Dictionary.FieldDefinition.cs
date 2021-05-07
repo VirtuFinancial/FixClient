@@ -10,12 +10,11 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.ComponentModel;
+using System;
 
 namespace Fix
 {
-    public static partial class Dictionary
+    public partial class Dictionary
     {
         public class FieldDefinition
         {
@@ -27,7 +26,7 @@ namespace Fix
             {
                 if (enumeratedType != null && !enumeratedType.IsEnum)
                 {
-                    throw new ArgumentException("enumerated type must be an enum");    
+                    throw new ArgumentException("enumerated type must be an enum");
                 }
 
                 EnumeratedType = enumeratedType;
@@ -37,7 +36,7 @@ namespace Fix
                 DataType = dataType.ToUpper() == "STIRNG" ? "string" : dataType;
                 Added = added;
             }
-            
+
             public int Tag { get; }
             public string Name { get; }
             public string Description { get; }

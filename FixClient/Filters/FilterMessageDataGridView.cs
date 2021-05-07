@@ -10,7 +10,6 @@
 //
 /////////////////////////////////////////////////
 
-using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -50,9 +49,7 @@ namespace FixClient
             DefaultCellStyle.SelectionForeColor = LookAndFeel.Color.GridCellSelectedForeground;
             DoubleBuffered = true;
 
-#pragma warning disable RECS0091 // Use 'var' keyword when possible
             DataGridViewColumn column = new DataGridViewCheckBoxColumn
-#pragma warning restore RECS0091 // Use 'var' keyword when possible
             {
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells,
                 Name = "Visible"
@@ -64,13 +61,14 @@ namespace FixClient
                 ReadOnly = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells,
                 Name = "Type",
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleCenter}
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             };
             Columns.Add(column);
 
             column = new DataGridViewTextBoxColumn
             {
-                ReadOnly = true, AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                ReadOnly = true,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 Name = "Name"
             };
             Columns.Add(column);

@@ -10,21 +10,16 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
-using System.Net.Sockets;
-using System.Collections.Concurrent;
-using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace FixTests
 {
-    public class SessionTestsBase<TSession> where TSession : Fix.Session, new() 
+    public class SessionTestsBase<TSession> where TSession : Fix.Session, new()
     {
         const string Host = "127.0.0.1";
         int Port = 20101;
@@ -84,7 +79,7 @@ namespace FixTests
             _listener = new TcpListener(Fix.Network.GetLocalAddress(Host), Port);
             _listener.Start();
             _listener.BeginAcceptSocket(AcceptTcpClientCallback, _listener);
-            _client = new TcpClient {NoDelay = true};
+            _client = new TcpClient { NoDelay = true };
             _client.Connect(Fix.Network.GetAddress(Host), Port);
             Initiator = new TSession
             {
@@ -195,15 +190,13 @@ namespace FixTests
 
         protected void AcceptorStateChange(Fix.State expected)
         {
-            Fix.State actual;
-            Assert.IsTrue(_acceptorStates.TryTake(out actual, Timeout), $"Timeout waiting for acceptor state change {expected}");
+            Assert.IsTrue(_acceptorStates.TryTake(out Fix.State actual, Timeout), $"Timeout waiting for acceptor state change {expected}");
             Assert.AreEqual(expected, actual);
         }
 
         protected void InitiatorStateChange(Fix.State expected)
         {
-            Fix.State actual;
-            Assert.IsTrue(_initatorStates.TryTake(out actual, Timeout), $"Timeout waiting for initiator state change {expected}");
+            Assert.IsTrue(_initatorStates.TryTake(out Fix.State actual, Timeout), $"Timeout waiting for initiator state change {expected}");
             Assert.AreEqual(expected, actual);
         }
 
@@ -217,7 +210,7 @@ namespace FixTests
             return Expect(_acceptorIncomingMessages, definition, expectedFields);
         }
 
-        string MsgTypeName(string msgType)
+        static string MsgTypeName(string msgType)
         {
             Fix.Dictionary.Message definition = Fix.Dictionary.Messages[msgType];
             if (definition == null)
@@ -225,11 +218,9 @@ namespace FixTests
             return definition.Name;
         }
 
-        Fix.Message Expect(BlockingCollection<Fix.Message> messages, Fix.Dictionary.Message definition, IEnumerable<Fix.Field> expectedFields)
+        static Fix.Message Expect(BlockingCollection<Fix.Message> messages, Fix.Dictionary.Message definition, IEnumerable<Fix.Field> expectedFields)
         {
-            Fix.Message message;
-
-            Assert.IsTrue(messages.TryTake(out message, Timeout), $"Timed out waiting for MsgType={definition.Name}");
+            Assert.IsTrue(messages.TryTake(out Fix.Message message, Timeout), $"Timed out waiting for MsgType={definition.Name}");
             Assert.AreEqual(definition.MsgType, message.MsgType, $"Found MsgType={MsgTypeName(message.MsgType)} when we expected MsgType={definition.Name}\n{message}");
 
             if (expectedFields == null)
@@ -240,7 +231,7 @@ namespace FixTests
             foreach (var expected in expectedFields)
             {
                 Fix.Field actual;
-                for (;;)
+                for (; ; )
                 {
                     Assert.IsTrue(fields.MoveNext(), $"Expected field {expected} is not present or is not in the expected position");
                     actual = fields.Current;

@@ -10,10 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Fix
 {
@@ -23,7 +22,7 @@ namespace Fix
         // We need a much smarter data structure here but this will do to get things working and
         // define the interface
         //
-        readonly List<Field> _fields = new List<Field>();
+        readonly List<Field> _fields = new();
         readonly Dictionary.Message _messageDefinition;
 
         public FieldCollection(Dictionary.Message messageDefinition = null)
@@ -35,9 +34,11 @@ namespace Fix
         {
             for (int index = 0; index < data.Length / 2; ++index)
             {
-                int tag;
-                if (!int.TryParse(data[index, 0], out tag))
+                if (!int.TryParse(data[index, 0], out int tag))
+                {
                     throw new ArgumentException($"Non numeric tag '{data[index, 0]}={data[index, 1]}'");
+                }
+
                 Add(new Field(tag, data[index, 1]));
             }
         }
@@ -46,8 +47,7 @@ namespace Fix
         {
             if (field.Definition == null && _messageDefinition != null)
             {
-                Dictionary.Field definition;
-                if (_messageDefinition.Fields.TryGetValue(field.Tag, out definition))
+                if (_messageDefinition.Fields.TryGetValue(field.Tag, out Dictionary.Field definition))
                 {
                     field.Definition = definition;
                 }
@@ -225,8 +225,8 @@ namespace Fix
 
         public Field Find(int tag)
         {
-            return (from Field field in _fields 
-                    where field.Tag == tag 
+            return (from Field field in _fields
+                    where field.Tag == tag
                     select field).FirstOrDefault();
         }
 
@@ -246,7 +246,7 @@ namespace Fix
 
         public Field FindFrom(int tag, ref int index)
         {
-            if(index < 0 || index >= _fields.Count)
+            if (index < 0 || index >= _fields.Count)
                 throw new IndexOutOfRangeException();
 
             for (; index < _fields.Count; ++index)
@@ -311,7 +311,7 @@ namespace Fix
         {
             return from Field field in _fields.GetRange(index, count) select (Field)field.Clone();
         }
-   
+
         #region IEnumerable<Field>
 
         public IEnumerator<Field> GetEnumerator()

@@ -10,7 +10,6 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -55,8 +54,7 @@ namespace FixClient
         {
             if (ModifierKeys == Keys.Control)
             {
-                var source = DataSource as BindingSource;
-                if (source != null)
+                if (DataSource is BindingSource source)
                 {
                     source.Sort = string.Empty;
                     Refresh();

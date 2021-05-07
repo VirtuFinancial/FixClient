@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -18,7 +18,7 @@ namespace Fix
 {
     public class MessageCollection : IEnumerable<Message>, ICloneable
     {
-        readonly List<Message> _messages = new List<Message>();
+        readonly List<Message> _messages = new();
 
         #region Events
 
@@ -88,7 +88,7 @@ namespace Fix
         public object Clone()
         {
             var clone = new MessageCollection();
-            foreach(Message message in _messages)
+            foreach (Message message in _messages)
                 clone.Add(message);
             return clone;
         }

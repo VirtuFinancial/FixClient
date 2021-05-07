@@ -10,8 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace DictionaryTests
 {
@@ -49,14 +49,14 @@ namespace DictionaryTests
         [ExpectedException(typeof(ArgumentException))]
         public void TestFieldLookupByNameNonFieldPropertyIsNotReflected()
         {
-            Fix.Dictionary.Field field = Fix.Dictionary.Fields["Count"];
+            _ = Fix.Dictionary.Fields["Count"];
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestFieldLookupByInvalidName()
         {
-            Fix.Dictionary.Field field = Fix.Dictionary.Fields["VybongBysanton"];
+            _ = Fix.Dictionary.Fields["VybongBysanton"];
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace DictionaryTests
         [ExpectedException(typeof(ArgumentException))]
         public void TestOutOfRangeMin()
         {
-            Fix.Dictionary.Field field = Fix.Dictionary.Fields["0"];
+            _ = Fix.Dictionary.Fields["0"];
         }
 
         [TestMethod]
@@ -94,7 +94,7 @@ namespace DictionaryTests
         [ExpectedException(typeof(ArgumentException))]
         public void TestOutOfRangeMax()
         {
-            Fix.Dictionary.Field field = Fix.Dictionary.FIX_4_0.Fields["141"];
+            _ = Fix.Dictionary.FIX_4_0.Fields["141"];
         }
 
         [TestMethod]

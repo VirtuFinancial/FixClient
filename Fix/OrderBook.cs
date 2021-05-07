@@ -10,11 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+using System;
 using System.Linq;
-using System.Text;
 
 namespace Fix
 {
@@ -31,7 +28,7 @@ namespace Fix
     public class OrderBook
     {
         #region Events
-        
+
         public delegate void OrderDelegate(object sender, OrderBookEventArgs e);
 
         public event OrderDelegate OrderInserted;
@@ -67,9 +64,9 @@ namespace Fix
         [Flags]
         public enum Retain
         {
-            None        = 0,
-            ActiveGTC   = 1 << 1,
-            ActiveGTD   = 1 << 2
+            None = 0,
+            ActiveGTC = 1 << 1,
+            ActiveGTD = 1 << 2
         }
 
         public void Clear(Retain options = Retain.None)
@@ -94,7 +91,7 @@ namespace Fix
                     return true;
                 }).ToArray();
 
-                foreach(var item in ordersToRemove)
+                foreach (var item in ordersToRemove)
                 {
                     Orders.Remove(item.Key);
                 }
@@ -105,7 +102,7 @@ namespace Fix
 
         public void Delete(Order order)
         {
-            if(Orders.Remove(KeyForOrder(order)))
+            if (Orders.Remove(KeyForOrder(order)))
             {
                 OnOrderDeleted(order);
             }
@@ -132,7 +129,7 @@ namespace Fix
 
                 Field possDupFlag = message.Fields.Find(Dictionary.Fields.PossDupFlag);
 
-                if (possDupFlag != null && (bool) possDupFlag)
+                if (possDupFlag != null && (bool)possDupFlag)
                 {
                     message.Status = MessageStatus.Warn;
                     message.StatusMessage = StatusMessageHeader + " because it is a possible duplicate";
@@ -247,7 +244,7 @@ namespace Fix
                 return false;
             }
 
-            var ordStatus = (OrdStatus) ordStatusField;
+            var ordStatus = (OrdStatus)ordStatusField;
 
             Field ClOrdID = message.Fields.Find(Dictionary.Fields.ClOrdID);
 
@@ -260,7 +257,7 @@ namespace Fix
 
             Field OrigClOrdID = message.Fields.Find(Dictionary.Fields.OrigClOrdID);
 
-            if(ordStatus == Fix.OrdStatus.Canceled && ClOrdID != null && OrigClOrdID == null)
+            if (ordStatus == Fix.OrdStatus.Canceled && ClOrdID != null && OrigClOrdID == null)
             {
                 if (ProcessOrdStatusUpdate(message, ClOrdID.Value, ordStatus))
                     return true;
@@ -271,7 +268,7 @@ namespace Fix
             // Use hardcoded values for ExecType because values were removed in later releases and we don't want the
             // conversion to explode.
             //
-            if( ordStatus == Fix.OrdStatus.Replaced || 
+            if (ordStatus == Fix.OrdStatus.Replaced ||
                 ordStatus == Fix.OrdStatus.PendingCancel ||
                 ordStatus == Fix.OrdStatus.PendingReplace ||
                 ordStatus == Fix.OrdStatus.Canceled ||
@@ -279,27 +276,27 @@ namespace Fix
             {
                 Field SenderCompID = message.Fields.Find(Dictionary.Fields.SenderCompID);
                 Field TargetCompID = message.Fields.Find(Dictionary.Fields.TargetCompID);
-                
-                if(OrigClOrdID == null || OrigClOrdID.Value == ClOrdID.Value)
+
+                if (OrigClOrdID == null || OrigClOrdID.Value == ClOrdID.Value)
                 {
-                    for(int index = Orders.Count - 1; index >= 0; --index)
+                    for (int index = Orders.Count - 1; index >= 0; --index)
                     {
                         Order order = Orders[index];
 
-                        if(order.NewClOrdID == null)
+                        if (order.NewClOrdID == null)
                             continue;
-                        
-                        if(order.SenderCompID != TargetCompID.Value || order.TargetCompID != SenderCompID.Value)
-                           continue;
 
-                        if(order.ClOrdID == ClOrdID.Value)
+                        if (order.SenderCompID != TargetCompID.Value || order.TargetCompID != SenderCompID.Value)
+                            continue;
+
+                        if (order.ClOrdID == ClOrdID.Value)
                         {
                             OrigClOrdID = ClOrdID;
                             ClOrdID = new Field(Dictionary.Fields.ClOrdID, order.NewClOrdID);
                             break;
                         }
-                
-                        if(order.NewClOrdID == ClOrdID.Value)
+
+                        if (order.NewClOrdID == ClOrdID.Value)
                         {
                             OrigClOrdID = new Field(Dictionary.Fields.ClOrdID, order.ClOrdID);
                             ClOrdID = new Field(Dictionary.Fields.ClOrdID, order.NewClOrdID);
@@ -308,7 +305,7 @@ namespace Fix
                     }
                 }
 
-                if(OrigClOrdID != null)
+                if (OrigClOrdID != null)
                 {
                     //
                     // When we first store the order we set the comp id's relative to the order source so we
@@ -328,7 +325,7 @@ namespace Fix
                     // Use hardcoded values for ExecType because values were removed in later releases and we don't want the
                     // conversion to explode.
                     //
-                    if(ordStatus == Fix.OrdStatus.Replaced ||
+                    if (ordStatus == Fix.OrdStatus.Replaced ||
                        ordStatus == Fix.OrdStatus.PendingReplace ||
                        ordStatus == Fix.OrdStatus.PendingCancel ||
                        ordStatus == Fix.OrdStatus.Canceled)
@@ -339,12 +336,12 @@ namespace Fix
                     {
                         ProcessOrdStatusUpdate(message, order, Fix.OrdStatus.Replaced);
                     }
-                    
-                    if(ordStatus == Fix.OrdStatus.Replaced || (ExecType != null && ExecType.Value == "5"))
+
+                    if (ordStatus == Fix.OrdStatus.Replaced || (ExecType != null && ExecType.Value == "5"))
                     {
                         Message pending = order.PendingMessage;
 
-                        if(pending == null)
+                        if (pending == null)
                             return false;
 
                         var replacement = (Order)order.Clone();
@@ -352,14 +349,14 @@ namespace Fix
 
                         replacement.ClOrdID = ClOrdID.Value;
                         replacement.OrigClOrdID = OrigClOrdID.Value;
-                
-                        if(ordStatus != Fix.OrdStatus.Replaced)
+
+                        if (ordStatus != Fix.OrdStatus.Replaced)
                         {
-					        replacement.OrdStatus = ordStatus;
+                            replacement.OrdStatus = ordStatus;
                         }
-                        else if(order.PreviousOrdStatus != null)
+                        else if (order.PreviousOrdStatus != null)
                         {
-					        replacement.OrdStatus = order.PreviousOrdStatus;
+                            replacement.OrdStatus = order.PreviousOrdStatus;
                         }
                         else
                         {
@@ -368,15 +365,15 @@ namespace Fix
 
                         Field OrderQty = message.Fields.Find(Dictionary.Fields.OrderQty);
 
-                        if(OrderQty != null)
-				        {
-					        replacement.OrderQty = (long)OrderQty;
-				        }
+                        if (OrderQty != null)
+                        {
+                            replacement.OrderQty = (long)OrderQty;
+                        }
 
                         UpdateOrder(replacement, message, true);
-				        AddOrder(replacement);
+                        AddOrder(replacement);
                     }
-        
+
                     return true;
                 }
             }
@@ -429,7 +426,7 @@ namespace Fix
             order.OrdStatus = order.PreviousOrdStatus ?? OrdStatus.New;
             Field Text = message.Fields.Find(Dictionary.Fields.Text);
 
-            if(Text != null)
+            if (Text != null)
             {
                 order.Text = Text.Value;
             }
@@ -437,7 +434,7 @@ namespace Fix
             order.Messages.Add(message);
             OnOrderUpdated(order);
 
-            if(DeleteInactiveOrders && !order.Active)
+            if (DeleteInactiveOrders && !order.Active)
             {
                 DeleteOrder(order);
                 OnOrderDeleted(order);
@@ -451,18 +448,17 @@ namespace Fix
             Field SenderCompID = message.Fields.Find(Dictionary.Fields.SenderCompID);
             Field TargetCompID = message.Fields.Find(Dictionary.Fields.TargetCompID);
             Field ListID = message.Fields.Find(Dictionary.Fields.ListID);
-            Field ClOrdID = message.Fields.Find(Dictionary.Fields.ClOrdID);
 
             if (ListID == null)
                 return false;
 
             Message orderSingle = null;
-            
-            foreach(Field field in message.Fields)
-            { 
-                if(field.Tag == Dictionary.Fields.ClOrdID.Tag)
+
+            foreach (Field field in message.Fields)
+            {
+                if (field.Tag == Dictionary.Fields.ClOrdID.Tag)
                 {
-                    if(orderSingle != null)
+                    if (orderSingle != null)
                     {
                         ProcessNewOrderSingle(orderSingle);
                     }
@@ -479,17 +475,17 @@ namespace Fix
                     continue;
                 }
 
-                if(orderSingle != null)
+                if (orderSingle != null)
                 {
                     orderSingle.Fields.Set(field);
                 }
             }
-            
-            if(orderSingle != null)
+
+            if (orderSingle != null)
             {
                 ProcessNewOrderSingle(orderSingle);
             }
-            
+
             return true;
         }
 
@@ -553,7 +549,7 @@ namespace Fix
 
             Field Price = message.Fields.Find(Dictionary.Fields.Price);
             if (Price != null && (decimal)Price != order.Price)
-                order.PendingPrice = (decimal) Price;
+                order.PendingPrice = (decimal)Price;
 
             order.Messages.Add(message);
 
@@ -611,7 +607,7 @@ namespace Fix
                 return false;
             }
 
-            order.Messages.Add(message);	
+            order.Messages.Add(message);
             order.PreviousOrdStatus = order.OrdStatus;
             order.OrdStatus = Fix.OrdStatus.PendingCancel;
             order.NewClOrdID = ClOrdID.Value;
@@ -645,7 +641,7 @@ namespace Fix
             }
 
             ProcessOrdStatusUpdate(message, order, status);
-            
+
             return true;
         }
 
@@ -656,61 +652,63 @@ namespace Fix
                 order.OrdStatus = status;
             }
 
-            if(order.OrdStatus != Fix.OrdStatus.PendingCancel &&
+            if (order.OrdStatus != Fix.OrdStatus.PendingCancel &&
                order.OrdStatus != Fix.OrdStatus.PendingReplace &&
                order.OrdStatus != Fix.OrdStatus.Replaced)
             {
                 UpdateOrder(order, message);
             }
-	        else
-	        {	
-	            Field ExecType = message.Fields.Find(Dictionary.Fields.ExecType);
+            else
+            {
+                Field ExecType = message.Fields.Find(Dictionary.Fields.ExecType);
 
-		        if(ExecType != null)
-		        {
+                if (ExecType != null)
+                {
                     //
                     // Use hardcoded values for ExecType because values were removed in later releases and we don't want the
                     // conversion to explode.
                     //
-			        if(ExecType.Value == "1" /* Partial */|| ExecType.Value == "2" /* Fill */ )
-			        {
-				        UpdateOrder(order, message);
-			        }
-		        }
-	        }
+                    if (ExecType.Value == "1" /* Partial */|| ExecType.Value == "2" /* Fill */ )
+                    {
+                        UpdateOrder(order, message);
+                    }
+                }
+            }
 
-            if(order.OrdStatus == Fix.OrdStatus.Replaced)
+            if (order.OrdStatus == Fix.OrdStatus.Replaced)
             {
                 order.LeavesQty = 0;
                 order.PendingOrderQty = null;
                 order.PendingPrice = null;
             }
-            
+
             order.Messages.Add(message);
             OnOrderUpdated(order);
-            
-            if(DeleteInactiveOrders && !order.Active)
+
+            if (DeleteInactiveOrders && !order.Active)
             {
                 DeleteOrder(order);
                 OnOrderDeleted(order);
             }
         }
 
-        public string KeyForOrder(Order order)
+        public static string KeyForOrder(Order order)
         {
             return KeyForOrder(order.SenderCompID, order.TargetCompID, order.ClOrdID);
         }
 
-        public string KeyForOrder(string SenderCompID, string TargetCompID, string ClOrdID)
+        public static string KeyForOrder(string SenderCompID, string TargetCompID, string ClOrdID)
         {
             return $"{SenderCompID}-{TargetCompID}-{ClOrdID}";
         }
 
         Order FindOrder(string SenderCompID, string TargetCompID, string ClOrdID)
         {
-            Order order;
-            if (Orders.TryGetValue(KeyForOrder(SenderCompID, TargetCompID, ClOrdID), out order))
+            if (Orders.TryGetValue(KeyForOrder(SenderCompID, TargetCompID, ClOrdID), out Order order))
+            {
                 return order;
+            }
+
             return null;
         }
 
@@ -730,24 +728,24 @@ namespace Fix
                 return false;
             }
 
-            if(MaximumOrders > 0 && Orders.Count >= MaximumOrders)
-	        {
+            if (MaximumOrders > 0 && Orders.Count >= MaximumOrders)
+            {
                 Order inactive = Orders.FirstOrDefault(o => !o.Value.Active).Value;
                 if (inactive != null)
                 {
                     DeleteOrder(inactive);
                     OnOrderDeleted(inactive);
                 }
-	        }
+            }
 
             Orders.Add(KeyForOrder(order), order);
 
             OnOrderInserted(order);
-            
+
             return true;
         }
 
-        void UpdateOrder(Order order, Message message, bool replacement = false)
+        static void UpdateOrder(Order order, Message message, bool replacement = false)
         {
             Field Price = message.Fields.Find(Dictionary.Fields.Price);
             Field AvgPx = message.Fields.Find(Dictionary.Fields.AvgPx);
@@ -755,30 +753,30 @@ namespace Fix
             Field LeavesQty = message.Fields.Find(Dictionary.Fields.LeavesQty);
             Field Text = message.Fields.Find(Dictionary.Fields.Text);
             Field OrderID = message.Fields.Find(Dictionary.Fields.OrderID);
-            
-            if(Price != null && (decimal)Price > 0)
+
+            if (Price != null && (decimal)Price > 0)
                 order.Price = (decimal)Price;
 
-            if(AvgPx != null)
+            if (AvgPx != null)
                 order.AvgPx = (decimal)AvgPx;
 
-            if(CumQty != null)
+            if (CumQty != null)
                 order.CumQty = (long)CumQty;
 
-            if(LeavesQty != null && !replacement)
+            if (LeavesQty != null && !replacement)
             {
                 order.LeavesQty = (long)LeavesQty;
             }
             else
             {
-                if(order.Active)
+                if (order.Active)
                 {
-                    if(order.CumQty.HasValue)
+                    if (order.CumQty.HasValue)
                     {
                         long done = order.CumQty.Value;
                         long value = 0;
-                
-                        if(done <= order.OrderQty)
+
+                        if (done <= order.OrderQty)
                         {
                             value = order.OrderQty - done;
                         }
@@ -792,19 +790,19 @@ namespace Fix
                 }
             }
 
-	        if(order.LeavesQty.HasValue)
-	        {
-		        if(order.LeavesQty > 0 && order.OrdStatus == Fix.OrdStatus.Filled ||
-		           order.LeavesQty < order.OrderQty && order.OrdStatus == Fix.OrdStatus.New)
-		        {
-			        order.OrdStatus = Fix.OrdStatus.PartiallyFilled;
-		        }
-	        }
-            
-            if(Text != null)
+            if (order.LeavesQty.HasValue)
+            {
+                if (order.LeavesQty > 0 && order.OrdStatus == Fix.OrdStatus.Filled ||
+                   order.LeavesQty < order.OrderQty && order.OrdStatus == Fix.OrdStatus.New)
+                {
+                    order.OrdStatus = Fix.OrdStatus.PartiallyFilled;
+                }
+            }
+
+            if (Text != null)
                 order.Text = Text.Value;
-            
-            if(OrderID != null)
+
+            if (OrderID != null)
                 order.OrderID = OrderID.Value;
         }
     }

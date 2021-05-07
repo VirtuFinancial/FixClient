@@ -10,13 +10,12 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace FixClient
 {
@@ -34,13 +33,13 @@ namespace FixClient
         DataView _fieldView;
 
         readonly TabControl _tabControl;
-        readonly NativeTabControl _nativeTabControl = new NativeTabControl(new Padding(-4, -2, 4, 4));
+        readonly NativeTabControl _nativeTabControl = new(new Padding(-4, -2, 4, 4));
         readonly InspectorPanel _inspectorPanel;
         readonly MessageOptionsPanel _messageOptionsPanel;
 
         readonly SearchTextBox _messageSearchTextBox;
         readonly SearchTextBox _fieldSearchTextBox;
-    
+
         Session _session;
 
         readonly Timer _timer;
@@ -82,17 +81,14 @@ namespace FixClient
                 _selectedMsgType = message.MsgType;
             }
 
-            if(MessageSelected != null)
-            {
-                MessageSelected(message);
-            }
+            MessageSelected?.Invoke(message);
         }
 
         public MessagesPanel()
         {
             var leftSplitter = new SplitContainer
             {
-                Dock = DockStyle.Fill, 
+                Dock = DockStyle.Fill,
                 Orientation = Orientation.Vertical
             };
 
@@ -105,9 +101,9 @@ namespace FixClient
 
             _messageTable = new MessageTypeDataTable("MessageTypes");
             _messageView = new DataView(_messageTable);
-            _messageBindingSource = new BindingSource {DataSource = _messageView};
+            _messageBindingSource = new BindingSource { DataSource = _messageView };
 
-            _messageGrid = new MessageTypeDataGridView {Dock = DockStyle.Fill};
+            _messageGrid = new MessageTypeDataGridView { Dock = DockStyle.Fill };
             _messageGrid.SelectionChanged += MessageGridSelectionChanged;
             _messageGrid.DataSource = _messageBindingSource;
 
@@ -115,8 +111,8 @@ namespace FixClient
             _fieldGrid.SelectionChanged += FieldGridSelectionChanged;
             _fieldGrid.CellContextMenuStripNeeded += FieldGridCellContextMenuStripNeeded;
 
-            _inspectorPanel = new InspectorPanel {Dock = DockStyle.Fill};
-            _messageOptionsPanel = new MessageOptionsPanel {Dock = DockStyle.Fill};
+            _inspectorPanel = new InspectorPanel { Dock = DockStyle.Fill };
+            _messageOptionsPanel = new MessageOptionsPanel { Dock = DockStyle.Fill };
 
             var inspectorPage = new TabPage("Dictionary");
             inspectorPage.Controls.Add(_inspectorPanel);
@@ -126,10 +122,10 @@ namespace FixClient
 
             _tabControl = new TabControl { Dock = DockStyle.Fill };
             _nativeTabControl.AssignHandle(_tabControl.Handle);
-    
+
             _tabControl.TabPages.Add(inspectorPage);
             _tabControl.TabPages.Add(optionsPage);
-                
+
 
             #region Message ToolStrip
 
@@ -161,86 +157,86 @@ namespace FixClient
             };
 
             _filterButton = new ToolStripButton
-                                {
-                                    ToolTipText = "Filter all optional fields which do not have assigned values",
-                                    Image = Properties.Resources.Filter,
-                                    ImageTransparentColor = Color.White
-                                };
+            {
+                ToolTipText = "Filter all optional fields which do not have assigned values",
+                Image = Properties.Resources.Filter,
+                ImageTransparentColor = Color.White
+            };
             _filterButton.Click += FilterButtonClick;
             fieldToolStrip.Items.Add(_filterButton);
 
             _removeFilterButton = new ToolStripButton
-                                      {
-                                          ToolTipText = "Remove all filters from the optional fields",
-                                          Image = Properties.Resources.RemoveFilter,
-                                          ImageTransparentColor = Color.White
-                                      };
+            {
+                ToolTipText = "Remove all filters from the optional fields",
+                Image = Properties.Resources.RemoveFilter,
+                ImageTransparentColor = Color.White
+            };
             _removeFilterButton.Click += RemoveFilterButtonClick;
             fieldToolStrip.Items.Add(_removeFilterButton);
 
             _repeatButton = new ToolStripButton
-                                {
-                                    ToolTipText = "Repeat the selected fields",
-                                    Image = Properties.Resources.RepeatFields,
-                                    ImageTransparentColor = Color.Magenta
-                                };
+            {
+                ToolTipText = "Repeat the selected fields",
+                Image = Properties.Resources.RepeatFields,
+                ImageTransparentColor = Color.Magenta
+            };
             _repeatButton.Click += RepeatButtonClick;
             fieldToolStrip.Items.Add(_repeatButton);
 
             _removeButton = new ToolStripButton
-                                {
-                                    ToolTipText = "Remove the selected fields",
-                                    Image = Properties.Resources.RemoveFields,
-                                    ImageTransparentColor = Color.Magenta
-                                };
+            {
+                ToolTipText = "Remove the selected fields",
+                Image = Properties.Resources.RemoveFields,
+                ImageTransparentColor = Color.Magenta
+            };
             _removeButton.Click += RemoveButtonClick;
             fieldToolStrip.Items.Add(_removeButton);
 
             _resetButton = new ToolStripButton
-                               {
-                                   ToolTipText = "Reset the fields of this message to their defaults",
-                                   Image = Properties.Resources.ResetFields,
-                                   ImageTransparentColor = Color.Magenta
-                               };
+            {
+                ToolTipText = "Reset the fields of this message to their defaults",
+                Image = Properties.Resources.ResetFields,
+                ImageTransparentColor = Color.Magenta
+            };
             _resetButton.Click += ResetButtonClick;
             fieldToolStrip.Items.Add(_resetButton);
 
             _pasteButton = new ToolStripButton
-                               {
-                                   ToolTipText = "Paste a formatted log message or raw FIX message",
-                                   Image = Properties.Resources.Paste,
-                                   ImageTransparentColor = Color.White
-                               };
+            {
+                ToolTipText = "Paste a formatted log message or raw FIX message",
+                Image = Properties.Resources.Paste,
+                ImageTransparentColor = Color.White
+            };
             _pasteButton.Click += PasteButtonClick;
             fieldToolStrip.Items.Add(_pasteButton);
 
             _editGoaButton = new ToolStripButton
-                                 {
-                                     ToolTipText = "Edit GATE Generic Order Attributes",
-                                     Image = Properties.Resources.GOA,
-                                     ImageTransparentColor = Color.Magenta
-                                 };
+            {
+                ToolTipText = "Edit GATE Generic Order Attributes",
+                Image = Properties.Resources.GOA,
+                ImageTransparentColor = Color.Magenta
+            };
             _editGoaButton.Click += EditGoaButtonClick;
             fieldToolStrip.Items.Add(_editGoaButton);
             #endregion
 
             #region MenuStrip
             var menu = new ToolStripMenuItem("Action");
-            
-            _sendMenuItem = new ToolStripMenuItem("Send", 
-                                                 _sendButton.Image, 
+
+            _sendMenuItem = new ToolStripMenuItem("Send",
+                                                 _sendButton.Image,
                                                  SendButtonClick);
             menu.DropDownItems.Add(_sendMenuItem);
 
             menu.DropDownItems.Add(new ToolStripSeparator());
 
-            _filterMenuItem = new ToolStripMenuItem("Filter", 
+            _filterMenuItem = new ToolStripMenuItem("Filter",
                                                    _filterButton.Image,
                                                    FilterButtonClick);
             menu.DropDownItems.Add(_filterMenuItem);
 
-            _removeFilterMenuItem = new ToolStripMenuItem("Remove Filters", 
-                                                         _removeFilterButton.Image, 
+            _removeFilterMenuItem = new ToolStripMenuItem("Remove Filters",
+                                                         _removeFilterButton.Image,
                                                          RemoveFilterButtonClick);
             menu.DropDownItems.Add(_removeFilterMenuItem);
 
@@ -262,9 +258,9 @@ namespace FixClient
 
             menu.DropDownItems.Add(_resetMenuItem);
 
-            _pasteMenuItem = new ToolStripMenuItem("Paste", 
-                                                  _pasteButton.Image, 
-                                                  PasteButtonClick, 
+            _pasteMenuItem = new ToolStripMenuItem("Paste",
+                                                  _pasteButton.Image,
+                                                  PasteButtonClick,
                                                   Keys.Control | Keys.V);
             menu.DropDownItems.Add(_pasteMenuItem);
 
@@ -290,9 +286,9 @@ namespace FixClient
 
             _insertContextMenuItem = new ToolStripMenuItem("Insert Custom Field",
                                                           Properties.Resources.Customise)
-                                         {
-                                             ImageTransparentColor = Color.Magenta
-                                         };
+            {
+                ImageTransparentColor = Color.Magenta
+            };
 
             _resetContextMenuItem = new ToolStripMenuItem("Reset Fields",
                                                          _resetButton.Image,
@@ -309,7 +305,7 @@ namespace FixClient
                 Dock = DockStyle.Top
             };
             _messageSearchTextBox.TextChanged += MessageSearchTextBoxTextChanged;
-            _fieldSearchTextBox= new SearchTextBox
+            _fieldSearchTextBox = new SearchTextBox
             {
                 Dock = DockStyle.Top
             };
@@ -347,7 +343,7 @@ namespace FixClient
 
             _timer = new Timer
             {
-                Interval = 1000, 
+                Interval = 1000,
                 Enabled = true
             };
             _timer.Tick += TimerTick;
@@ -368,11 +364,11 @@ namespace FixClient
             }
             else
             {
-            search = string.Format("CONVERT({0}, System.String) LIKE '%{3}%' OR {1} LIKE '%{3}%' OR {2} LIKE '%{3}%'",
-                                       FieldDataTable.ColumnTag,
-                                       FieldDataTable.ColumnName,
-                                       FieldDataTable.ColumnValue,
-                                       _fieldSearchTextBox.Text);
+                search = string.Format("CONVERT({0}, System.String) LIKE '%{3}%' OR {1} LIKE '%{3}%' OR {2} LIKE '%{3}%'",
+                                           FieldDataTable.ColumnTag,
+                                           FieldDataTable.ColumnName,
+                                           FieldDataTable.ColumnValue,
+                                           _fieldSearchTextBox.Text);
             }
             _fieldView.RowFilter = _session.FieldRowFilter(SelectedMessage.MsgType, search);
         }
@@ -412,14 +408,10 @@ namespace FixClient
                 if (_messageGrid.SelectedRows.Count == 0)
                     return null;
 
-                var rowView = _messageGrid.SelectedRows[0].DataBoundItem as DataRowView;
-
-                if (rowView == null)
+                if (_messageGrid.SelectedRows[0].DataBoundItem is not DataRowView rowView)
                     return null;
 
-                var messageRow = rowView.Row as MessageTypeDataRow;
-
-                if (messageRow == null)
+                if (rowView.Row is not MessageTypeDataRow messageRow)
                     return null;
 
                 return _session.MessageForTemplate(messageRow.Message);
@@ -433,14 +425,10 @@ namespace FixClient
                 if (_fieldGrid.SelectedRows.Count == 0)
                     return null;
 
-                var rowView = _fieldGrid.SelectedRows[0].DataBoundItem as DataRowView;
-
-                if (rowView == null)
+                if (_fieldGrid.SelectedRows[0].DataBoundItem is not DataRowView rowView)
                     return null;
 
-                var fieldRow = rowView.Row as FieldDataRow;
-
-                if (fieldRow == null)
+                if (rowView.Row is not FieldDataRow fieldRow)
                     return null;
 
                 return fieldRow.Field;
@@ -460,30 +448,26 @@ namespace FixClient
                                 MessageBoxIcon.Information);
                 return;
             }
-            
+
             DataGridViewRow row = _fieldGrid.SelectedRows[0];
-            var rowView = row.DataBoundItem as DataRowView;
-            
-            if(rowView == null)
+
+            if (row.DataBoundItem is not DataRowView rowView)
             {
-                throw new Exception(string.Format("MessageFieldDataGridView Row.DataBoundItem at index {0} is not a DataRowView ", row.Index));    
+                throw new Exception(string.Format("MessageFieldDataGridView Row.DataBoundItem at index {0} is not a DataRowView ", row.Index));
             }
 
-            var dataRow = rowView.Row as FieldDataRow;
-            if (dataRow == null)
+            if (rowView.Row is not FieldDataRow dataRow)
                 return;
-            
-            var fieldTag = (int)dataRow[FieldDataTable.ColumnTag];
-            var fieldName = (string) dataRow[FieldDataTable.ColumnName];
 
-            using (GoaEditor editor = new GoaEditor())
-            {
-                editor.Text = string.Format("{0} - {1}", fieldTag, fieldName);
-                editor.Goa = row.Cells[FieldDataTable.ColumnValue].Value.ToString();
-                if (editor.ShowDialog() != DialogResult.OK)
-                    return;
-                row.Cells[FieldDataTable.ColumnValue].Value = editor.Goa;
-            }
+            var fieldTag = (int)dataRow[FieldDataTable.ColumnTag];
+            var fieldName = (string)dataRow[FieldDataTable.ColumnName];
+
+            using GoaEditor editor = new();
+            editor.Text = string.Format("{0} - {1}", fieldTag, fieldName);
+            editor.Goa = row.Cells[FieldDataTable.ColumnValue].Value.ToString();
+            if (editor.ShowDialog() != DialogResult.OK)
+                return;
+            row.Cells[FieldDataTable.ColumnValue].Value = editor.Goa;
         }
 
         void FieldGridCellContextMenuStripNeeded(object sender, DataGridViewCellContextMenuStripNeededEventArgs e)
@@ -492,18 +476,19 @@ namespace FixClient
                 return;
 
             DataGridViewRow gridRow = _fieldGrid.Rows[e.RowIndex];
-            var rowView = gridRow.DataBoundItem as DataRowView;
-            if (rowView == null)
+
+            if (gridRow.DataBoundItem is not DataRowView rowView)
                 return;
+
             DataRow row = rowView.Row;
 
             ContextMenuRowIndex = _fieldTable.Rows.IndexOf(row);
-            
+
             if (Session.CustomFields.Any())
             {
                 _insertContextMenuItem.DropDownItems.Clear();
 
-                ToolStripMenuItem[] items = new ToolStripMenuItem[Session.CustomFields.Count()];
+                ToolStripMenuItem[] items = new ToolStripMenuItem[Session.CustomFields.Count];
 
                 int index = 0;
 
@@ -516,7 +501,7 @@ namespace FixClient
 
                 _insertContextMenuItem.DropDownItems.AddRange(items);
             }
-            
+
             _repeatContextMenuItem.Enabled = _fieldGrid.SelectedRows.Count > 0;
             _removeContextMenuItem.Enabled = _fieldGrid.SelectedRows.Count > 0;
             _insertContextMenuItem.Enabled = Session.CustomFields.Any();
@@ -655,7 +640,7 @@ namespace FixClient
             int end = _fieldTable.Rows.IndexOf((_fieldGrid.SelectedRows[0].DataBoundItem as DataRowView).Row);
             int begin = _fieldTable.Rows.IndexOf((_fieldGrid.SelectedRows[_fieldGrid.SelectedRows.Count - 1].DataBoundItem as DataRowView).Row);
 
-            if(end < begin)
+            if (end < begin)
             {
                 //
                 // If the user selects the rows bottom up thats the order the rows will be in SelectedRows so we need to 
@@ -665,12 +650,12 @@ namespace FixClient
                 end = begin;
                 begin = tmp;
             }
-            
+
             Fix.Message message = SelectedMessage;
 
             if (message == null)
                 return;
-            
+
             message.Fields.Repeat(begin, end - begin + 1);
             //
             // Update some fields automatically to make life easier for the user.
@@ -683,8 +668,10 @@ namespace FixClient
                 //
                 int clOrdIdCount = (from DataGridViewRow row in _fieldGrid.SelectedRows
                                     select row.DataBoundItem as DataRowView
-                                    into rowView select rowView.Row
-                                    into dataRow select (int) dataRow[FieldDataTable.ColumnTag]).Count(tag => tag == Fix.Dictionary.Fields.ClOrdID.Tag);
+                                    into rowView
+                                    select rowView.Row
+                                    into dataRow
+                                    select (int)dataRow[FieldDataTable.ColumnTag]).Count(tag => tag == Fix.Dictionary.Fields.ClOrdID.Tag);
 
                 Fix.Field totNoOrders = message.Fields.Find(Fix.Dictionary.Fields.TotNoOrders);
 
@@ -742,59 +729,57 @@ namespace FixClient
                 return;
             }
 
-            using (var form = new PasteMessageForm())
+            using PasteMessageForm form = new();
+            form.DefineUnknownAsCustom = Session.PasteDefineCustomFields;
+            form.FilterEmptyFields = Session.PasteFilterEmptyFields;
+            form.SmartPaste = Session.PasteSmart;
+            form.ResetExistingMessage = Session.PasteResetExisting;
+            form.ProcessRepeatingGroups = Session.PasteProcessRepeatingGroups;
+
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            Session.PasteDefineCustomFields = form.DefineUnknownAsCustom;
+            Session.PasteFilterEmptyFields = form.FilterEmptyFields;
+            Session.PasteSmart = form.SmartPaste;
+            Session.PasteResetExisting = form.ResetExistingMessage;
+            Session.PasteProcessRepeatingGroups = form.ProcessRepeatingGroups;
+
+            Session.Write();
+
+            if (form.ResetExistingMessage)
             {
-                form.DefineUnknownAsCustom = Session.PasteDefineCustomFields;
-                form.FilterEmptyFields = Session.PasteFilterEmptyFields;
-                form.SmartPaste = Session.PasteSmart;
-                form.ResetExistingMessage = Session.PasteResetExisting;
-                form.ProcessRepeatingGroups = Session.PasteProcessRepeatingGroups;
+                _session.ResetTemplateMessage(message.MsgType);
+            }
 
-                if (form.ShowDialog() != DialogResult.OK)
-                    return;
-
-                Session.PasteDefineCustomFields = form.DefineUnknownAsCustom;
-                Session.PasteFilterEmptyFields = form.FilterEmptyFields;
-                Session.PasteSmart = form.SmartPaste;
-                Session.PasteResetExisting = form.ResetExistingMessage;
-                Session.PasteProcessRepeatingGroups = form.ProcessRepeatingGroups;
-
-                Session.Write();
-
-                if (form.ResetExistingMessage)
+            if (form.SmartPaste)
+            {
+                if (form.ProcessRepeatingGroups)
                 {
-                    _session.ResetTemplateMessage(message.MsgType);
-                }
-
-                if (form.SmartPaste)
-                {
-                    if (form.ProcessRepeatingGroups)
-                    {
-                        SmartPasteWithGroups(parsedMessage, message, form.DefineUnknownAsCustom);
-                    }
-                    else
-                    {
-                        SmartPasteWithoutGroups(parsedMessage, message, form.DefineUnknownAsCustom);
-                    }
+                    SmartPasteWithGroups(parsedMessage, message, form.DefineUnknownAsCustom);
                 }
                 else
                 {
-                    SimplePaste(parsedMessage, message, form.DefineUnknownAsCustom);     
+                    SmartPasteWithoutGroups(parsedMessage, message, form.DefineUnknownAsCustom);
                 }
+            }
+            else
+            {
+                SimplePaste(parsedMessage, message, form.DefineUnknownAsCustom);
+            }
 
-                SelectMessage(message.MsgType);
-                MessageGridSelectionChanged(null, null);
-                RemoveFilterButtonClick(this, null);
+            SelectMessage(message.MsgType);
+            MessageGridSelectionChanged(null, null);
+            RemoveFilterButtonClick(this, null);
 
-                if (form.FilterEmptyFields)
-                {
-                    FilterButtonClick(this, null);
-                }
+            if (form.FilterEmptyFields)
+            {
+                FilterButtonClick(this, null);
+            }
 
-                if (form.DefineUnknownAsCustom)
-                {
-                    Session.WriteCustomFields();
-                }
+            if (form.DefineUnknownAsCustom)
+            {
+                Session.WriteCustomFields();
             }
         }
 
@@ -822,12 +807,9 @@ namespace FixClient
 
             foreach (var field in parsedMessage.Fields)
             {
-                Fix.Dictionary.Field definition;
-
-                if (!Session.Version.Fields.TryGetValue(field.Tag, out definition) || definition == null)
+                if (!Session.Version.Fields.TryGetValue(field.Tag, out Fix.Dictionary.Field definition) || definition == null)
                 {
-                    CustomField custom;
-                    if (!Session.CustomFields.TryGetValue(field.Tag, out custom) && defineUnknownAsCustom)
+                    if (!Session.CustomFields.TryGetValue(field.Tag, out CustomField custom) && defineUnknownAsCustom)
                     {
                         custom = new CustomField { Tag = field.Tag, Name = field.Tag.ToString() };
                         Session.AddCustomField(custom);
@@ -836,7 +818,7 @@ namespace FixClient
                     continue;
                 }
 
-                for(;exemplarIndex < exemplar.FieldCount;++exemplarIndex)
+                for (; exemplarIndex < exemplar.FieldCount; ++exemplarIndex)
                 {
                     definition = exemplar.Fields[exemplarIndex];
 
@@ -855,8 +837,7 @@ namespace FixClient
 
                     if (groupIndent == null)
                     {
-                        int index;
-                        if (indexes.TryGetValue(field.Tag, out index))
+                        if (indexes.TryGetValue(field.Tag, out int index))
                         {
                             // We've seen this tag already so this means we have a repeating group. Move back to
                             // the start of the group in the definition and continue on.
@@ -896,11 +877,10 @@ namespace FixClient
         {
             foreach (Fix.Field field in parsedMessage.Fields)
             {
-                Fix.Dictionary.Field definition;
-                if(!Session.Version.Fields.TryGetValue(field.Tag, out definition))
+                if (!Session.Version.Fields.TryGetValue(field.Tag, out _))
                 {
                     CustomField custom;
-                    if (!Session.CustomFields.TryGetValue(field.Tag, out custom) && defineUnknownAsCustom)
+                    if (!Session.CustomFields.TryGetValue(field.Tag, out _) && defineUnknownAsCustom)
                     {
                         custom = new CustomField { Tag = field.Tag, Name = field.Tag.ToString() };
                         Session.AddCustomField(custom);
@@ -946,11 +926,10 @@ namespace FixClient
 
             foreach (Fix.Field field in parsedMessage.Fields)
             {
-                Fix.Dictionary.Field definition;
-                if (!Session.Version.Fields.TryGetValue(field.Tag, out definition))
+                if (!Session.Version.Fields.TryGetValue(field.Tag, out _))
                 {
                     CustomField custom;
-                    if (!Session.CustomFields.TryGetValue(field.Tag, out custom) && defineUnknownAsCustom)
+                    if (!Session.CustomFields.TryGetValue(field.Tag, out _) && defineUnknownAsCustom)
                     {
                         custom = new CustomField { Tag = field.Tag, Name = field.Tag.ToString() };
                         Session.AddCustomField(custom);
@@ -1071,7 +1050,7 @@ namespace FixClient
             // Count the number of ClOrdId's in the message so we can allocate that many in the session.
             //
             int clOrdIdCount = 0;
-         
+
             foreach (Fix.Field field in defaults.Fields)
             {
                 if (string.IsNullOrEmpty(field.Value))
@@ -1166,7 +1145,7 @@ namespace FixClient
                         updatedFields.Add(new KeyValuePair<int, string>(index, value));
                         ++nextClOrdId;
                     }
-                    else if(field.Tag == Fix.Dictionary.Fields.ListID.Tag && Session.AutoListId)
+                    else if (field.Tag == Fix.Dictionary.Fields.ListID.Tag && Session.AutoListId)
                     {
                         if (message.MsgType != Fix.Dictionary.Messages.OrderCancelRequest.MsgType &&
                             message.MsgType != Fix.Dictionary.Messages.OrderCancelReplaceRequest.MsgType)
@@ -1195,13 +1174,13 @@ namespace FixClient
                         defaults.Fields[index].Value = Session.OutgoingSeqNum.ToString();
                         updatedFields.Add(new KeyValuePair<int, string>(index, Session.OutgoingSeqNum.ToString()));
                     }
-                    else if(field.Tag == Fix.Dictionary.Fields.OrderID.Tag)
+                    else if (field.Tag == Fix.Dictionary.Fields.OrderID.Tag)
                     {
                         int orderId = Session.NextOrderId++;
                         defaults.Fields[index].Value = orderId.ToString();
                         updatedFields.Add(new KeyValuePair<int, string>(index, orderId.ToString()));
                     }
-                    else if(field.Tag == Fix.Dictionary.Fields.ExecID.Tag)
+                    else if (field.Tag == Fix.Dictionary.Fields.ExecID.Tag)
                     {
                         int execId = Session.NextExecId++;
                         defaults.Fields[index].Value = execId.ToString();
@@ -1209,37 +1188,7 @@ namespace FixClient
                     }
                 }
             }
-            else if (message.MsgType == Fix.Dictionary.Messages.TradeCaptureReport.MsgType && 
-                     Session.AutoTradeReportId &&
-                     Session.OrderBehaviour == Fix.Behaviour.Initiator)
-            {
-                for (int index = 0; index < defaults.Fields.Count; ++index)
-                {
-                    Fix.Field field = defaults.Fields[index];
-
-                    if (field.Tag == Fix.Dictionary.Fields.TradeReportID.Tag)
-                    {
-                        int tradeReportId = Session.NextTradeReportId++;
-                        defaults.Fields[index].Value = tradeReportId.ToString();
-                        updatedFields.Add(new KeyValuePair<int, string>(index, tradeReportId.ToString()));
-                    }
-                } 
-            }
-            else if (message.MsgType == Fix.Dictionary.Messages.TradeCaptureReport.MsgType && Session.AutoTradeId)
-            {
-                for (int index = 0; index < defaults.Fields.Count; ++index)
-                {
-                    Fix.Field field = defaults.Fields[index];
-
-                    if (field.Tag == Fix.Dictionary.Fields.TradeID.Tag)
-                    {
-                        int tradeId = Session.NextTradeId++;
-                        defaults.Fields[index].Value = tradeId.ToString();
-                        updatedFields.Add(new KeyValuePair<int, string>(index, tradeId.ToString()));
-                    }
-                }
-            }
-
+        
             foreach (KeyValuePair<int, string> field in updatedFields)
             {
                 _fieldTable.Rows[field.Key][FieldDataTable.ColumnValue] = field.Value;
@@ -1282,7 +1231,7 @@ namespace FixClient
             _messageSearchTextBox.Enabled = Session != null;
             _fieldSearchTextBox.Enabled = Session != null;
         }
-        
+
         public Session Session
         {
             get
@@ -1297,10 +1246,10 @@ namespace FixClient
                     _session.FieldFilterChanged -= SessionFieldFilterChanged;
                     _session.SessionReset -= SessionSessionReset;
                 }
-                
+
                 _session = value;
                 Reload();
-                
+
                 if (_session != null)
                 {
                     _session.MessageFilterChanged += SessionMessageFilterChanged;
@@ -1320,7 +1269,7 @@ namespace FixClient
 
             MessageGridSelectionChanged(this, null);
         }
-       
+
         void SessionMessageFilterChanged(object sender, EventArgs e)
         {
             _messageView.RowFilter = Session.MessageRowFilter();
@@ -1346,9 +1295,7 @@ namespace FixClient
 
                 foreach (Fix.Dictionary.Message message in _session.Version.Messages)
                 {
-                     var row = _messageTable.NewRow() as MessageTypeDataRow;
-
-                    if (row != null)
+                    if (_messageTable.NewRow() is MessageTypeDataRow row)
                     {
                         row.Message = message;
                         row[MessageTypeDataTable.ColumnMsgType] = message.MsgType;
@@ -1358,9 +1305,9 @@ namespace FixClient
                         row[MessageTypeDataTable.ColumnSearchMsgType] = message.MsgType.ToUpper();
                         row[MessageTypeDataTable.ColumnSearchMsgTypeDescription] = message.Name.ToUpper();
                         _messageTable.Rows.Add(row);
-                    }      
+                    }
                 }
-          
+
                 _messageView.RowFilter = _session.MessageRowFilter();
             }
             finally
@@ -1393,9 +1340,9 @@ namespace FixClient
 
                 if (message == null)
                     return;
-                
+
                 message.Fields.Set(Fix.Dictionary.Fields.BeginString, _session.BeginString);
-                
+
                 if (_session.BeginString.BeginString == Fix.Dictionary.Versions.FIXT_1_1.BeginString &&
                     message.MsgType == Fix.Dictionary.Messages.Logon.MsgType)
                 {
@@ -1403,10 +1350,10 @@ namespace FixClient
                     message.Fields.Set(Fix.Dictionary.Fields.EncryptMethod, Fix.EncryptMethod.None);
                     message.Fields.Set(Fix.Dictionary.Fields.HeartBtInt, _session.HeartBtInt);
                 }
-                
+
                 message.Fields.Set(Fix.Dictionary.Fields.SenderCompID, _session.SenderCompId);
                 message.Fields.Set(Fix.Dictionary.Fields.TargetCompID, _session.TargetCompId);
-                
+
                 if (_session.AutoSetMsgSeqNum)
                 {
                     message.Fields.Set(Fix.Dictionary.Fields.MsgSeqNum, Session.OutgoingSeqNum);
@@ -1447,7 +1394,7 @@ namespace FixClient
                     {
                         message.Fields[index].Value = Session.IncomingSeqNum.ToString();
                     }
-                    
+
                     //
                     // Update any of the various ID's as required
                     //
@@ -1477,7 +1424,7 @@ namespace FixClient
                         {
                             if (Session.AutoListSeqNo && message.MsgType != Fix.Dictionary.FIX_4_0.Messages.KodiakWaveOrder.MsgType)
                             {
-                               message.Fields[index].Value = nextListSeqNo.ToString();
+                                message.Fields[index].Value = nextListSeqNo.ToString();
                                 ++nextListSeqNo;
                             }
                         }
@@ -1488,17 +1435,9 @@ namespace FixClient
                     }
                     else if (message.MsgType == Fix.Dictionary.Messages.AllocationInstruction.MsgType)
                     {
-                        if(field.Tag == Fix.Dictionary.Fields.AllocID.Tag)
+                        if (field.Tag == Fix.Dictionary.Fields.AllocID.Tag)
                         {
                             message.Fields[index].Value = nextAllocId.ToString();
-                        }
-                    }
-                    else if (message.MsgType == Fix.Dictionary.Messages.TradeCaptureReport.MsgType &&
-                             Session.OrderBehaviour == Fix.Behaviour.Initiator)
-                    {
-                        if (field.Tag == Fix.Dictionary.Fields.TradeReportID.Tag)
-                        {
-                            message.Fields[index].Value = Session.NextTradeReportId.ToString();
                         }
                     }
 
@@ -1523,11 +1462,11 @@ namespace FixClient
                         continue;
                     }
 
-                    var dataRow = _fieldTable.NewRow() as FieldDataRow;
-
-                    if (dataRow == null)
+                    if (_fieldTable.NewRow() is not FieldDataRow dataRow)
+                    {
                         continue;
-           
+                    }
+
                     dataRow.Field = field;
 
                     if (field.Definition != null)
@@ -1540,9 +1479,7 @@ namespace FixClient
                     }
                     else
                     {
-                        CustomField custom;
-
-                        if (Session.CustomFields.TryGetValue(field.Tag, out custom))
+                        if (Session.CustomFields.TryGetValue(field.Tag, out CustomField custom))
                         {
                             dataRow[FieldDataTable.ColumnName] = custom.Name;
                             dataRow[FieldDataTable.ColumnCustom] = true;
@@ -1566,7 +1503,7 @@ namespace FixClient
             finally
             {
                 _fieldView = new DataView(_fieldTable);
-                
+
                 FieldSearchTextBoxTextChanged(_fieldSearchTextBox, null);
                 _fieldGrid.DataSource = _fieldView;
                 if (message != null)
@@ -1601,14 +1538,14 @@ namespace FixClient
 
             Session.WriteTemplates();
         }
-    
-        public void UpdateMessage(Fix.Message message, Fix.Order order)
+
+        public static void UpdateMessage(Fix.Message message, Fix.Order order)
         {
             //
             // Order.Messages are stored in arrival order so we just iterate through and get
             // the most recent version of each field.
             //
-            foreach(Fix.Field field in message.Fields)
+            foreach (Fix.Field field in message.Fields)
             {
                 if (field.Tag == Fix.Dictionary.Fields.MsgType.Tag)
                     continue;
@@ -1620,7 +1557,7 @@ namespace FixClient
                     if (sourceField == null)
                         continue;
 
-                    message.Fields.Set(field.Tag, sourceField.Value); 
+                    message.Fields.Set(field.Tag, sourceField.Value);
                 }
             }
         }
@@ -1655,7 +1592,7 @@ namespace FixClient
 
             if (order.Side.HasValue)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side) order.Side);
+                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
             }
 
             message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
@@ -1696,7 +1633,7 @@ namespace FixClient
 
             if (order.Side.HasValue)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side) order.Side);
+                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
             }
 
             message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
@@ -1726,235 +1663,6 @@ namespace FixClient
             SelectMessage(message.MsgType);
         }
 
-        public void ReplyTradeReport(Fix.TradeReport.ReportSide buySide, Fix.TradeReport.ReportSide sellSide)
-        {
-            Fix.Message target = FindMessage(Fix.Dictionary.Messages.TradeCaptureReport.MsgType);
-
-            if (target == null)
-                return;
-            //
-            // This message has repeating groups so we can't just set each field we need. Construct a message with the
-            // fields we want and then just do a smart paste into the target message.
-            //
-            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.TradeCaptureReport.MsgType };
-
-            Fix.TradeReport trade = buySide?.TradeReport ?? sellSide?.TradeReport;
-
-            if (trade == null)
-                return;
-
-            message.Fields.Add(Fix.Dictionary.Fields.LastQty, trade.LastQty);
-            message.Fields.Add(Fix.Dictionary.Fields.LastPx, trade.LastPx);
-
-            message.Fields.Add(Fix.Dictionary.Fields.ExchangeTradeType, Fix.ExchangeTradeType.ManualTrade);
-            message.Fields.Add(Fix.Dictionary.Fields.ExecType, Fix.ExecType.Trade);
-
-            string securityExchange = trade.SecurityExchange;
-            if (!string.IsNullOrEmpty(securityExchange))
-                message.Fields.Add(Fix.Dictionary.Fields.SecurityExchange, securityExchange);
-
-            string securityID = trade.SecurityID;
-            if (!string.IsNullOrEmpty(securityID))
-                message.Fields.Add(Fix.Dictionary.Fields.SecurityID, securityID);
-
-            Fix.SecurityIDSource? securityIDSource = trade.SecurityIDSource;
-            if (securityIDSource != null)
-                message.Fields.Add(Fix.Dictionary.Fields.SecurityIDSource, securityIDSource.Value);
-             
-            message.Fields.Add(Fix.Dictionary.Fields.TradeHandlingInstr, Fix.TradeHandlingInstr.TradeConfirmation);
-
-            message.Fields.Add(Fix.Dictionary.Fields.TradeID, Session.NextTradeId);
-            message.Fields.Add(Fix.Dictionary.Fields.TradeReportID, trade.TradeReportID);
-
-            message.Fields.Add(Fix.Dictionary.Fields.TradeReportTransType, Fix.TradeReportTransType.Replace);
-            message.Fields.Add(Fix.Dictionary.Fields.TradeReportType, Fix.TradeReportType.Submit);
-            message.Fields.Add(Fix.Dictionary.Fields.TrdRptStatus, Fix.TrdRptStatus.Accepted);
-            message.Fields.Add(Fix.Dictionary.Fields.TrdType, Fix.TrdType.PrivatelyNegotiatedTrades);
-
-
-            if (buySide != null && sellSide != null)
-            {
-                message.Fields.Add(Fix.Dictionary.Fields.NoSides, Fix.NoSides.BothSides);
-            }
-            else
-            {
-                message.Fields.Add(Fix.Dictionary.Fields.NoSides, Fix.NoSides.OneSide);
-            }
-
-            if (buySide != null)
-            {
-                message.Fields.Add(Fix.Dictionary.Fields.Side, buySide.Side);
-                message.Fields.Add(Fix.Dictionary.Fields.NoPartyIDs, 1);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyID, buySide.PartyID);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyIDSource, Fix.PartyIDSource.Proprietary);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyRole, Fix.PartyRole.ExecutingFirm);
-
-                message.Fields.Add(Fix.Dictionary.Fields.NoClearingInstructions, 1);
-                message.Fields.Add(Fix.Dictionary.Fields.ClearingInstruction, Fix.ClearingInstruction.ProcessNormally);
-                message.Fields.Add(Fix.Dictionary.Fields.OrderCategory, Fix.OrderCategory.InternalCrossOrder);
-            }
-
-            if (sellSide != null)
-            {
-                // We need to repeat the side group before doing these fields - effectively smart paste (maybe construct a message and paste it?).
-                message.Fields.Add(Fix.Dictionary.Fields.Side, sellSide.Side);
-                message.Fields.Add(Fix.Dictionary.Fields.NoPartyIDs, 1);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyID, sellSide.PartyID);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyIDSource, Fix.PartyIDSource.Proprietary);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyRole, Fix.PartyRole.ExecutingFirm);
-            }
-
-            SimplePaste(message, target, true);
-
-            SelectMessage(message.MsgType);
-        }
-
-        public void AcknowledgeTradeReport(Fix.TradeReport.ReportSide buySide, Fix.TradeReport.ReportSide sellSide)
-        {
-            Fix.Message target = FindMessage(Fix.Dictionary.Messages.TradeCaptureReportAck.MsgType);
-
-            if (target == null)
-                return;
-            //
-            // This message has repeating groups so we can't just set each field we need. Construct a message with the
-            // fields we want and then just do a smart paste into the target message.
-            //
-            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.TradeCaptureReportAck.MsgType };
-
-            Fix.TradeReport trade = buySide?.TradeReport ?? sellSide?.TradeReport;
-
-            if (trade == null)
-                return;
-
-
-
-            /*
-                                      Custom(5681): M
-                                    ExecType( 150): F
-                                      LastPx(  31): 60.05
-                                     LastQty(  32): 100
-                                     SecurityExchange( 207): XHKG
-                                  SecurityID(  48): 3699
-                                    IDSource(  22): 8
-                          TradeHandlingInstr(1123): 0
-                                     TradeID(1003): 3699000000146
-                        TradeReportTransType( 487): 0
-                             TradeReportType( 856): 0
-                                TransactTime(  60): 20150714-01:32:58.000
-                                TrdRptStatus( 939): 0 - Accepted
-                                     TrdType( 828): 22
-                                     NoSides( 552): 2
-
-                                        Side(  54): 1
-                                  NoPartyIDs( 453): 1
-                                     PartyID( 448): 7268
-                               PartyIDSource( 447): D
-                                   PartyRole( 452): 1
-
-                      NoClearingInstructions( 576): 1
-                         ClearingInstruction( 577): 0
-                               OrderCategory(1115): A
-                                  
-                                        Side(  54): 2
-                                  NoPartyIDs( 453): 1
-                                     PartyID( 448): 7268
-                               PartyIDSource( 447): D
-                                   PartyRole( 452): 17
-                            
-                                    CheckSum(  10): 130
-
-            */
-            
-            /*
-            message.Fields.Set(Fix.Dictionary.Fields.TradeReportID, trade.TradeReportID);
-
-            message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.ExecType.New);
-            message.Fields.Set(Fix.Dictionary.Fields.TrdRptStatus, Fix.TrdRptStatus.Accepted);
-
-            message.Fields.Set(Fix.Dictionary.Fields.Symbol, trade.Symbol);
-            message.Fields.Set(Fix.Dictionary.Fields.LastQty, trade.LastQty);
-            message.Fields.Set(Fix.Dictionary.Fields.LastPx, trade.LastPx);
-            message.Fields.Set(Fix.Dictionary.Fields.TrdType, trade.TrdType);
-            //message.Fields.Set(Fix.Dictionary.Fields.TradeReportTransType, Fix.TradeReportTransType.New);
-
-            message.Fields.Set(Fix.Dictionary.Fields.NoSides, 1);
-            message.Fields.Set(Fix.Dictionary.Fields.Side, trade.Side);
-            message.Fields.Set(Fix.Dictionary.Fields.PartyID, trade.PartyID);
-            */
-
-            SimplePaste(message, target, true);
-
-            SelectMessage(message.MsgType);
-        }
-
-        public void RejectTradeReport(Fix.TradeReport.ReportSide buySide, Fix.TradeReport.ReportSide sellSide)
-        {
-            Fix.Message target = FindMessage(Fix.Dictionary.Messages.TradeCaptureReportAck.MsgType);
-
-            if (target == null)
-                return;
-            //
-            // This message has repeating groups so we can't just set each field we need. Construct a message with the
-            // fields we want and then just do a smart paste into the target message.
-            //
-            var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.TradeCaptureReportAck.MsgType };
-
-            Fix.TradeReport trade = buySide?.TradeReport ?? sellSide?.TradeReport;
-
-            if (trade == null)
-                return;
-
-            message.Fields.Set(Fix.Dictionary.Fields.TradeReportID, trade.TradeReportID);
-
-            message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.ExecType.New);
-            message.Fields.Add(Fix.Dictionary.Fields.TradeReportType, Fix.TradeReportType.Submit);
-            message.Fields.Set(Fix.Dictionary.Fields.TrdRptStatus, Fix.TrdRptStatus.Rejected);
-            message.Fields.Set(Fix.Dictionary.Fields.TradeReportRejectReason, Fix.TradeReportRejectReason.InvalidTradeType);
-
-            message.Fields.Set(Fix.Dictionary.Fields.Symbol, trade.Symbol);
-            message.Fields.Set(Fix.Dictionary.Fields.LastQty, trade.LastQty);
-            message.Fields.Set(Fix.Dictionary.Fields.LastPx, trade.LastPx);
-            message.Fields.Set(Fix.Dictionary.Fields.TrdType, trade.TrdType);
-            //message.Fields.Set(Fix.Dictionary.Fields.TradeReportTransType, Fix.TradeReportTransType.New);
-
-            if (buySide != null && sellSide != null)
-            {
-                message.Fields.Add(Fix.Dictionary.Fields.NoSides, Fix.NoSides.BothSides);
-            }
-            else
-            {
-                message.Fields.Add(Fix.Dictionary.Fields.NoSides, Fix.NoSides.OneSide);
-            }
-
-            if (buySide != null)
-            {
-                message.Fields.Add(Fix.Dictionary.Fields.Side, buySide.Side);
-                message.Fields.Add(Fix.Dictionary.Fields.NoPartyIDs, 1);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyID, buySide.PartyID);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyIDSource, Fix.PartyIDSource.Proprietary);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyRole, Fix.PartyRole.ExecutingFirm);
-
-                message.Fields.Add(Fix.Dictionary.Fields.NoClearingInstructions, 1);
-                message.Fields.Add(Fix.Dictionary.Fields.ClearingInstruction, Fix.ClearingInstruction.ProcessNormally);
-                message.Fields.Add(Fix.Dictionary.Fields.OrderCategory, Fix.OrderCategory.InternalCrossOrder);
-            }
-
-            if (sellSide != null)
-            {
-                // We need to repeat the side group before doing these fields - effectively smart paste (maybe construct a message and paste it?).
-                message.Fields.Add(Fix.Dictionary.Fields.Side, sellSide.Side);
-                message.Fields.Add(Fix.Dictionary.Fields.NoPartyIDs, 1);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyID, sellSide.PartyID);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyIDSource, Fix.PartyIDSource.Proprietary);
-                message.Fields.Add(Fix.Dictionary.Fields.PartyRole, Fix.PartyRole.ExecutingFirm);
-            }
-
-
-            SimplePaste(message, target, true);
-
-            SelectMessage(message.MsgType);
-        }
-
         public void AcknowledgeOrder(Fix.Order order)
         {
             Fix.Message message = FindMessage(Fix.Dictionary.Messages.ExecutionReport.MsgType);
@@ -1963,10 +1671,10 @@ namespace FixClient
                 return;
 
             message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, order.ClOrdID);
-            
+
             if (order.Side.HasValue)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side) order.Side);
+                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
             }
 
             message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
@@ -2010,7 +1718,7 @@ namespace FixClient
 
             if (order.Side.HasValue)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side) order.Side);
+                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
             }
 
             message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
@@ -2054,7 +1762,7 @@ namespace FixClient
 
             if (order.Side.HasValue)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side) order.Side);
+                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
             }
 
             message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
@@ -2082,7 +1790,7 @@ namespace FixClient
                 }
                 else
                 {
-                    message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.Dictionary.FIX_5_0.ExecType.Trade);    
+                    message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.Dictionary.FIX_5_0.ExecType.Trade);
                 }
                 message.Fields.Set(Fix.Dictionary.Fields.LeavesQty, 0);
             }
@@ -2097,9 +1805,7 @@ namespace FixClient
 
         Fix.Message FindMessage(string msgType)
         {
-            var row = _messageTable.Rows.Find(msgType) as MessageTypeDataRow;
-
-            if (row == null)
+            if (_messageTable.Rows.Find(msgType) is not MessageTypeDataRow row)
             {
                 MessageBox.Show(this,
                                 string.Format("Unable to find the {0} message", msgType),
@@ -2115,10 +1821,10 @@ namespace FixClient
         void SelectMessage(string msgType)
         {
             int previous = _messageBindingSource.Position;
-            
+
             _messageBindingSource.Position = _messageBindingSource.Find(MessageTypeDataTable.ColumnMsgType, msgType);
 
-            if(_messageBindingSource.Position == previous)
+            if (_messageBindingSource.Position == previous)
             {
                 MessageGridSelectionChanged(this, null);
             }
@@ -2135,7 +1841,7 @@ namespace FixClient
 
             if (order.Side.HasValue)
             {
-                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side) order.Side);
+                message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
             }
 
             message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
@@ -2176,14 +1882,14 @@ namespace FixClient
                 return;
 
             UpdateMessage(message, order);
-            
+
             message.Fields.Set(Fix.Dictionary.Fields.OrigClOrdID, order.ClOrdID);
             message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, Session.FormatClOrdId(Session.NextClOrdId));
             //
             // This field was removed from later versions.
             //
             Fix.Field beginString = message.Fields.Find(Fix.Dictionary.Fields.BeginString);
-            
+
             if (beginString != null && beginString.Value == Fix.Dictionary.Versions.FIX_4_0.BeginString)
             {
                 message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.CxlType, "F");
@@ -2209,7 +1915,7 @@ namespace FixClient
                 return;
 
             UpdateMessage(message, order);
-             
+
             message.Fields.Set(Fix.Dictionary.Fields.OrigClOrdID, order.ClOrdID);
             message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, Session.FormatClOrdId(Session.NextClOrdId));
             //
@@ -2217,12 +1923,12 @@ namespace FixClient
             // to a default if it was not set.
             //
             // TODO
-                
+
             //if (orderSingle.FindField(Fix.Field.FieldId.HandlInst) == null)
             //{
             //    message.SetField(Fix.Field.FieldId.HandlInst, "1");
             //}
-                
+
             //
             // If we've previously amended an order from an OrderList in this session the
             // CancelReplaceRequest will have ListID set, we need to unset this if we are 

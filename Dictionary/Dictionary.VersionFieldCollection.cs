@@ -10,15 +10,14 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 
 namespace Fix
 {
-    public static partial class Dictionary
+    public partial class Dictionary
     {
         // TODO -   we need to be able to represent gaps efficiently - it has a minimal effect on size and none on 
         //          performance so perhaps just leave it as is for now.
@@ -38,10 +37,9 @@ namespace Fix
 
             public virtual Field this[string tag]
             {
-                get 
+                get
                 {
-                    Field field;
-                    if (!TryGetValue(tag, out field))
+                    if (!TryGetValue(tag, out var field))
                         throw new ArgumentException(string.Format("Unknown tag {0}", tag));
                     return field;
                 }
@@ -66,9 +64,7 @@ namespace Fix
 
             public bool TryGetValue(string tag, out Field field)
             {
-                int index;
-
-                if (!int.TryParse(tag, out index))
+                if (!int.TryParse(tag, out var index))
                 {
                     return LookupFieldByName(tag, out field);
                 }
@@ -88,7 +84,7 @@ namespace Fix
             {
                 FieldInfo info = GetType().GetField(tag, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
 
-                if(info != null && info.FieldType == typeof(Field))
+                if (info != null && info.FieldType == typeof(Field))
                 {
                     field = (Field)info.GetValue(this);
                     return true;

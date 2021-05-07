@@ -18,16 +18,16 @@ using System.Linq;
 
 namespace Fix
 {
-    public static partial class Dictionary
+    public partial class Dictionary
     {
         public sealed class OrderedDictionary<TKey, TValue> : IOrderedDictionary<TKey, TValue>
         {
             const int DefaultInitialCapacity = 0;
 
-            static readonly string KeyTypeName = typeof (TKey).FullName;
-            static readonly string ValueTypeName = typeof (TValue).FullName;
+            static readonly string KeyTypeName = typeof(TKey).FullName;
+            static readonly string ValueTypeName = typeof(TValue).FullName;
 
-            static readonly bool ValueTypeIsReferenceType = !typeof (ValueType).IsAssignableFrom(typeof (TValue));
+            static readonly bool ValueTypeIsReferenceType = !typeof(ValueType).IsAssignableFrom(typeof(TValue));
 
             Dictionary<TKey, TValue> _dictionary;
             List<KeyValuePair<TKey, TValue>> _list;
@@ -66,8 +66,8 @@ namespace Fix
                     throw new ArgumentNullException(nameof(key));
                 }
 
-                if (key is TKey)
-                    return (TKey) key;
+                if (key is TKey result)
+                    return result;
 
                 throw new ArgumentException($"'{nameof(key)}' must be of type " + KeyTypeName, nameof(key));
             }
@@ -77,13 +77,13 @@ namespace Fix
                 if (value == null)
                 {
                     if (ValueTypeIsReferenceType)
-                        return default(TValue);
+                        return default;
 
                     throw new ArgumentNullException(nameof(value));
                 }
 
-                if (value is TValue)
-                    return (TValue) value;
+                if (value is TValue result)
+                    return result;
 
                 throw new ArgumentException($"'{nameof(value)}' must be of type " + ValueTypeName, nameof(value));
             }
@@ -163,9 +163,7 @@ namespace Fix
                 if (Dictionary.ContainsKey(replacement))
                     throw new ArgumentException($"replacement key {replacement} is already in use", nameof(replacement));
 
-                TValue value;
-
-                if (!Dictionary.TryGetValue(existing, out value))
+                if (!Dictionary.TryGetValue(existing, out var value))
                     throw new ArgumentException($"existing key {existing} can not be found", nameof(existing));
 
                 Dictionary.Remove(existing);
@@ -245,7 +243,7 @@ namespace Fix
 
             ICollection IDictionary.Keys
             {
-                get { return (ICollection) Keys; }
+                get { return (ICollection)Keys; }
             }
 
             public int IndexOfKey(TKey key)
@@ -296,7 +294,7 @@ namespace Fix
 
             ICollection IDictionary.Values
             {
-                get { return (ICollection) Values; }
+                get { return (ICollection)Values; }
             }
 
             public TValue this[TKey key]
@@ -324,7 +322,7 @@ namespace Fix
 
             void ICollection.CopyTo(Array array, int index)
             {
-                ((ICollection) List).CopyTo(array, index);
+                ((ICollection)List).CopyTo(array, index);
             }
 
             public int Count
@@ -376,12 +374,12 @@ namespace Fix
 
             bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
             {
-                return ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).Contains(item);
+                return ((ICollection<KeyValuePair<TKey, TValue>>)Dictionary).Contains(item);
             }
 
             void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
             {
-                ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).CopyTo(array, arrayIndex);
+                ((ICollection<KeyValuePair<TKey, TValue>>)Dictionary).CopyTo(array, arrayIndex);
             }
 
             bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)

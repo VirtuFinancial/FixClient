@@ -10,8 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FixTests
 {
@@ -36,7 +36,7 @@ namespace FixTests
         public void TestExecInstWithMultipleValues()
         {
             var field = new Fix.Field(Fix.Dictionary.Fields.ExecInst, "c x");
-            var values = (Fix.ExecInst[]) field;
+            var values = (Fix.ExecInst[])field;
             Assert.AreEqual(2, values.Length);
             Assert.AreEqual(Fix.ExecInst.IgnorePriceValidityChecks, values[0]);
             Assert.AreEqual(Fix.ExecInst.IgnoreNotionalValueChecks, values[1]);
@@ -62,7 +62,7 @@ namespace FixTests
         [ExpectedException(typeof(ArgumentException))]
         public void TestInvalidStringTagConstructor()
         {
-            var field = new Fix.Field("blah", "D");
+            _ = new Fix.Field("blah", "D");
         }
 
         [TestMethod]

@@ -49,7 +49,7 @@
             // 
             this.OK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OK.Location = new System.Drawing.Point(297, 581);
+            this.OK.Location = new System.Drawing.Point(297, 712);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(75, 23);
             this.OK.TabIndex = 18;
@@ -59,7 +59,7 @@
             // 
             this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.Location = new System.Drawing.Point(378, 581);
+            this.Cancel.Location = new System.Drawing.Point(378, 712);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(75, 23);
             this.Cancel.TabIndex = 19;
@@ -69,13 +69,13 @@
             // 
             this._gridPlaceHolder.Location = new System.Drawing.Point(12, 12);
             this._gridPlaceHolder.Name = "_gridPlaceHolder";
-            this._gridPlaceHolder.Size = new System.Drawing.Size(441, 563);
+            this._gridPlaceHolder.Size = new System.Drawing.Size(441, 681);
             this._gridPlaceHolder.TabIndex = 35;
             // 
             // SessionForm
             // 
             this.AcceptButton = this.OK;
-            this.ClientSize = new System.Drawing.Size(465, 616);
+            this.ClientSize = new System.Drawing.Size(465, 747);
             this.Controls.Add(this._gridPlaceHolder);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.OK);

@@ -10,8 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FixTests
 {
@@ -21,7 +21,7 @@ namespace FixTests
         [TestInitialize]
         public void Initialise()
         {
-            string[,] fields = 
+            string[,] fields =
             {
                 { "8", "FIX.4.0" },
                 { "9", "127" },
@@ -42,10 +42,10 @@ namespace FixTests
         Fix.FieldCollection Collection { get; set; }
 
         [TestMethod]
-        [ExpectedException(typeof (IndexOutOfRangeException))]
+        [ExpectedException(typeof(IndexOutOfRangeException))]
         public void TestFindFromByTagWithNegativeIndex()
         {
-            Collection.FindFrom(Fix.Dictionary.Fields.BeginString.Tag, -1); 
+            Collection.FindFrom(Fix.Dictionary.Fields.BeginString.Tag, -1);
         }
 
         [TestMethod]

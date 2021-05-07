@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DictionaryTests
 {
@@ -70,7 +70,7 @@ namespace DictionaryTests
             Assert.AreEqual(Fix.Dictionary.Versions.FIX_5_0, Fix.Dictionary.Versions[5]);
             Assert.AreEqual(Fix.Dictionary.Versions.FIX_5_0SP1, Fix.Dictionary.Versions[6]);
             Assert.AreEqual(Fix.Dictionary.Versions.FIX_5_0SP2, Fix.Dictionary.Versions[7]);
-            Assert.AreEqual(Fix.Dictionary.Versions.FIXT_1_1, Fix.Dictionary.Versions[8]);  
+            Assert.AreEqual(Fix.Dictionary.Versions.FIXT_1_1, Fix.Dictionary.Versions[8]);
         }
 
         [TestMethod]

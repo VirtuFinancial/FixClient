@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////
+﻿/////////////////////////////////////////////////
 //
 // FIX Client
 //
@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +25,7 @@ namespace FixPersistentSessionPerformanceTest
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             WriteLine("FIX session connecting");
             Connect();
@@ -45,7 +45,7 @@ namespace FixPersistentSessionPerformanceTest
 
         static void SendTestRequests()
         {
-            for(long testRequestId = 1; testRequestId <= long.MaxValue; ++testRequestId)
+            for (long testRequestId = 1; testRequestId <= long.MaxValue; ++testRequestId)
             {
                 var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.TestRequest.MsgType };
                 message.Fields.Set(Fix.Dictionary.Fields.TestReqID.Tag, testRequestId);
@@ -59,11 +59,11 @@ namespace FixPersistentSessionPerformanceTest
             {
                 Interval = IntervalInMilliseconds,
             };
-            _timer.Elapsed += _timer_Elapsed;
+            _timer.Elapsed += Timer_Elapsed;
             _timer.Start();
         }
 
-        static void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        static void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             long currentAcceptorOutgoingMsgSeqNum = Acceptor.OutgoingSeqNum;
             long currentAcceptorIncomingMsgSeqNum = Acceptor.IncomingSeqNum;
@@ -137,7 +137,7 @@ namespace FixPersistentSessionPerformanceTest
             Acceptor.Error += Acceptor_Error;
             Acceptor.Warning += Acceptor_Warning;
             Acceptor.Information += Acceptor_Information;
-         
+
             _connectionEstablished.Set();
         }
 
@@ -150,7 +150,7 @@ namespace FixPersistentSessionPerformanceTest
             _listener = new TcpListener(Fix.Network.GetLocalAddress(Host), Port);
             _listener.Start();
             _listener.BeginAcceptSocket(AcceptTcpClientCallback, _listener);
-            _client = new TcpClient {NoDelay = true};
+            _client = new TcpClient { NoDelay = true };
             _client.Connect(Fix.Network.GetAddress(Host), Port);
             Initiator = new Fix.PersistentSession
             {

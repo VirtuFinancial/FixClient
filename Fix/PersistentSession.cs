@@ -10,24 +10,20 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Text;
-using System.IO;
-using System.IO.MemoryMappedFiles;
-using System.Reflection;
-using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Threading;
 
 namespace Fix
 {
     public class PersistentSession : Session, IDisposable
     {
-        readonly object _syncObject = new object();
-        
+        readonly object _syncObject = new();
+
         Timer _writeTimer;
         JsonSerializer _serialiser;
 
@@ -47,15 +43,15 @@ namespace Fix
 
         // This constructor is only used for cloning
         public PersistentSession(PersistentSession session)
-        :   base(session)
+        : base(session)
         {
             FileName = session.FileName;
             PersistMessages = session.PersistMessages;
         }
 
         [Browsable(false)]
-        public string FileName 
-        { 
+        public string FileName
+        {
             get { return _fileName; }
             set
             {
@@ -71,8 +67,8 @@ namespace Fix
 
         [Browsable(false)]
         public bool PersistMessages { get; set; }
-        
-        protected string GetFileNamePrefix(string filename)
+
+        protected static string GetFileNamePrefix(string filename)
         {
             return Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar +
                    Path.GetFileNameWithoutExtension(filename);
@@ -189,7 +185,7 @@ namespace Fix
                 }
 
                 UpdateReadonlyAttributes();
-                
+
                 Reading = true;
                 ReadMessages();
                 Reading = false;
@@ -209,7 +205,7 @@ namespace Fix
             }
         }
 
-        JsonSerializer CreateSerializer()
+        static JsonSerializer CreateSerializer()
         {
             var serializer = new JsonSerializer
             {
@@ -233,8 +229,8 @@ namespace Fix
                 }
 
                 PersistentSession session;
-                
-                lock(_syncObject)
+
+                lock (_syncObject)
                 {
                     session = (PersistentSession)Clone();
 
@@ -244,13 +240,11 @@ namespace Fix
                         return;
                     }
 
-                    using (FileStream stream = new FileStream(FileName, FileMode.Create))
-                    using (JsonWriter writer = new JsonTextWriter(new StreamWriter(stream)))
-                    {
-                        writer.Formatting = Formatting.Indented;
-                        JObject environment = JObject.FromObject(session, _serialiser);
-                        environment.WriteTo(writer);
-                    }
+                    using FileStream stream = new(FileName, FileMode.Create);
+                    using JsonWriter writer = new JsonTextWriter(new StreamWriter(stream));
+                    writer.Formatting = Formatting.Indented;
+                    JObject environment = JObject.FromObject(session, _serialiser);
+                    environment.WriteTo(writer);
                 }
             }
             catch (Exception ex)
@@ -269,27 +263,25 @@ namespace Fix
                 return;
 
             int errors = 0;
-            
+
             try
             {
-                using (FileStream stream = new FileStream(MessagesFileName, FileMode.OpenOrCreate))
-                using (Reader reader = new Reader(stream))
+                using FileStream stream = new(MessagesFileName, FileMode.OpenOrCreate);
+                using Reader reader = new(stream);
+                for (; ; )
                 {
-                    for (;;)
+                    try
                     {
-                        try
-                        {
-                            Message message = reader.ReadLine();
-                            if (message == null)
-                                break;
-                            Messages.Add(message);
-                        }
-                        catch (Exception ex)
-                        {
-                            ++errors;
-                            OnWarning(ex.Message);
-                            reader.DiscardLine();
-                        }
+                        Message message = reader.ReadLine();
+                        if (message == null)
+                            break;
+                        Messages.Add(message);
+                    }
+                    catch (Exception ex)
+                    {
+                        ++errors;
+                        OnWarning(ex.Message);
+                        reader.DiscardLine();
                     }
                 }
             }
@@ -325,7 +317,7 @@ namespace Fix
         {
             if (Reading)
                 return;
-            
+
             try
             {
                 _historyWriter.WriteLine(ev.Message);

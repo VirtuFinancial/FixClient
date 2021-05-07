@@ -10,11 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -57,7 +53,6 @@ namespace Fix.Parsers
                     continue;
 
                 int tag = Convert.ToInt32(match.Groups[1].Value);
-                string separator = match.Groups[2].Value;
                 string value = match.Groups[3].Value;
 
                 // If we haven't loaded a version yet or if the version has changed. The version is unlikely to change but sometimes
@@ -86,10 +81,10 @@ namespace Fix.Parsers
 
                     if (field == null && _version == Dictionary.Versions.FIXT_1_1)
                     {
-                                    
+
                     }
                 }
-                    
+
                 if (field != null && (field.EnumeratedType != null || field.Tag == Dictionary.Fields.MsgType.Tag))
                 {
                     match = Regex.Match(value, @"\s*([a-zA-Z0-9]+)\s*-");
@@ -130,7 +125,7 @@ namespace Fix.Parsers
         protected override Message ParseMessage(TextReader reader)
         {
             var message = new Message();
-            
+
             message.Fields.Clear();
 
             bool foundStart = FindStart(reader, message);
@@ -144,12 +139,12 @@ namespace Fix.Parsers
             return message;
         }
 
-        bool IsMessageTerminator(string line)
+        static bool IsMessageTerminator(string line)
         {
             string trimmed = line.Trim();
-            return  trimmed == "}" || 
-                    trimmed.Contains(" Incoming ") || 
-                    trimmed.Contains(" Outgoing ") || 
+            return trimmed == "}" ||
+                    trimmed.Contains(" Incoming ") ||
+                    trimmed.Contains(" Outgoing ") ||
                     string.IsNullOrEmpty(trimmed.Trim());
         }
 

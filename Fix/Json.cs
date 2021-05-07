@@ -10,10 +10,10 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Fix
 {
@@ -21,7 +21,7 @@ namespace Fix
     {
         public class FixVersionConverter : JsonConverter
         {
-            readonly List<Dictionary.Version> _versions = new List<Dictionary.Version>();
+            readonly List<Dictionary.Version> _versions = new();
 
             public FixVersionConverter()
             {

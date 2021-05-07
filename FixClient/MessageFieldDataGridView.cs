@@ -10,13 +10,12 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Linq;
+using System;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms;
-using System.ComponentModel;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace FixClient
 {
@@ -75,7 +74,7 @@ namespace FixClient
                 DataPropertyName = FieldDataTable.ColumnTag,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells,
                 ReadOnly = true,
-                DefaultCellStyle = {Alignment = DataGridViewContentAlignment.MiddleLeft}
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft }
             };
             Columns.Add(column);
 
@@ -113,8 +112,7 @@ namespace FixClient
         {
             if (ModifierKeys == Keys.Control)
             {
-                var view = DataSource as DataView;
-                if (view != null)
+                if (DataSource is DataView view)
                 {
                     view.Sort = string.Empty;
                     Refresh();
@@ -128,18 +126,15 @@ namespace FixClient
         public Fix.Field FieldAtIndex(int rowIndex)
         {
             DataGridViewRow row = Rows[rowIndex];
-            var rowView = row.DataBoundItem as DataRowView;
 
-            if (rowView == null)
+            if (row.DataBoundItem is not DataRowView rowView)
             {
                 return null;
                 // HMM - this was thrown when changing from the messages to the history view
                 //throw new Exception(string.Format("MessageFieldDataGridView Row.DataBoundItem at index {0} is not a DataRowView ", rowIndex));
             }
 
-            var dataRow = rowView.Row as FieldDataRow;
-
-            if (dataRow == null)
+            if (rowView.Row is not FieldDataRow dataRow)
             {
                 throw new Exception(string.Format("MessageFieldDataGridView RowView.Row at index {0} is not a FieldDataRow", rowIndex));
             }
@@ -150,32 +145,41 @@ namespace FixClient
         protected string ToolTipForCell(int rowIndex, int columnIndex, char value)
         {
             DataGridViewRow row = Rows[rowIndex];
-            var rowView = row.DataBoundItem as DataRowView;
 
-            if (rowView == null || rowView.IsNew)
+            if (row.DataBoundItem is not DataRowView rowView || rowView.IsNew)
+            {
                 return null;
+            }
 
             var dataRow = (FieldDataRow)rowView.Row;
 
             Fix.Field field = dataRow.Field;
 
             if (field.Definition == null)
+                {
                 return null;
+            }
 
             Type type = field.Definition.EnumeratedType;
 
             if (type == null)
+                {
                 return null;
+            }
 
             string name = type.GetEnumName(value);
 
             if (string.IsNullOrEmpty(name))
+                {
                 return null;
+            }
 
             MemberInfo[] info = type.GetMember(name);
 
             if (info.Length < 1)
+                {
                 return null;
+            }
 
             var attributes = info[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
 
@@ -187,39 +191,46 @@ namespace FixClient
         protected override void OnCellToolTipTextNeeded(DataGridViewCellToolTipTextNeededEventArgs e)
         {
             if (e.RowIndex < 0)
+                {
                 return;
+            }
 
             DataGridViewColumn column = Columns[e.ColumnIndex];
 
             if (column.Name != FieldDataTable.ColumnDescription && column.Name != FieldDataTable.ColumnValue)
+                {
                 return;
+            }
 
             DataGridViewCell cell = Rows[e.RowIndex].Cells[e.ColumnIndex];
 
             if (cell.Value == null || cell.Value == DBNull.Value)
+                {
                 return;
+            }
 
-            char enumValue;
-            if (!Char.TryParse(cell.Value.ToString(), out enumValue))
+            if (!char.TryParse(cell.Value.ToString(), out char enumValue))
             {
                 if (!(cell.Value is int))
+                {
                     return;
+                }
                 enumValue = Convert.ToChar(cell.Value);
             }
 
             e.ToolTipText = ToolTipForCell(e.RowIndex, e.ColumnIndex, enumValue);
         }
-    
+
         protected override void OnCellFormatting(DataGridViewCellFormattingEventArgs e)
         {
             try
             {
                 DataGridViewRow row = Rows[e.RowIndex];
 
-                var rowView = row.DataBoundItem as DataRowView;
-
-                if (rowView == null || rowView.IsNew)
+                if (row.DataBoundItem is not DataRowView rowView || rowView.IsNew)
+                {
                     return;
+                }
 
                 var dataRow = (FieldDataRow)rowView.Row;
 
@@ -232,7 +243,7 @@ namespace FixClient
 
                     if (customValue != null && customValue != DBNull.Value)
                     {
-                        custom = (bool) customValue;
+                        custom = (bool)customValue;
                     }
 
                     if (custom)
@@ -242,7 +253,7 @@ namespace FixClient
                     else
                     {
                         object requiredValue = dataRow[FieldDataTable.ColumnRequired];
-                        var required = (bool) requiredValue;
+                        var required = (bool)requiredValue;
                         e.CellStyle.ForeColor = required ? LookAndFeel.Color.Incoming : LookAndFeel.Color.Outgoing;
                     }
                 }

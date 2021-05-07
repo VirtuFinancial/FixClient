@@ -10,9 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿#region Using directives
+#region Using directives
 
-using System;
 using System.Windows.Forms;
 
 #endregion
@@ -45,7 +44,7 @@ namespace FixClient
         public bool Readonly
         {
             get { return _propertyGrid.Enabled; }
-            set 
+            set
             {
                 _propertyGrid.Enabled = !value;
                 OK.Enabled = !value;
@@ -54,7 +53,7 @@ namespace FixClient
 
         public Session Session
         {
-            get { return _session; } 
+            get { return _session; }
             set
             {
                 _session = value;

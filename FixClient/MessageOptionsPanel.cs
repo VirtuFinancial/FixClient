@@ -10,10 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using System.Reflection;
 
 namespace FixClient
 {
@@ -67,20 +65,10 @@ namespace FixClient
             [Description("Automatically increment the AllocID field in any messages that have it")]
             [Category(CategoryAuto)]
             public bool AutoAllocId { get; set; }
-
-            [DisplayName("TradeReportID")]
-            [Description("Automatically increment the TradeReportID field in any messages that have it")]
-            [Category(CategoryAuto)]
-            public bool AutoTradeReportId { get; set; }
-
-            [DisplayName("TradeID")]
-            [Description("Automatically increment the TradeID field in any messages that have it")]
-            [Category(CategoryAuto)]
-            public bool AutoTradeId { get; set; }
         }
 
         Session _session;
-        readonly MessageOptions _options = new MessageOptions();
+        readonly MessageOptions _options = new();
         readonly PropertyGrid _propertyGrid;
 
         public MessageOptionsPanel()
@@ -95,7 +83,7 @@ namespace FixClient
                 SelectedObject = _options
             };
             _propertyGrid.PropertyValueChanged += PropertyGridPropertyValueChanged;
-            _propertyGrid.Layout += (sender, ev) => MoveSplitter(_propertyGrid, 190); 
+            _propertyGrid.Layout += (sender, ev) => MoveSplitter(_propertyGrid, 190);
 
             var panel1 = new BorderHidingPanel(_propertyGrid) { Dock = DockStyle.Fill };
 
@@ -104,8 +92,9 @@ namespace FixClient
             UpdateUiState();
         }
 
-        void MoveSplitter(PropertyGrid propertyGrid, int x)
+        static void MoveSplitter(PropertyGrid propertyGrid, int x)
         {
+            /* TODO
             object propertyGridView = typeof(PropertyGrid).InvokeMember("gridView", 
                                                                         BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance, 
                                                                         null, 
@@ -116,6 +105,7 @@ namespace FixClient
                                                     null, 
                                                     propertyGridView, 
                                                     new object[] { x });
+            */
         }
 
         void PropertyGridPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
@@ -150,12 +140,6 @@ namespace FixClient
                 case "AllocID":
                     _session.AutoAllocId = value;
                     break;
-                case "TradeReportID":
-                    _session.AutoTradeReportId = value;
-                    break;
-                case "TradeID":
-                    _session.AutoTradeId = value;
-                    break;
             }
             _session.Write();
         }
@@ -167,7 +151,6 @@ namespace FixClient
             {
                 _session = value;
 
-                _options.AutoTradeReportId = _session.AutoTradeReportId;
                 _options.AutoAllocId = _session.AutoAllocId;
                 _options.AutoClOrdId = _session.AutoClOrdId;
                 _options.AutoListId = _session.AutoListId;
@@ -177,7 +160,6 @@ namespace FixClient
                 _options.AutoSetMsgSeqNum = _session.AutoSetMsgSeqNum;
                 _options.AutoTotNoOrders = _session.AutoTotNoOrders;
                 _options.AutoTransactTime = _session.AutoTransactTime;
-                _options.AutoTradeId = _session.AutoTradeId;
                 UpdateUiState();
             }
         }

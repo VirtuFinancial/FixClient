@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
@@ -21,7 +21,7 @@ namespace FixClient
     {
         const uint MaximumMessages = 1000;
         readonly LogMessageDataGridView _messageGrid;
-        readonly LogMessageDataTable _messageTable = new LogMessageDataTable("Messages");
+        readonly LogMessageDataTable _messageTable = new("Messages");
         readonly DataView _messageView;
         readonly ToolStripButton _clearButton;
         readonly SearchTextBox _searchTextBox;
@@ -33,12 +33,12 @@ namespace FixClient
 
             #region Toolstrip
             _clearButton = new ToolStripButton(Properties.Resources.Clear)
-                               {
-                                   ToolTipText = "Clear all log messages",
-                                   ImageTransparentColor = Color.Magenta
-                               };
+            {
+                ToolTipText = "Clear all log messages",
+                ImageTransparentColor = Color.Magenta
+            };
             _clearButton.Click += ClearButtonClick;
-            
+
             var toolstrip = new ToolStrip(new ToolStripItem[]
             {
                 _clearButton,
@@ -59,10 +59,10 @@ namespace FixClient
             _messageView = new DataView(_messageTable);
 
             _messageGrid = new LogMessageDataGridView
-                            {
-                                Dock = DockStyle.Fill, 
-                                DataSource = _messageView
-                            };
+            {
+                Dock = DockStyle.Fill,
+                DataSource = _messageView
+            };
 
             var container = new ToolStripContainer
             {
@@ -170,7 +170,7 @@ namespace FixClient
 
             if (result != DialogResult.Yes)
                 return;
-                                                  
+
             _messageTable.Clear();
         }
     }

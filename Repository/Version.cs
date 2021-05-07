@@ -10,11 +10,10 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace Fix.Repository
@@ -41,8 +40,8 @@ namespace Fix.Repository
         {
             public int Compare(string x, string y)
             {
-                int left = Convert.ToInt32(x.Substring(2));
-                int right = Convert.ToInt32(y.Substring(2));
+                int left = Convert.ToInt32(x[2..]);
+                int right = Convert.ToInt32(y[2..]);
                 return left.CompareTo(right);
             }
         }
@@ -56,20 +55,20 @@ namespace Fix.Repository
                                  where Path.GetFileName(entry).ToUpper().StartsWith("EP")
                                  select Path.GetFileName(entry)).OrderByDescending(entry => entry, new DirectoryComparer()).FirstOrDefault();
 
-            if(!string.IsNullOrEmpty(mostRecent))
+            if (!string.IsNullOrEmpty(mostRecent))
             {
                 extension = mostRecent;
             }
-            
+
             directory += "/" + extension;
-            
+
             var customMessages = new List<Message>();
 
-            using (FileStream fs = new FileStream(directory + "/Messages.xml", FileMode.Open))
+            using (FileStream fs = new(directory + "/Messages.xml", FileMode.Open))
             {
                 var ser = new XmlSerializer(typeof(Messages));
                 var m = (Messages)ser.Deserialize(fs);
-                foreach(Message message in m.Items)
+                foreach (Message message in m.Items)
                 {
                     Messages.Add((Message)message.Clone());
 
@@ -115,7 +114,7 @@ namespace Fix.Repository
 
             Messages.AddRange(customMessages);
 
-            using (FileStream fs = new FileStream(directory + "/Enums.xml", FileMode.Open))
+            using (FileStream fs = new(directory + "/Enums.xml", FileMode.Open))
             {
                 var ser = new XmlSerializer(typeof(Enums));
                 var m = (Enums)ser.Deserialize(fs);
@@ -123,8 +122,7 @@ namespace Fix.Repository
                 foreach (Enum en in m.Items)
                 {
                     var clone = (Enum)en.Clone();
-                    List<Enum> values;
-                    if (!Enums.TryGetValue(clone.Tag, out values))
+                    if (!Enums.TryGetValue(clone.Tag, out List<Enum> values))
                     {
                         values = new List<Enum>();
                         Enums[clone.Tag] = values;
@@ -133,7 +131,7 @@ namespace Fix.Repository
                 }
             }
 
-            using (FileStream fs = new FileStream(directory + "/Fields.xml", FileMode.Open))
+            using (FileStream fs = new(directory + "/Fields.xml", FileMode.Open))
             {
                 var ser = new XmlSerializer(typeof(Fields));
                 var m = (Fields)ser.Deserialize(fs);
@@ -155,15 +153,14 @@ namespace Fix.Repository
                 InjectHKEXExchangeTradeTypeField();
             }
 
-            using (FileStream fs = new FileStream(directory + "/MsgContents.xml", FileMode.Open))
+            using (FileStream fs = new(directory + "/MsgContents.xml", FileMode.Open))
             {
                 var ser = new XmlSerializer(typeof(MsgContents));
                 var m = (MsgContents)ser.Deserialize(fs);
                 foreach (MsgContent content in m.Items)
                 {
                     var clone = (MsgContent)content.Clone();
-                    List<MsgContent> contents;
-                    if(!MsgContents.TryGetValue(clone.ComponentID, out contents))
+                    if (!MsgContents.TryGetValue(clone.ComponentID, out List<MsgContent> contents))
                     {
                         contents = new List<MsgContent>();
                         MsgContents[clone.ComponentID] = contents;
@@ -173,7 +170,7 @@ namespace Fix.Repository
                 InjectHKEXExchangeTradeTypeIntoMsgContents();
             }
 
-            using (FileStream fs = new FileStream(directory + "/Components.xml", FileMode.Open))
+            using (FileStream fs = new(directory + "/Components.xml", FileMode.Open))
             {
                 var ser = new XmlSerializer(typeof(Components));
                 var m = (Components)ser.Deserialize(fs);
@@ -194,9 +191,10 @@ namespace Fix.Repository
                 return;
 
             // Find it's fields
-            List<MsgContent> content;
-            if (!MsgContents.TryGetValue(tradeCaptureReport.ComponentID, out content))
+            if (!MsgContents.TryGetValue(tradeCaptureReport.ComponentID, out List<MsgContent> content))
+            {
                 return;
+            }
 
             var field = new MsgContent
             {
@@ -237,7 +235,7 @@ namespace Fix.Repository
             }
         }
 
-        void InjectHKEXExchangeTradeTypeEnum(Enums enums)
+        static void InjectHKEXExchangeTradeTypeEnum(Enums enums)
         {
             /*
                 Inject this custom type used by the HKEX
@@ -265,9 +263,9 @@ namespace Fix.Repository
                 ["O"] = "Odd Lot - Semi - Automatic"
             };
 
-           // int tag = enums.Items.Max(e => e.Tag) + 1;
+            // int tag = enums.Items.Max(e => e.Tag) + 1;
 
-            foreach(var entry in definitions)
+            foreach (var entry in definitions)
             {
                 string symbolicName = entry.Value.Replace(" ", "").Replace("-", "");
                 var value = new Enum

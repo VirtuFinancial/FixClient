@@ -10,17 +10,15 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.CodeDom;
 
 namespace Lexicographer
 {
     partial class CodeGenerator
     {
-        IEnumerable<CodeTypeDeclaration> GenerateEnums(Fix.Repository.Version version, bool includeNamespace = true)
+        static IEnumerable<CodeTypeDeclaration> GenerateEnums(Fix.Repository.Version version, bool includeNamespace = true)
         {
             var declarations = new List<CodeTypeDeclaration>();
             CodeTypeDeclaration versionType = null;
@@ -43,11 +41,9 @@ namespace Lexicographer
                 declarations.Add(dictionaryType);
             }
 
-            foreach(int tag in version.Enums.Keys)
+            foreach (int tag in version.Enums.Keys)
             {
-                Fix.Repository.Field field;
-
-                if (!version.Fields.TryGetValue(tag, out field))
+                if (!version.Fields.TryGetValue(tag, out Fix.Repository.Field field))
                     continue;
 
                 var type = new CodeTypeDeclaration(field.Name)

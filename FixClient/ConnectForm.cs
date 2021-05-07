@@ -11,11 +11,10 @@
 /////////////////////////////////////////////////
 
 using System;
-using System.Windows.Forms;
-using System.Threading.Tasks;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.IO;
+using System.Windows.Forms;
 
 namespace FixClient
 {
@@ -59,11 +58,11 @@ namespace FixClient
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(null, ex.Message, "ITGA Fix Initiator", MessageBoxButtons.OK,
+                        MessageBox.Show(null, ex.Message, "Fix Initiator", MessageBoxButtons.OK,
                                         MessageBoxIcon.Information);
                         DialogResult = DialogResult.Cancel;
                     }
-                    BeginInvoke(new MethodInvoker(Close), new object[] {this, null});
+                    BeginInvoke(new MethodInvoker(Close), new object[] { this, null });
                 }, null);
             }
             else
@@ -85,10 +84,10 @@ namespace FixClient
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(null, ex.Message, "ITGA Fix Initiator", MessageBoxButtons.OK,
+                        MessageBox.Show(null, ex.Message, "Fix Initiator", MessageBoxButtons.OK,
                                         MessageBoxIcon.Information);
                         DialogResult = DialogResult.Cancel;
-                    }       
+                    }
                     _tcpListener.Stop();
                 }, null);
             }

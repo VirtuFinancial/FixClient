@@ -10,14 +10,11 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+using System;
 using System.ComponentModel;
+using System.IO;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace Fix
 {
@@ -83,7 +80,7 @@ namespace Fix
             });
         }
 
-        readonly object _syncRoot = new object();
+        readonly object _syncRoot = new();
 
         public virtual void Close()
         {
@@ -94,7 +91,7 @@ namespace Fix
 
                 _testRequestTimer?.Dispose();
                 _testRequestTimer = null;
-           
+
                 StopDefibrillator();
 
                 _reader?.Close();
@@ -116,7 +113,7 @@ namespace Fix
         {
             lock (_syncRoot)
             {
-                PerformSend(message, setSeqNum);    
+                PerformSend(message, setSeqNum);
             }
         }
 
@@ -161,7 +158,7 @@ namespace Fix
 
                 message.Fields.Set(Dictionary.Fields.SenderCompID, SenderCompId);
                 message.Fields.Set(Dictionary.Fields.TargetCompID, TargetCompId);
-                
+
                 if (setSeqNum)
                 {
                     message.Fields.Set(Dictionary.Fields.MsgSeqNum, AllocateOutgoingSeqNum());

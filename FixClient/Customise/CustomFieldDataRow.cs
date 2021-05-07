@@ -10,11 +10,6 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data;
 
 namespace FixClient
@@ -22,7 +17,7 @@ namespace FixClient
     class CustomFieldDataRow : DataRow
     {
         public CustomFieldDataRow(DataRowBuilder builder)
-        :   base(builder)
+        : base(builder)
         {
         }
 

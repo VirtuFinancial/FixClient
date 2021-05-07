@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System.CodeDom;
+using System.CodeDom;
 
 namespace Lexicographer
 {
@@ -49,7 +49,7 @@ namespace Lexicographer
                                                               }
             };
             dictionaryType.Members.Add(versionsProperty);
-          
+
             var versionsType = new CodeTypeDeclaration("VersionCollection")
             {
                 Attributes = MemberAttributes.Public,
@@ -69,11 +69,11 @@ namespace Lexicographer
                     Type = new CodeTypeReference("Version")
                 };
                 versionsType.Members.Add(versionField);
-                if(!versionField.Name.StartsWith("FIXT_"))
+                if (!versionField.Name.StartsWith("FIXT_"))
                     last = versionField.Name;
             }
 
-            if(!string.IsNullOrEmpty(last))
+            if (!string.IsNullOrEmpty(last))
             {
                 var defaultField = new CodeMemberField
                 {
@@ -102,8 +102,8 @@ namespace Lexicographer
                                                                                     new CodeVariableReferenceExpression("Fix.Dictionary." + versionClass + ".Fields")));
 
                 constructor.Statements.Add(assign);
-                
-                
+
+
 
                 versionsCreate.Initializers.Add(new CodeVariableReferenceExpression(versionClass));
             }
@@ -125,7 +125,7 @@ namespace Lexicographer
                 Attributes = MemberAttributes.Public | MemberAttributes.Static,
                 Name = "Fields",
                 Type = new CodeTypeReference(last + "." + last + "FieldCollection"),
-                GetStatements = 
+                GetStatements =
                 {
                     new CodeMethodReturnStatement
                     {
@@ -140,7 +140,7 @@ namespace Lexicographer
                 Attributes = MemberAttributes.Public | MemberAttributes.Static,
                 Name = "Messages",
                 Type = new CodeTypeReference(last + "." + last + "MessageCollection"),
-                GetStatements = 
+                GetStatements =
                 {
                     new CodeMethodReturnStatement
                     {
@@ -155,7 +155,7 @@ namespace Lexicographer
                 Attributes = MemberAttributes.Public | MemberAttributes.Static,
                 Name = "DataTypes",
                 Type = new CodeTypeReference(last + "." + last + "DataTypeCollection"),
-                GetStatements = 
+                GetStatements =
                 {
                     new CodeMethodReturnStatement
                     {

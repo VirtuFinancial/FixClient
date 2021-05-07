@@ -10,11 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.IO;
 
 namespace Fix
@@ -45,16 +41,14 @@ namespace Fix
 
         public MessageCollection Parse(Uri uri)
         {
-            if(uri.Scheme != "file")
-                throw new ArgumentException("Exepected a URI with a 'file' scheme and got '{0}'", uri.Scheme);    
+            if (uri.Scheme != "file")
+                throw new ArgumentException("Exepected a URI with a 'file' scheme and got '{0}'", uri.Scheme);
 
-            using (FileStream stream = new FileStream(uri.LocalPath, FileMode.Open))
-            {
-                return Parse(stream);
-            }
+            using FileStream stream = new(uri.LocalPath, FileMode.Open);
+            return Parse(stream);
         }
 
         protected abstract Message ParseMessage(TextReader reader);
-    
+
     }
 }

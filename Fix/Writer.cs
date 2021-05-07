@@ -10,11 +10,9 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 using System.IO;
+using System.Text;
 
 namespace Fix
 {
@@ -80,24 +78,22 @@ namespace Fix
             }
             else
             {
-                using (MemoryStream stream = new MemoryStream())
+                using MemoryStream stream = new();
+                using (BinaryWriter writer = new(stream, Encoding.ASCII, true))
                 {
-                    using (BinaryWriter writer = new BinaryWriter(stream, Encoding.ASCII, true))
-                    {
-                        Write(writer, message);
-                    }
+                    Write(writer, message);
+                }
 
-                    lock (_writer)
-                    {
-                        _writer.Write(stream.GetBuffer(), 0, (int) stream.Length);
-                    }
+                lock (_writer)
+                {
+                    _writer.Write(stream.GetBuffer(), 0, (int)stream.Length);
                 }
             }
 
-            OnMessageWritten(message);        
+            OnMessageWritten(message);
         }
 
-        void Write(BinaryWriter writer, Message message)
+        static void Write(BinaryWriter writer, Message message)
         {
             foreach (Field field in message.Fields)
             {
@@ -124,8 +120,8 @@ namespace Fix
         {
             WriteMessage(message);
             _writer.Flush();
-        }   
-        
+        }
+
         public void WriteLine(Message message)
         {
             _writer.Write(Encoding.ASCII.GetBytes(message.Incoming ? "<" : ">"));

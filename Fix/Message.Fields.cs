@@ -10,11 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
 namespace Fix
 {
@@ -23,9 +19,7 @@ namespace Fix
         public MissingFieldException(Dictionary.Field field)
         : base($"Message does not contain a {field.Name} field")
         {
-            Field = field;
         }
-        Dictionary.Field Field { get; }
     }
 
     public partial class Message
@@ -116,8 +110,7 @@ namespace Fix
                 Field field = Fields.Find(Dictionary.Fields.BeginSeqNo);
                 if (field == null)
                     throw new MissingFieldException(Dictionary.Fields.BeginSeqNo);
-                int value;
-                if(!int.TryParse(field.Value, out value))
+                if (!int.TryParse(field.Value, out int value))
                     throw new Exception($"Message contains an invalid {field}");
                 return value;
             }
@@ -130,8 +123,7 @@ namespace Fix
                 Field field = Fields.Find(Dictionary.Fields.EndSeqNo);
                 if (field == null)
                     throw new MissingFieldException(Dictionary.Fields.EndSeqNo);
-                int value;
-                if (!int.TryParse(field.Value, out value))
+                if (!int.TryParse(field.Value, out int value))
                     throw new Exception($"Message contains an invalid {field}");
                 return value;
             }
@@ -155,7 +147,7 @@ namespace Fix
                 Field field = Fields.Find(Dictionary.Fields.ResetSeqNumFlag);
                 if (field == null)
                     return false;
-                return (bool) field;
+                return (bool)field;
             }
         }
 
@@ -166,8 +158,7 @@ namespace Fix
                 Field field = Fields.Find(Dictionary.Fields.NewSeqNo);
                 if (field == null)
                     throw new MissingFieldException(Dictionary.Fields.NewSeqNo);
-                int value;
-                if (!int.TryParse(field.Value, out value))
+                if (!int.TryParse(field.Value, out int value))
                     throw new Exception($"Message contains an invalid {field}");
                 return value;
             }
@@ -191,7 +182,7 @@ namespace Fix
                 Field field = Fields.Find(Dictionary.Fields.OrdStatus);
                 if (field == null)
                     return null;
-                return (OrdStatus) field;
+                return (OrdStatus)field;
             }
         }
 
@@ -202,7 +193,7 @@ namespace Fix
                 Field field = Fields.Find(Dictionary.Fields.SessionStatus);
                 if (field == null)
                     return null;
-                return (SessionStatus) field;
+                return (SessionStatus)field;
             }
         }
 

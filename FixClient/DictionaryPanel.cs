@@ -13,8 +13,8 @@
 using System;
 using System.Drawing;
 using System.Text;
-using System.Windows.Forms;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace FixClient
 {
@@ -31,7 +31,7 @@ namespace FixClient
 
             _browser = new WebBrowser { Dock = DockStyle.Fill };
             _browser.ScriptErrorsSuppressed = true;
-            _browser.Navigate("http://www.onixs.biz/tools/fixdictionary/index.php");
+            _browser.Navigate("https://www.onixs.biz/fix-dictionary.html");
 
             ContentPanel.Controls.Add(_browser);
 
@@ -45,20 +45,20 @@ namespace FixClient
             TopToolStripPanel.Join(toolStrip);
 
             _backButton = new ToolStripButton
-                              {
-                                  ToolTipText = "Back",
-                                  Image = Properties.Resources.Back,
-                                  ImageTransparentColor = Color.Magenta
-                              };
+            {
+                ToolTipText = "Back",
+                Image = Properties.Resources.Back,
+                ImageTransparentColor = Color.Magenta
+            };
             _backButton.Click += (sender, ev) => _browser.GoBack();
             toolStrip.Items.Add(_backButton);
 
             _forwardButton = new ToolStripButton
-                                 {
-                                     ToolTipText = "Forward",
-                                     Image = Properties.Resources.Forward,
-                                     ImageTransparentColor = Color.Magenta
-                                 };
+            {
+                ToolTipText = "Forward",
+                Image = Properties.Resources.Forward,
+                ImageTransparentColor = Color.Magenta
+            };
             _forwardButton.Click += (sender, ev) => _browser.GoForward();
             toolStrip.Items.Add(_forwardButton);
             #endregion
@@ -72,9 +72,8 @@ namespace FixClient
                 //"http://onixs.biz/fixdictionary/4.2/msgType_D_68.html"
                 //
                 string numeric;
-                int result;
 
-                if (int.TryParse(value.MsgType, out result))
+                if (int.TryParse(value.MsgType, out int result))
                 {
                     numeric = value.MsgType;
                 }
@@ -89,9 +88,9 @@ namespace FixClient
 
                     numeric = builder.ToString();
                 }
-                
-                var uri = new Uri(string.Format("http://onixs.biz/fixdictionary/{0}/msgType_{1}_{2}.html",
-                                                value.BeginString.Substring(4, 3),                                
+
+                var uri = new Uri(string.Format("http://onixs.biz/fix-dictionary/{0}/msgType_{1}_{2}.html",
+                                                value.BeginString.Substring(4, 3),
                                                 value.MsgType,
                                                 numeric));
 

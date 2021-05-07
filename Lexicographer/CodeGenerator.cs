@@ -10,14 +10,12 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+using Microsoft.CSharp;
 using System.CodeDom;
 using System.CodeDom.Compiler;
-using Microsoft.CSharp;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Lexicographer
 {
@@ -28,28 +26,28 @@ namespace Lexicographer
 
         public void Run()
         {
-            GenerateFile(string.Empty, new [] { GenerateVersions() });
-            
-            foreach(Fix.Repository.Version version in Repository.Versions)
-            {
-                GenerateFile(version.BeginString + "_Messages", new [] { GenerateMessages(version) });    
+            GenerateFile(string.Empty, new[] { GenerateVersions() });
 
-                foreach(Fix.Repository.Message message in version.Messages)
+            foreach (Fix.Repository.Version version in Repository.Versions)
+            {
+                GenerateFile(version.BeginString + "_Messages", new[] { GenerateMessages(version) });
+
+                foreach (Fix.Repository.Message message in version.Messages)
                 {
                     string name = message.Name;
 
                     if (name == "SecurityStatus")
                     {
-                        name = name + "Message";
+                        name += "Message";
                     }
 
-                    GenerateFile(version.BeginString + "_Messages_" + name, new [] { GenerateMessage(version, message) });
+                    GenerateFile(version.BeginString + "_Messages_" + name, new[] { GenerateMessage(version, message) });
                 }
             }
 
             foreach (Fix.Repository.Version version in Repository.Versions)
             {
-                GenerateFile(version.BeginString + "_Fields", new [] { GenerateFields(version) });
+                GenerateFile(version.BeginString + "_Fields", new[] { GenerateFields(version) });
             }
 
             Fix.Repository.Version last = null;
@@ -64,12 +62,12 @@ namespace Lexicographer
 
             if (last != null)
             {
-                GenerateFile("Enums", GenerateEnums(last, false));        
+                GenerateFile("Enums", GenerateEnums(last, false));
             }
 
-            foreach(Fix.Repository.Version version in Repository.Versions)
+            foreach (Fix.Repository.Version version in Repository.Versions)
             {
-                GenerateFile(version.BeginString + "_DataTypes", new [] { GenerateDataTypes(version) });
+                GenerateFile(version.BeginString + "_DataTypes", new[] { GenerateDataTypes(version) });
             }
         }
 
@@ -77,7 +75,7 @@ namespace Lexicographer
         {
             var globalNamespace = new CodeNamespace
             {
-                Imports =   
+                Imports =
                 {
                     new CodeNamespaceImport("System"),
                     new CodeNamespaceImport("System.Linq"),
@@ -93,7 +91,7 @@ namespace Lexicographer
             {
                 Namespaces = { globalNamespace, codeNamespace }
             };
-            
+
             var codeProvider = new CSharpCodeProvider();
 
             string filename = OutputPath + Path.DirectorySeparatorChar + string.Format("Dictionary{0}.", string.IsNullOrEmpty(filenameSuffix) ? "" : "_" + filenameSuffix.Replace(".", "_")) + codeProvider.FileExtension;

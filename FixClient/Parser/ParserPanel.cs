@@ -13,8 +13,8 @@
 using System;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms;
 using System.Text;
+using System.Windows.Forms;
 
 namespace FixClient
 {
@@ -95,7 +95,7 @@ namespace FixClient
             _showAdminMessageCheckBox = new ToolStripCheckBox();
             _showAdminMessageCheckBox.CheckChanged += ShowAdminMessageCheckBoxCheckChanged;
 
-            _statusNoneMenuItem = new ToolStripMenuItem { Text = "None", Checked =  true, CheckOnClick = true};
+            _statusNoneMenuItem = new ToolStripMenuItem { Text = "None", Checked = true, CheckOnClick = true };
             _statusNoneMenuItem.Click += StatusMenuItemClick;
 
             _statusInfoMenuItem = new ToolStripMenuItem { Text = "Info", Checked = true, CheckOnClick = true };
@@ -103,7 +103,7 @@ namespace FixClient
 
             _statusWarnMenuItem = new ToolStripMenuItem { Text = "Warn", Checked = true, CheckOnClick = true };
             _statusWarnMenuItem.Click += StatusMenuItemClick;
-            
+
             _statusErrorMenuItem = new ToolStripMenuItem { Text = "Error", Checked = true, CheckOnClick = true };
             _statusErrorMenuItem.Click += StatusMenuItemClick;
 
@@ -117,7 +117,7 @@ namespace FixClient
             var toolStrip = new ToolStrip(new ToolStripItem[]
             {
                 loadButton,
-                new ToolStripLabel("Show Administrative Messages"), 
+                new ToolStripLabel("Show Administrative Messages"),
                 _showAdminMessageCheckBox,
                 _statusButton
             })
@@ -131,7 +131,7 @@ namespace FixClient
 
             var splitter = new SplitContainer
             {
-                Orientation = Orientation.Horizontal, 
+                Orientation = Orientation.Horizontal,
                 Dock = DockStyle.Fill,
                 SplitterDistance = 200
             };
@@ -148,10 +148,10 @@ namespace FixClient
             container.TopToolStripPanel.BackColor = LookAndFeel.Color.ToolStrip;
 
             _messageGridView = new ParserMessageDataGridView
-                                   {
-                                       Dock = DockStyle.Fill,
-                                       VirtualMode = true
-                                   };
+            {
+                Dock = DockStyle.Fill,
+                VirtualMode = true
+            };
             _messageGridView.SelectionChanged += ClientMessageGridGridSelectionChanged;
             _messageGridView.CellValueNeeded += MessageGridViewCellValueNeeded;
             _messageGridView.CellFormatting += MessageGridViewCellFormatting;
@@ -163,7 +163,7 @@ namespace FixClient
 
                 DataGridViewColumn column;
 
-                if (source.DataType == typeof (Image))
+                if (source.DataType == typeof(Image))
                 {
                     column = new DataGridViewImageColumn
                     {
@@ -182,7 +182,7 @@ namespace FixClient
                 _messageGridView.Columns.Add(column);
             }
 
-            var fieldGridView = new FieldDataGridView 
+            var fieldGridView = new FieldDataGridView
             {
                 Dock = DockStyle.Fill,
                 DataSource = _fieldView
@@ -201,7 +201,7 @@ namespace FixClient
 
             _orderTable = new OrderDataTable("Orders");
             _orderView = new DataView(_orderTable);
-            orderGrid  = new OrderDataGridView
+            orderGrid = new OrderDataGridView
             {
                 DataSource = _orderView,
                 Dock = DockStyle.Fill,
@@ -226,8 +226,7 @@ namespace FixClient
         void MessageGridViewCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             DataRowView view = _messageView[e.RowIndex];
-            var dataRow = view.Row as MessageDataRow;
-            if (dataRow != null)
+            if (view.Row is MessageDataRow dataRow)
             {
                 e.CellStyle.ForeColor = dataRow.Message.Incoming
                     ? LookAndFeel.Color.Incoming
@@ -248,7 +247,7 @@ namespace FixClient
 
         void OrderSearchTextBoxTextChanged(object sender, EventArgs e)
         {
-            var textBox = (TextBox) sender;
+            var textBox = (TextBox)sender;
             if (string.IsNullOrEmpty(textBox.Text))
             {
                 _orderView.RowFilter = null;
@@ -344,7 +343,7 @@ namespace FixClient
             else
             {
                 if (!string.IsNullOrEmpty(filter))
-                        filter += " AND ";
+                    filter += " AND ";
                 filter += string.Format("({0} LIKE '%{3}%' OR {1} LIKE '%{3}%' OR {2} LIKE '%{3}%')",
                                         ParserMessageDataTable.ColumnSendingTime,
                                         ParserMessageDataTable.ColumnMsgSeqNum,
@@ -362,10 +361,10 @@ namespace FixClient
         {
             Fix.Order order = e.Order;
 
-            var row = _orderTable.Rows.Find(order.ClOrdID) as OrderDataRow;
-
-            if (row == null)
+            if (_orderTable.Rows.Find(order.ClOrdID) is not OrderDataRow row)
+            {
                 return;
+            }
 
             row.Order = order;
             UpdateRow(row);
@@ -374,13 +373,12 @@ namespace FixClient
         void OrderBookOrderInserted(object sender, Fix.OrderBookEventArgs e)
         {
             Fix.Order order = e.Order;
-
-            var row = _orderTable.Rows.Find(order.ClOrdID) as OrderDataRow;
-
-            if (row != null)
+            if (_orderTable.Rows.Find(order.ClOrdID) is OrderDataRow)
+            {
                 return;
+            }
 
-            row = (OrderDataRow)_orderTable.NewRow();
+            OrderDataRow row = (OrderDataRow)_orderTable.NewRow();
             row.Order = order;
             row[OrderDataTable.ColumnClOrdId] = order.ClOrdID;
             //
@@ -393,7 +391,7 @@ namespace FixClient
             _orderTable.Rows.Add(row);
         }
 
-        void UpdateRow(OrderDataRow row)
+        static void UpdateRow(OrderDataRow row)
         {
             Fix.Order order = row.Order;
 
@@ -409,7 +407,7 @@ namespace FixClient
 
             if (order.OrdStatus != null)
             {
-                row[OrderDataTable.ColumnOrdStatus] = (Fix.OrdStatus) order.OrdStatus;
+                row[OrderDataTable.ColumnOrdStatus] = (Fix.OrdStatus)order.OrdStatus;
                 row[OrderDataTable.ColumnOrdStatusString] = ((Fix.OrdStatus)order.OrdStatus).ToString();
             }
             else
@@ -422,14 +420,14 @@ namespace FixClient
 
             if (order.Side != null)
             {
-                row[OrderDataTable.ColumnSide] = (Fix.Side) order.Side;
+                row[OrderDataTable.ColumnSide] = (Fix.Side)order.Side;
                 row[OrderDataTable.ColumnSideString] = ((Fix.Side)order.Side).ToString();
             }
 
             long cumQty = order.CumQty ?? 0;
             long leavesQty = order.LeavesQty ?? 0;
 
-            if(!order.LeavesQty.HasValue)
+            if (!order.LeavesQty.HasValue)
             {
                 if (order.Active)
                 {
@@ -457,45 +455,43 @@ namespace FixClient
         {
             UpdateMessageFilter();
         }
-     
+
         void LoadClientMessagesButtonClick(object sender, EventArgs e)
         {
-            using (OpenFileDialog dlg = new OpenFileDialog())
+            using OpenFileDialog dlg = new();
+            if (dlg.ShowDialog() != DialogResult.OK)
+                return;
+
+            Cursor original = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+
+            try
             {
-                if (dlg.ShowDialog() != DialogResult.OK)
-                    return;
+                Fix.MessageCollection messages = Fix.MessageCollection.Parse(dlg.FileName);
 
-                Cursor original = Cursor.Current;
-                Cursor.Current = Cursors.WaitCursor;
-
-                try
-                {
-                    Fix.MessageCollection messages = Fix.MessageCollection.Parse(dlg.FileName);
-
-                    if (messages == null)
-                    {
-                        MessageBox.Show(this,
-                                        "The file could not be parsed",
-                                        Application.ProductName,
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
-                        return;
-                    }
-
-                    Messages = messages;
-                }
-                catch (Exception ex)
+                if (messages == null)
                 {
                     MessageBox.Show(this,
-                                    ex.Message,
+                                    "The file could not be parsed",
                                     Application.ProductName,
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Information);
+                    return;
                 }
-                finally
-                {
-                    Cursor.Current = original;
-                }
+
+                Messages = messages;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this,
+                                ex.Message,
+                                Application.ProductName,
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+            }
+            finally
+            {
+                Cursor.Current = original;
             }
         }
 
@@ -504,16 +500,22 @@ namespace FixClient
             get
             {
                 if (_messageGridView.SelectedRows.Count == 0)
+                {
                     return null;
+                }
+
                 DataRowView view = _messageView[_messageGridView.SelectedRows[0].Index];
-                var dataRow = view.Row as MessageDataRow;
-                if (dataRow == null)
+         
+                if (view.Row is not MessageDataRow dataRow)
+                {
                     return null;
+                }
+
                 return dataRow.Message;
             }
         }
 
-        public Fix.Dictionary.Message MessageDefinition(Fix.Message message)
+        public static Fix.Dictionary.Message MessageDefinition(Fix.Message message)
         {
             Fix.Field beginString = message.Fields.Find(Fix.Dictionary.Fields.BeginString);
             Fix.Dictionary.Version version = null;
@@ -527,10 +529,9 @@ namespace FixClient
             return exemplar;
         }
 
-        public Fix.Dictionary.Field FieldDefinition(Fix.Dictionary.Message message, Fix.Field field)
+        public static Fix.Dictionary.Field FieldDefinition(Fix.Dictionary.Message message, Fix.Field field)
         {
-            Fix.Dictionary.Field definition;
-            message.Fields.TryGetValue(field.Tag, out definition);
+            message.Fields.TryGetValue(field.Tag, out Fix.Dictionary.Field definition);
             return definition;
         }
 
@@ -571,10 +572,10 @@ namespace FixClient
 
                 foreach (Fix.Field field in message.Fields)
                 {
-                    var dataRow = _fieldTable.NewRow() as FieldDataRow;
-
-                    if (dataRow == null)
+                    if (_fieldTable.NewRow() is not FieldDataRow dataRow)
+                    {
                         continue;
+                    }
 
                     if (field.Definition == null && message.Definition != null)
                     {
@@ -611,17 +612,13 @@ namespace FixClient
 
         Image ImageForMessageStatus(Fix.MessageStatus status)
         {
-            switch (status)
+            return status switch
             {
-                case Fix.MessageStatus.Error:
-                    return messageStatusErrorImage;
-                case Fix.MessageStatus.Info:
-                    return messageStatusInfoImage;
-                case Fix.MessageStatus.Warn:
-                    return messageStatusWarnImage;
-            }
-
-            return messageStatusNoneImage;
+                Fix.MessageStatus.Error => messageStatusErrorImage,
+                Fix.MessageStatus.Info => messageStatusInfoImage,
+                Fix.MessageStatus.Warn => messageStatusWarnImage,
+                _ => messageStatusNoneImage,
+            };
         }
 
         void MessagesMessageAdded(object sender, Fix.MessageCollection.MessageEvent ev)
@@ -651,7 +648,7 @@ namespace FixClient
 
             field = message.Fields.Find(Fix.Dictionary.Fields.MsgSeqNum);
 
-            row[ParserMessageDataTable.ColumnMsgSeqNum] = field != null ? field.Value : null;
+            row[ParserMessageDataTable.ColumnMsgSeqNum] = field?.Value;
 
             _messageTable.Rows.Add(row);
         }
@@ -669,7 +666,7 @@ namespace FixClient
                     _orderTable.Clear();
 
                     _orderBook.Clear();
-                    
+
                     foreach (Fix.Message message in value)
                     {
                         _orderBook.Process(message);

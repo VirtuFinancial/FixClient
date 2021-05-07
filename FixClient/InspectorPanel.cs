@@ -10,16 +10,10 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Reflection;
+using System.Windows.Forms;
 
 namespace FixClient
 {
@@ -45,7 +39,7 @@ namespace FixClient
 
             _messageDescription = new TextBox
             {
-                Dock = DockStyle.Fill, 
+                Dock = DockStyle.Fill,
                 Multiline = true,
                 ReadOnly = true
             };
@@ -59,7 +53,7 @@ namespace FixClient
 
             _fieldDescription = new TextBox
             {
-                Dock = DockStyle.Fill, 
+                Dock = DockStyle.Fill,
                 Multiline = true,
                 ReadOnly = true
             };
@@ -156,7 +150,7 @@ namespace FixClient
             [Category(Category)]
             [ReadOnly(true)]
             public string Added { get; set; }
-    
+
             [Category(Category)]
             [ReadOnly(true)]
             public string Value { get; set; }
@@ -175,7 +169,7 @@ namespace FixClient
                 _fieldPropertyGrid.SelectedObject = definition;
                 _fieldDescription.Text = definition?.Description;
 
-                if(definition?.EnumeratedType == null)
+                if (definition?.EnumeratedType == null)
                 {
                     _valuePropertyGrid.SelectedObject = null;
                     _valueDescription.Text = null;
@@ -213,7 +207,7 @@ namespace FixClient
 
                         valueProperties.Value = value.Value;
                         valueProperties.Name = name;
-                        valueProperties.Added = added;    
+                        valueProperties.Added = added;
                     }
                 }
                 finally

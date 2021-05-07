@@ -10,12 +10,12 @@
 //
 /////////////////////////////////////////////////
 
-﻿#region Using directives
+#region Using directives
 
 using System;
 using System.Data;
-using System.Windows.Forms;
 using System.Text;
+using System.Windows.Forms;
 
 #endregion
 
@@ -82,54 +82,54 @@ namespace FixClient
             };
 
             _cancelButton = new ToolStripSplitButton
-                                {
-                                    Text = "Cancel", 
-                                    ToolTipText = "Cancel the selected order"
-                                };
+            {
+                Text = "Cancel",
+                ToolTipText = "Cancel the selected order"
+            };
             _cancelButton.Click += CancelButtonClick;
-            
+
             _cancelAllButton = new ToolStripMenuItem
-                                   {
-                                       Text = "Cancel All",
-                                       ToolTipText = "Cancel all open orders immediately"
-                                   };
+            {
+                Text = "Cancel All",
+                ToolTipText = "Cancel all open orders immediately"
+            };
             _cancelAllButton.Click += CancelAllButtonClick;
             _cancelButton.DropDownItems.Add(_cancelAllButton);
-            
+
             _amendButton = new ToolStripButton
-                               {
-                                   Text = "Amend", 
-                                   ToolTipText = "Amend the selected order"
-                               };
+            {
+                Text = "Amend",
+                ToolTipText = "Amend the selected order"
+            };
             _amendButton.Click += AmendButtonClick;
 
             _statusButton = new ToolStripButton
-                                {
-                                    Text = "Status",
-                                    ToolTipText = "Request a status update for the selected order"
-                                };
+            {
+                Text = "Status",
+                ToolTipText = "Request a status update for the selected order"
+            };
             _statusButton.Click += StatusButtonClick;
 
             _listExecuteButton = new ToolStripButton
-                                     {
-                                         Text = "ListExecute",
-                                         ToolTipText = "Execute the Order List associated with the selected order"
-                                     };
+            {
+                Text = "ListExecute",
+                ToolTipText = "Execute the Order List associated with the selected order"
+            };
             _listExecuteButton.Click += ListExecuteButtonClick;
 
             _listStatusButton = new ToolStripButton
-                                    {
-                                        Text = "ListStatus",
-                                        ToolTipText =
+            {
+                Text = "ListStatus",
+                ToolTipText =
                                             "Request the status of the Order List associated with the selected order"
-                                    };
+            };
             _listStatusButton.Click += ListStatusButtonClick;
 
             _listCancelButton = new ToolStripButton
-                                    {
-                                        Text = "ListCancel",
-                                        ToolTipText = "Cancel the Order List associated with the selected order"
-                                    };
+            {
+                Text = "ListCancel",
+                ToolTipText = "Cancel the Order List associated with the selected order"
+            };
             _listCancelButton.Click += ListCancelButtonClick;
 
             _clientToolStrip.Items.AddRange(new ToolStripItem[]
@@ -151,10 +151,10 @@ namespace FixClient
             };
 
             _ackButton = new ToolStripDropDownButton
-                             {
-                                 Text = "Ack", 
-                                 ToolTipText = "Acknowledge the selected order"
-                             };
+            {
+                Text = "Ack",
+                ToolTipText = "Acknowledge the selected order"
+            };
             _ackButton.Click += AckButtonClick;
 
             _ackAllButton = new ToolStripMenuItem
@@ -164,12 +164,12 @@ namespace FixClient
             };
             _ackAllButton.Click += AcknowledgeAllButtonClick;
             _ackButton.DropDownItems.Add(_ackAllButton);
-       
+
             _rejectButton = new ToolStripDropDownButton
-                                {
-                                    Text = "Reject", 
-                                    ToolTipText = "Reject the selected order"
-                                };
+            {
+                Text = "Reject",
+                ToolTipText = "Reject the selected order"
+            };
             _rejectButton.Click += RejectButtonClick;
 
             _rejectAllButton = new ToolStripMenuItem
@@ -196,18 +196,18 @@ namespace FixClient
             _acceptorCancelButton.DropDownItems.Add(_acceptorCancelAllButton);
 
             _reportButton = new ToolStripButton
-                                {
-                                    Text = "Report",
-                                    ToolTipText = "Send an execution teport for the selected order"
-                                };
+            {
+                Text = "Report",
+                ToolTipText = "Send an execution teport for the selected order"
+            };
             _reportButton.Click += ReportButtonClick;
-       
-            _serverToolStrip.Items.AddRange(new ToolStripItem[] 
-            {    
+
+            _serverToolStrip.Items.AddRange(new ToolStripItem[]
+            {
                 _ackButton,
                 _rejectButton,
                 _acceptorCancelButton,
-                _reportButton   
+                _reportButton
             });
 
             #endregion
@@ -240,7 +240,7 @@ namespace FixClient
             _listCancelMenuItem = new ToolStripMenuItem("ListCancel", _listCancelButton.Image);
             _listCancelMenuItem.Click += ListCancelButtonClick;
             _clientMenuStrip.DropDownItems.Add(_listCancelMenuItem);
-       
+
             _serverMenuStrip = new ToolStripMenuItem("Action");
 
             _ackMenuItem = new ToolStripMenuItem("Acknowledge", _ackButton.Image);
@@ -260,10 +260,10 @@ namespace FixClient
             _orderView = new DataView(_orderTable);
 
             _orderGrid = new OrderDataGridView
-                             {
-                                 Dock = DockStyle.Fill, 
-                                 DataSource = _orderView
-                             };
+            {
+                Dock = DockStyle.Fill,
+                DataSource = _orderView
+            };
             _orderGrid.SelectionChanged += (sender, ev) => UpdateUiState();
 
             _orderSearchTextBox = new SearchTextBox
@@ -478,7 +478,7 @@ namespace FixClient
             }
             else
             {
-                UnsolicitedCancelAllOpenOrders();        
+                UnsolicitedCancelAllOpenOrders();
             }
         }
 
@@ -553,17 +553,17 @@ namespace FixClient
                     var orderRow = view.Row as OrderDataRow;
                     Fix.Order order = orderRow.Order;
 
-                    if(order.OrdStatus == Fix.OrdStatus.Canceled ||
+                    if (order.OrdStatus == Fix.OrdStatus.Canceled ||
                         order.OrdStatus == Fix.OrdStatus.Rejected ||
                         order.OrdStatus == Fix.OrdStatus.DoneForDay)
                     {
                         continue;
                     }
 
-                    var message = new Fix.Message {MsgType = Fix.Dictionary.Messages.OrderCancelRequest.MsgType};
-                    
-                    _messageDefaults.UpdateMessage(message, order);
-                    
+                    var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.OrderCancelRequest.MsgType };
+
+                    MessagesPanel.UpdateMessage(message, order);
+
                     message.Fields.Set(Fix.Dictionary.Fields.TransactTime, Fix.Field.TimeString(_session.MillisecondTimestamps));
                     message.Fields.Set(Fix.Dictionary.Fields.Side, order.Side.Value);
                     message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
@@ -574,11 +574,11 @@ namespace FixClient
                     //
                     Fix.Field beginString = message.Fields.Find(Fix.Dictionary.Fields.BeginString);
 
-                    if(beginString != null && beginString.Value == Fix.Dictionary.Versions.FIX_4_0.BeginString)
+                    if (beginString != null && beginString.Value == Fix.Dictionary.Versions.FIX_4_0.BeginString)
                     {
                         message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.CxlType, "F");
                     }
-                    
+
                     Session.Send(message);
                 }
                 catch (Exception ex)
@@ -702,7 +702,7 @@ namespace FixClient
 
         void StatusButtonClick(object sender, EventArgs e)
         {
-           Fix.Order order = SelectedOrder;
+            Fix.Order order = SelectedOrder;
 
             if (order == null)
                 return;
@@ -757,7 +757,7 @@ namespace FixClient
         {
             bool enabled = false;
             bool listEnabled = false;
-            
+
             if (Session != null && Session.Connected && _orderGrid.SelectedRows.Count > 0)
             {
                 enabled = true;
@@ -769,7 +769,7 @@ namespace FixClient
                     listEnabled = true;
                 }
             }
-            
+
             _cancelButton.Enabled = enabled;
             _amendButton.Enabled = enabled;
             _statusButton.Enabled = enabled;
@@ -812,7 +812,7 @@ namespace FixClient
 
                 _session = value;
                 Reload();
-                
+
                 if (_session != null)
                 {
                     _session.OrderBook.Messages.Reset += MessagesReset;
@@ -821,7 +821,7 @@ namespace FixClient
                     _session.SessionReset += SessionSessionReset;
                     _session.StateChanged += SessionStateChanged;
                 }
-                
+
                 if (value.OrderBehaviour == Fix.Behaviour.Initiator)
                 {
                     TopToolStripPanel.Controls.Clear();
@@ -880,10 +880,10 @@ namespace FixClient
 
             Fix.Order order = ev.Order;
 
-            var row = _orderTable.Rows.Find(order.ClOrdID) as OrderDataRow;
-
-            if (row == null)
+            if (_orderTable.Rows.Find(order.ClOrdID) is not OrderDataRow row)
+            {
                 return;
+            }
 
             row.Order = order;
             UpdateRow(row);
@@ -903,12 +903,12 @@ namespace FixClient
 
         void AddOrder(Fix.Order order)
         {
-            var row = _orderTable.Rows.Find(order.ClOrdID) as OrderDataRow;
-
-            if (row != null)
+            if (_orderTable.Rows.Find(order.ClOrdID) is OrderDataRow _)
+            {
                 return;
+            }
 
-            row = (OrderDataRow)_orderTable.NewRow();
+            var row = (OrderDataRow)_orderTable.NewRow();
             row.Order = order;
             row[OrderDataTable.ColumnClOrdId] = order.ClOrdID;
             //
@@ -921,7 +921,7 @@ namespace FixClient
             _orderTable.Rows.Add(row);
         }
 
-        void UpdateRow(OrderDataRow row)
+        static void UpdateRow(OrderDataRow row)
         {
             Fix.Order order = row.Order;
 
@@ -986,7 +986,7 @@ namespace FixClient
             if (order.Text != null)
                 row[OrderDataTable.ColumnText] = order.Text;
         }
-        
+
         void Reload()
         {
             try
@@ -996,7 +996,7 @@ namespace FixClient
 
                 foreach (Fix.Order order in Session.OrderBook.Orders.Values)
                 {
-                    AddOrder(order);   
+                    AddOrder(order);
                 }
             }
             catch (Exception ex)

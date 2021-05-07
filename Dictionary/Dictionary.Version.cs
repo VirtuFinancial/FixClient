@@ -10,15 +10,13 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.ComponentModel;
 
 namespace Fix
 {
-    public static partial class Dictionary
+    public partial class Dictionary
     {
         public class Version
         {
@@ -39,8 +37,7 @@ namespace Fix
             {
                 get
                 {
-                    Dictionary.FIX_5_0SP2.ApplVerID result;
-                    if (!Enum.TryParse(SanitisedBeginString, out result))
+                    if (!Enum.TryParse(SanitisedBeginString, out Dictionary.FIX_5_0SP2.ApplVerID result))
                         return null;
                     return Convert.ToChar(result).ToString();
                 }
@@ -62,11 +59,11 @@ namespace Fix
 
             #endregion
 
-            public static bool operator==(Version a, Version b)
+            public static bool operator ==(Version a, Version b)
             {
                 if (ReferenceEquals(a, b))
                     return true;
-                if ((object)a == null || (object)b == null)
+                if (a is null || b is null)
                     return false;
                 return a.BeginString == b.BeginString;
             }
@@ -93,7 +90,7 @@ namespace Fix
 
             public virtual IEnumerator<Version> GetEnumerator()
             {
-                foreach(Version version in _versions)
+                foreach (Version version in _versions)
                     yield return version;
             }
 

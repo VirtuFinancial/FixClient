@@ -10,7 +10,6 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DictionaryTests
@@ -95,8 +94,7 @@ namespace DictionaryTests
         public void TestDynamicFieldLookup()
         {
             Fix.Dictionary.Message message = Fix.Dictionary.FIX_4_0.Messages.Logon;
-            Fix.Dictionary.Field field;
-            Assert.IsTrue(message.Fields.TryGetValue(10, out field));
+            Assert.IsTrue(message.Fields.TryGetValue(10, out Fix.Dictionary.Field field));
             Assert.AreEqual(10, field.Tag);
             Assert.AreEqual("CheckSum", field.Name);
         }

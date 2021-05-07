@@ -19,8 +19,8 @@ namespace FixClient
     public partial class ToolStripCheckBox : ToolStripControlHost
     {
         readonly FlowLayoutPanel _controlPanel;
-        readonly CheckBox _checkBox = new CheckBox();
-         
+        readonly CheckBox _checkBox = new();
+
         public ToolStripCheckBox() : base(new FlowLayoutPanel())
         {
             _controlPanel = (FlowLayoutPanel)Control;
@@ -39,13 +39,10 @@ namespace FixClient
 
         void CheckBoxCheckedChanged(object sender, EventArgs e)
         {
-            if (CheckChanged != null)
-            {
-                CheckChanged(sender, e);
-            }
+            CheckChanged?.Invoke(sender, e);
         }
 
-        public event EventHandler CheckChanged;        
+        public event EventHandler CheckChanged;
 
         public bool Checked
         {
@@ -59,7 +56,7 @@ namespace FixClient
             set { _checkBox.Text = value; }
         }
 
-        
+
 
     }
 }

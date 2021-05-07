@@ -28,11 +28,22 @@ namespace FixClient
 
         public static bool operator ==(CustomField lhs, CustomField rhs)
         {
-            if (ReferenceEquals(lhs, null) && ReferenceEquals(rhs, null))
+            if (lhs is null && rhs is null)
+            {
                 return true;
-            if (ReferenceEquals(null, rhs)) return false;
-            if (ReferenceEquals(lhs, null)) return false;
-            return lhs.Tag  == rhs.Tag;
+            }
+
+            if (rhs is null)
+            {
+                return false;
+            }
+
+            if (lhs is null)
+            {
+                return false;
+            }
+
+            return lhs.Tag == rhs.Tag;
         }
 
         public static bool operator !=(CustomField lhs, CustomField rhs)
@@ -61,5 +72,5 @@ namespace FixClient
         }
     }
 
-    
+
 }

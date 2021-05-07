@@ -53,8 +53,8 @@ namespace FixClient
 			this.m_checkBox.TabIndex = 0;
 			this.m_checkBox.Text = "checkBox";
 			this.m_checkBox.UseVisualStyleBackColor = true;
-			this.m_checkBox.CheckStateChanged += new System.EventHandler(this.checkBox_CheckStateChanged);
-			this.m_checkBox.CheckedChanged += new System.EventHandler(this.checkBox_CheckedChanged);
+			this.m_checkBox.CheckStateChanged += new System.EventHandler(this.CheckBox_CheckStateChanged);
+			this.m_checkBox.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
 			// 
 			// CheckGroupBox
 			// 

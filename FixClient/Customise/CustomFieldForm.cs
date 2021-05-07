@@ -18,7 +18,7 @@ namespace FixClient
 {
     public partial class CustomFieldForm : Form
     {
-        CustomField _customField = new CustomField();
+        CustomField _customField = new();
         readonly Fix.Dictionary.Version _version;
         readonly ErrorProvider _errorProvider;
 
@@ -51,7 +51,7 @@ namespace FixClient
 
         void NameTextBoxValidated(object sender, EventArgs e)
         {
-            ClearErrors();    
+            ClearErrors();
         }
 
         void NameTextBoxValidating(object sender, CancelEventArgs e)
@@ -71,7 +71,7 @@ namespace FixClient
 
         void ValueTextBoxValidated(object sender, EventArgs e)
         {
-            ClearErrors();    
+            ClearErrors();
         }
 
         void ValueTextBoxValidating(object sender, CancelEventArgs e)
@@ -88,9 +88,7 @@ namespace FixClient
 
             int tag = Convert.ToInt32(valueTextBox.Text);
 
-            Fix.Dictionary.Field existing;
-
-            if (Version.Fields.TryGetValue(tag, out existing) && existing != null)
+            if (Version.Fields.TryGetValue(tag, out Fix.Dictionary.Field existing) && existing != null)
             {
                 //
                 // This is a standard field, we allow the user so set these as custom fields so they can be

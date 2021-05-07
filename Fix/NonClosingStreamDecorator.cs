@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.IO;
 
 namespace Fix
@@ -21,9 +21,7 @@ namespace Fix
 
         public NonClosingStreamDecorator(Stream stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-            _innerStream = stream;
+            _innerStream = stream ?? throw new ArgumentNullException(nameof(stream));
         }
 
         public override void Close()

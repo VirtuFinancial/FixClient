@@ -10,13 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
-using System.Net.Sockets;
 
 namespace FixClient
 {
@@ -24,7 +18,7 @@ namespace FixClient
     {
         public IPEndPoint EndPoint()
         {
-            if(Behaviour == Fix.Behaviour.Initiator)
+            if (Behaviour == Fix.Behaviour.Initiator)
                 return new IPEndPoint(Fix.Network.GetAddress(Host), Port);
             return new IPEndPoint(0, Port);
         }

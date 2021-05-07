@@ -10,8 +10,8 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Reflection;
 
 namespace DictionaryTests
@@ -21,8 +21,8 @@ namespace DictionaryTests
         public static string GetDescription(this Enum value)
         {
             FieldInfo field = value.GetType().GetField(value.ToString());
-            var attribute = Attribute.GetCustomAttribute(field, typeof(System.ComponentModel.DescriptionAttribute)) as System.ComponentModel.DescriptionAttribute;
-            return attribute == null ? value.ToString() : attribute.Description;
+            Attribute attribute = Attribute.GetCustomAttribute(field, typeof(System.ComponentModel.DescriptionAttribute));
+            return attribute is not System.ComponentModel.DescriptionAttribute descriptionAttribute ? value.ToString() : descriptionAttribute.Description;
         }
     }
 

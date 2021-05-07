@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////
+﻿/////////////////////////////////////////////////
 //
 // FIX Client
 //
@@ -10,7 +10,7 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,18 +27,18 @@ namespace DictionaryPerformanceTest
         public int NullUniqueFields { get; set; }
         public int TotalFields { get; set; }
         public int NullTotalFields { get; set; }
-        public Dictionary<string, int> MessageFields = new Dictionary<string, int>();
-        public Dictionary<string, TimeSpan> MessageFieldsIterationTimes = new Dictionary<string, TimeSpan>();
+        public Dictionary<string, int> MessageFields = new();
+        public Dictionary<string, TimeSpan> MessageFieldsIterationTimes = new();
     }
 
     class Program
     {
-        static readonly Dictionary<string, Counters> Counters = new Dictionary<string, Counters>();
+        static readonly Dictionary<string, Counters> Counters = new();
 
         static void CountMessages(Fix.Dictionary.Version version)
         {
             Counters counters = Counters[version.BeginString];
-            foreach (var message in version.Messages)
+            foreach (var _ in version.Messages)
             {
                 ++counters.Messages;
             }
@@ -94,7 +94,7 @@ namespace DictionaryPerformanceTest
             for (int i = 0; i < 100000; ++i)
             {
                 int index = random.Next(message.FieldCount - 1);
-                Fix.Dictionary.Field field = message.Fields[index];
+                _ = message.Fields[index];
             }
         }
 
@@ -122,7 +122,7 @@ namespace DictionaryPerformanceTest
             Console.WriteLine("{0} - {1}", stopwatch.Elapsed, label);
         }
 
-        static void Main(string[] args)
+        static void Main()
         {
             /*
             TimeOperation(InstantiateMessage, "Instantiate Message");
@@ -139,7 +139,7 @@ namespace DictionaryPerformanceTest
             Console.ReadKey();
             */
 
-            TimeOperation(() => 
+            TimeOperation(() =>
             {
                 Fix.Dictionary.Message message = Fix.Dictionary.Messages.ExecutionReport;
                 foreach (var field in message.Fields)
@@ -206,66 +206,62 @@ namespace DictionaryPerformanceTest
                 TimeOperation(() => CountTotalFields(version), string.Format("Iterate over total fields in {0}", version.BeginString));
             }
 
-            using (StreamWriter writer = new StreamWriter("C:\\workspace\\FixDictionaryStats.csv", false))
+            using StreamWriter writer = new("C:\\workspace\\FixDictionaryStats.csv", false);
+            writer.WriteLine("Version,Messages,UniqueFields,TotalFields,NullUniqueFields,NullTotalFields");
+
+            foreach (var counter in Counters)
             {
-                writer.WriteLine("Version,Messages,UniqueFields,TotalFields,NullUniqueFields,NullTotalFields");
+                writer.WriteLine("{0},{1},{2},{3},{4},{5}",
+                                  counter.Key,
+                                  counter.Value.Messages,
+                                  counter.Value.UniqueFields,
+                                  counter.Value.TotalFields,
+                                  counter.Value.NullUniqueFields,
+                                  counter.Value.NullTotalFields);
+            }
 
-                foreach (var counter in Counters)
+            writer.WriteLine();
+
+            var builder = new StringBuilder("Message,");
+
+            foreach (var counter in Counters)
+            {
+                builder.AppendFormat("{0},,", counter.Key);
+            }
+
+            writer.WriteLine(builder);
+
+            var buffers = new Dictionary<string, StringBuilder>();
+
+            foreach (var counter in Counters)
+            {
+                foreach (var message in counter.Value.MessageFields.Keys)
                 {
-                    writer.WriteLine("{0},{1},{2},{3},{4},{5}",
-                                      counter.Key,
-                                      counter.Value.Messages,
-                                      counter.Value.UniqueFields,
-                                      counter.Value.TotalFields,
-                                      counter.Value.NullUniqueFields,
-                                      counter.Value.NullTotalFields);
+                    buffers[message] = new StringBuilder();
                 }
+            }
 
-                writer.WriteLine();
-
-                var builder = new StringBuilder("Message,");
-
-                foreach (var counter in Counters)
+            foreach (var counter in Counters)
+            {
+                foreach (var item in buffers)
                 {
-                    builder.AppendFormat("{0},,", counter.Key);
-                }
-
-                writer.WriteLine(builder);
-
-                var buffers = new Dictionary<string, StringBuilder>();
-
-                foreach (var counter in Counters)
-                {
-                    foreach (var message in counter.Value.MessageFields.Keys)
+                    if (counter.Value.MessageFields.TryGetValue(item.Key, out int count))
                     {
-                        buffers[message] = new StringBuilder();
-                    }
-                }
-
-                foreach (var counter in Counters)
-                {
-                    foreach (var item in buffers)
-                    {
-                        int count;
-                        if (counter.Value.MessageFields.TryGetValue(item.Key, out count))
+                        if (counter.Value.MessageFieldsIterationTimes.TryGetValue(item.Key, out TimeSpan time))
                         {
-                            TimeSpan time;
-                            if (counter.Value.MessageFieldsIterationTimes.TryGetValue(item.Key, out time))
-                            {
-                                item.Value.AppendFormat("{0},{1},", count, time.TotalMilliseconds);
-                            }
-                        }
-                        else
-                        {
-                            item.Value.AppendFormat(",,");
+                            item.Value.AppendFormat("{0},{1},", count, time.TotalMilliseconds);
                         }
                     }
+                    else
+                    {
+                        item.Value.AppendFormat(",,");
+                    }
                 }
+            }
 
-                foreach (var buffer in buffers)
-                {
-                    writer.WriteLine(buffer.Key + "," + buffer.Value);    
-                }
+            foreach (var buffer in buffers)
+            {
+                writer.WriteLine(buffer.Key + "," + buffer.Value);
             }
         }
     }

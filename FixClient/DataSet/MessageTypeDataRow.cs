@@ -10,14 +10,14 @@
 //
 /////////////////////////////////////////////////
 
-﻿using System.Data;
+using System.Data;
 
 namespace FixClient
 {
     class MessageTypeDataRow : DataRow
     {
         public MessageTypeDataRow(DataRowBuilder builder)
-        :   base(builder)
+        : base(builder)
         {
         }
 
