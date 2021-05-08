@@ -31,7 +31,7 @@ namespace FixClient
             InitializeComponent();
         }
 
-        public Fix.Message Message { get; set; }
+        public Fix.Message? Message { get; set; }
 
         protected override void OnDataError(bool displayErrorDialogIfNoHandler, DataGridViewDataErrorEventArgs e)
         {

@@ -24,7 +24,7 @@ namespace FixClient
         readonly IPEndPoint _endPoint;
         readonly IPEndPoint _bindEndPoint;
         readonly Fix.Behaviour _behaviour;
-        TcpClient _tcpClient;
+        TcpClient? _tcpClient;
         TcpSocketListener _tcpListener;
 
         public ConnectForm(IPEndPoint bindEndPoint, IPEndPoint endPoint, Fix.Behaviour behaviour)

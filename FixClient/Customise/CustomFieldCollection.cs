@@ -42,16 +42,28 @@ namespace FixClient
                     continue;
                 }
 
-                string name = reader.GetAttribute("name");
+                if (reader.GetAttribute("name") is not string name)
+                {
+                    continue;
+                }
+                
                 int id = Convert.ToInt32(reader.GetAttribute("id"));
-                string[] categories = reader.GetAttribute("categories").Split(',');
+                
+                if (reader.GetAttribute("categories") is not string categoryAttribute)
+                {
+                    continue;
+                }
+                
+                string[] categories = categoryAttribute.Split(',');
 
                 foreach (string c in categories)
                 {
                     string category = c.Trim();
 
-                    if (category == String.Empty)
+                    if (category == string.Empty)
+                    {
                         continue;
+                    }
 
                     if (!_fields.ContainsKey(category))
                     {
@@ -65,13 +77,7 @@ namespace FixClient
             }
         }
 
-        public Dictionary<string, CustomFieldCategory> Fields
-        {
-            get
-            {
-                return _fields;
-            }
-        }
+        public Dictionary<string, CustomFieldCategory> Fields => _fields;
 
     }
 }

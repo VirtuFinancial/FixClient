@@ -130,7 +130,7 @@ namespace FixClient
             Controls.Add(splitterTwo);
         }
 
-        public Fix.Dictionary.Message Message
+        public Fix.Dictionary.Message? Message
         {
             set
             {
@@ -160,7 +160,7 @@ namespace FixClient
             public string Name { get; set; }
         }
 
-        public Fix.Field Field
+        public Fix.Field? Field
         {
             set
             {

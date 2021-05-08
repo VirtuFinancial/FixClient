@@ -67,7 +67,7 @@ namespace FixClient
             public bool AutoAllocId { get; set; }
         }
 
-        Session _session;
+        Session? _session;
         readonly MessageOptions _options = new();
         readonly PropertyGrid _propertyGrid;
 
@@ -144,7 +144,7 @@ namespace FixClient
             _session.Write();
         }
 
-        public Session Session
+        public Session? Session
         {
             get { return _session; }
             set

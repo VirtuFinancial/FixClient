@@ -490,7 +490,7 @@ namespace FixClient
 
         public bool FieldVisible(string msgType, int tag)
         {
-            if (!_fieldFilters.TryGetValue(msgType, out Dictionary<int, bool> filters))
+            if (!_fieldFilters.TryGetValue(msgType, out var filters))
             {
                 return true;
             }
@@ -503,7 +503,7 @@ namespace FixClient
             return visible;
         }
 
-        public string FieldRowFilter(string msgType, string searchString = null)
+        public string? FieldRowFilter(string msgType, string? searchString = null)
         {
             var expression = new StringBuilder(string.Format("{0} NOT IN (", FieldDataTable.ColumnTag));
 
@@ -519,7 +519,9 @@ namespace FixClient
             }
 
             if (!items)
+            {
                 return searchString;
+            }
 
             expression.Append(')');
 
@@ -533,7 +535,7 @@ namespace FixClient
             return result;
         }
 
-        public string MessageRowFilter(string searchString = null)
+        public string? MessageRowFilter(string? searchString = null)
         {
             var expression = new StringBuilder();
 
@@ -549,7 +551,9 @@ namespace FixClient
             }
 
             if (!items)
+            {
                 return searchString;
+            }
 
             string result = searchString ?? expression.ToString();
 

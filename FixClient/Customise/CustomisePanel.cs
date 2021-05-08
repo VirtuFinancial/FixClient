@@ -19,7 +19,7 @@ namespace FixClient
 {
     public partial class CustomisePanel : FixClientPanel
     {
-        Session _session;
+        Session? _session;
 
         readonly CustomiseFieldDataGridView _fieldGrid;
         readonly CustomFieldDataTable _fieldTable;
