@@ -9,19 +9,14 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
-#region Using directives
-
 using System.Windows.Forms;
-
-#endregion
 
 namespace FixClient
 {
     partial class SessionForm : Form
     {
         readonly CustomPropertyGrid _propertyGrid;
-        Session _session;
+        Session? _session;
 
         public SessionForm()
         {
@@ -35,7 +30,7 @@ namespace FixClient
             };
             _propertyGrid.PropertyValueChanged += (o, args) =>
             {
-                Session.UpdateReadonlyAttributes();
+                Session?.UpdateReadonlyAttributes();
                 _propertyGrid.Refresh();
             };
             _gridPlaceHolder.Controls.Add(_propertyGrid);
@@ -51,7 +46,7 @@ namespace FixClient
             }
         }
 
-        public Session Session
+        public Session? Session
         {
             get { return _session; }
             set

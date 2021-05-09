@@ -110,7 +110,13 @@ namespace FixClient
 
         void PropertyGridPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
+            if (_session is null)
+            {
+                return;
+            }
+
             var value = (bool)e.ChangedItem.Value;
+            
             switch (e.ChangedItem.Label)
             {
                 case "MsgSeqNum":
@@ -151,15 +157,19 @@ namespace FixClient
             {
                 _session = value;
 
-                _options.AutoAllocId = _session.AutoAllocId;
-                _options.AutoClOrdId = _session.AutoClOrdId;
-                _options.AutoListId = _session.AutoListId;
-                _options.AutoListSeqNo = _session.AutoListSeqNo;
-                _options.AutoNoOrders = _session.AutoNoOrders;
-                _options.AutoSendingTime = _session.AutoSendingTime;
-                _options.AutoSetMsgSeqNum = _session.AutoSetMsgSeqNum;
-                _options.AutoTotNoOrders = _session.AutoTotNoOrders;
-                _options.AutoTransactTime = _session.AutoTransactTime;
+                if (_session is not null)
+                {
+                    _options.AutoAllocId = _session.AutoAllocId;
+                    _options.AutoClOrdId = _session.AutoClOrdId;
+                    _options.AutoListId = _session.AutoListId;
+                    _options.AutoListSeqNo = _session.AutoListSeqNo;
+                    _options.AutoNoOrders = _session.AutoNoOrders;
+                    _options.AutoSendingTime = _session.AutoSendingTime;
+                    _options.AutoSetMsgSeqNum = _session.AutoSetMsgSeqNum;
+                    _options.AutoTotNoOrders = _session.AutoTotNoOrders;
+                    _options.AutoTransactTime = _session.AutoTransactTime;
+                }
+
                 UpdateUiState();
             }
         }

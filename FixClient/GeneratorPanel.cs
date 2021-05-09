@@ -26,7 +26,7 @@ namespace FixClient
         readonly ToolStripMenuItem _pauseMenuItem;
         readonly ToolStripMenuItem _stopMenuItem;
 
-        Session _session;
+        Session? _session;
         //Fix.OrderGenerator _generator;
 
         public GeneratorPanel()
@@ -133,7 +133,7 @@ namespace FixClient
             UpdateUiState();
         }
 
-        public Session Session
+        public Session? Session
         {
             get
             {

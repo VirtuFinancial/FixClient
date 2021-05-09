@@ -25,7 +25,7 @@ namespace FixClient
         readonly DataView _messageView;
         readonly ToolStripButton _clearButton;
         readonly SearchTextBox _searchTextBox;
-        Session _session;
+        Session? _session;
 
         public LogPanel()
         {

@@ -9,14 +9,13 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System.Windows.Forms;
 
 namespace FixClient
 {
     public partial class FixClientPanel : ToolStripContainer
     {
-        ToolStripMenuItem _menuStrip;
+        ToolStripMenuItem? _menuStrip;
 
         public FixClientPanel()
         {
@@ -24,7 +23,7 @@ namespace FixClient
             TopToolStripPanel.BackColor = LookAndFeel.Color.ToolStrip;
         }
 
-        public ToolStripMenuItem ToolStripMenuItem
+        public ToolStripMenuItem? ToolStripMenuItem
         {
             get
             {

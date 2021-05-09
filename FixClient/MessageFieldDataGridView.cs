@@ -123,7 +123,7 @@ namespace FixClient
             base.OnColumnHeaderMouseClick(e);
         }
 
-        public Fix.Field FieldAtIndex(int rowIndex)
+        public Fix.Field? FieldAtIndex(int rowIndex)
         {
             DataGridViewRow row = Rows[rowIndex];
 

@@ -26,9 +26,9 @@ namespace FixClient
             public static extern IntPtr SendMessageW(IntPtr hWnd, UInt32 Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
         }
 
-        string _cue;
+        string? _cue;
 
-        public string Cue
+        public string? Cue
         {
             get
             {

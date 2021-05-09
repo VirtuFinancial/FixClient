@@ -25,8 +25,8 @@ namespace FixClient
     {
         Padding _imagePadding;
         bool _imageBeforeValue;
-        Image _image;
-        Icon _icon;
+        Image? _image;
+        Icon? _icon;
 
         /// <summary>
         /// Constructor that sets the default values
@@ -42,7 +42,7 @@ namespace FixClient
         [
             DefaultValue(null)
         ]
-        public Icon Icon
+        public Icon? Icon
         {
             get
             {
@@ -64,7 +64,7 @@ namespace FixClient
         [
             DefaultValue(null)
         ]
-        public Image Image
+        public Image? Image
         {
             get
             {
@@ -148,7 +148,7 @@ namespace FixClient
         /// <summary>
         /// Custom Clone implementation that copies the cell specific properties.
         /// </summary>
-        public override object Clone()
+        public override object? Clone()
         {
             var dataGridViewCell = base.Clone() as DataGridViewImageColumnHeaderCell;
             if (dataGridViewCell != null)
@@ -316,6 +316,11 @@ namespace FixClient
                 valBounds.Offset(borderWidths.X, borderWidths.Y);
                 valBounds.Width -= borderWidths.Right;
                 valBounds.Height -= borderWidths.Bottom;
+
+                if (DataGridView is null)
+                {
+                    return;
+                }
 
                 if (valBounds.Width > 0 && valBounds.Height > 0)
                 {

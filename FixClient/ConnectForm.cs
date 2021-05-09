@@ -25,7 +25,7 @@ namespace FixClient
         readonly IPEndPoint _bindEndPoint;
         readonly Fix.Behaviour _behaviour;
         TcpClient? _tcpClient;
-        TcpSocketListener _tcpListener;
+        TcpSocketListener? _tcpListener;
 
         public ConnectForm(IPEndPoint bindEndPoint, IPEndPoint endPoint, Fix.Behaviour behaviour)
         {
@@ -36,7 +36,7 @@ namespace FixClient
             Load += ConnectFormLoad;
         }
 
-        public Stream Stream { get; private set; }
+        public Stream? Stream { get; private set; }
 
         void ConnectFormLoad(object? sender, EventArgs e)
         {
@@ -62,7 +62,7 @@ namespace FixClient
                                         MessageBoxIcon.Information);
                         DialogResult = DialogResult.Cancel;
                     }
-                    BeginInvoke(new MethodInvoker(Close), new object[] { this, null });
+                    BeginInvoke(new MethodInvoker(Close), new object[] { this, EventArgs.Empty });
                 }, null);
             }
             else

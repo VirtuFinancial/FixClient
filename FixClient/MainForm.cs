@@ -83,8 +83,8 @@ namespace FixClient
         readonly ToolStrip _toolStrip;
         readonly ToolStrip _viewToolStrip;
 
-        Session _currentSession;
-        Session CurrentSession
+        Session? _currentSession;
+        Session? CurrentSession
         {
             get { return _currentSession; }
             set

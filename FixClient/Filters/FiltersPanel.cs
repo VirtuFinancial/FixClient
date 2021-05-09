@@ -19,7 +19,7 @@ namespace FixClient
 {
     partial class FiltersPanel : FixClientPanel
     {
-        Session _session;
+        Session? _session;
 
         readonly FilterMessageDataGridView _messageGrid;
         readonly FilterFieldDataGridView _fieldGrid;
@@ -389,7 +389,7 @@ namespace FixClient
             }
         }
 
-        public Session Session
+        public Session? Session
         {
             get { return _session; }
             set

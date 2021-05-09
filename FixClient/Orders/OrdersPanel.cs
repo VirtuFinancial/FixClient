@@ -62,7 +62,7 @@ namespace FixClient
         readonly ToolStripMenuItem _rejectMenuItem;
         readonly ToolStripMenuItem _reportMenuItem;
 
-        Session _session;
+        Session? _session;
 
         public OrdersPanel(MessagesPanel messageDefaults, ToolStripButton defaultsButton)
         {
@@ -278,6 +278,11 @@ namespace FixClient
 
         void ApplyFilters()
         {
+            if (_orderView.Table is null)
+            {
+                return;
+            }
+
             var buffer = new StringBuilder();
 
             string text = _orderSearchTextBox.Text;
@@ -344,21 +349,44 @@ namespace FixClient
 
         void AcknowledgeAllPendingOrders()
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             foreach (DataGridViewRow row in _orderGrid.Rows)
             {
                 try
                 {
                     var view = row.DataBoundItem as DataRowView;
-                    var orderRow = view.Row as OrderDataRow;
+                    var orderRow = view?.Row as OrderDataRow;
+
+                    if (orderRow?.Order is null)
+                    {
+                        continue;
+                    }
+
                     Fix.Order order = orderRow.Order;
 
-                    if (order.OrdStatus != null)
+                    if (order is null)
+                    {
                         continue;
+                    }
+
+                    if (order.OrdStatus != null)
+                    {
+                        continue;
+                    }
 
                     var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.ExecutionReport.MsgType };
 
                     message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, order.ClOrdID);
-                    message.Fields.Set(order.Side);
+
+                    if (order.Side is FieldValue side)
+                    {
+                        message.Fields.Set(order.Side);
+                    }
+
                     message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
                     message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, order.OrderQty);
                     message.Fields.Set(FIX_5_0SP2.OrdStatus.New);
@@ -401,21 +429,38 @@ namespace FixClient
 
         void RejectAllPendingOrders()
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             foreach (DataGridViewRow row in _orderGrid.Rows)
             {
                 try
                 {
                     var view = row.DataBoundItem as DataRowView;
-                    var orderRow = view.Row as OrderDataRow;
-                    Fix.Order order = orderRow.Order;
+                    var orderRow = view?.Row as OrderDataRow;
+                    Fix.Order? order = orderRow?.Order;
+
+                    if (order is null)
+                    {
+                        continue;
+                    }
 
                     if (order.OrdStatus != null)
+                    {
                         continue;
+                    }
 
                     var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.ExecutionReport.MsgType };
 
                     message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, order.ClOrdID);
-                    message.Fields.Set(order.Side);
+
+                    if (order.Side is FieldValue side)
+                    {
+                        message.Fields.Set(order.Side);
+                    }
+
                     message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
                     message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, order.OrderQty);
                     message.Fields.Set(FIX_5_0SP2.OrdStatus.Rejected);
@@ -458,6 +503,11 @@ namespace FixClient
 
         void CancelAllButtonClick(object? sender, EventArgs e)
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             DialogResult result = MessageBox.Show(this,
                 "This will cancel all open orders, are you sure?",
                 Application.ProductName,
@@ -479,13 +529,23 @@ namespace FixClient
 
         void UnsolicitedCancelAllOpenOrders()
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             foreach (DataGridViewRow row in _orderGrid.Rows)
             {
                 try
                 {
                     var view = row.DataBoundItem as DataRowView;
-                    var orderRow = view.Row as OrderDataRow;
-                    Fix.Order order = orderRow.Order;
+                    var orderRow = view?.Row as OrderDataRow;
+                    Fix.Order? order = orderRow?.Order;
+
+                    if (order is null)
+                    {
+                        continue;
+                    }
 
                     if (order.OrdStatus == FIX_5_0SP2.OrdStatus.Canceled ||
                         order.OrdStatus == FIX_5_0SP2.OrdStatus.Rejected ||
@@ -497,7 +557,12 @@ namespace FixClient
                     var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.ExecutionReport.MsgType };
 
                     message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, order.ClOrdID);
-                    message.Fields.Set(order.Side);
+
+                    if (order.Side is FieldValue side)
+                    {
+                        message.Fields.Set(side);
+                    }
+
                     message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
                     message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, order.OrderQty);
                     message.Fields.Set(FIX_5_0SP2.OrdStatus.Canceled);
@@ -540,13 +605,23 @@ namespace FixClient
 
         void CancelAllOpenOrders()
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             foreach (DataGridViewRow row in _orderGrid.Rows)
             {
                 try
                 {
                     var view = row.DataBoundItem as DataRowView;
-                    var orderRow = view.Row as OrderDataRow;
-                    Fix.Order order = orderRow.Order;
+                    var orderRow = view?.Row as OrderDataRow;
+                    Fix.Order? order = orderRow?.Order;
+
+                    if (order is null)
+                    {
+                        return;
+                    }
 
                     if (order.OrdStatus == FIX_5_0SP2.OrdStatus.Canceled ||
                         order.OrdStatus == FIX_5_0SP2.OrdStatus.Rejected ||
@@ -559,17 +634,22 @@ namespace FixClient
 
                     MessagesPanel.UpdateMessage(message, order);
 
-                    message.Fields.Set(FIX_5_0SP2.Fields.TransactTime, Fix.Field.TimeString(_session.MillisecondTimestamps));
-                    message.Fields.Set(FIX_5_0SP2.Fields.Side, order.Side.Value);
+                    message.Fields.Set(FIX_5_0SP2.Fields.TransactTime, Fix.Field.TimeString(Session.MillisecondTimestamps));
+
+                    if (order.Side is FieldValue side)
+                    {
+                        message.Fields.Set(FIX_5_0SP2.Fields.Side, side.Value);
+                    }
+
                     message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
                     message.Fields.Set(FIX_5_0SP2.Fields.OrigClOrdID, order.ClOrdID);
                     message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, Session.FormatClOrdId(Session.NextClOrdId++));
                     //
                     // This field was removed from later versions.
                     //
-                    Fix.Field beginString = message.Fields.Find(FIX_5_0SP2.Fields.BeginString);
+                    Fix.Field? beginString = message.Fields.Find(FIX_5_0SP2.Fields.BeginString);
 
-                    if (beginString != null && beginString.Value == "FIX.4.0")
+                    if (beginString is not null && beginString.Value == "FIX.4.0")
                     {
                         message.Fields.Set(FIX_4_2.Fields.CxlType, "F");
                     }
@@ -589,10 +669,10 @@ namespace FixClient
 
         void ListCancelButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             if (order.ListID == null)
             {
@@ -610,10 +690,10 @@ namespace FixClient
 
         void ListStatusButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             if (order.ListID == null)
             {
@@ -631,10 +711,10 @@ namespace FixClient
 
         void ListExecuteButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             if (order.ListID == null)
             {
@@ -652,10 +732,10 @@ namespace FixClient
 
         void ReportButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             _defaultsButton.PerformClick();
             _messageDefaults.ReportOrder(order);
@@ -663,10 +743,10 @@ namespace FixClient
 
         void RejectButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             _defaultsButton.PerformClick();
             _messageDefaults.RejectOrder(order);
@@ -674,10 +754,10 @@ namespace FixClient
 
         void AckButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             _defaultsButton.PerformClick();
 
@@ -697,10 +777,10 @@ namespace FixClient
 
         void StatusButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             _defaultsButton.PerformClick();
             _messageDefaults.OrderStatus(order);
@@ -708,10 +788,10 @@ namespace FixClient
 
         void AmendButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             _defaultsButton.PerformClick();
             _messageDefaults.AmendOrder(order);
@@ -719,10 +799,15 @@ namespace FixClient
 
         void CancelButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
+
+            if (Session is null)
+            {
+                return;
+            }
 
             _defaultsButton.PerformClick();
 
@@ -736,15 +821,18 @@ namespace FixClient
             }
         }
 
-        Fix.Order SelectedOrder
+        Fix.Order? SelectedOrder
         {
             get
             {
                 if (_orderGrid.SelectedRows.Count == 0)
+                {
                     return null;
+                }
+
                 var row = _orderGrid.SelectedRows[0].DataBoundItem as DataRowView;
-                var orderRow = row.Row as OrderDataRow;
-                return orderRow.Order;
+                var orderRow = row?.Row as OrderDataRow;
+                return orderRow?.Order;
             }
         }
 
@@ -757,11 +845,12 @@ namespace FixClient
             {
                 enabled = true;
 
-                Fix.Order order = SelectedOrder;
-
-                if (order.ListID != null)
+                if (SelectedOrder is Fix.Order order)
                 {
-                    listEnabled = true;
+                    if (order.ListID != null)
+                    {
+                        listEnabled = true;
+                    }
                 }
             }
 
@@ -788,7 +877,7 @@ namespace FixClient
             _reportMenuItem.Enabled = enabled;
         }
 
-        public Session Session
+        public Session? Session
         {
             get
             {
@@ -817,7 +906,7 @@ namespace FixClient
                     _session.StateChanged += SessionStateChanged;
                 }
 
-                if (value.OrderBehaviour == Fix.Behaviour.Initiator)
+                if (value?.OrderBehaviour == Fix.Behaviour.Initiator)
                 {
                     TopToolStripPanel.Controls.Clear();
                     TopToolStripPanel.Join(_clientToolStrip);
@@ -918,7 +1007,10 @@ namespace FixClient
 
         static void UpdateRow(OrderDataRow row)
         {
-            Fix.Order order = row.Order;
+            if (row.Order is not Fix.Order order)
+            {
+                return;
+            }
 
             row[OrderDataTable.ColumnQuantity] = order.OrderQty;
             row[OrderDataTable.ColumnPendingQuantity] = order.PendingOrderQty;
@@ -984,6 +1076,11 @@ namespace FixClient
 
         void Reload()
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             try
             {
                 _orderTable.BeginLoadData();

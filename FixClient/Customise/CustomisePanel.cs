@@ -135,20 +135,27 @@ namespace FixClient
         void AddCategoryButtonClick(object? sender, EventArgs e)
         {
             if (_categoryComboBox.SelectedItem == null)
+            {
                 return;
+            }
+
+            if (Session is null)
+            {
+                return;
+            }
 
             if (_categoryComboBox.SelectedItem is CustomFieldCategory category)
             {
                 foreach (CustomField field in category.Fields)
                 {
-                    var definition = _session.Version.Fields[field.Tag];
+                    var definition = Session.Version.Fields[field.Tag];
 
                     if (definition != null)
                     {
                         MessageBox.Show(this,
                                         string.Format(
                                         "{0} already had a field with tag = {1} ignoring custom field {1} = {2}",
-                                        _session.Version.BeginString,
+                                        Session.Version.BeginString,
                                         field.Tag,
                                         field.Name),
                                         Application.ProductName,
@@ -179,17 +186,24 @@ namespace FixClient
 
         void EditFieldButtonClick(object? sender, EventArgs e)
         {
-            if (_fieldGrid.SelectedRows.Count < 1)
+            if (Session is null)
+            {
                 return;
+            }
+
+            if (_fieldGrid.SelectedRows.Count < 1)
+            {
+                return;
+            }
 
             using CustomFieldForm form = new(Session.Version, true);
             DataGridViewRow row = _fieldGrid.SelectedRows[0];
             var view = row.DataBoundItem as DataRowView;
-            var dataRow = (CustomFieldDataRow)view.Row;
-            CustomField field = dataRow.Field;
-
-            if (field == null)
+            var dataRow = view?.Row as CustomFieldDataRow;
+            if (dataRow?.Field is not CustomField field)
+            {
                 return;
+            }
 
             form.Field = new CustomField { Tag = field.Tag, Name = field.Name };
 
@@ -205,8 +219,15 @@ namespace FixClient
 
         void DeleteFieldButtonClick(object? sender, EventArgs e)
         {
-            if (_fieldGrid.SelectedRows.Count < 1)
+            if (Session is null)
+            {
                 return;
+            }
+
+            if (_fieldGrid.SelectedRows.Count < 1)
+            {
+                return;
+            }
 
             DialogResult result = MessageBox.Show(this,
                                                   "Are you sure you want to delete this custom field?",
@@ -215,12 +236,17 @@ namespace FixClient
                                                   MessageBoxIcon.Question);
 
             if (result != DialogResult.Yes)
+            {
                 return;
+            }
 
             DataGridViewRow row = _fieldGrid.SelectedRows[0];
             var view = row.DataBoundItem as DataRowView;
-            var dataRow = (CustomFieldDataRow)view.Row;
-            CustomField customField = dataRow.Field;
+            var dataRow = view?.Row as CustomFieldDataRow;
+            if (dataRow?.Field is not CustomField customField)
+            {
+                return;
+            }
             //
             // Remove the field definition.
             //
@@ -245,16 +271,23 @@ namespace FixClient
                     ++index;
                 }
             }
-             */
+            */
             Session.WriteCustomFields();
         }
 
         void NewFieldButtonClick(object? sender, EventArgs e)
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             using CustomFieldForm form = new(Session.Version, false);
 
             if (form.ShowDialog() != DialogResult.OK)
+            {
                 return;
+            }
 
             CustomField field = form.Field;
 
@@ -320,17 +353,28 @@ namespace FixClient
 
         void AddField(CustomField field)
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             Session.AddCustomField(field);
         }
 
         void RemoveField(CustomField field)
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             Session.RemoveCustomField(field);
+
             try
             {
                 _fieldTable.BeginLoadData();
-                DataRow row = _fieldTable.Rows.Find(field.Tag);
-                if (row != null)
+
+                if (_fieldTable.Rows.Find(field.Tag) is DataRow row)
                 {
                     _fieldTable.Rows.Remove(row);
                 }
@@ -390,7 +434,7 @@ namespace FixClient
             }
         }
 
-        public Session Session
+        public Session? Session
         {
             get
             {
@@ -412,7 +456,7 @@ namespace FixClient
 
                 Reload();
                 UpdateUiState();
-                FieldGridSelectionChanged(this, null);
+                FieldGridSelectionChanged(this, EventArgs.Empty);
             }
         }
     }
