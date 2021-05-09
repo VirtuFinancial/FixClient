@@ -40,7 +40,7 @@ namespace FixClient
         readonly ToolStripButton _parserButton;
         readonly ToolStripButton _logButton;
 
-        FixClientPanel _currentPanel;
+        FixClientPanel? _currentPanel;
 
         readonly ToolStripMenuItem _fileNew;
         readonly ToolStripMenuItem _fileOpen;
@@ -445,7 +445,7 @@ namespace FixClient
             _container.TopToolStripPanel.Join(_mainMenu, 0);
             _container.TopToolStripPanel.Join(_viewToolStrip, 1);
             _container.TopToolStripPanel.Join(_toolStrip, 1);
-            UpdateContentPanel(_messagesButton, null);
+            UpdateContentPanel(_messagesButton, EventArgs.Empty);
         }
 
         static void HelpAboutClick(object? sender, EventArgs e)
@@ -461,7 +461,7 @@ namespace FixClient
 
         void UpdateContentPanel(object? sender, EventArgs e)
         {
-            Control control = null;
+            Control? control = null;
 
             if (sender is ToolStripButton stripButton)
             {
@@ -520,7 +520,7 @@ namespace FixClient
                 {
                     _currentPanel = control as FixClientPanel;
 
-                    if (_currentPanel.ToolStripMenuItem != null)
+                    if (_currentPanel?.ToolStripMenuItem is not null)
                     {
                         _mainMenu.Items.Insert(_mainMenu.Items.Count - 1, _currentPanel.ToolStripMenuItem);
                     }
@@ -555,7 +555,7 @@ namespace FixClient
                 CurrentSession = null;
             }
 
-            DisconnectButtonClick(this, null);
+            DisconnectButtonClick(this, EventArgs.Empty);
             SaveSizeAndPosition();
             Properties.Settings.Default.Save();
             base.OnClosing(e);
@@ -632,7 +632,14 @@ namespace FixClient
                 try
                 {
                     var ser = new XmlSerializer(typeof(List<string>));
-                    _mru = (List<string>)ser.Deserialize(stream);
+                    
+                    if (ser.Deserialize(stream) is not List<string> deserialisedList)
+                    {
+                        return;
+                    }
+
+                    _mru = deserialisedList;
+
                     foreach (string filename in _mru)
                     {
                         AddToMruMenu(filename);
@@ -688,8 +695,11 @@ namespace FixClient
         void OpenButtonClick(object? sender, EventArgs e)
         {
             using OpenFileDialog dlg = new();
+
             if (dlg.ShowDialog() != DialogResult.OK)
+            {
                 return;
+            }
 
             try
             {
@@ -735,9 +745,9 @@ namespace FixClient
             {
                 if (!_expectingDisconnect)
                 {
-                    if (CurrentSession.Behaviour == Fix.Behaviour.Acceptor)
+                    if (CurrentSession?.Behaviour == Fix.Behaviour.Acceptor)
                     {
-                        ConnectButtonClick(this, null);
+                        ConnectButtonClick(this, EventArgs.Empty);
                         return;
                     }
                     else
@@ -768,12 +778,16 @@ namespace FixClient
                 for (; ; )
                 {
                     if (form.ShowDialog() != DialogResult.OK)
+                    {
                         return;
+                    }
 
                     CurrentSession = form.Session;
 
                     if (SaveSessionFile())
+                    {
                         break;
+                    }
                 }
 
                 CurrentSession.StateChanged += CurrentSessionStateChanged;
@@ -792,9 +806,9 @@ namespace FixClient
 
         bool SaveSessionFile()
         {
-            if (string.IsNullOrEmpty(CurrentSession.FileName))
+            if (string.IsNullOrEmpty(CurrentSession?.FileName))
             {
-                return FileSaveAsClick(this, null);
+                return FileSaveAsClick(this, EventArgs.Empty);
             }
 
             CurrentSession.Write();
@@ -803,15 +817,20 @@ namespace FixClient
 
         bool FileSaveAsClick(object? sender, EventArgs e)
         {
+            if (CurrentSession is not Session current)
+            {
+                return false;
+            }
+
             string filename;
 
-            if (!string.IsNullOrEmpty(CurrentSession.FileName))
+            if (!string.IsNullOrEmpty(current.FileName))
             {
-                filename = Path.GetFileName(CurrentSession.FileName);
+                filename = Path.GetFileName(current.FileName);
             }
             else
             {
-                filename = CurrentSession.SenderCompId + "-" + CurrentSession.TargetCompId + ".session";
+                filename = current.SenderCompId + "-" + current.TargetCompId + ".session";
             }
 
             using (SaveFileDialog dlg = new())
@@ -835,6 +854,11 @@ namespace FixClient
 
         void ConnectButtonClick(object? sender, EventArgs e)
         {
+            if (CurrentSession is null)
+            {
+                return;
+            }
+
             IPEndPoint endPoint;
             IPEndPoint bindEndPoint;
 
@@ -903,7 +927,7 @@ namespace FixClient
             using SessionForm form = new();
             form.Readonly = CurrentSession != null && CurrentSession.Connected;
 
-            Session clone = null;
+            Session? clone = null;
 
             if (CurrentSession != null)
             {
@@ -913,7 +937,9 @@ namespace FixClient
             form.Session = clone;
 
             if (form.ShowDialog() != DialogResult.OK)
+            {
                 return;
+            }
 
             if (CurrentSession != null && clone != null)
             {
@@ -994,7 +1020,11 @@ namespace FixClient
                 try
                 {
                     var ser = new XmlSerializer(typeof(Point));
-                    Location = (Point)ser.Deserialize(stream);
+
+                    if (ser.Deserialize(stream) is Point point)
+                    {
+                        Location = point;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1014,7 +1044,11 @@ namespace FixClient
                 try
                 {
                     var ser = new XmlSerializer(typeof(Size));
-                    Size = (Size)ser.Deserialize(stream);
+
+                    if (ser.Deserialize(stream) is Size size)
+                    {
+                        Size = size;
+                    }
                 }
                 catch (Exception ex)
                 {

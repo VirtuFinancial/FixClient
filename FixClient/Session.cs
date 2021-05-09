@@ -48,12 +48,12 @@ namespace FixClient
 
         protected void OnMessagesReset()
         {
-            MessagesReset?.Invoke(this, null);
+            MessagesReset?.Invoke(this, EventArgs.Empty);
         }
 
         protected void OnSessionReset()
         {
-            SessionReset?.Invoke(this, null);
+            SessionReset?.Invoke(this, EventArgs.Empty);
         }
 
         protected void OnCustomFieldAdded(CustomField field)
@@ -353,7 +353,7 @@ namespace FixClient
 
         public override Fix.Message MessageForTemplate(Fix.Dictionary.Message templateMessage)
         {
-            if (!_messageTemplates.TryGetValue(templateMessage.MsgType, out Fix.Message message))
+            if (!_messageTemplates.TryGetValue(templateMessage.MsgType, out Fix.Message? message))
             {
                 message = base.MessageForTemplate(templateMessage);
 
@@ -372,9 +372,12 @@ namespace FixClient
 
         public void ResetTemplateMessage(string msgType)
         {
-            if (_messageTemplates.TryGetValue(msgType, out Fix.Message template))
+            if (_messageTemplates.TryGetValue(msgType, out Fix.Message? template))
             {
-                Fix.Dictionary.Message definition = template.Definition;
+                if (template.Definition is not Fix.Dictionary.Message definition)
+                {
+                    return;
+                }
 
                 template.Fields.Clear();
 
@@ -430,7 +433,7 @@ namespace FixClient
 
         protected void OnMessageFilterChanged()
         {
-            MessageFilterChanged?.Invoke(this, null);
+            MessageFilterChanged?.Invoke(this, EventArgs.Empty);
             // This cannot happen automatically
             //WriteFilters();
         }
@@ -440,7 +443,7 @@ namespace FixClient
             //if (!AutoWriteFilters)
             //    return;
 
-            FieldFilterChanged?.Invoke(this, null);
+            FieldFilterChanged?.Invoke(this, EventArgs.Empty);
 
             // This cannot happen automatically
             //WriteFilters();
@@ -467,7 +470,7 @@ namespace FixClient
 
         public Dictionary<int, bool> FieldFilters(string msgType)
         {
-            if (!_fieldFilters.TryGetValue(msgType, out Dictionary<int, bool> filters))
+            if (!_fieldFilters.TryGetValue(msgType, out Dictionary<int, bool>? filters))
             {
                 filters = new Dictionary<int, bool>();
                 _fieldFilters[msgType] = filters;
@@ -588,16 +591,25 @@ namespace FixClient
         void ReadCustomFields()
         {
             int errors = 0;
+
             try
             {
                 if (!File.Exists(CustomFieldsFileName))
+                {
                     return;
+                }
 
                 using var stream = new FileStream(CustomFieldsFileName, FileMode.Open);
                 using var sr = new StreamReader(stream);
                 using var reader = new JsonTextReader(sr);
+                
                 JObject filters = JObject.Load(reader);
-                JToken fields = filters["Fields"];
+                
+                if (filters["Fields"] is not JToken fields)
+                {
+                    return;
+                }
+
                 foreach (var field in fields)
                 {
                     try
@@ -606,8 +618,8 @@ namespace FixClient
                         {
 
                             Tag = Convert.ToInt32(field["Tag"]),
-                            Name = field["Name"].ToString()
-                        });
+                            Name = field["Name"]?.ToString() ?? string.Empty
+                        }); ;
                     }
                     catch (Exception ex)
                     {
@@ -658,13 +670,21 @@ namespace FixClient
             try
             {
                 if (!File.Exists(FiltersFileName))
+                {
                     return;
+                }
 
                 using var stream = new FileStream(FiltersFileName, FileMode.Open);
                 using var sr = new StreamReader(stream);
                 using var reader = new JsonTextReader(sr);
+                
                 JObject filters = JObject.Load(reader);
-                JToken messages = filters["Messages"];
+                
+                if (filters["Messages"] is not JToken messages)
+                {
+                    return;
+                }
+
                 foreach (var item in messages)
                 {
                     foreach (Fix.Dictionary.Message message in Version.Messages)
@@ -676,18 +696,40 @@ namespace FixClient
                         }
                     }
                 }
-                JToken fields = filters["Fields"];
+                
+                if (filters["Fields"] is not JToken fields)
+                {
+                    return;
+                }
+
                 foreach (var entry in fields)
                 {
-                    var property = (JProperty)entry.First;
-                    Fix.Dictionary.Message message = Version.Messages.FirstOrDefault(item => item.Name == property.Name);
-                    if (message == null)
-                        continue;
-                    foreach (string fieldEntry in (JArray)property.Value)
+                    if (entry.First is not JProperty property)
                     {
-                        var field = message.Fields.FirstOrDefault(item => item.Name == fieldEntry);
-                        if (field == null)
+                        continue;
+                    }
+
+                    Fix.Dictionary.Message? message = Version.Messages.FirstOrDefault(item => item.Name == property.Name);
+
+                    if (message == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (string? fieldEntry in (JArray)property.Value)
+                    {
+                        if (fieldEntry is null)
+                        {
                             continue;
+                        }
+
+                        var field = message.Fields.FirstOrDefault(item => item.Name == fieldEntry);
+
+                        if (field == null)
+                        {
+                            continue;
+                        }
+
                         FieldVisible(message.MsgType, field.Tag, false);
                     }
                 }
@@ -747,7 +789,10 @@ namespace FixClient
             {
                 if (!filter.Value)
                 {
-                    writer.WriteStringValue(Version.Messages[filter.Key].Name);
+                    if (Version.Messages[filter.Key]?.Name is string value)
+                    {
+                        writer.WriteStringValue(value);
+                    }
                 }
             }
             writer.WriteEndArray();
@@ -756,10 +801,19 @@ namespace FixClient
             foreach (var filter in _fieldFilters)
             {
                 if (filter.Value.Count == 0 || filter.Value.All(field => field.Value))
+                {
                     continue;
+                }
+
+                if (Version.Messages[filter.Key]?.Name is not string name)
+                {
+                    continue;
+                }
+
                 writer.WriteStartObject();
-                writer.WritePropertyName(Version.Messages[filter.Key].Name);
+                writer.WritePropertyName(name);
                 writer.WriteStartArray();
+                
                 foreach (var field in filter.Value)
                 {
                     if (!field.Value)
@@ -789,9 +843,11 @@ namespace FixClient
                 {
                     try
                     {
-                        Fix.Message template = reader.ReadLine();
-                        if (template == null)
+                        if (reader.ReadLine() is not Fix.Message template)
+                        {
                             break;
+                        }
+
                         template.Definition = Version.Messages[template.MsgType];
                         _messageTemplates[template.MsgType] = template;
                     }

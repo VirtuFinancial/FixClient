@@ -145,19 +145,19 @@ namespace FixClient
 
             [Category(Category)]
             [ReadOnly(true)]
-            public string Type { get; set; }
+            public string? Type { get; set; }
 
             [Category(Category)]
             [ReadOnly(true)]
-            public string Added { get; set; }
+            public string? Added { get; set; }
 
             [Category(Category)]
             [ReadOnly(true)]
-            public string Value { get; set; }
+            public string? Value { get; set; }
 
             [Category(Category)]
             [ReadOnly(true)]
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
 
         public Fix.Field? Field

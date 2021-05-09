@@ -10,13 +10,8 @@
 //
 /////////////////////////////////////////////////
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static Fix.Dictionary;
 
@@ -43,13 +38,16 @@ namespace FixClient
 
         protected override void OnEditingControlShowing(DataGridViewEditingControlShowingEventArgs e)
         {
-            if (e.Control as ComboBox == null)
+            if (e.Control is not ComboBox comboBox)
+            {
                 return;
-            (e.Control as ComboBox).DrawMode = DrawMode.OwnerDrawFixed;
-            (e.Control as ComboBox).DrawItem -= ComboBoxDrawItem;
-            (e.Control as ComboBox).DrawItem += ComboBoxDrawItem;
-            (e.Control as ComboBox).DropDownClosed -= ComboBoxDropDownClosed;
-            (e.Control as ComboBox).DropDownClosed += ComboBoxDropDownClosed;
+            }
+
+            comboBox.DrawMode = DrawMode.OwnerDrawFixed;
+            comboBox.DrawItem -= ComboBoxDrawItem;
+            comboBox.DrawItem += ComboBoxDrawItem;
+            comboBox.DropDownClosed -= ComboBoxDropDownClosed;
+            comboBox.DropDownClosed += ComboBoxDropDownClosed;
         }
 
         void ComboBoxDropDownClosed(object? sender, EventArgs e)
@@ -105,9 +103,14 @@ namespace FixClient
             // is not an enumeration.
             //
             if (Columns[e.ColumnIndex].Name != FieldDataTable.ColumnDescription)
+            {
                 return;
+            }
 
-            Fix.Field field = FieldAtIndex(e.RowIndex);
+            if (FieldAtIndex(e.RowIndex) is not Fix.Field field)
+            {
+                return;
+            }
 
             var definition = FIX_5_0SP2.Fields[field.Tag];
 
@@ -130,18 +133,22 @@ namespace FixClient
         {
             for (int index = e.RowIndex; index < e.RowIndex + e.RowCount; ++index)
             {
-                Fix.Field field = FieldAtIndex(index);
-
-                if (field is null)
+                if (FieldAtIndex(index) is not Fix.Field field)
+                {
                     continue;
+                }
 
                 var definition = FIX_5_0SP2.Fields[field.Tag];
 
                 if (definition == null)
+                {
                     continue;
+                }
 
                 if (definition.Values.Count == 0)
+                {
                     continue;
+                }
 
                 DataGridViewRow row = Rows[index];
 
@@ -167,28 +174,44 @@ namespace FixClient
         protected override void OnCellValueChanged(DataGridViewCellEventArgs e)
         {
             if (InternalChange)
+            {
                 return;
+            }
 
             if (Message == null)
+            {
                 return;
+            }
 
             DataGridViewColumn column = Columns[e.ColumnIndex];
             DataGridViewRow row = Rows[e.RowIndex];
 
             if (row.DataBoundItem is not DataRowView rowView)
+            {
                 return;
+            }
 
             if (rowView.Row is not FieldDataRow dataRow)
+            {
                 return;
+            }
             //
             // We need to get the index of the row in the underlying table not the view as the view
             // may have been filtered.
             //
             var view = DataSource as DataView;
-            DataTable table = view.Table;
+            
+            if (view?.Table is not DataTable table)
+            {
+                return;
+            }
+
             int index = table.Rows.IndexOf(dataRow);
 
-            Fix.Field field = dataRow.Field;
+            if (dataRow.Field is not Fix.Field field)
+            {
+                return;
+            }
 
             if (column.Name == FieldDataTable.ColumnDescription)
             {
@@ -206,7 +229,7 @@ namespace FixClient
 
             DataGridViewCell cell = row.Cells[FieldDataTable.ColumnValue];
 
-            string value = cell.Value == null ? "" : cell.Value.ToString().Trim();
+            string value = (cell.Value?.ToString() ?? "").Trim();
 
             var definition = FIX_5_0SP2.Fields[field.Tag];
 
@@ -239,12 +262,14 @@ namespace FixClient
             foreach (DataGridViewRow r in Rows)
             {
                 var rv = r.DataBoundItem as DataRowView;
-                dataRow = rv.Row as FieldDataRow;
 
-                if (dataRow.Field.Tag == FIX_5_0SP2.Fields.BodyLength.Tag)
+                if (rv?.Row is FieldDataRow fieldDataRow)
                 {
-                    dataRow[FieldDataTable.ColumnValue] = Message.ComputeBodyLength();
-                    break;
+                    if (fieldDataRow.Field?.Tag == FIX_5_0SP2.Fields.BodyLength.Tag)
+                    {
+                        fieldDataRow[FieldDataTable.ColumnValue] = Message.ComputeBodyLength();
+                        break;
+                    }
                 }
             }
             //

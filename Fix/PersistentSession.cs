@@ -68,8 +68,13 @@ namespace Fix
         [Browsable(false)]
         public bool PersistMessages { get; set; }
 
-        protected static string GetFileNamePrefix(string filename)
+        protected static string GetFileNamePrefix(string? filename)
         {
+            if (string.IsNullOrEmpty(filename))
+            {
+                throw new Exception("filename is null or empty");
+            }
+
             return Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar +
                    Path.GetFileNameWithoutExtension(filename);
         }

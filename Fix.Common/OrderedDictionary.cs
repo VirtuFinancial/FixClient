@@ -346,7 +346,7 @@ namespace Fix.Common
 
         public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
-            if (Dictionary.TryGetValue(key, out TValue innerValue))
+            if (Dictionary.TryGetValue(key, out var innerValue))
             {
                 value = innerValue;
                 return true;

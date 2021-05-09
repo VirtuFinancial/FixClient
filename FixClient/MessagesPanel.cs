@@ -433,15 +433,26 @@ namespace FixClient
             get
             {
                 if (_messageGrid.SelectedRows.Count == 0)
+                {
                     return null;
+                }
 
                 if (_messageGrid.SelectedRows[0].DataBoundItem is not DataRowView rowView)
+                {
                     return null;
+                }
 
                 if (rowView.Row is not MessageTypeDataRow messageRow)
+                {
                     return null;
+                }
 
-                return _session?.MessageForTemplate(messageRow.Message);
+                if (messageRow.Message is not Fix.Dictionary.Message message)
+                {
+                    return null;
+                }
+
+                return _session?.MessageForTemplate(message);
             }
         }
 
@@ -677,7 +688,7 @@ namespace FixClient
                 //
                 int clOrdIdCount = (from FieldDataRow row
                                     in _fieldTable.Rows
-                                    where row.Field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag
+                                    where row.Field?.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag
                                     select row).Count();
 
                 Fix.Field? totNoOrders = message.Fields.Find(FIX_5_0SP2.Fields.TotNoOrders);
@@ -1697,7 +1708,11 @@ namespace FixClient
 
             foreach (FieldDataRow row in _fieldTable.Rows)
             {
-                Fix.Field field = row.Field;
+                if (row.Field is not Fix.Field field)
+                {
+                    continue;
+                }
+
                 if ((field.Tag == FIX_5_0SP2.Fields.SendingTime.Tag && _session.AutoSendingTime) ||
                     (field.Tag == FIX_5_0SP2.Fields.TransactTime.Tag && _session.AutoTransactTime))
                 {
@@ -2030,7 +2045,12 @@ namespace FixClient
                 return null;
             }
 
-            return _session.MessageForTemplate(row.Message);
+            if (row.Message is not Fix.Dictionary.Message message)
+            {
+                return null;
+            }
+
+            return _session.MessageForTemplate(message);
         }
 
         void SelectMessage(string msgType)
