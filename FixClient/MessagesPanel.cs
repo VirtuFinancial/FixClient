@@ -930,10 +930,10 @@ namespace FixClient
 
             message.Fields.Clear();
 
-            Fix.Dictionary.Message? exemplar = Session.Version.Messages[message.MsgType];
+            //Fix.Dictionary.Message? exemplar = Session.Version.Messages[message.MsgType];
 
-            var indents = new Stack<IndentIndex>();
-            var indexes = new Dictionary<int, int>();
+            //var indents = new Stack<IndentIndex>();
+            //var indexes = new Dictionary<int, int>();
             //int? groupIndent = null;
             //int exemplarIndex = 0;
 
@@ -941,9 +941,9 @@ namespace FixClient
             {
                 if (!Session.Version.Fields.TryGetValue(field.Tag, out var fieldDefinition) || fieldDefinition == null)
                 {
-                    if (!Session.CustomFields.TryGetValue(field.Tag, out var custom) && defineUnknownAsCustom)
+                    if (!Session.CustomFields.TryGetValue(field.Tag, out var _) && defineUnknownAsCustom)
                     {
-                        custom = new CustomField { Tag = field.Tag, Name = field.Tag.ToString() };
+                        var custom = new CustomField { Tag = field.Tag, Name = field.Tag.ToString() };
                         Session.AddCustomField(custom);
                     }
                     message.Fields.Add(field.Tag, field.Value);

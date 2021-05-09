@@ -669,7 +669,7 @@ namespace FixClient
             ScrollToBottom();
         }
 
-        Image ImageForMessageStatus(Fix.MessageStatus status)
+        static Image ImageForMessageStatus(Fix.MessageStatus status)
         {
             return status switch
             {
@@ -682,7 +682,7 @@ namespace FixClient
 
         void AddMesage(Fix.Message message)
         {
-            if (message.Definition is not Fix.Dictionary.Message definition)
+            if (message.Definition is not Fix.Dictionary.Message)
             {
                 message.Definition = FIX_5_0SP2.Messages[message.MsgType];
 

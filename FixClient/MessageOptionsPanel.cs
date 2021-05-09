@@ -83,7 +83,8 @@ namespace FixClient
                 SelectedObject = _options
             };
             _propertyGrid.PropertyValueChanged += PropertyGridPropertyValueChanged;
-            _propertyGrid.Layout += (sender, ev) => MoveSplitter(_propertyGrid, 190);
+            
+            //_propertyGrid.Layout += (sender, ev) => MoveSplitter(_propertyGrid, 190);
 
             var panel1 = new BorderHidingPanel(_propertyGrid) { Dock = DockStyle.Fill };
 
@@ -92,8 +93,8 @@ namespace FixClient
             UpdateUiState();
         }
 
-        static void MoveSplitter(PropertyGrid propertyGrid, int x)
-        {
+        //static void MoveSplitter(PropertyGrid propertyGrid, int x)
+        //{
             /* TODO
             object propertyGridView = typeof(PropertyGrid).InvokeMember("gridView", 
                                                                         BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance, 
@@ -106,7 +107,7 @@ namespace FixClient
                                                     propertyGridView, 
                                                     new object[] { x });
             */
-        }
+        //}
 
         void PropertyGridPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {

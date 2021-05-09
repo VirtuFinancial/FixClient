@@ -109,7 +109,7 @@ namespace FixClient
         {
         }
 
-        public void UpdateUiState()
+        public static void UpdateUiState()
         {
             /*
             bool enabled = true;
@@ -128,10 +128,10 @@ namespace FixClient
             */
         }
 
-        void Reload()
-        {
-            UpdateUiState();
-        }
+        //void Reload()
+        //{
+        //    UpdateUiState();
+        //}
 
         public Session? Session
         {

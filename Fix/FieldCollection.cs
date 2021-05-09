@@ -24,11 +24,11 @@ namespace Fix
         // define the interface
         //
         readonly List<Field> _fields = new();
-        readonly Dictionary.Message? _messageDefinition;
+        //readonly Dictionary.Message? _messageDefinition;
 
         public FieldCollection(Dictionary.Message? messageDefinition = null)
         {
-            _messageDefinition = messageDefinition;
+            //_messageDefinition = messageDefinition;
         }
 
         public FieldCollection(string[,] data)
@@ -44,8 +44,8 @@ namespace Fix
             }
         }
 
-        void UpdateDefinition(Field field)
-        {
+        //void UpdateDefinition(Field field)
+        //{
             //throw new NotImplementedException();
             /*
             if (field.Definition == null && _messageDefinition != null)
@@ -56,7 +56,7 @@ namespace Fix
                 }
             }
             */
-        }
+        //}
 
         public void Set(Field value)
         {
@@ -65,7 +65,7 @@ namespace Fix
                 if (field.Tag == value.Tag)
                 {
                     field.Value = value.Value;
-                    UpdateDefinition(field);
+                    //UpdateDefinition(field);
                     return;
                 }
             }
@@ -97,7 +97,7 @@ namespace Fix
 
         public void Add(Field field)
         {
-            UpdateDefinition(field);
+            //UpdateDefinition(field);
             _fields.Add(field);
         }
 
