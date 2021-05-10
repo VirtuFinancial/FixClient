@@ -9,11 +9,26 @@ namespace Fix
     {
         public class VersionCollection : IEnumerable<Version>
         {
-            public VersionCollection(Version defaultVersion, params Version[] versions)
+            public readonly Version FIX_4_2 = new Version("FIX.4.2", Fix.Dictionary.FIX_4_2.DataTypes, Fix.Dictionary.FIX_4_2.Fields, Fix.Dictionary.FIX_4_2.Messages);
+            public readonly Version FIX_4_4 = new Version("FIX.4.4", Fix.Dictionary.FIX_4_4.DataTypes, Fix.Dictionary.FIX_4_4.Fields, Fix.Dictionary.FIX_4_4.Messages);
+            public readonly Version FIX_5_0SP2 = new Version("FIX.5.0SP2", Fix.Dictionary.FIX_5_0SP2.DataTypes, Fix.Dictionary.FIX_5_0SP2.Fields, Fix.Dictionary.FIX_5_0SP2.Messages);
+            // There isn't a separate transport orchestra and generating one from the repository doesn't work
+            // due to errors in the repository so just cheat. It's only the session messages so this gives us
+            // what we need.
+            public readonly Version FIXT_1_1 = new Version("FIXT.1.1", Fix.Dictionary.FIX_5_0SP2.DataTypes, Fix.Dictionary.FIX_5_0SP2.Fields, Fix.Dictionary.FIX_5_0SP2.Messages);
+
+            public VersionCollection()
             {
-                Default = defaultVersion;
-                _versions = versions.Append(defaultVersion).ToArray();
+                Default = FIX_5_0SP2;
+
+                _versions = new[] {
+                    FIX_4_2,
+                    FIX_4_4,
+                    FIX_5_0SP2,
+                    FIXT_1_1
+                };
             }
+
 
             public Version? this[string beginString]
             {
@@ -25,7 +40,7 @@ namespace Fix
                 }
             }
 
-            public Version Default { get; private set; }
+            public Version Default { get; }
 
             public int Count => _versions.Length;
 
@@ -41,5 +56,7 @@ namespace Fix
 
             Version[] _versions;
         }
+
+        public static VersionCollection Versions { get; } = new VersionCollection();
     }
 }

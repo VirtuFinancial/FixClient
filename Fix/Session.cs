@@ -137,18 +137,8 @@ namespace Fix
 
         public Session()
         {
-            if (Versions["FIXT.1.1"] is not Dictionary.Version FIXT_1_1)
-            {
-                throw new Exception("Could not resolve FIXT.1.1");
-            }
-
-            if (Versions["FIX.5.0SP2"] is not Dictionary.Version FIX_5_0SP2)
-            {
-                throw new Exception("Could not resolve FIX.5.0SP2");
-            }
-
-            BeginString = FIXT_1_1;
-            DefaultApplVerId = FIX_5_0SP2;
+            BeginString = Versions.FIXT_1_1;
+            DefaultApplVerId = Versions.FIX_5_0SP2;
             HeartBtInt = 30;
             AutoSendingTime = true;
             OutgoingSeqNum = 1;

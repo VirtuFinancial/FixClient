@@ -1363,23 +1363,11 @@ namespace FixTests
         [TestMethod]
         public void TestCloneSession()
         {
-            if (Versions["FIXT.1.1"] is not Fix.Dictionary.Version FIXT_1_1)
-            {
-                Assert.Fail("Could not load FIXT.1.1 from the dictionary");
-                return;
-            }
-
-            if (Versions["FIX.5.0SP2"] is not Fix.Dictionary.Version FIX_5_0SP2)
-            {
-                Assert.Fail("Could not load FIXT.5.0SP2 from the dictionary");
-                return;
-            }
-
             var original = new Fix.Session
             {
                 OrderBehaviour = Fix.Behaviour.Initiator,
-                BeginString = FIXT_1_1,
-                DefaultApplVerId = FIX_5_0SP2,
+                BeginString = Versions.FIXT_1_1,
+                DefaultApplVerId = Versions.FIX_5_0SP2,
                 LogonBehaviour = Fix.Behaviour.Initiator,
                 SenderCompId = "SENDER",
                 TargetCompId = "TARGET",
@@ -1393,17 +1381,11 @@ namespace FixTests
                 AutoSendingTime = true
             };
 
-            if (Versions["FIX.4.2"] is not Fix.Dictionary.Version FIX_4_2)
-            {
-                Assert.Fail("Could not load FIX.4.2 from the dictionary");
-                return;
-            }
-
             var clone = (Fix.Session)original.Clone();
 
             clone.OrderBehaviour = Fix.Behaviour.Acceptor;
-            clone.BeginString = FIX_4_2;
-            clone.DefaultApplVerId = FIX_4_2;
+            clone.BeginString = Versions.FIX_4_2;
+            clone.DefaultApplVerId = Versions.FIX_4_2;
             clone.LogonBehaviour = Fix.Behaviour.Acceptor;
             clone.SenderCompId = "INITIATOR";
             clone.TargetCompId = "ACCEPTOR";
@@ -1417,8 +1399,8 @@ namespace FixTests
             clone.AutoSendingTime = false;
 
             Assert.AreEqual(Fix.Behaviour.Initiator, original.OrderBehaviour);
-            Assert.AreEqual(FIXT_1_1, original.BeginString);
-            Assert.AreEqual(FIX_5_0SP2, original.DefaultApplVerId);
+            Assert.AreEqual(Versions.FIXT_1_1, original.BeginString);
+            Assert.AreEqual(Versions.FIX_5_0SP2, original.DefaultApplVerId);
             Assert.AreEqual(Fix.Behaviour.Initiator, original.LogonBehaviour);
             Assert.AreEqual("SENDER", original.SenderCompId);
             Assert.AreEqual("TARGET", original.TargetCompId);
@@ -1432,8 +1414,8 @@ namespace FixTests
             Assert.AreEqual(true, original.AutoSendingTime);
 
             Assert.AreEqual(Fix.Behaviour.Acceptor, clone.OrderBehaviour);
-            Assert.AreEqual(FIX_4_2, clone.BeginString);
-            Assert.AreEqual(FIX_4_2, clone.DefaultApplVerId);
+            Assert.AreEqual(Versions.FIX_4_2, clone.BeginString);
+            Assert.AreEqual(Versions.FIX_4_2, clone.DefaultApplVerId);
             Assert.AreEqual(Fix.Behaviour.Acceptor, clone.LogonBehaviour);
             Assert.AreEqual("INITIATOR", clone.SenderCompId);
             Assert.AreEqual("ACCEPTOR", clone.TargetCompId);
@@ -1450,23 +1432,11 @@ namespace FixTests
         [TestMethod]
         public void TestClonePersistentSession()
         {
-            if (Versions["FIXT.1.1"] is not Fix.Dictionary.Version FIXT_1_1)
-            {
-                Assert.Fail("Could not load FIXT.1.1 from the dictionary");
-                return;
-            }
-
-            if (Versions["FIX.5.0SP2"] is not Fix.Dictionary.Version FIX_5_0SP2)
-            {
-                Assert.Fail("Could not load FIXT.5.0SP2 from the dictionary");
-                return;
-            }
-
             var original = new Fix.PersistentSession
             {
                 OrderBehaviour = Fix.Behaviour.Initiator,
-                BeginString = FIXT_1_1,
-                DefaultApplVerId = FIX_5_0SP2,
+                BeginString = Versions.FIXT_1_1,
+                DefaultApplVerId = Versions.FIX_5_0SP2,
                 LogonBehaviour = Fix.Behaviour.Initiator,
                 SenderCompId = "SENDER",
                 TargetCompId = "TARGET",
@@ -1483,15 +1453,9 @@ namespace FixTests
 
             var clone = (Fix.PersistentSession)original.Clone();
 
-            if (Versions["FIX.4.2"] is not Fix.Dictionary.Version FIX_4_2)
-            {
-                Assert.Fail("Could not load FIX.4.2 from the dictionary");
-                return;
-            }
-
             clone.OrderBehaviour = Fix.Behaviour.Acceptor;
-            clone.BeginString = FIX_4_2;
-            clone.DefaultApplVerId = FIX_4_2;
+            clone.BeginString = Versions.FIX_4_2;
+            clone.DefaultApplVerId = Versions.FIX_4_2;
             clone.LogonBehaviour = Fix.Behaviour.Acceptor;
             clone.SenderCompId = "INITIATOR";
             clone.TargetCompId = "ACCEPTOR";
@@ -1506,8 +1470,8 @@ namespace FixTests
             clone.FileName = @"D:\other\path\file.session";
 
             Assert.AreEqual(Fix.Behaviour.Initiator, original.OrderBehaviour);
-            Assert.AreEqual(FIXT_1_1, original.BeginString);
-            Assert.AreEqual(FIX_5_0SP2, original.DefaultApplVerId);
+            Assert.AreEqual(Versions.FIXT_1_1, original.BeginString);
+            Assert.AreEqual(Versions.FIX_5_0SP2, original.DefaultApplVerId);
             Assert.AreEqual(Fix.Behaviour.Initiator, original.LogonBehaviour);
             Assert.AreEqual("SENDER", original.SenderCompId);
             Assert.AreEqual("TARGET", original.TargetCompId);
@@ -1522,8 +1486,8 @@ namespace FixTests
             Assert.AreEqual(@"C:\some\path\file.session", original.FileName);
 
             Assert.AreEqual(Fix.Behaviour.Acceptor, clone.OrderBehaviour);
-            Assert.AreEqual(FIX_4_2, clone.BeginString);
-            Assert.AreEqual(FIX_4_2, clone.DefaultApplVerId);
+            Assert.AreEqual(Versions.FIX_4_2, clone.BeginString);
+            Assert.AreEqual(Versions.FIX_4_2, clone.DefaultApplVerId);
             Assert.AreEqual(Fix.Behaviour.Acceptor, clone.LogonBehaviour);
             Assert.AreEqual("INITIATOR", clone.SenderCompId);
             Assert.AreEqual("ACCEPTOR", clone.TargetCompId);

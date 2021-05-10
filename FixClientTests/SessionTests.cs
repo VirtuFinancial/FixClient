@@ -45,8 +45,8 @@ namespace FixClientTests
             var original = new FixClient.Session
             {
                 OrderBehaviour = Fix.Behaviour.Initiator,
-                BeginString = Fix.Dictionary.Versions["FIXT.1.1"],
-                DefaultApplVerId = Fix.Dictionary.Versions["FIX.5.0SP2"],
+                BeginString = Fix.Dictionary.Versions.FIXT_1_1,
+                DefaultApplVerId = Fix.Dictionary.Versions.FIX_5_0SP2,
                 LogonBehaviour = Fix.Behaviour.Initiator,
                 SenderCompId = "SENDER",
                 TargetCompId = "TARGET",
@@ -83,8 +83,8 @@ namespace FixClientTests
             var clone = (FixClient.Session)original.Clone();
 
             clone.OrderBehaviour = Fix.Behaviour.Acceptor;
-            clone.BeginString = Fix.Dictionary.Versions["FIX.4.2"];
-            clone.DefaultApplVerId = Fix.Dictionary.Versions["FIX.4.2"];
+            clone.BeginString = Fix.Dictionary.Versions.FIX_4_2;
+            clone.DefaultApplVerId = Fix.Dictionary.Versions.FIX_4_2;
             clone.LogonBehaviour = Fix.Behaviour.Acceptor;
             clone.SenderCompId = "INITIATOR";
             clone.TargetCompId = "ACCEPTOR";
@@ -118,8 +118,8 @@ namespace FixClientTests
             clone.AutoScrollMessages = false;
 
             Assert.AreEqual(Fix.Behaviour.Initiator, original.OrderBehaviour);
-            Assert.AreEqual(Fix.Dictionary.Versions["FIXT.1.1"], original.BeginString);
-            Assert.AreEqual(Fix.Dictionary.Versions["FIX.5.0SP2"], original.DefaultApplVerId);
+            Assert.AreEqual(Fix.Dictionary.Versions.FIXT_1_1, original.BeginString);
+            Assert.AreEqual(Fix.Dictionary.Versions.FIX_5_0SP2, original.DefaultApplVerId);
             Assert.AreEqual(Fix.Behaviour.Initiator, original.LogonBehaviour);
             Assert.AreEqual("SENDER", original.SenderCompId);
             Assert.AreEqual("TARGET", original.TargetCompId);
@@ -153,8 +153,8 @@ namespace FixClientTests
             Assert.AreEqual(true, original.AutoScrollMessages);
 
             Assert.AreEqual(Fix.Behaviour.Acceptor, clone.OrderBehaviour);
-            Assert.AreEqual(Fix.Dictionary.Versions["FIX.4.2"], clone.BeginString);
-            Assert.AreEqual(Fix.Dictionary.Versions["FIX.4.2"], clone.DefaultApplVerId);
+            Assert.AreEqual(Fix.Dictionary.Versions.FIX_4_2, clone.BeginString);
+            Assert.AreEqual(Fix.Dictionary.Versions.FIX_4_2, clone.DefaultApplVerId);
             Assert.AreEqual(Fix.Behaviour.Acceptor, clone.LogonBehaviour);
             Assert.AreEqual("INITIATOR", clone.SenderCompId);
             Assert.AreEqual("ACCEPTOR", clone.TargetCompId);
