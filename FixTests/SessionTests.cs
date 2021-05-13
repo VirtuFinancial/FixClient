@@ -9,10 +9,10 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading;
+using static Fix.Dictionary;
 
 namespace FixTests
 {
@@ -62,18 +62,18 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggedOn);
             InitiatorStateChange(Fix.State.LoggedOn);
 
-            SendFromInitiator(Fix.Dictionary.Messages.NewOrderSingle);
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.NewOrderSingle);
-            SendFromAcceptor(Fix.Dictionary.Messages.ExecutionReport);
-            ReceiveAtInitiator(Fix.Dictionary.Messages.ExecutionReport);
+            SendFromInitiator(FIX_5_0SP2.Messages.NewOrderSingle);
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.NewOrderSingle);
+            SendFromAcceptor(FIX_5_0SP2.Messages.ExecutionReport);
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.ExecutionReport);
 
-            SendFromAcceptor(Fix.Dictionary.Messages.Heartbeat);
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Heartbeat);
+            SendFromAcceptor(FIX_5_0SP2.Messages.Heartbeat);
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Heartbeat);
 
-            SendFromInitiator(Fix.Dictionary.Messages.NewOrderSingle);
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.NewOrderSingle);
-            SendFromAcceptor(Fix.Dictionary.Messages.ExecutionReport);
-            ReceiveAtInitiator(Fix.Dictionary.Messages.ExecutionReport);
+            SendFromInitiator(FIX_5_0SP2.Messages.NewOrderSingle);
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.NewOrderSingle);
+            SendFromAcceptor(FIX_5_0SP2.Messages.ExecutionReport);
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.ExecutionReport);
 
             Assert.AreEqual(6, Initiator.OutgoingSeqNum);
             Assert.AreEqual(7, Initiator.IncomingSeqNum);
@@ -88,15 +88,15 @@ namespace FixTests
             Assert.AreEqual(false, Initiator.Messages[9].Administrative);   // NewOrderSingle
             Assert.AreEqual(false, Initiator.Messages[10].Administrative);  // ExecutionReport
 
-            SendFromInitiator(Fix.Dictionary.Messages.ResendRequest, new[]
+            SendFromInitiator(FIX_5_0SP2.Messages.ResendRequest, new[]
             {
-                 new Fix.Field(Fix.Dictionary.Fields.BeginSeqNo, 4),
-                 new Fix.Field(Fix.Dictionary.Fields.EndSeqNo, 6)
+                 new Fix.Field(FIX_5_0SP2.Fields.BeginSeqNo, 4),
+                 new Fix.Field(FIX_5_0SP2.Fields.EndSeqNo, 6)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.ExecutionReport);
-            ReceiveAtInitiator(Fix.Dictionary.Messages.SequenceReset);
-            ReceiveAtInitiator(Fix.Dictionary.Messages.ExecutionReport);
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.ExecutionReport);
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.SequenceReset);
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.ExecutionReport);
 
             Assert.AreEqual(7, Initiator.OutgoingSeqNum);
             Assert.AreEqual(7, Initiator.IncomingSeqNum);
@@ -126,7 +126,7 @@ namespace FixTests
         [TestMethod]
         public void TestSessionStatus()
         {
-            Initiator.SessionStatus = Fix.SessionStatus.SessionActive;
+            Initiator.SessionStatus = new Fix.Field(FIX_5_0SP2.SessionStatus.SessionActive);
 
             Assert.AreEqual(Fix.State.Connected, Acceptor.State);
             Assert.AreEqual(Fix.State.Connected, Initiator.State);
@@ -139,7 +139,7 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggedOn);
             InitiatorStateChange(Fix.State.LoggedOn);
 
-            Assert.AreEqual(Fix.SessionStatus.SessionActive, Acceptor.SessionStatus);
+            Assert.AreEqual(FIX_5_0SP2.SessionStatus.SessionActive.Value, Acceptor.SessionStatus?.Value);
         }
 
         [TestMethod]
@@ -164,7 +164,7 @@ namespace FixTests
         {
             Acceptor.NextExpectedMsgSeqNum = true;
             Initiator.NextExpectedMsgSeqNum = true;
-            Initiator.SessionStatus = Fix.SessionStatus.SessionActive;
+            Initiator.SessionStatus = new Fix.Field(FIX_5_0SP2.SessionStatus.SessionActive);
 
             Assert.AreEqual(Fix.State.Connected, Acceptor.State);
             Assert.AreEqual(Fix.State.Connected, Initiator.State);
@@ -175,13 +175,13 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon);
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logon);
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon);
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logon);
 
             AcceptorStateChange(Fix.State.LoggedOn);
             InitiatorStateChange(Fix.State.LoggedOn);
 
-            Assert.AreEqual(Fix.SessionStatus.SessionActive, Acceptor.SessionStatus);
+            Assert.AreEqual(FIX_5_0SP2.SessionStatus.SessionActive.Value, Acceptor.SessionStatus?.Value);
         }
 
 
@@ -200,8 +200,8 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon);
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logon);
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon);
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logon);
 
             AcceptorStateChange(Fix.State.LoggedOn);
             InitiatorStateChange(Fix.State.LoggedOn);
@@ -221,9 +221,9 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logout, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logout, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.Text, string.Format("Logon does not contain NextExpectedMsgSeqNum"))
+                new Fix.Field(FIX_5_0SP2.Fields.Text, string.Format("Logon does not contain NextExpectedMsgSeqNum"))
             });
 
             AcceptorStateChange(Fix.State.Disconnected);
@@ -245,11 +245,11 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon);
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon);
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logout, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logout, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.Text, string.Format("Logon does not contain NextExpectedMsgSeqNum"))
+                new Fix.Field(FIX_5_0SP2.Fields.Text, string.Format("Logon does not contain NextExpectedMsgSeqNum"))
             });
 
             AcceptorStateChange(Fix.State.Disconnected);
@@ -272,9 +272,9 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logout, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logout, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.Text, string.Format("NextExpectedMsgSeqNum too high, expecting 1 but received 50"))
+                new Fix.Field(FIX_5_0SP2.Fields.Text, string.Format("NextExpectedMsgSeqNum too high, expecting 1 but received 50"))
             });
 
             AcceptorStateChange(Fix.State.Disconnected);
@@ -302,48 +302,48 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 396),
-                new Fix.Field(Fix.Dictionary.Fields.NextExpectedMsgSeqNum, 389)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 396),
+                new Fix.Field(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum, 389)
             });
 
             Acceptor.Send(new Fix.Message
             {
-                MsgType = Fix.Dictionary.Messages.Logon.MsgType,
+                MsgType = FIX_5_0SP2.Messages.Logon.MsgType,
                 Fields = {
-                    new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 389),
-                    new Fix.Field(Fix.Dictionary.Fields.HeartBtInt.Tag, 30),
-                    new Fix.Field(Fix.Dictionary.Fields.NextExpectedMsgSeqNum, 393)
+                    new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 389),
+                    new Fix.Field(FIX_5_0SP2.Fields.HeartBtInt.Tag, 30),
+                    new Fix.Field(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum, 393)
                 }
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 389),
-                new Fix.Field(Fix.Dictionary.Fields.NextExpectedMsgSeqNum, 393)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 389),
+                new Fix.Field(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum, 393)
             });
 
             InitiatorStateChange(Fix.State.Resending);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.SequenceReset, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.SequenceReset, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 393),
-                new Fix.Field(Fix.Dictionary.Fields.GapFillFlag, true),
-                new Fix.Field(Fix.Dictionary.Fields.NewSeqNo, 397)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 393),
+                new Fix.Field(FIX_5_0SP2.Fields.GapFillFlag, true),
+                new Fix.Field(FIX_5_0SP2.Fields.NewSeqNo, 397)
             });
 
             Acceptor.Send(new Fix.Message
             {
-                MsgType = Fix.Dictionary.Messages.Heartbeat.MsgType,
+                MsgType = FIX_5_0SP2.Messages.Heartbeat.MsgType,
                 Fields = {
-                    new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 390)
+                    new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 390)
                 }
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 390)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 390)
             });
 
             InitiatorStateChange(Fix.State.LoggedOn);
@@ -369,28 +369,28 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 550),
-                new Fix.Field(Fix.Dictionary.Fields.NextExpectedMsgSeqNum, 1)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 550),
+                new Fix.Field(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum, 1)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 1872),
-                new Fix.Field(Fix.Dictionary.Fields.NextExpectedMsgSeqNum, 549)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 1872),
+                new Fix.Field(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum, 549)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.SequenceReset, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.SequenceReset, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 1),
-                new Fix.Field(Fix.Dictionary.Fields.NewSeqNo, 1873)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.NewSeqNo, 1873)
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.SequenceReset, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.SequenceReset, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 549),
-                new Fix.Field(Fix.Dictionary.Fields.NewSeqNo, 551)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 549),
+                new Fix.Field(FIX_5_0SP2.Fields.NewSeqNo, 551)
             });
 
             InitiatorStateChange(Fix.State.Resending);
@@ -399,28 +399,28 @@ namespace FixTests
             AcceptorStateChange(Fix.State.Resending);
             AcceptorStateChange(Fix.State.LoggedOn);
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.TestRequest, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 1873),
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "0")
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 1873),
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "0")
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.TestRequest, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 551),
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "0")
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 551),
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "0")
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 1874),
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "0")
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 1874),
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "0")
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 552),
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "0")
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 552),
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "0")
             });
 
             Assert.AreEqual(Fix.State.LoggedOn, Acceptor.State);
@@ -432,9 +432,9 @@ namespace FixTests
         {
             var messageToResend = new Fix.Message
             {
-                MsgType = Fix.Dictionary.Messages.ExecutionReport.MsgType
+                MsgType = FIX_5_0SP2.Messages.ExecutionReport.MsgType
             };
-            messageToResend.Fields.Set(Fix.Dictionary.Fields.MsgSeqNum, 6);
+            messageToResend.Fields.Set(FIX_5_0SP2.Fields.MsgSeqNum, 6);
 
             Acceptor.NextExpectedMsgSeqNum = true;
             Acceptor.OutgoingSeqNum = 12;
@@ -455,57 +455,57 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6),
-                new Fix.Field(Fix.Dictionary.Fields.NextExpectedMsgSeqNum, 6)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 6),
+                new Fix.Field(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum, 6)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 12),
-                new Fix.Field(Fix.Dictionary.Fields.NextExpectedMsgSeqNum, 7)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 12),
+                new Fix.Field(FIX_5_0SP2.Fields.NextExpectedMsgSeqNum, 7)
             });
 
             InitiatorStateChange(Fix.State.Resending);
             AcceptorStateChange(Fix.State.Resending);
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.ExecutionReport, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.ExecutionReport, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6),
-                new Fix.Field(Fix.Dictionary.Fields.PossDupFlag, true)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 6),
+                new Fix.Field(FIX_5_0SP2.Fields.PossDupFlag, true)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.SequenceReset, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.SequenceReset, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 12),
-                new Fix.Field(Fix.Dictionary.Fields.GapFillFlag, true),
-                new Fix.Field(Fix.Dictionary.Fields.NewSeqNo, 13)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 12),
+                new Fix.Field(FIX_5_0SP2.Fields.GapFillFlag, true),
+                new Fix.Field(FIX_5_0SP2.Fields.NewSeqNo, 13)
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.TestRequest, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 7),
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "0")
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 7),
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "0")
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 13),
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "0")
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 13),
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "0")
             });
 
             /*
-            ReceiveAtInitiator(Fix.Dictionary.Messages.TestRequest, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 14),
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "0")
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 14),
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "0")
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 8),
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "0")
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 8),
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "0")
             });
             */
 
@@ -527,37 +527,37 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggedOn);
             InitiatorStateChange(Fix.State.LoggedOn);
 
-            SendFromInitiator(Fix.Dictionary.Messages.TestRequest, new[]
+            SendFromInitiator(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
 
-            SendFromInitiator(Fix.Dictionary.Messages.Logon, new[]
+            SendFromInitiator(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.EncryptMethod.Tag, Fix.EncryptMethod.None),
-                new Fix.Field(Fix.Dictionary.Fields.HeartBtInt.Tag, 30),
-                new Fix.Field(Fix.Dictionary.Fields.ResetSeqNumFlag, "Y")
+                new Fix.Field(FIX_5_0SP2.EncryptMethod.None),
+                new Fix.Field(FIX_5_0SP2.Fields.HeartBtInt.Tag, 30),
+                new Fix.Field(FIX_5_0SP2.Fields.ResetSeqNumFlag, "Y")
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 1),
-                new Fix.Field(Fix.Dictionary.Fields.ResetSeqNumFlag, "Y")
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.ResetSeqNumFlag, "Y")
             });
 
-            SendFromInitiator(Fix.Dictionary.Messages.TestRequest, new[]
+            SendFromInitiator(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
         }
 
@@ -575,37 +575,37 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggedOn);
             InitiatorStateChange(Fix.State.LoggedOn);
 
-            SendFromAcceptor(Fix.Dictionary.Messages.TestRequest, new[]
+            SendFromAcceptor(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
 
-            SendFromAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            SendFromAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.EncryptMethod.Tag, Fix.EncryptMethod.None),
-                new Fix.Field(Fix.Dictionary.Fields.HeartBtInt.Tag, 30),
-                new Fix.Field(Fix.Dictionary.Fields.ResetSeqNumFlag, "Y")
+                new Fix.Field(FIX_5_0SP2.EncryptMethod.None),
+                new Fix.Field(FIX_5_0SP2.Fields.HeartBtInt.Tag, 30),
+                new Fix.Field(FIX_5_0SP2.Fields.ResetSeqNumFlag, "Y")
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 1),
-                new Fix.Field(Fix.Dictionary.Fields.ResetSeqNumFlag, "Y")
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.ResetSeqNumFlag, "Y")
             });
 
-            SendFromAcceptor(Fix.Dictionary.Messages.TestRequest, new[]
+            SendFromAcceptor(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
         }
 
@@ -628,33 +628,33 @@ namespace FixTests
 
             int beginSeqNum = Initiator.OutgoingSeqNum - 1;
 
-            SendFromInitiator(Fix.Dictionary.Messages.NewOrderSingle, new[]
+            SendFromInitiator(FIX_5_0SP2.Messages.NewOrderSingle, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.NoAllocs, 1),
-                new Fix.Field(Fix.Dictionary.Fields.AllocAccount, "ROM"),
-                new Fix.Field(Fix.Dictionary.Fields.AllocAccount, "FOO")
+                new Fix.Field(FIX_5_0SP2.Fields.NoAllocs, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.AllocAccount, "ROM"),
+                new Fix.Field(FIX_5_0SP2.Fields.AllocAccount, "FOO")
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.NewOrderSingle, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.NewOrderSingle, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.NoAllocs, 1),
-                new Fix.Field(Fix.Dictionary.Fields.AllocAccount, "ROM"),
-                new Fix.Field(Fix.Dictionary.Fields.AllocAccount, "FOO")
+                new Fix.Field(FIX_5_0SP2.Fields.NoAllocs, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.AllocAccount, "ROM"),
+                new Fix.Field(FIX_5_0SP2.Fields.AllocAccount, "FOO")
             });
 
-            SendFromAcceptor(Fix.Dictionary.Messages.Reject, new[]
+            SendFromAcceptor(FIX_5_0SP2.Messages.Reject, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.RefSeqNum, beginSeqNum)
+                new Fix.Field(FIX_5_0SP2.Fields.RefSeqNum, beginSeqNum)
             });
 
-            SentFromAcceptor(Fix.Dictionary.Messages.Reject, new[]
+            SentFromAcceptor(FIX_5_0SP2.Messages.Reject, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.RefSeqNum, beginSeqNum)
+                new Fix.Field(FIX_5_0SP2.Fields.RefSeqNum, beginSeqNum)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Reject, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Reject, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.RefSeqNum, beginSeqNum)
+                new Fix.Field(FIX_5_0SP2.Fields.RefSeqNum, beginSeqNum)
             });
 
             // Pretend the acceptor didn't increment the MsgSeqNum for the rejected message.
@@ -662,27 +662,27 @@ namespace FixTests
 
             int endSeqNo = Initiator.OutgoingSeqNum;
 
-            SendFromInitiator(Fix.Dictionary.Messages.Heartbeat);
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Heartbeat);
+            SendFromInitiator(FIX_5_0SP2.Messages.Heartbeat);
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Heartbeat);
 
-            SentFromAcceptor(Fix.Dictionary.Messages.ResendRequest, new[]
+            SentFromAcceptor(FIX_5_0SP2.Messages.ResendRequest, new[]
             {
-                 new Fix.Field(Fix.Dictionary.Fields.BeginSeqNo, beginSeqNum),
-                 new Fix.Field(Fix.Dictionary.Fields.EndSeqNo, endSeqNo)
+                 new Fix.Field(FIX_5_0SP2.Fields.BeginSeqNo, beginSeqNum),
+                 new Fix.Field(FIX_5_0SP2.Fields.EndSeqNo, endSeqNo)
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.SequenceReset, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.SequenceReset, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.GapFillFlag, true),
-                new Fix.Field(Fix.Dictionary.Fields.NewSeqNo, beginSeqNum + 1)
+                new Fix.Field(FIX_5_0SP2.Fields.GapFillFlag, true),
+                new Fix.Field(FIX_5_0SP2.Fields.NewSeqNo, beginSeqNum + 1)
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.NewOrderSingle, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.NewOrderSingle, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.NoAllocs, 1),
-                new Fix.Field(Fix.Dictionary.Fields.AllocAccount, "ROM"),
-                new Fix.Field(Fix.Dictionary.Fields.AllocAccount, "FOO"),
-                new Fix.Field(Fix.Dictionary.Fields.PossDupFlag, true)
+                new Fix.Field(FIX_5_0SP2.Fields.NoAllocs, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.AllocAccount, "ROM"),
+                new Fix.Field(FIX_5_0SP2.Fields.AllocAccount, "FOO"),
+                new Fix.Field(FIX_5_0SP2.Fields.PossDupFlag, true)
             });
 
         }
@@ -705,8 +705,8 @@ namespace FixTests
         [TestMethod]
         public void TestLogonOnlySpecifyCompIdsAtInitiator()
         {
-            Acceptor.SenderCompId = null;
-            Acceptor.TargetCompId = null;
+            Acceptor.SenderCompId = string.Empty;
+            Acceptor.TargetCompId = string.Empty;
 
             Assert.AreEqual(Fix.State.Connected, Acceptor.State);
             Assert.AreEqual(Fix.State.Connected, Initiator.State);
@@ -737,16 +737,16 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            SentFromAcceptor(Fix.Dictionary.Messages.Reject, new[]
+            SentFromAcceptor(FIX_5_0SP2.Messages.Reject, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.RefSeqNum, 1),
-                new Fix.Field(Fix.Dictionary.Fields.Text, "Received SenderCompID 'WRONG' when expecting 'INITIATOR'")
+                new Fix.Field(FIX_5_0SP2.Fields.RefSeqNum, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.Text, "Received SenderCompID 'WRONG' when expecting 'INITIATOR'")
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Reject, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Reject, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.RefSeqNum, 1),
-                new Fix.Field(Fix.Dictionary.Fields.Text, "Received SenderCompID 'WRONG' when expecting 'INITIATOR'")
+                new Fix.Field(FIX_5_0SP2.Fields.RefSeqNum, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.Text, "Received SenderCompID 'WRONG' when expecting 'INITIATOR'")
             });
 
             AcceptorStateChange(Fix.State.Disconnected);
@@ -770,19 +770,19 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            SendFromInitiator(Fix.Dictionary.Messages.Logon);
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon);
+            SendFromInitiator(FIX_5_0SP2.Messages.Logon);
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon);
 
-            SentFromAcceptor(Fix.Dictionary.Messages.Reject, new[]
+            SentFromAcceptor(FIX_5_0SP2.Messages.Reject, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.RefSeqNum, 1),
-                new Fix.Field(Fix.Dictionary.Fields.Text, "Received TargetCompID 'WRONG' when expecting 'ACCEPTOR'")
+                new Fix.Field(FIX_5_0SP2.Fields.RefSeqNum, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.Text, "Received TargetCompID 'WRONG' when expecting 'ACCEPTOR'")
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Reject, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Reject, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.RefSeqNum, 1),
-                new Fix.Field(Fix.Dictionary.Fields.Text, "Received TargetCompID 'WRONG' when expecting 'ACCEPTOR'")
+                new Fix.Field(FIX_5_0SP2.Fields.RefSeqNum, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.Text, "Received TargetCompID 'WRONG' when expecting 'ACCEPTOR'")
             });
 
             AcceptorStateChange(Fix.State.Disconnected);
@@ -826,14 +826,14 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggedOn);
             InitiatorStateChange(Fix.State.LoggedOn);
 
-            SendFromInitiator(Fix.Dictionary.Messages.TestRequest, new[]
+            SendFromInitiator(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
         }
 
@@ -853,28 +853,28 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 5)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 5)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 1)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 1)
             });
 
             AcceptorStateChange(Fix.State.Resending);
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.ResendRequest, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.ResendRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.BeginSeqNo, 1),
-                new Fix.Field(Fix.Dictionary.Fields.EndSeqNo, 5)
+                new Fix.Field(FIX_5_0SP2.Fields.BeginSeqNo, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.EndSeqNo, 5)
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.SequenceReset, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.SequenceReset, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.GapFillFlag, "Y"),
-                new Fix.Field(Fix.Dictionary.Fields.NewSeqNo, 6)
+                new Fix.Field(FIX_5_0SP2.Fields.GapFillFlag, "Y"),
+                new Fix.Field(FIX_5_0SP2.Fields.NewSeqNo, 6)
             });
 
             AcceptorStateChange(Fix.State.LoggedOn);
@@ -896,14 +896,14 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 1)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 1)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logout, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logout, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.Text, string.Format("MsgSeqNum too low, expecting 5 but received 1"))
+                new Fix.Field(FIX_5_0SP2.Fields.Text, string.Format("MsgSeqNum too low, expecting 5 but received 1"))
             });
 
             AcceptorStateChange(Fix.State.Disconnected);
@@ -929,47 +929,47 @@ namespace FixTests
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 2)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 2)
             });
 
             Acceptor.Send(new Fix.Message
             {
-                MsgType = Fix.Dictionary.Messages.Logon.MsgType,
+                MsgType = FIX_5_0SP2.Messages.Logon.MsgType,
                 Fields = {
-                    new Fix.Field(Fix.Dictionary.Fields.HeartBtInt, 30),
-                    new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 5002)
+                    new Fix.Field(FIX_5_0SP2.Fields.HeartBtInt, 30),
+                    new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 5002)
                 }
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 5002)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 5002)
             });
 
             InitiatorStateChange(Fix.State.Resending);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.ResendRequest, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.ResendRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.BeginSeqNo, 1),
-                new Fix.Field(Fix.Dictionary.Fields.EndSeqNo, 5002)
+                new Fix.Field(FIX_5_0SP2.Fields.BeginSeqNo, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.EndSeqNo, 5002)
             });
 
             Acceptor.ValidateMessages = true;
 
             Acceptor.Send(new Fix.Message
             {
-                MsgType = Fix.Dictionary.Messages.SequenceReset.MsgType,
+                MsgType = FIX_5_0SP2.Messages.SequenceReset.MsgType,
                 Fields =
                 {
-                    new Fix.Field(Fix.Dictionary.Fields.NewSeqNo, 5003)
+                    new Fix.Field(FIX_5_0SP2.Fields.NewSeqNo, 5003)
                 }
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.SequenceReset, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.SequenceReset, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.NewSeqNo, 5003)
+                new Fix.Field(FIX_5_0SP2.Fields.NewSeqNo, 5003)
             });
 
             // We can't test Acceptor state because we had validation turned off so it isn't set at all
@@ -1009,9 +1009,9 @@ namespace FixTests
                      CheckSum   (10) - 084
             }
             */
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6246)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 6246)
             });
             /*
             2014-09-01 13:57:40.1385|DEBUG|AwesomO.Execution.FixClient|Outgoing
@@ -1027,9 +1027,9 @@ namespace FixTests
                    HeartBtInt  (108) - 30
             }
             */
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6239)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 6239)
             });
             /*
             2014-09-01 13:57:40.1545|INFO|AwesomO.Execution.FixClient|[GEH_DESK,GATE] 10.132.100.2:65371 Recoverable message sequence error, expected 6243 received 6246 - initiating recovery
@@ -1051,11 +1051,11 @@ namespace FixTests
                     EndSeqNo   (16) - 6246
             }
             */
-            ReceiveAtInitiator(Fix.Dictionary.Messages.ResendRequest, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.ResendRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6240),
-                new Fix.Field(Fix.Dictionary.Fields.BeginSeqNo, 6243),
-                new Fix.Field(Fix.Dictionary.Fields.EndSeqNo, 6246)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 6240),
+                new Fix.Field(FIX_5_0SP2.Fields.BeginSeqNo, 6243),
+                new Fix.Field(FIX_5_0SP2.Fields.EndSeqNo, 6246)
             });
             /*
             2014-09-01 13:57:40.1545|DEBUG|AwesomO.Execution.FixClient|Incoming
@@ -1076,15 +1076,15 @@ namespace FixTests
             */
             var message = new Fix.Message
             {
-                MsgType = Fix.Dictionary.Messages.SequenceReset.MsgType,
+                MsgType = FIX_5_0SP2.Messages.SequenceReset.MsgType,
                 Fields =
                 {
-                    new Fix.Field(Fix.Dictionary.Fields.NewSeqNo, 6247),
-                    new Fix.Field(Fix.Dictionary.Fields.PossDupFlag, true),
-                    new Fix.Field(Fix.Dictionary.Fields.GapFillFlag, true)
+                    new Fix.Field(FIX_5_0SP2.Fields.NewSeqNo, 6247),
+                    new Fix.Field(FIX_5_0SP2.Fields.PossDupFlag, true),
+                    new Fix.Field(FIX_5_0SP2.Fields.GapFillFlag, true)
                 }
             };
-            message.Fields.Set(new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6243));
+            message.Fields.Set(new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 6243));
 
             Initiator.Send(message, false);
             /*
@@ -1093,12 +1093,12 @@ namespace FixTests
             2014-09-01 13:57:40.1545|INFO|AwesomO.Execution.FixClient|[GEH_DESK,GATE] 10.132.100.2:65371 Resend complete
             2014-09-01 13:57:40.1545|INFO|AwesomO.Execution.FixClient|[GEH_DESK,GATE] 10.132.100.2:65371 Transiton from state Resending to state LoggedOn
             */
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.SequenceReset, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.SequenceReset, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6243),
-                new Fix.Field(Fix.Dictionary.Fields.NewSeqNo, 6247),
-                new Fix.Field(Fix.Dictionary.Fields.PossDupFlag, true),
-                new Fix.Field(Fix.Dictionary.Fields.GapFillFlag, true)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 6243),
+                new Fix.Field(FIX_5_0SP2.Fields.NewSeqNo, 6247),
+                new Fix.Field(FIX_5_0SP2.Fields.PossDupFlag, true),
+                new Fix.Field(FIX_5_0SP2.Fields.GapFillFlag, true)
             });
 
             AcceptorStateChange(Fix.State.LoggedOn);
@@ -1117,13 +1117,13 @@ namespace FixTests
             */
             message = new Fix.Message
             {
-                MsgType = Fix.Dictionary.Messages.TestRequest.MsgType,
+                MsgType = FIX_5_0SP2.Messages.TestRequest.MsgType,
                 Fields =
                 {
-                    new Fix.Field(Fix.Dictionary.Fields.TestReqID, 3118)
+                    new Fix.Field(FIX_5_0SP2.Fields.TestReqID, 3118)
                 }
             };
-            message.Fields.Set(new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6241));
+            message.Fields.Set(new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 6241));
 
             Acceptor.Send(message);
             /*
@@ -1144,22 +1144,22 @@ namespace FixTests
             */
             message = new Fix.Message
             {
-                MsgType = Fix.Dictionary.Messages.SequenceReset.MsgType,
+                MsgType = FIX_5_0SP2.Messages.SequenceReset.MsgType,
                 Fields =
                 {
-                    new Fix.Field(Fix.Dictionary.Fields.NewSeqNo, 6248),
-                    new Fix.Field(Fix.Dictionary.Fields.PossDupFlag, true)
+                    new Fix.Field(FIX_5_0SP2.Fields.NewSeqNo, 6248),
+                    new Fix.Field(FIX_5_0SP2.Fields.PossDupFlag, true)
                 }
             };
-            message.Fields.Set(new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6247));
+            message.Fields.Set(new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 6247));
 
             Initiator.Send(message, false);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.SequenceReset, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.SequenceReset, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6247),
-                new Fix.Field(Fix.Dictionary.Fields.NewSeqNo, 6248),
-                new Fix.Field(Fix.Dictionary.Fields.PossDupFlag, true)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 6247),
+                new Fix.Field(FIX_5_0SP2.Fields.NewSeqNo, 6248),
+                new Fix.Field(FIX_5_0SP2.Fields.PossDupFlag, true)
             });
             /*
             2014-09-01 13:57:40.1545|DEBUG|AwesomO.Execution.FixClient|Incoming
@@ -1177,20 +1177,20 @@ namespace FixTests
             */
             message = new Fix.Message
             {
-                MsgType = Fix.Dictionary.Messages.Heartbeat.MsgType,
+                MsgType = FIX_5_0SP2.Messages.Heartbeat.MsgType,
                 Fields =
                 {
-                    new Fix.Field(Fix.Dictionary.Fields.TestReqID, 3118)
+                    new Fix.Field(FIX_5_0SP2.Fields.TestReqID, 3118)
                 }
             };
-            message.Fields.Set(new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6248));
+            message.Fields.Set(new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 6248));
 
             Initiator.Send(message, false);
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.MsgSeqNum, 6248),
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, 3118)
+                new Fix.Field(FIX_5_0SP2.Fields.MsgSeqNum, 6248),
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, 3118)
             });
 
             Assert.AreEqual(Fix.State.LoggedOn, Acceptor.State);
@@ -1210,18 +1210,18 @@ namespace FixTests
             InitiatorStateChange(Fix.State.LoggingOn);
             AcceptorStateChange(Fix.State.LoggingOn);
 
-            SendFromInitiator(Fix.Dictionary.Messages.NewOrderSingle);
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.NewOrderSingle);
+            SendFromInitiator(FIX_5_0SP2.Messages.NewOrderSingle);
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.NewOrderSingle);
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Reject, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Reject, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.RefSeqNum, 1),
-                new Fix.Field(Fix.Dictionary.Fields.Text, "First message is not a Logon")
+                new Fix.Field(FIX_5_0SP2.Fields.RefSeqNum, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.Text, "First message is not a Logon")
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logout, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logout, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.Text, "First message is not a Logon")
+                new Fix.Field(FIX_5_0SP2.Fields.Text, "First message is not a Logon")
             });
 
             AcceptorStateChange(Fix.State.Disconnected);
@@ -1245,18 +1245,18 @@ namespace FixTests
             InitiatorStateChange(Fix.State.LoggingOn);
             AcceptorStateChange(Fix.State.LoggingOn);
 
-            SendFromInitiator(Fix.Dictionary.Messages.Logon);
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon);
+            SendFromInitiator(FIX_5_0SP2.Messages.Logon);
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon);
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Reject, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Reject, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.RefSeqNum, 1),
-                new Fix.Field(Fix.Dictionary.Fields.Text, "Logon message does not contain a HeartBtInt")
+                new Fix.Field(FIX_5_0SP2.Fields.RefSeqNum, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.Text, "Logon message does not contain a HeartBtInt")
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logout, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logout, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.Text, "Logon message does not contain a HeartBtInt")
+                new Fix.Field(FIX_5_0SP2.Fields.Text, "Logon message does not contain a HeartBtInt")
             });
 
             AcceptorStateChange(Fix.State.Disconnected);
@@ -1280,21 +1280,21 @@ namespace FixTests
             InitiatorStateChange(Fix.State.LoggingOn);
             AcceptorStateChange(Fix.State.LoggingOn);
 
-            SendFromInitiator(Fix.Dictionary.Messages.Logon, new[]
+            SendFromInitiator(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.HeartBtInt, "DODGY")
+                new Fix.Field(FIX_5_0SP2.Fields.HeartBtInt, "DODGY")
             });
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon);
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon);
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Reject, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Reject, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.RefSeqNum, 1),
-                new Fix.Field(Fix.Dictionary.Fields.Text, "DODGY is not a valid numeric HeartBtInt")
+                new Fix.Field(FIX_5_0SP2.Fields.RefSeqNum, 1),
+                new Fix.Field(FIX_5_0SP2.Fields.Text, "DODGY is not a valid numeric HeartBtInt")
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logout, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logout, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.Text, "DODGY is not a valid numeric HeartBtInt")
+                new Fix.Field(FIX_5_0SP2.Fields.Text, "DODGY is not a valid numeric HeartBtInt")
             });
 
             AcceptorStateChange(Fix.State.Disconnected);
@@ -1317,19 +1317,19 @@ namespace FixTests
 
             StandardLogonSequence();
 
-            SendFromInitiator(Fix.Dictionary.Messages.TestRequest, new[]
+            SendFromInitiator(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
 
-            Fix.Message heartbeat = ReceiveAtInitiator(Fix.Dictionary.Messages.Heartbeat, new[]
+            Fix.Message heartbeat = ReceiveAtInitiator(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
 
-            Fix.Field sendingTime = heartbeat.Fields.Find(Fix.Dictionary.Fields.SendingTime);
+            Fix.Field? sendingTime = heartbeat.Fields.Find(FIX_5_0SP2.Fields.SendingTime);
             Assert.IsNotNull(sendingTime);
-            Assert.AreEqual(21, sendingTime.Value.Length);
+            Assert.AreEqual(21, sendingTime?.Value.Length);
         }
 
         [TestMethod]
@@ -1345,19 +1345,19 @@ namespace FixTests
 
             StandardLogonSequence();
 
-            SendFromInitiator(Fix.Dictionary.Messages.TestRequest, new[]
+            SendFromInitiator(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
 
-            Fix.Message heartbeat = ReceiveAtInitiator(Fix.Dictionary.Messages.Heartbeat, new[]
+            Fix.Message heartbeat = ReceiveAtInitiator(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.TestReqID, "TEST")
+                new Fix.Field(FIX_5_0SP2.Fields.TestReqID, "TEST")
             });
 
-            Fix.Field sendingTime = heartbeat.Fields.Find(Fix.Dictionary.Fields.SendingTime);
+            Fix.Field? sendingTime = heartbeat.Fields.Find(FIX_5_0SP2.Fields.SendingTime);
             Assert.IsNotNull(sendingTime);
-            Assert.AreEqual(17, sendingTime.Value.Length);
+            Assert.AreEqual(17, sendingTime?.Value.Length);
         }
 
         [TestMethod]
@@ -1366,8 +1366,8 @@ namespace FixTests
             var original = new Fix.Session
             {
                 OrderBehaviour = Fix.Behaviour.Initiator,
-                BeginString = Fix.Dictionary.Versions.FIXT_1_1,
-                DefaultApplVerId = Fix.Dictionary.Versions.FIX_5_0,
+                BeginString = Versions.FIXT_1_1,
+                DefaultApplVerId = Versions.FIX_5_0SP2,
                 LogonBehaviour = Fix.Behaviour.Initiator,
                 SenderCompId = "SENDER",
                 TargetCompId = "TARGET",
@@ -1384,8 +1384,8 @@ namespace FixTests
             var clone = (Fix.Session)original.Clone();
 
             clone.OrderBehaviour = Fix.Behaviour.Acceptor;
-            clone.BeginString = Fix.Dictionary.Versions.FIX_4_2;
-            clone.DefaultApplVerId = Fix.Dictionary.Versions.FIX_4_2;
+            clone.BeginString = Versions.FIX_4_2;
+            clone.DefaultApplVerId = Versions.FIX_4_2;
             clone.LogonBehaviour = Fix.Behaviour.Acceptor;
             clone.SenderCompId = "INITIATOR";
             clone.TargetCompId = "ACCEPTOR";
@@ -1399,8 +1399,8 @@ namespace FixTests
             clone.AutoSendingTime = false;
 
             Assert.AreEqual(Fix.Behaviour.Initiator, original.OrderBehaviour);
-            Assert.AreEqual(Fix.Dictionary.Versions.FIXT_1_1, original.BeginString);
-            Assert.AreEqual(Fix.Dictionary.Versions.FIX_5_0, original.DefaultApplVerId);
+            Assert.AreEqual(Versions.FIXT_1_1, original.BeginString);
+            Assert.AreEqual(Versions.FIX_5_0SP2, original.DefaultApplVerId);
             Assert.AreEqual(Fix.Behaviour.Initiator, original.LogonBehaviour);
             Assert.AreEqual("SENDER", original.SenderCompId);
             Assert.AreEqual("TARGET", original.TargetCompId);
@@ -1414,8 +1414,8 @@ namespace FixTests
             Assert.AreEqual(true, original.AutoSendingTime);
 
             Assert.AreEqual(Fix.Behaviour.Acceptor, clone.OrderBehaviour);
-            Assert.AreEqual(Fix.Dictionary.Versions.FIX_4_2, clone.BeginString);
-            Assert.AreEqual(Fix.Dictionary.Versions.FIX_4_2, clone.DefaultApplVerId);
+            Assert.AreEqual(Versions.FIX_4_2, clone.BeginString);
+            Assert.AreEqual(Versions.FIX_4_2, clone.DefaultApplVerId);
             Assert.AreEqual(Fix.Behaviour.Acceptor, clone.LogonBehaviour);
             Assert.AreEqual("INITIATOR", clone.SenderCompId);
             Assert.AreEqual("ACCEPTOR", clone.TargetCompId);
@@ -1435,8 +1435,8 @@ namespace FixTests
             var original = new Fix.PersistentSession
             {
                 OrderBehaviour = Fix.Behaviour.Initiator,
-                BeginString = Fix.Dictionary.Versions.FIXT_1_1,
-                DefaultApplVerId = Fix.Dictionary.Versions.FIX_5_0,
+                BeginString = Versions.FIXT_1_1,
+                DefaultApplVerId = Versions.FIX_5_0SP2,
                 LogonBehaviour = Fix.Behaviour.Initiator,
                 SenderCompId = "SENDER",
                 TargetCompId = "TARGET",
@@ -1454,8 +1454,8 @@ namespace FixTests
             var clone = (Fix.PersistentSession)original.Clone();
 
             clone.OrderBehaviour = Fix.Behaviour.Acceptor;
-            clone.BeginString = Fix.Dictionary.Versions.FIX_4_2;
-            clone.DefaultApplVerId = Fix.Dictionary.Versions.FIX_4_2;
+            clone.BeginString = Versions.FIX_4_2;
+            clone.DefaultApplVerId = Versions.FIX_4_2;
             clone.LogonBehaviour = Fix.Behaviour.Acceptor;
             clone.SenderCompId = "INITIATOR";
             clone.TargetCompId = "ACCEPTOR";
@@ -1470,8 +1470,8 @@ namespace FixTests
             clone.FileName = @"D:\other\path\file.session";
 
             Assert.AreEqual(Fix.Behaviour.Initiator, original.OrderBehaviour);
-            Assert.AreEqual(Fix.Dictionary.Versions.FIXT_1_1, original.BeginString);
-            Assert.AreEqual(Fix.Dictionary.Versions.FIX_5_0, original.DefaultApplVerId);
+            Assert.AreEqual(Versions.FIXT_1_1, original.BeginString);
+            Assert.AreEqual(Versions.FIX_5_0SP2, original.DefaultApplVerId);
             Assert.AreEqual(Fix.Behaviour.Initiator, original.LogonBehaviour);
             Assert.AreEqual("SENDER", original.SenderCompId);
             Assert.AreEqual("TARGET", original.TargetCompId);
@@ -1486,8 +1486,8 @@ namespace FixTests
             Assert.AreEqual(@"C:\some\path\file.session", original.FileName);
 
             Assert.AreEqual(Fix.Behaviour.Acceptor, clone.OrderBehaviour);
-            Assert.AreEqual(Fix.Dictionary.Versions.FIX_4_2, clone.BeginString);
-            Assert.AreEqual(Fix.Dictionary.Versions.FIX_4_2, clone.DefaultApplVerId);
+            Assert.AreEqual(Versions.FIX_4_2, clone.BeginString);
+            Assert.AreEqual(Versions.FIX_4_2, clone.DefaultApplVerId);
             Assert.AreEqual(Fix.Behaviour.Acceptor, clone.LogonBehaviour);
             Assert.AreEqual("INITIATOR", clone.SenderCompId);
             Assert.AreEqual("ACCEPTOR", clone.TargetCompId);

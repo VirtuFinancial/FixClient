@@ -26,7 +26,7 @@ namespace FixClient
         readonly ToolStripMenuItem _pauseMenuItem;
         readonly ToolStripMenuItem _stopMenuItem;
 
-        Session _session;
+        Session? _session;
         //Fix.OrderGenerator _generator;
 
         public GeneratorPanel()
@@ -97,19 +97,19 @@ namespace FixClient
             UpdateUiState();
         }
 
-        static void StopButtonClick(object sender, EventArgs e)
+        static void StopButtonClick(object? sender, EventArgs e)
         {
         }
 
-        static void PauseButtonClick(object sender, EventArgs e)
+        static void PauseButtonClick(object? sender, EventArgs e)
         {
         }
 
-        static void StartButtonClick(object sender, EventArgs e)
+        static void StartButtonClick(object? sender, EventArgs e)
         {
         }
 
-        public void UpdateUiState()
+        public static void UpdateUiState()
         {
             /*
             bool enabled = true;
@@ -128,12 +128,12 @@ namespace FixClient
             */
         }
 
-        void Reload()
-        {
-            UpdateUiState();
-        }
+        //void Reload()
+        //{
+        //    UpdateUiState();
+        //}
 
-        public Session Session
+        public Session? Session
         {
             get
             {

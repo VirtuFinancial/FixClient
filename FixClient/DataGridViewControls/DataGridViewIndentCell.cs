@@ -29,6 +29,7 @@ namespace FixClient
             new SolidBrush(Color.FromArgb(120, 120, 120)),
         };
 
+        /* TODO
         protected override void Paint(Graphics graphics, Rectangle clipBounds, Rectangle cellBounds, int rowIndex,
                                       DataGridViewElementStates cellState, object value, object formattedValue, string errorText,
                                       DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle,
@@ -52,5 +53,6 @@ namespace FixClient
             rect.Inflate(-(rect.Width / 3) + 1, 0);
             graphics.FillRectangle(brush, rect);
         }
+        */
     }
 }

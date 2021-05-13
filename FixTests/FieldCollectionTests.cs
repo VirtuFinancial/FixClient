@@ -9,9 +9,9 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using static Fix.Dictionary;
 
 namespace FixTests
 {
@@ -39,37 +39,37 @@ namespace FixTests
             Assert.AreEqual(11, Collection.Count);
         }
 
-        Fix.FieldCollection Collection { get; set; }
+        Fix.FieldCollection Collection { get; set; } = new Fix.FieldCollection();
 
         [TestMethod]
         [ExpectedException(typeof(IndexOutOfRangeException))]
         public void TestFindFromByTagWithNegativeIndex()
         {
-            Collection.FindFrom(Fix.Dictionary.Fields.BeginString.Tag, -1);
+            Collection.FindFrom(FIX_5_0SP2.Fields.BeginString.Tag, -1);
         }
 
         [TestMethod]
         [ExpectedException(typeof(IndexOutOfRangeException))]
         public void TestFindFromByTagWithIndexOffTheEnd()
         {
-            Collection.FindFrom(Fix.Dictionary.Fields.BeginString.Tag, 11);
+            Collection.FindFrom(FIX_5_0SP2.Fields.BeginString.Tag, 11);
         }
 
         [TestMethod]
         public void TestFindFromRefByTag()
         {
             int index = 0;
-            Fix.Field field = Collection.FindFrom(Fix.Dictionary.Fields.BeginString.Tag, ref index);
+            Fix.Field? field = Collection.FindFrom(FIX_5_0SP2.Fields.BeginString.Tag, ref index);
             Assert.AreEqual(0, index);
             Assert.IsNotNull(field);
-            Assert.AreEqual(8, field.Tag);
-            Assert.AreEqual("FIX.4.0", field.Value);
+            Assert.AreEqual(8, field?.Tag);
+            Assert.AreEqual("FIX.4.0", field?.Value);
             index = 1;
-            field = Collection.FindFrom(Fix.Dictionary.Fields.BeginString.Tag, ref index);
+            field = Collection.FindFrom(FIX_5_0SP2.Fields.BeginString.Tag, ref index);
             Assert.AreEqual(-1, index);
             Assert.IsNull(field);
             index = 0;
-            field = Collection.FindFrom(Fix.Dictionary.Fields.TargetCompID.Tag, ref index);
+            field = Collection.FindFrom(FIX_5_0SP2.Fields.TargetCompID.Tag, ref index);
             Assert.AreEqual(4, index);
             Assert.IsNotNull(field);
         }
@@ -77,11 +77,11 @@ namespace FixTests
         [TestMethod]
         public void TestFindFromByTag()
         {
-            Fix.Field field = Collection.FindFrom(Fix.Dictionary.Fields.BeginString.Tag, 0);
+            Fix.Field? field = Collection.FindFrom(FIX_5_0SP2.Fields.BeginString.Tag, 0);
             Assert.IsNotNull(field);
-            Assert.AreEqual(8, field.Tag);
-            Assert.AreEqual("FIX.4.0", field.Value);
-            field = Collection.FindFrom(Fix.Dictionary.Fields.BeginString.Tag, 1);
+            Assert.AreEqual(8, field?.Tag);
+            Assert.AreEqual("FIX.4.0", field?.Value);
+            field = Collection.FindFrom(FIX_5_0SP2.Fields.BeginString.Tag, 1);
             Assert.IsNull(field);
         }
 
@@ -89,13 +89,13 @@ namespace FixTests
         public void TestFindFromFirstRefByDefinition()
         {
             int index = 0;
-            Fix.Field field = Collection.FindFrom(Fix.Dictionary.Fields.BeginString, ref index);
+            Fix.Field? field = Collection.FindFrom(FIX_5_0SP2.Fields.BeginString, ref index);
             Assert.AreEqual(0, index);
             Assert.IsNotNull(field);
-            Assert.AreEqual(8, field.Tag);
-            Assert.AreEqual("FIX.4.0", field.Value);
+            Assert.AreEqual(8, field?.Tag);
+            Assert.AreEqual("FIX.4.0", field?.Value);
             index = 1;
-            field = Collection.FindFrom(Fix.Dictionary.Fields.BeginString, ref index);
+            field = Collection.FindFrom(FIX_5_0SP2.Fields.BeginString, ref index);
             Assert.AreEqual(-1, index);
             Assert.IsNull(field);
         }
@@ -103,48 +103,48 @@ namespace FixTests
         [TestMethod]
         public void TestFindFromFirstByDefinition()
         {
-            Fix.Field field = Collection.FindFrom(Fix.Dictionary.Fields.BeginString, 0);
+            Fix.Field? field = Collection.FindFrom(FIX_5_0SP2.Fields.BeginString, 0);
             Assert.IsNotNull(field);
-            Assert.AreEqual(8, field.Tag);
-            Assert.AreEqual("FIX.4.0", field.Value);
-            field = Collection.FindFrom(Fix.Dictionary.Fields.BeginString, 1);
+            Assert.AreEqual(8, field?.Tag);
+            Assert.AreEqual("FIX.4.0", field?.Value);
+            field = Collection.FindFrom(FIX_5_0SP2.Fields.BeginString, 1);
             Assert.IsNull(field);
         }
 
         [TestMethod]
         public void TestFindFirstByTag()
         {
-            Fix.Field field = Collection.Find(Fix.Dictionary.Fields.BeginString.Tag);
+            Fix.Field? field = Collection.Find(FIX_5_0SP2.Fields.BeginString.Tag);
             Assert.IsNotNull(field);
-            Assert.AreEqual(8, field.Tag);
-            Assert.AreEqual("FIX.4.0", field.Value);
+            Assert.AreEqual(8, field?.Tag);
+            Assert.AreEqual("FIX.4.0", field?.Value);
         }
 
         [TestMethod]
         public void TestFindFirstByDefinition()
         {
-            Fix.Field field = Collection.Find(Fix.Dictionary.Fields.BeginString);
+            Fix.Field? field = Collection.Find(FIX_5_0SP2.Fields.BeginString);
             Assert.IsNotNull(field);
-            Assert.AreEqual(8, field.Tag);
-            Assert.AreEqual("FIX.4.0", field.Value);
+            Assert.AreEqual(8, field?.Tag);
+            Assert.AreEqual("FIX.4.0", field?.Value);
         }
 
         [TestMethod]
         public void TestFindLastByTag()
         {
-            Fix.Field field = Collection.Find(Fix.Dictionary.Fields.CheckSum.Tag);
+            Fix.Field? field = Collection.Find(FIX_5_0SP2.Fields.CheckSum.Tag);
             Assert.IsNotNull(field);
-            Assert.AreEqual(10, field.Tag);
-            Assert.AreEqual("128", field.Value);
+            Assert.AreEqual(10, field?.Tag);
+            Assert.AreEqual("128", field?.Value);
         }
 
         [TestMethod]
         public void TestFindLastByDefinition()
         {
-            Fix.Field field = Collection.Find(Fix.Dictionary.Fields.CheckSum);
+            Fix.Field? field = Collection.Find(FIX_5_0SP2.Fields.CheckSum);
             Assert.IsNotNull(field);
-            Assert.AreEqual(10, field.Tag);
-            Assert.AreEqual("128", field.Value);
+            Assert.AreEqual(10, field?.Tag);
+            Assert.AreEqual("128", field?.Value);
         }
 
         [TestMethod]
@@ -160,7 +160,7 @@ namespace FixTests
         public void TestRemove()
         {
             Assert.AreEqual("ITGHK", Collection[3].Value);
-            Collection.Remove(Fix.Dictionary.Fields.SenderCompID);
+            Collection.Remove(FIX_5_0SP2.Fields.SenderCompID);
             Assert.AreEqual(10, Collection.Count);
             Assert.AreEqual("KODIAK_KGEHVWAP", Collection[3].Value);
         }

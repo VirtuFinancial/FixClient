@@ -67,7 +67,7 @@ namespace FixClient
             public bool AutoAllocId { get; set; }
         }
 
-        Session _session;
+        Session? _session;
         readonly MessageOptions _options = new();
         readonly PropertyGrid _propertyGrid;
 
@@ -83,7 +83,8 @@ namespace FixClient
                 SelectedObject = _options
             };
             _propertyGrid.PropertyValueChanged += PropertyGridPropertyValueChanged;
-            _propertyGrid.Layout += (sender, ev) => MoveSplitter(_propertyGrid, 190);
+            
+            //_propertyGrid.Layout += (sender, ev) => MoveSplitter(_propertyGrid, 190);
 
             var panel1 = new BorderHidingPanel(_propertyGrid) { Dock = DockStyle.Fill };
 
@@ -92,8 +93,8 @@ namespace FixClient
             UpdateUiState();
         }
 
-        static void MoveSplitter(PropertyGrid propertyGrid, int x)
-        {
+        //static void MoveSplitter(PropertyGrid propertyGrid, int x)
+        //{
             /* TODO
             object propertyGridView = typeof(PropertyGrid).InvokeMember("gridView", 
                                                                         BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance, 
@@ -106,11 +107,17 @@ namespace FixClient
                                                     propertyGridView, 
                                                     new object[] { x });
             */
-        }
+        //}
 
         void PropertyGridPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
+            if (_session is null)
+            {
+                return;
+            }
+
             var value = (bool)e.ChangedItem.Value;
+            
             switch (e.ChangedItem.Label)
             {
                 case "MsgSeqNum":
@@ -144,22 +151,26 @@ namespace FixClient
             _session.Write();
         }
 
-        public Session Session
+        public Session? Session
         {
             get { return _session; }
             set
             {
                 _session = value;
 
-                _options.AutoAllocId = _session.AutoAllocId;
-                _options.AutoClOrdId = _session.AutoClOrdId;
-                _options.AutoListId = _session.AutoListId;
-                _options.AutoListSeqNo = _session.AutoListSeqNo;
-                _options.AutoNoOrders = _session.AutoNoOrders;
-                _options.AutoSendingTime = _session.AutoSendingTime;
-                _options.AutoSetMsgSeqNum = _session.AutoSetMsgSeqNum;
-                _options.AutoTotNoOrders = _session.AutoTotNoOrders;
-                _options.AutoTransactTime = _session.AutoTransactTime;
+                if (_session is not null)
+                {
+                    _options.AutoAllocId = _session.AutoAllocId;
+                    _options.AutoClOrdId = _session.AutoClOrdId;
+                    _options.AutoListId = _session.AutoListId;
+                    _options.AutoListSeqNo = _session.AutoListSeqNo;
+                    _options.AutoNoOrders = _session.AutoNoOrders;
+                    _options.AutoSendingTime = _session.AutoSendingTime;
+                    _options.AutoSetMsgSeqNum = _session.AutoSetMsgSeqNum;
+                    _options.AutoTotNoOrders = _session.AutoTotNoOrders;
+                    _options.AutoTransactTime = _session.AutoTransactTime;
+                }
+
                 UpdateUiState();
             }
         }

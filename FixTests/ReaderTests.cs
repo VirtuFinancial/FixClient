@@ -9,13 +9,13 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Text;
+using static Fix.Dictionary;
 
 namespace FixTests
 {
@@ -68,9 +68,10 @@ namespace FixTests
 
             FieldsEqual(expected, message);
 
-            Assert.AreEqual(Fix.Dictionary.FIX_4_0.Messages.Email.MsgType, message.MsgType);
+            Assert.AreEqual(FIX_5_0SP2.Messages.Email.MsgType, message.MsgType);
         }
 
+        /*
         [TestMethod]
         public void TestReadKodiakOrderWave()
         {
@@ -116,7 +117,9 @@ namespace FixTests
 
             Assert.AreEqual(Fix.Dictionary.FIX_4_0.Messages.KodiakWaveOrder.MsgType, message.MsgType);
         }
+        */
 
+        /*
         [TestMethod]
         public void TestReadKodiakExecutionReport()
         {
@@ -159,6 +162,7 @@ namespace FixTests
 
             //Assert.AreEqual(Fix.Dictionary.FIX_4_0.Messages.KodiakOrderWave, message.MsgType);
         }
+        */
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]

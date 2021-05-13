@@ -37,12 +37,12 @@ namespace FixClient
             _controlPanel.Controls.Add(_checkBox);
         }
 
-        void CheckBoxCheckedChanged(object sender, EventArgs e)
+        void CheckBoxCheckedChanged(object? sender, EventArgs e)
         {
             CheckChanged?.Invoke(sender, e);
         }
 
-        public event EventHandler CheckChanged;
+        public event EventHandler? CheckChanged;
 
         public bool Checked
         {

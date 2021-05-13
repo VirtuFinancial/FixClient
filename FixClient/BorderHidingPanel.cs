@@ -30,7 +30,7 @@ namespace FixClient
             SizeChanged += BorderHidingPanelSizeChanged;
         }
 
-        void BorderHidingPanelSizeChanged(object sender, EventArgs e)
+        void BorderHidingPanelSizeChanged(object? sender, EventArgs e)
         {
             if (_control != null)
             {

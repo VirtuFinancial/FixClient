@@ -9,30 +9,17 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace FixClient
 {
     static class StringExtensions
     {
-        public static IEnumerable<string> SplitInParts(this string s, int partLength)
+        public static string SplitInParts(this string stringToSplit, int maximumLineLength)
         {
-            if (s == null)
-                throw new ArgumentNullException(nameof(s));
-
-            if (partLength <= 0)
-                throw new ArgumentException("Part length has to be positive.", nameof(partLength));
-
-            int length;
-            for (var i = 0; i < s.Length; i += length)
-            {
-                int next = i + Math.Min(partLength, s.Length - i);
-                while (next < s.Length && s[next++] != ' ') { }
-                length = next - i;
-                yield return s.Substring(i, length);
-            }
+            return Regex.Replace(stringToSplit, @"(.{1," + maximumLineLength + @"})(?:\s|$)", "$1\n");
         }
     }
 }

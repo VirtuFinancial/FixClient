@@ -9,10 +9,10 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.IO;
 using System.Text;
+using static Fix.Dictionary;
 
 namespace Fix
 {
@@ -32,7 +32,7 @@ namespace Fix
 
         public delegate void MessageDelegate(object sender, MessageEvent e);
 
-        public event MessageDelegate MessageRead;
+        public event MessageDelegate? MessageRead;
 
         protected void OnMessageRead(Message message)
         {
@@ -79,9 +79,9 @@ namespace Fix
             }
         }
 
-        public Message ReadLine()
+        public Message? ReadLine()
         {
-            Message message = null;
+            Message? message = null;
             try
             {
                 char direction = ReadChar();
@@ -115,7 +115,7 @@ namespace Fix
 
         public void Read(Message message)
         {
-            Field previous = null;
+            Field? previous = null;
 
             for (long index = 0; ; ++index)
             {
@@ -134,14 +134,14 @@ namespace Fix
                     _tag.Append(token);
                 }
 
-                Dictionary.Field definition = null;
+                VersionField? definition = null;
 
                 if (ValidateDataFields &&
-                    Dictionary.Fields.TryGetValue(_tag.ToString(), out definition) &&
+                    FIX_5_0SP2.Fields.TryGetValue(int.Parse(_tag.ToString()), out definition) &&
                     definition != null &&
-                    definition.DataType == Dictionary.DataTypes.Data)
+                    definition.DataType == FIX_5_0SP2.DataTypes.data.Name)
                 {
-                    if (previous == null)
+                    if (previous is null)
                     {
                         throw new Exception($"Encountered a data type field at index {index} [{definition.Tag}] with no previous field");
                     }
@@ -152,8 +152,12 @@ namespace Fix
                     }
 
                     byte[] bytes = new byte[dataLength];
+
                     if (ReadChars(bytes, 0, bytes.Length) != bytes.Length)
+                    {
                         throw new EndOfStreamException();
+                    }
+
                     _value.Append(Convert.ToBase64String(bytes));
 
                     char trailing = ReadChar();
@@ -184,12 +188,12 @@ namespace Fix
 
                 var field = new Field(_tag.ToString(), _value.ToString())
                 {
-                    Data = definition != null && definition.DataType == Dictionary.DataTypes.Data
+                    Data = definition != null && definition.DataType == FIX_5_0SP2.DataTypes.data.Name
                 };
 
                 message.Fields.Add(field);
 
-                if (field.Tag == Dictionary.Fields.CheckSum.Tag)
+                if (field.Tag == FIX_5_0SP2.Fields.CheckSum.Tag)
                     break;
 
                 previous = field;

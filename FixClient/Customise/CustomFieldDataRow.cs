@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System.Data;
 
 namespace FixClient
@@ -21,6 +20,6 @@ namespace FixClient
         {
         }
 
-        public CustomField Field { get; set; }
+        public CustomField? Field { get; set; }
     }
 }

@@ -24,7 +24,7 @@ namespace Fix.Parsers
         // (11:44:31.07700) IN 8=FIX.4.2^A9=72^A35=A^A49=FIX_CLIENT^A56=FIX_ENGINE^A34=12^A52=20110114-00:44:30^A98=0^A108=60^A10=090^A
         // (11:44:31.86800) OUT 8=FIX.4.2^A9=75^A35=A^A34=1^A49=FIX_ENGINE^A56=FIX_CLIENT^A52=20110114-00:44:31.868^A98=0^A108=60^A10=000^A
         //
-        protected override Message ParseMessage(TextReader reader)
+        protected override Message? ParseMessage(TextReader reader)
         {
             string direction;
             string body = string.Empty;
@@ -33,7 +33,7 @@ namespace Fix.Parsers
             {
                 try
                 {
-                    string line = reader.ReadLine();
+                    var line = reader.ReadLine();
 
                     if (string.IsNullOrEmpty(line))
                         return null;

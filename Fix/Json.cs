@@ -38,19 +38,22 @@ namespace Fix
                 return objectType == typeof(Fix.Dictionary.Version);
             }
 
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
             {
                 if (reader.TokenType != JsonToken.String)
                 {
                     throw new JsonSerializationException($"Unexpected token {reader.TokenType} when parsing Fix.Dictionary.Version.");
                 }
 
-                string value = reader.Value.ToString();
+                if (reader.Value?.ToString() is string value)
+                {
+                    return (from version in _versions where version.BeginString == value select version).FirstOrDefault();
+                }
 
-                return (from version in _versions where version.BeginString == value select version).FirstOrDefault();
+                return null;
             }
 
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
             {
                 if (value == null)
                 {

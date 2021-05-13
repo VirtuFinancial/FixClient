@@ -19,7 +19,7 @@ namespace FixClient
 {
     partial class FiltersPanel : FixClientPanel
     {
-        Session _session;
+        Session? _session;
 
         readonly FilterMessageDataGridView _messageGrid;
         readonly FilterFieldDataGridView _fieldGrid;
@@ -200,44 +200,77 @@ namespace FixClient
             UpdateUiState();
         }
 
-        void MessageGridCellContentClick(object sender, DataGridViewCellEventArgs e)
+        void MessageGridCellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             if (e.RowIndex < 0)
+            {
                 return;
+            }
+
             if (_messageGrid.Columns[e.ColumnIndex].Name != FilterMessageDataTable.ColumnVisible)
+            {
                 return;
+            }
+
             DataRowView view = _messageView[e.RowIndex];
             DataRow dataRow = view.Row;
+
             if (dataRow == null)
+            {
                 return;
+            }
+
             var visible = (bool)dataRow[FilterMessageDataTable.ColumnVisible];
             var msgType = (string)dataRow[FilterMessageDataTable.ColumnMsgType];
             dataRow[FilterMessageDataTable.ColumnVisible] = !visible;
             Session.MessageVisible(msgType, !visible);
         }
 
-        void FieldGridCellContentClick(object sender, DataGridViewCellEventArgs e)
+        void FieldGridCellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             if (e.RowIndex < 0)
+            {
                 return;
+            }
+
             if (_fieldGrid.Columns[e.ColumnIndex].Name != FilterFieldDataTable.ColumnVisible)
+            {
                 return;
+            }
+
             DataRowView view = _fieldView[e.RowIndex];
             DataRow dataRow = view.Row;
+
             if (dataRow == null)
+            {
                 return;
-            Fix.Dictionary.Message message = SelectedMessage;
-            if (message == null)
+            }
+
+            if (SelectedMessage is not Fix.Dictionary.Message message)
+            { 
                 return;
+            }
+
             var visible = (bool)dataRow[FilterFieldDataTable.ColumnVisible];
             var tag = (int)dataRow[FilterFieldDataTable.ColumnTag];
             dataRow[FilterFieldDataTable.ColumnVisible] = !visible;
             Session.FieldVisible(message.MsgType, tag, !visible);
         }
 
-        void FieldSearchTextBoxTextChanged(object sender, EventArgs e)
+        void FieldSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
-            string search = null;
+            string? search = null;
+            
             if (string.IsNullOrEmpty(_fieldSearchTextBox.Text))
             {
                 _fieldView.Sort = string.Empty;
@@ -255,9 +288,15 @@ namespace FixClient
             _fieldSearchTextBox.Focus();
         }
 
-        void MessageSearchTextBoxTextChanged(object sender, EventArgs e)
+        void MessageSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
-            string search = null;
+            if (Session is null)
+            {
+                return;
+            }
+
+            string? search = null;
+            
             if (string.IsNullOrEmpty(_messageSearchTextBox.Text))
             {
                 _messageView.Sort = string.Empty;
@@ -269,30 +308,36 @@ namespace FixClient
                                        FilterMessageDataTable.ColumnMsgType,
                                        FilterMessageDataTable.ColumnName);
             }
+
             _messageGrid.RowCount = 0;
-            _messageView.RowFilter = _session.MessageRowFilter(search);
+            _messageView.RowFilter = Session.MessageRowFilter(search);
             _messageGrid.RowCount = _messageView.Count;
             _messageSearchTextBox.Focus();
         }
 
-        void MessageGridCellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        void MessageGridCellValueNeeded(object? sender, DataGridViewCellValueEventArgs e)
         {
             e.Value = _messageView[e.RowIndex][e.ColumnIndex];
         }
 
-        void FieldGridCellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        void FieldGridCellValueNeeded(object? sender, DataGridViewCellValueEventArgs e)
         {
             e.Value = _fieldView[e.RowIndex][e.ColumnIndex];
         }
 
         void SetAllMessagesVisibility(bool visible)
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             try
             {
-                Session.AutoWriteFilters = false;
+                //Session.AutoWriteFilters = false;
                 _messageTable.BeginLoadData();
 
-                string msgType = null;
+                string? msgType = null;
 
                 foreach (DataRow row in _messageTable.Rows)
                 {
@@ -310,20 +355,28 @@ namespace FixClient
             {
                 _messageTable.EndLoadData();
                 _messageGrid.Refresh();
-                Session.AutoWriteFilters = true;
+                //Session.AutoWriteFilters = true;
                 Session.WriteFilters();
             }
         }
 
         void SetAllFieldsVisibility(bool visible)
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             try
             {
-                Session.AutoWriteFilters = false;
+                //Session.AutoWriteFilters = false;
                 _fieldTable.BeginLoadData();
-                Fix.Dictionary.Message message = SelectedMessage;
-                if (message == null)
+
+                if (SelectedMessage is not Fix.Dictionary.Message message)
+                {
                     return;
+                }
+
                 foreach (DataRow row in _fieldTable.Rows)
                 {
                     var tag = (int)row[FilterFieldDataTable.ColumnTag];
@@ -335,12 +388,12 @@ namespace FixClient
             {
                 _fieldTable.EndLoadData();
                 _fieldGrid.Refresh();
-                Session.AutoWriteFilters = true;
+                //Session.AutoWriteFilters = true;
                 Session.WriteFilters();
             }
         }
 
-        Fix.Dictionary.Message SelectedMessage
+        Fix.Dictionary.Message? SelectedMessage
         {
             get
             {
@@ -359,18 +412,23 @@ namespace FixClient
             }
         }
 
-        void MessageGridSelectionChanged(object sender, EventArgs e)
+        void MessageGridSelectionChanged(object? sender, EventArgs e)
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             try
             {
                 _fieldGrid.RowCount = 0;
                 _fieldTable.BeginLoadData();
                 _fieldTable.Clear();
 
-                Fix.Dictionary.Message message = SelectedMessage;
-
-                if (message == null)
+                if (SelectedMessage is not Fix.Dictionary.Message message)
+                {
                     return;
+                }
 
                 foreach (var field in message.Fields)
                 {
@@ -389,7 +447,7 @@ namespace FixClient
             }
         }
 
-        public Session Session
+        public Session? Session
         {
             get { return _session; }
             set
@@ -422,6 +480,11 @@ namespace FixClient
 
         void LoadMessages()
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             try
             {
                 _messageGrid.RowCount = 0;

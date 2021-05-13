@@ -74,7 +74,7 @@ namespace FixPerformanceTest
                     {
                         try
                         {
-                            Fix.Message message = reader.ReadLine();
+                            Fix.Message? message = reader.ReadLine();
 
                             if (message == null)
                                 break;

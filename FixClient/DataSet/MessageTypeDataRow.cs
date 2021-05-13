@@ -21,6 +21,6 @@ namespace FixClient
         {
         }
 
-        public Fix.Dictionary.Message Message { get; set; }
+        public Fix.Dictionary.Message? Message { get; set; }
     }
 }

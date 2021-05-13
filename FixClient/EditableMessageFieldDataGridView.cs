@@ -9,11 +9,11 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using static Fix.Dictionary;
 
 namespace FixClient
 {
@@ -26,7 +26,7 @@ namespace FixClient
             InitializeComponent();
         }
 
-        public Fix.Message Message { get; set; }
+        public Fix.Message? Message { get; set; }
 
         protected override void OnDataError(bool displayErrorDialogIfNoHandler, DataGridViewDataErrorEventArgs e)
         {
@@ -38,16 +38,19 @@ namespace FixClient
 
         protected override void OnEditingControlShowing(DataGridViewEditingControlShowingEventArgs e)
         {
-            if (e.Control as ComboBox == null)
+            if (e.Control is not ComboBox comboBox)
+            {
                 return;
-            (e.Control as ComboBox).DrawMode = DrawMode.OwnerDrawFixed;
-            (e.Control as ComboBox).DrawItem -= ComboBoxDrawItem;
-            (e.Control as ComboBox).DrawItem += ComboBoxDrawItem;
-            (e.Control as ComboBox).DropDownClosed -= ComboBoxDropDownClosed;
-            (e.Control as ComboBox).DropDownClosed += ComboBoxDropDownClosed;
+            }
+
+            comboBox.DrawMode = DrawMode.OwnerDrawFixed;
+            comboBox.DrawItem -= ComboBoxDrawItem;
+            comboBox.DrawItem += ComboBoxDrawItem;
+            comboBox.DropDownClosed -= ComboBoxDropDownClosed;
+            comboBox.DropDownClosed += ComboBoxDropDownClosed;
         }
 
-        void ComboBoxDropDownClosed(object sender, EventArgs e)
+        void ComboBoxDropDownClosed(object? sender, EventArgs e)
         {
             if (sender is ComboBox comboBox)
             {
@@ -55,7 +58,7 @@ namespace FixClient
             }
         }
 
-        void ComboBoxDrawItem(object sender, DrawItemEventArgs e)
+        void ComboBoxDrawItem(object? sender, DrawItemEventArgs e)
         {
             if (e.Index < 0)
                 return;
@@ -75,11 +78,15 @@ namespace FixClient
             if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
             {
                 if (comboBox.Items[e.Index] is not EnumDescription enumDescription)
+                {
                     return;
-                string description = ToolTipForCell(CurrentCell.RowIndex, CurrentCell.ColumnIndex, Convert.ToChar(enumDescription.Value));
+                }
+
+                var tooltipText = $"{enumDescription.Value} - {enumDescription.Description}".SplitInParts(100);
+
                 Point position = comboBox.PointToClient(Cursor.Position);
                 position.Y += 40;
-                _toolTip.Show(description, comboBox, position);
+                _toolTip.Show(tooltipText, comboBox, position);
             }
             else
             {
@@ -96,11 +103,18 @@ namespace FixClient
             // is not an enumeration.
             //
             if (Columns[e.ColumnIndex].Name != FieldDataTable.ColumnDescription)
+            {
                 return;
+            }
 
-            Fix.Field field = FieldAtIndex(e.RowIndex);
+            if (FieldAtIndex(e.RowIndex) is not Fix.Field field)
+            {
+                return;
+            }
 
-            if (field.Definition == null || field.Definition.EnumeratedType == null)
+            var definition = FIX_5_0SP2.Fields[field.Tag];
+
+            if (definition == null || definition.Values.Count == 0)
             {
                 e.Cancel = true;
             }
@@ -119,42 +133,37 @@ namespace FixClient
         {
             for (int index = e.RowIndex; index < e.RowIndex + e.RowCount; ++index)
             {
-                Fix.Field field = FieldAtIndex(index);
-
-                if (field == null || field.Definition == null)
+                if (FieldAtIndex(index) is not Fix.Field field)
+                {
                     continue;
+                }
 
-                Type enumType = field.Definition.EnumeratedType;
+                var definition = FIX_5_0SP2.Fields[field.Tag];
 
-                if (enumType == null)
+                if (definition == null)
+                {
                     continue;
+                }
+
+                if (definition.Values.Count == 0)
+                {
+                    continue;
+                }
 
                 DataGridViewRow row = Rows[index];
 
                 if (row.Cells[FieldDataTable.ColumnDescription] is DataGridViewComboBoxCell cell)
                 {
-                    var collection = new EnumDescriptionCollection(enumType);
+                    var collection = new EnumDescriptionCollection(definition);
                     cell.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
                     cell.ReadOnly = false;
                     cell.DataSource = collection;
 
-                    if (EnumTypeHasNumericValues(enumType))
+                    if (field.Value != null && definition.Values.TryGetValue(field.Value, out var valueDefinition))
                     {
-                        if (int.TryParse(field.Value, out int value))
-                        {
-                            InternalChange = true;
-                            cell.Value = new EnumDescription(Enum.GetName(enumType, value), value);
-                            InternalChange = false;
-                        }
-                    }
-                    else
-                    {
-                        if (char.TryParse(field.Value, out char value))
-                        {
-                            InternalChange = true;
-                            cell.Value = new EnumDescription(Enum.GetName(enumType, value), value);
-                            InternalChange = false;
-                        }
+                        InternalChange = true;
+                        cell.Value = new EnumDescription(valueDefinition.Name, field.Value, valueDefinition.Description);
+                        InternalChange = false;
                     }
                 }
             }
@@ -162,39 +171,47 @@ namespace FixClient
 
         bool InternalChange { get; set; }
 
-        static bool EnumTypeHasNumericValues(Type enumType)
-        {
-            // TODO - we need a better way of doing type equality for version specific enums against the global definitions
-            return enumType.Name == typeof(Fix.TrdType).Name ||
-                   enumType.Name == typeof(Fix.SessionStatus).Name;
-        }
-
         protected override void OnCellValueChanged(DataGridViewCellEventArgs e)
         {
             if (InternalChange)
+            {
                 return;
+            }
 
             if (Message == null)
+            {
                 return;
+            }
 
             DataGridViewColumn column = Columns[e.ColumnIndex];
             DataGridViewRow row = Rows[e.RowIndex];
 
             if (row.DataBoundItem is not DataRowView rowView)
+            {
                 return;
+            }
 
             if (rowView.Row is not FieldDataRow dataRow)
+            {
                 return;
+            }
             //
             // We need to get the index of the row in the underlying table not the view as the view
             // may have been filtered.
             //
             var view = DataSource as DataView;
-            DataTable table = view.Table;
+            
+            if (view?.Table is not DataTable table)
+            {
+                return;
+            }
+
             int index = table.Rows.IndexOf(dataRow);
 
-            Fix.Field field = dataRow.Field;
-            Type enumType = field.Definition?.EnumeratedType;
+            if (dataRow.Field is not Fix.Field field)
+            {
+                return;
+            }
 
             if (column.Name == FieldDataTable.ColumnDescription)
             {
@@ -202,23 +219,8 @@ namespace FixClient
                 // The user has selected an item in a combo box for an field with an enumerated value so
                 // update the source field as well.
                 //
-                object raw = CurrentCell.Value;
-                string converted = CurrentCell.Value.ToString();
-
-                if (EnumTypeHasNumericValues(enumType))
-                {
-                    converted = Convert.ToInt32(CurrentCell.Value).ToString(System.Globalization.CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    if (raw is int)
-                    {
-                        converted = (Convert.ToChar(Convert.ToInt32(CurrentCell.Value))).ToString(System.Globalization.CultureInfo.InvariantCulture);
-                    }
-                }
-
-                dataRow[FieldDataTable.ColumnValue] = converted;
-                Message.Fields[index].Value = converted;
+                dataRow[FieldDataTable.ColumnValue] = (string)CurrentCell.Value;
+                Message.Fields[index].Value = (string)CurrentCell.Value;
                 return;
             }
 
@@ -227,18 +229,20 @@ namespace FixClient
 
             DataGridViewCell cell = row.Cells[FieldDataTable.ColumnValue];
 
-            string value = cell.Value == null ? "" : cell.Value.ToString().Trim();
+            string value = (cell.Value?.ToString() ?? "").Trim();
 
-            if (!string.IsNullOrEmpty(value) && field.Definition != null)
+            var definition = FIX_5_0SP2.Fields[field.Tag];
+
+            if (!string.IsNullOrEmpty(value) && definition != null)
             {
-                if (field.Definition.DataType == Fix.Dictionary.DataTypes.Int ||
-                    field.Definition.DataType == Fix.Dictionary.DataTypes.Length ||
-                    field.Definition.DataType == Fix.Dictionary.DataTypes.SeqNum)
+                if (definition.DataType == FIX_5_0SP2.DataTypes.Int.Name ||
+                    definition.DataType == FIX_5_0SP2.DataTypes.Length.Name ||
+                    definition.DataType == FIX_5_0SP2.DataTypes.SeqNum.Name)
                 {
                     if (!int.TryParse(value, out var _))
                     {
                         MessageBox.Show(this,
-                                        string.Format("{0} must be an integer", field.Definition.Name),
+                                        string.Format("{0} must be an integer", definition.Name),
                                         Application.ProductName,
                                         MessageBoxButtons.OK,
                                         MessageBoxIcon.Information);
@@ -252,60 +256,40 @@ namespace FixClient
             //
             // The bodylength changes whenever the message fields change so update it.
             //
-            if (field.Tag == Fix.Dictionary.Fields.BodyLength.Tag)
+            if (field.Tag == FIX_5_0SP2.Fields.BodyLength.Tag)
                 return;
 
             foreach (DataGridViewRow r in Rows)
             {
                 var rv = r.DataBoundItem as DataRowView;
-                dataRow = rv.Row as FieldDataRow;
 
-                if (dataRow.Field.Tag == Fix.Dictionary.Fields.BodyLength.Tag)
+                if (rv?.Row is FieldDataRow fieldDataRow)
                 {
-                    dataRow[FieldDataTable.ColumnValue] = Message.ComputeBodyLength();
-                    break;
+                    if (fieldDataRow.Field?.Tag == FIX_5_0SP2.Fields.BodyLength.Tag)
+                    {
+                        fieldDataRow[FieldDataTable.ColumnValue] = Message.ComputeBodyLength();
+                        break;
+                    }
                 }
             }
             //
             // Enumerated values such as 'OrderSingle.Side' have a description.
             //
-            if (field.Definition == null)
+            if (definition == null)
                 return;
 
             if (row.Cells[FieldDataTable.ColumnDescription] is not DataGridViewComboBoxCell comboCell)
                 return;
 
-            if (CurrentCell != null && CurrentCell.Value != DBNull.Value && enumType != null)
+            if (CurrentCell != null && CurrentCell.Value != DBNull.Value && definition.Values.Count > 0)
             {
                 comboCell.DisplayStyle = DataGridViewComboBoxDisplayStyle.DropDownButton;
                 comboCell.FlatStyle = FlatStyle.Flat;
                 comboCell.ReadOnly = false;
-                comboCell.DataSource = new EnumDescriptionCollection(enumType);
+                comboCell.DataSource = new EnumDescriptionCollection(definition);
                 comboCell.ValueMember = FieldDataTable.ColumnValue;
-                comboCell.DisplayMember = FieldDataTable.ColumnDescription;
-
-                if (EnumTypeHasNumericValues(enumType))
-                {
-                    if (int.TryParse(CurrentCell.Value.ToString(), out int i))
-                    {
-                        comboCell.Value = i;
-                    }
-                    else
-                    {
-                        comboCell.Value = null;
-                    }
-                }
-                else
-                {
-                    if (char.TryParse(CurrentCell.Value.ToString(), out char c))
-                    {
-                        comboCell.Value = Convert.ToInt32(c);
-                    }
-                    else
-                    {
-                        comboCell.Value = null;
-                    }
-                }
+                comboCell.DisplayMember = FieldDataTable.ColumnName;
+                comboCell.Value = CurrentCell.Value;
             }
             else
             {

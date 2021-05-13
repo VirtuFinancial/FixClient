@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 
 namespace FixClient
 {
@@ -41,18 +42,18 @@ namespace FixClient
         public delegate void ResetDelegate(object sender, EventArgs e);
         public delegate void CustomFieldDelegate(object sender, CustomFieldEventArgs e);
 
-        public event ResetDelegate SessionReset;
-        public event ResetDelegate MessagesReset;
-        public event CustomFieldDelegate CustomFieldAdded;
+        public event ResetDelegate? SessionReset;
+        public event ResetDelegate? MessagesReset;
+        public event CustomFieldDelegate? CustomFieldAdded;
 
         protected void OnMessagesReset()
         {
-            MessagesReset?.Invoke(this, null);
+            MessagesReset?.Invoke(this, EventArgs.Empty);
         }
 
         protected void OnSessionReset()
         {
-            SessionReset?.Invoke(this, null);
+            SessionReset?.Invoke(this, EventArgs.Empty);
         }
 
         protected void OnCustomFieldAdded(CustomField field)
@@ -70,16 +71,16 @@ namespace FixClient
             UpdateReadonlyAttributes();
 
             _messageFilters = new Dictionary<string, bool>();
-            Reading = true;
-            AutoWriteFilters = true;
-            Reading = false;
+            //Reading = true;
+            //AutoWriteFilters = true;
+            //Reading = false;
 
             Messages.MessageAdded += (sender, ev) =>
             {
                 OrderBook.Process(ev.Message);
             };
 
-            Messages.Reset += (sender, ev) =>
+            Messages.Reset += sender =>
             {
                 OrderBook.Clear(_retain);
             };
@@ -109,9 +110,9 @@ namespace FixClient
             AutoAllocId = session.AutoAllocId;
             AutoScrollMessages = session.AutoScrollMessages;
             OrderBook = new Fix.OrderBook();
-            Reading = true; // Disable the filter write if AutoWrite == true
-            AutoWriteFilters = session.AutoWriteFilters;
-            Reading = false;
+            //Reading = true; // Disable the filter write if AutoWrite == true
+            //AutoWriteFilters = session.AutoWriteFilters;
+            //Reading = false;
             PasteDefineCustomFields = session.PasteDefineCustomFields;
             PasteFilterEmptyFields = session.PasteFilterEmptyFields;
             PasteSmart = session.PasteSmart;
@@ -286,7 +287,7 @@ namespace FixClient
 
         public override void UpdateReadonlyAttributes()
         {
-            SetReadOnly("DefaultApplVerId", BeginString.BeginString != Fix.Dictionary.Versions.FIXT_1_1.BeginString);
+            SetReadOnly("DefaultApplVerId", BeginString.BeginString != "FIXT.1.1");
             SetReadOnly("BindHost", Behaviour == Fix.Behaviour.Acceptor);
             SetReadOnly("BindPort", Behaviour == Fix.Behaviour.Acceptor);
             SetReadOnly("NextClOrdId", OrderBehaviour == Fix.Behaviour.Acceptor);
@@ -352,7 +353,7 @@ namespace FixClient
 
         public override Fix.Message MessageForTemplate(Fix.Dictionary.Message templateMessage)
         {
-            if (!_messageTemplates.TryGetValue(templateMessage.MsgType, out Fix.Message message))
+            if (!_messageTemplates.TryGetValue(templateMessage.MsgType, out Fix.Message? message))
             {
                 message = base.MessageForTemplate(templateMessage);
 
@@ -371,9 +372,12 @@ namespace FixClient
 
         public void ResetTemplateMessage(string msgType)
         {
-            if (_messageTemplates.TryGetValue(msgType, out Fix.Message template))
+            if (_messageTemplates.TryGetValue(msgType, out Fix.Message? template))
             {
-                Fix.Dictionary.Message definition = template.Definition;
+                if (template.Definition is not Fix.Dictionary.Message definition)
+                {
+                    return;
+                }
 
                 template.Fields.Clear();
 
@@ -424,23 +428,25 @@ namespace FixClient
         public delegate void MessageFilterDelegate(object sender, EventArgs e);
         public delegate void FieldFilterDelegate(object sender, EventArgs e);
 
-        public event MessageFilterDelegate MessageFilterChanged;
-        public event FieldFilterDelegate FieldFilterChanged;
+        public event MessageFilterDelegate? MessageFilterChanged;
+        public event FieldFilterDelegate? FieldFilterChanged;
 
         protected void OnMessageFilterChanged()
         {
-            MessageFilterChanged?.Invoke(this, null);
-            WriteFilters();
+            MessageFilterChanged?.Invoke(this, EventArgs.Empty);
+            // This cannot happen automatically
+            //WriteFilters();
         }
 
         protected void OnFieldFilterChanged()
         {
-            if (!AutoWriteFilters)
-                return;
+            //if (!AutoWriteFilters)
+            //    return;
 
-            FieldFilterChanged?.Invoke(this, null);
+            FieldFilterChanged?.Invoke(this, EventArgs.Empty);
 
-            WriteFilters();
+            // This cannot happen automatically
+            //WriteFilters();
         }
 
         public void MessageVisible(string msgType, bool visible, bool raiseEvent = true)
@@ -464,7 +470,7 @@ namespace FixClient
 
         public Dictionary<int, bool> FieldFilters(string msgType)
         {
-            if (!_fieldFilters.TryGetValue(msgType, out Dictionary<int, bool> filters))
+            if (!_fieldFilters.TryGetValue(msgType, out Dictionary<int, bool>? filters))
             {
                 filters = new Dictionary<int, bool>();
                 _fieldFilters[msgType] = filters;
@@ -481,12 +487,13 @@ namespace FixClient
                 _fieldFilters[msgType] = filters;
             }
             _fieldFilters[msgType][tag] = visible;
-            OnFieldFilterChanged();
+            // TODO
+            //OnFieldFilterChanged();
         }
 
         public bool FieldVisible(string msgType, int tag)
         {
-            if (!_fieldFilters.TryGetValue(msgType, out Dictionary<int, bool> filters))
+            if (!_fieldFilters.TryGetValue(msgType, out var filters))
             {
                 return true;
             }
@@ -499,7 +506,7 @@ namespace FixClient
             return visible;
         }
 
-        public string FieldRowFilter(string msgType, string searchString = null)
+        public string? FieldRowFilter(string msgType, string? searchString = null)
         {
             var expression = new StringBuilder(string.Format("{0} NOT IN (", FieldDataTable.ColumnTag));
 
@@ -515,7 +522,9 @@ namespace FixClient
             }
 
             if (!items)
+            {
                 return searchString;
+            }
 
             expression.Append(')');
 
@@ -529,7 +538,7 @@ namespace FixClient
             return result;
         }
 
-        public string MessageRowFilter(string searchString = null)
+        public string? MessageRowFilter(string? searchString = null)
         {
             var expression = new StringBuilder();
 
@@ -545,7 +554,9 @@ namespace FixClient
             }
 
             if (!items)
+            {
                 return searchString;
+            }
 
             string result = searchString ?? expression.ToString();
 
@@ -570,26 +581,35 @@ namespace FixClient
         public override void Read()
         {
             base.Read();
-            Reading = true;
+            //Reading = true;
             ReadTemplates();
             ReadFilters();
             ReadCustomFields();
-            Reading = false;
+            //Reading = false;
         }
 
         void ReadCustomFields()
         {
             int errors = 0;
+
             try
             {
                 if (!File.Exists(CustomFieldsFileName))
+                {
                     return;
+                }
 
                 using var stream = new FileStream(CustomFieldsFileName, FileMode.Open);
                 using var sr = new StreamReader(stream);
                 using var reader = new JsonTextReader(sr);
+                
                 JObject filters = JObject.Load(reader);
-                JToken fields = filters["Fields"];
+                
+                if (filters["Fields"] is not JToken fields)
+                {
+                    return;
+                }
+
                 foreach (var field in fields)
                 {
                     try
@@ -598,8 +618,8 @@ namespace FixClient
                         {
 
                             Tag = Convert.ToInt32(field["Tag"]),
-                            Name = field["Name"].ToString()
-                        });
+                            Name = field["Name"]?.ToString() ?? string.Empty
+                        }); ;
                     }
                     catch (Exception ex)
                     {
@@ -623,8 +643,8 @@ namespace FixClient
 
         public void WriteCustomFields()
         {
-            if (Reading)
-                return;
+            //if (Reading)
+            //    return;
 
             using FileStream stream = new(CustomFieldsFileName, FileMode.Create);
             using JsonWriter writer = new JsonTextWriter(new StreamWriter(stream));
@@ -650,13 +670,21 @@ namespace FixClient
             try
             {
                 if (!File.Exists(FiltersFileName))
+                {
                     return;
+                }
 
                 using var stream = new FileStream(FiltersFileName, FileMode.Open);
                 using var sr = new StreamReader(stream);
                 using var reader = new JsonTextReader(sr);
+                
                 JObject filters = JObject.Load(reader);
-                JToken messages = filters["Messages"];
+                
+                if (filters["Messages"] is not JToken messages)
+                {
+                    return;
+                }
+
                 foreach (var item in messages)
                 {
                     foreach (Fix.Dictionary.Message message in Version.Messages)
@@ -668,18 +696,40 @@ namespace FixClient
                         }
                     }
                 }
-                JToken fields = filters["Fields"];
+                
+                if (filters["Fields"] is not JToken fields)
+                {
+                    return;
+                }
+
                 foreach (var entry in fields)
                 {
-                    var property = (JProperty)entry.First;
-                    Fix.Dictionary.Message message = Version.Messages.FirstOrDefault(item => item.Name == property.Name);
-                    if (message == null)
-                        continue;
-                    foreach (string fieldEntry in (JArray)property.Value)
+                    if (entry.First is not JProperty property)
                     {
-                        Fix.Dictionary.Field field = message.Fields.FirstOrDefault(item => item.Name == fieldEntry);
-                        if (field == null)
+                        continue;
+                    }
+
+                    Fix.Dictionary.Message? message = Version.Messages.FirstOrDefault(item => item.Name == property.Name);
+
+                    if (message == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (string? fieldEntry in (JArray)property.Value)
+                    {
+                        if (fieldEntry is null)
+                        {
                             continue;
+                        }
+
+                        var field = message.Fields.FirstOrDefault(item => item.Name == fieldEntry);
+
+                        if (field == null)
+                        {
+                            continue;
+                        }
+
                         FieldVisible(message.MsgType, field.Tag, false);
                     }
                 }
@@ -690,6 +740,7 @@ namespace FixClient
             }
         }
 
+        /*
         bool _autoWriteFilters;
 
         [Browsable(false)]
@@ -705,15 +756,32 @@ namespace FixClient
                 }
             }
         }
+        */
 
         public void WriteFilters()
         {
-            if (Reading || !AutoWriteFilters)
-                return;
+            //if (Reading || !AutoWriteFilters)
+            //    return;
+
+            // TODO - This is SLOW
+            // Possible Improvements
+            // 1. If a message has no filters applied either way then don't store it.
+            // 2. Only store feild tags not the names.
+            // 3. Store the fields we are keeping not the fields we are hiding
+            //      - How does this play with the filter view? It's good for the messages view.
+            //      - Maybe provide both as options and have a flag to show which format. 
+            //          - Messages view shows keepers
+            //          - Filters view shows losers
 
             using FileStream stream = new(FiltersFileName, FileMode.Create);
-            using JsonWriter writer = new JsonTextWriter(new StreamWriter(stream));
-            writer.Formatting = Formatting.Indented;
+       
+            var options = new JsonWriterOptions()
+            {
+                Indented = true,
+                SkipValidation = true
+            };
+            
+            using var writer = new Utf8JsonWriter(stream, options);
             writer.WriteStartObject();
             writer.WritePropertyName("Messages");
             writer.WriteStartArray();
@@ -721,7 +789,10 @@ namespace FixClient
             {
                 if (!filter.Value)
                 {
-                    writer.WriteValue(Version.Messages[filter.Key].Name);
+                    if (Version.Messages[filter.Key]?.Name is string value)
+                    {
+                        writer.WriteStringValue(value);
+                    }
                 }
             }
             writer.WriteEndArray();
@@ -730,18 +801,28 @@ namespace FixClient
             foreach (var filter in _fieldFilters)
             {
                 if (filter.Value.Count == 0 || filter.Value.All(field => field.Value))
+                {
                     continue;
+                }
+
+                if (Version.Messages[filter.Key]?.Name is not string name)
+                {
+                    continue;
+                }
+
                 writer.WriteStartObject();
-                writer.WritePropertyName(Version.Messages[filter.Key].Name);
+                writer.WritePropertyName(name);
                 writer.WriteStartArray();
+                
                 foreach (var field in filter.Value)
                 {
-                    if (field.Value)
+                    if (!field.Value)
                         continue;
-                    if (Version.Fields.TryGetValue(field.Key.ToString(), out var fieldDefinition))
-                    {
-                        writer.WriteValue(Version.Fields[field.Key.ToString()].Name);
-                    }
+                    //if (Version.Fields.TryGetValue(field.Key.ToString(), out var fieldDefinition))
+                    //{
+                    //writer.WriteValue(Version.Fields[field.Key.ToString()].Name);
+                    //}
+                    writer.WriteNumberValue(field.Key);
                 }
                 writer.WriteEndArray();
                 writer.WriteEndObject();
@@ -762,9 +843,11 @@ namespace FixClient
                 {
                     try
                     {
-                        Fix.Message template = reader.ReadLine();
-                        if (template == null)
+                        if (reader.ReadLine() is not Fix.Message template)
+                        {
                             break;
+                        }
+
                         template.Definition = Version.Messages[template.MsgType];
                         _messageTemplates[template.MsgType] = template;
                     }

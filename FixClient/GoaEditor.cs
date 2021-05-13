@@ -22,7 +22,7 @@ namespace FixClient
             goaTextBox.KeyPress += GoaTextBoxKeyPress;
         }
 
-        void GoaTextBoxKeyPress(object sender, KeyPressEventArgs e)
+        void GoaTextBoxKeyPress(object? sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == '\x02')
             {

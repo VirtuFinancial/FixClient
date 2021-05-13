@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzers>false</RunAnalyzers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Fix.Common/Fix.Common.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OrchestrationFiles Include="..\orchestrations\*.xml"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <OutputFiles Include="Generated\FIX_4_2_DataTypes.cs"/>
+    <OutputFiles Include="Generated\FIX_4_2_Fields.cs"/>
+    <OutputFiles Include="Generated\FIX_4_2_Messages.cs"/>
+    <OutputFiles Include="Generated\FIX_4_4_DataTypes.cs"/>
+    <OutputFiles Include="Generated\FIX_4_4_Fields.cs"/>
+    <OutputFiles Include="Generated\FIX_4_4_Messages.cs"/>
+    <OutputFiles Include="Generated\FIX_5_0SP2_DataTypes.cs"/>
+    <OutputFiles Include="Generated\FIX_5_0SP2_Fields.cs"/>
+    <OutputFiles Include="Generated\FIX_5_0SP2_Messages.cs"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="@(OutputFiles)" />
+  </ItemGroup>
+
+  <Target Name="RunLexicographer" BeforeTargets="BeforeBuild" Inputs="@(OrchestrationFiles)" Outputs="@(OutputFiles)">
+    <MakeDir Directories="$(MSBuildProjectDirectory)/Generated" />
+    <Exec Command="python ../../Fix.Lexicographer/lexicographer.py --namespace FIX_4_2 --prefix FIX_4_2_ --orchestration ../../orchestrations/fix_repository_4_2.xml" WorkingDirectory="$(MSBuildProjectDirectory)/Generated" />
+    <Exec Command="python ../../Fix.Lexicographer/lexicographer.py --namespace FIX_4_4 --prefix FIX_4_4_ --orchestration ../../orchestrations/fix_repository_4_4.xml" WorkingDirectory="$(MSBuildProjectDirectory)/Generated" />
+    <Exec Command="python ../../Fix.Lexicographer/lexicographer.py --namespace FIX_5_0SP2 --prefix FIX_5_0SP2_ --orchestration ../../orchestrations/fix_repository_5_0SP2_EP258.xml" WorkingDirectory="$(MSBuildProjectDirectory)/Generated" />
+  </Target>
+
+  <Target Name="Cleanup" AfterTargets="AfterClean">
+    <ItemGroup>
+        <GeneratedFiles Include="Generated\**\*.*" />
+    </ItemGroup>
+    <Delete Files="@(GeneratedFiles)" /> 
+    <RemoveDir Directories="Generated" />
+  </Target>
+
+
+</Project>

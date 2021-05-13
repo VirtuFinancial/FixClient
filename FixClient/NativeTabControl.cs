@@ -26,13 +26,15 @@ namespace FixClient
         {
             if ((m.Msg == TCM_ADJUSTRECT))
             {
-                var rc = (RECT)m.GetLParam(typeof(RECT));
-                //Adjust these values to suit, dependant upon Appearance 
-                rc.Left += AdjustPadding.Left;
-                rc.Right += AdjustPadding.Right;
-                rc.Top += AdjustPadding.Top;
-                rc.Bottom += AdjustPadding.Bottom;
-                Marshal.StructureToPtr(rc, m.LParam, true);
+                if (m.GetLParam(typeof(RECT)) is RECT rc)
+                {
+                    //Adjust these values to suit, dependant upon Appearance 
+                    rc.Left += AdjustPadding.Left;
+                    rc.Right += AdjustPadding.Right;
+                    rc.Top += AdjustPadding.Top;
+                    rc.Bottom += AdjustPadding.Bottom;
+                    Marshal.StructureToPtr(rc, m.LParam, true);
+                }
             }
             base.WndProc(ref m);
         }

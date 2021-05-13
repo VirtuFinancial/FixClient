@@ -9,10 +9,10 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using static Fix.Dictionary;
 
 namespace Fix.Parsers
 {
@@ -31,14 +31,14 @@ namespace Fix.Parsers
         //   BodyLength   (9) - 142
         //      MsgType  (35) - 8
         //
-        string _leftOvers;
-        Dictionary.Version _version;
+        string? _leftOvers;
+        Dictionary.Version? _version;
 
         protected bool ParseBody(TextReader reader, Message message)
         {
             while (true)
             {
-                string line = string.IsNullOrEmpty(_leftOvers) ? reader.ReadLine() : _leftOvers;
+                var line = string.IsNullOrEmpty(_leftOvers) ? reader.ReadLine() : _leftOvers;
                 _leftOvers = null;
 
                 if (line == null)
@@ -57,9 +57,9 @@ namespace Fix.Parsers
 
                 // If we haven't loaded a version yet or if the version has changed. The version is unlikely to change but sometimes
                 // in dev/testing this happens.
-                if (tag == Dictionary.Fields.BeginString.Tag && (_version == null || _version.BeginString != value))
+                if (tag == FIX_5_0SP2.Fields.BeginString.Tag && (_version == null || _version.BeginString != value))
                 {
-                    _version = value == Dictionary.Versions.FIXT_1_1.BeginString ? Dictionary.Versions.Default : Dictionary.Versions[value];
+                    _version = value == "FIXT_1_1" ? Versions.Default : Versions[value];
                 }
 
                 //
@@ -69,23 +69,23 @@ namespace Fix.Parsers
                 // types so we don't remove text with embedded '-' characters in Text
                 // fields etc.
                 //
-                Dictionary.Field field;
+                VersionField field;
 
                 if (_version == null)
                 {
-                    Dictionary.Fields.TryGetValue(tag, out field);
+                    FIX_5_0SP2.Fields.TryGetValue(tag, out field);
                 }
                 else
                 {
                     _version.Fields.TryGetValue(tag, out field);
 
-                    if (field == null && _version == Dictionary.Versions.FIXT_1_1)
+                    if (field == null && _version.BeginString == "FIXT_1_1")
                     {
 
                     }
                 }
-
-                if (field != null && (field.EnumeratedType != null || field.Tag == Dictionary.Fields.MsgType.Tag))
+                
+                if (field != null && (field.Values.Count > 0 || field.Tag == FIX_5_0SP2.Fields.MsgType.Tag))
                 {
                     match = Regex.Match(value, @"\s*([a-zA-Z0-9]+)\s*-");
 
@@ -122,7 +122,7 @@ namespace Fix.Parsers
             return message.Fields.Count > 0;
         }
 
-        protected override Message ParseMessage(TextReader reader)
+        protected override Message? ParseMessage(TextReader reader)
         {
             var message = new Message();
 
@@ -154,7 +154,7 @@ namespace Fix.Parsers
 
             while (true)
             {
-                string line = reader.ReadLine();
+                string? line = reader.ReadLine();
 
                 if (line == null)
                     return false;

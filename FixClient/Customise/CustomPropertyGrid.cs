@@ -80,11 +80,18 @@ namespace FixClient
                     if ((keyData & Keys.Shift) == Keys.Shift)
                     {
                         foundIndex--;
+
                         if (foundIndex < 0)
                         {
                             foundIndex = items.Count - 1;
                         }
-                        SelectedGridItem = (GridItem)items[foundIndex];
+
+                        if (items[foundIndex] is GridItem item)
+                        {
+
+                            SelectedGridItem = item;
+                        }
+
                         if (ExpandOnTab && (SelectedGridItem.GridItems.Count > 0))
                         {
                             SelectedGridItem.Expanded = false;
@@ -93,11 +100,17 @@ namespace FixClient
                     else
                     {
                         foundIndex++;
+
                         if (foundIndex >= items.Count)
                         {
                             foundIndex = 0;
                         }
-                        SelectedGridItem = (GridItem)items[foundIndex];
+
+                        if (items[foundIndex] is GridItem item)
+                        {
+                            SelectedGridItem = item;
+                        }
+
                         if (ExpandOnTab && (SelectedGridItem.GridItems.Count > 0))
                         {
                             SelectedGridItem.Expanded = true;

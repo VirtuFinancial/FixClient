@@ -3,14 +3,15 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Version>4.0.0</Version>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <ProjectReference Include="..\Fix.Dictionary\Fix.Dictionary.csproj" />
   </ItemGroup>
-
+  
   <ItemGroup>
-    <ProjectReference Include="..\Dictionary\Dictionary.csproj" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
 </Project>

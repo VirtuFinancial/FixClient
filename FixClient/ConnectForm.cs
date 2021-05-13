@@ -20,12 +20,12 @@ namespace FixClient
 {
     public partial class ConnectForm : Form
     {
-        Timer _timer;
+        Timer? _timer;
         readonly IPEndPoint _endPoint;
         readonly IPEndPoint _bindEndPoint;
         readonly Fix.Behaviour _behaviour;
-        TcpClient _tcpClient;
-        TcpSocketListener _tcpListener;
+        TcpClient? _tcpClient;
+        TcpSocketListener? _tcpListener;
 
         public ConnectForm(IPEndPoint bindEndPoint, IPEndPoint endPoint, Fix.Behaviour behaviour)
         {
@@ -36,9 +36,9 @@ namespace FixClient
             Load += ConnectFormLoad;
         }
 
-        public Stream Stream { get; private set; }
+        public Stream? Stream { get; private set; }
 
-        void ConnectFormLoad(object sender, EventArgs e)
+        void ConnectFormLoad(object? sender, EventArgs e)
         {
             _timer = new Timer { Interval = 100 };
             _timer.Tick += TimerTick;
@@ -62,7 +62,7 @@ namespace FixClient
                                         MessageBoxIcon.Information);
                         DialogResult = DialogResult.Cancel;
                     }
-                    BeginInvoke(new MethodInvoker(Close), new object[] { this, null });
+                    BeginInvoke(new MethodInvoker(Close), new object[] { this, EventArgs.Empty });
                 }, null);
             }
             else
@@ -93,7 +93,7 @@ namespace FixClient
             }
         }
 
-        void TimerTick(object sender, EventArgs e)
+        void TimerTick(object? sender, EventArgs e)
         {
             if (progressBar.Value == progressBar.Maximum)
             {

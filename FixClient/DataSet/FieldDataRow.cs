@@ -21,6 +21,6 @@ namespace FixClient
         {
         }
 
-        public Fix.Field Field { get; set; }
+        public Fix.Field? Field { get; set; }
     }
 }

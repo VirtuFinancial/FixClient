@@ -46,7 +46,7 @@ namespace FixClientTests
             {
                 OrderBehaviour = Fix.Behaviour.Initiator,
                 BeginString = Fix.Dictionary.Versions.FIXT_1_1,
-                DefaultApplVerId = Fix.Dictionary.Versions.FIX_5_0,
+                DefaultApplVerId = Fix.Dictionary.Versions.FIX_5_0SP2,
                 LogonBehaviour = Fix.Behaviour.Initiator,
                 SenderCompId = "SENDER",
                 TargetCompId = "TARGET",
@@ -119,7 +119,7 @@ namespace FixClientTests
 
             Assert.AreEqual(Fix.Behaviour.Initiator, original.OrderBehaviour);
             Assert.AreEqual(Fix.Dictionary.Versions.FIXT_1_1, original.BeginString);
-            Assert.AreEqual(Fix.Dictionary.Versions.FIX_5_0, original.DefaultApplVerId);
+            Assert.AreEqual(Fix.Dictionary.Versions.FIX_5_0SP2, original.DefaultApplVerId);
             Assert.AreEqual(Fix.Behaviour.Initiator, original.LogonBehaviour);
             Assert.AreEqual("SENDER", original.SenderCompId);
             Assert.AreEqual("TARGET", original.TargetCompId);

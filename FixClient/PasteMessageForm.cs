@@ -20,7 +20,7 @@ namespace FixClient
         public PasteMessageForm()
         {
             InitializeComponent();
-            SmartPasteCheckGroupBoxCheckedChanged(this, null);
+            SmartPasteCheckGroupBoxCheckedChanged(this, EventArgs.Empty);
         }
 
         public bool FilterEmptyFields

@@ -9,15 +9,11 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
-#region Using directives
-
 using System;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
-
-#endregion
+using static Fix.Dictionary;
 
 namespace FixClient
 {
@@ -66,7 +62,7 @@ namespace FixClient
         readonly ToolStripMenuItem _rejectMenuItem;
         readonly ToolStripMenuItem _reportMenuItem;
 
-        Session _session;
+        Session? _session;
 
         public OrdersPanel(MessagesPanel messageDefaults, ToolStripButton defaultsButton)
         {
@@ -120,8 +116,7 @@ namespace FixClient
             _listStatusButton = new ToolStripButton
             {
                 Text = "ListStatus",
-                ToolTipText =
-                                            "Request the status of the Order List associated with the selected order"
+                ToolTipText = "Request the status of the Order List associated with the selected order"
             };
             _listStatusButton.Click += ListStatusButtonClick;
 
@@ -283,6 +278,11 @@ namespace FixClient
 
         void ApplyFilters()
         {
+            if (_orderView.Table is null)
+            {
+                return;
+            }
+
             var buffer = new StringBuilder();
 
             string text = _orderSearchTextBox.Text;
@@ -319,7 +319,7 @@ namespace FixClient
             _orderSearchTextBox.Focus();
         }
 
-        void AcknowledgeAllButtonClick(object sender, EventArgs e)
+        void AcknowledgeAllButtonClick(object? sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show(this,
                                                   "This will acknowledge all pending orders, are you sure?",
@@ -333,7 +333,7 @@ namespace FixClient
             AcknowledgeAllPendingOrders();
         }
 
-        void RejectAllButtonClick(object sender, EventArgs e)
+        void RejectAllButtonClick(object? sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show(this,
                                                   "This will reject all pending orders, are you sure?",
@@ -349,46 +349,69 @@ namespace FixClient
 
         void AcknowledgeAllPendingOrders()
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             foreach (DataGridViewRow row in _orderGrid.Rows)
             {
                 try
                 {
                     var view = row.DataBoundItem as DataRowView;
-                    var orderRow = view.Row as OrderDataRow;
+                    var orderRow = view?.Row as OrderDataRow;
+
+                    if (orderRow?.Order is null)
+                    {
+                        continue;
+                    }
+
                     Fix.Order order = orderRow.Order;
 
-                    if (order.OrdStatus != null)
+                    if (order is null)
+                    {
                         continue;
+                    }
 
-                    var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.ExecutionReport.MsgType };
+                    if (order.OrdStatus != null)
+                    {
+                        continue;
+                    }
 
-                    message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, order.ClOrdID);
-                    message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
-                    message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
-                    message.Fields.Set(Fix.Dictionary.Fields.OrderQty, order.OrderQty);
-                    message.Fields.Set(Fix.Dictionary.Fields.OrdStatus, Fix.OrdStatus.New);
+                    var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.ExecutionReport.MsgType };
+
+                    message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, order.ClOrdID);
+
+                    if (order.Side is FieldValue side)
+                    {
+                        message.Fields.Set(order.Side);
+                    }
+
+                    message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
+                    message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, order.OrderQty);
+                    message.Fields.Set(FIX_5_0SP2.OrdStatus.New);
 
                     if (order.OrderID == null)
                     {
                         order.OrderID = Session.NextOrderId.ToString();
                     }
 
-                    message.Fields.Set(Fix.Dictionary.Fields.OrderID, order.OrderID);
-                    message.Fields.Set(Fix.Dictionary.Fields.ExecID, Session.NextExecId.ToString());
-                    message.Fields.Set(Fix.Dictionary.Fields.LastQty, 0);
-                    message.Fields.Set(Fix.Dictionary.Fields.LastPx, 0);
-                    message.Fields.Set(Fix.Dictionary.Fields.CumQty, 0);
-                    message.Fields.Set(Fix.Dictionary.Fields.AvgPx, 0);
+                    message.Fields.Set(FIX_5_0SP2.Fields.OrderID, order.OrderID);
+                    message.Fields.Set(FIX_5_0SP2.Fields.ExecID, Session.NextExecId.ToString());
+                    message.Fields.Set(FIX_5_0SP2.Fields.LastQty, 0);
+                    message.Fields.Set(FIX_5_0SP2.Fields.LastPx, 0);
+                    message.Fields.Set(FIX_5_0SP2.Fields.CumQty, 0);
+                    message.Fields.Set(FIX_5_0SP2.Fields.AvgPx, 0);
 
-                    if (Session.Version.BeginString != Fix.Dictionary.Versions.FIX_4_0.BeginString)
+                    if (Session.Version.BeginString != "FIX.4.0")
                     {
-                        message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.ExecType.New);
-                        message.Fields.Set(Fix.Dictionary.Fields.LeavesQty, order.OrderQty);
+                        message.Fields.Set(FIX_5_0SP2.ExecType.New);
+                        message.Fields.Set(FIX_5_0SP2.Fields.LeavesQty, order.OrderQty);
                     }
 
                     if (Session.Version.BeginString.StartsWith("FIX.4."))
                     {
-                        message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.ExecTransType, Fix.Dictionary.FIX_4_0.ExecTransType.New);
+                        message.Fields.Set(FIX_4_2.ExecTransType.New);
                     }
 
                     Session.Send(message);
@@ -406,46 +429,63 @@ namespace FixClient
 
         void RejectAllPendingOrders()
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             foreach (DataGridViewRow row in _orderGrid.Rows)
             {
                 try
                 {
                     var view = row.DataBoundItem as DataRowView;
-                    var orderRow = view.Row as OrderDataRow;
-                    Fix.Order order = orderRow.Order;
+                    var orderRow = view?.Row as OrderDataRow;
+                    Fix.Order? order = orderRow?.Order;
+
+                    if (order is null)
+                    {
+                        continue;
+                    }
 
                     if (order.OrdStatus != null)
+                    {
                         continue;
+                    }
 
-                    var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.ExecutionReport.MsgType };
+                    var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.ExecutionReport.MsgType };
 
-                    message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, order.ClOrdID);
-                    message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
-                    message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
-                    message.Fields.Set(Fix.Dictionary.Fields.OrderQty, order.OrderQty);
-                    message.Fields.Set(Fix.Dictionary.Fields.OrdStatus, Fix.OrdStatus.Rejected);
+                    message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, order.ClOrdID);
+
+                    if (order.Side is FieldValue side)
+                    {
+                        message.Fields.Set(order.Side);
+                    }
+
+                    message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
+                    message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, order.OrderQty);
+                    message.Fields.Set(FIX_5_0SP2.OrdStatus.Rejected);
 
                     if (order.OrderID == null)
                     {
                         order.OrderID = Session.NextOrderId.ToString();
                     }
 
-                    message.Fields.Set(Fix.Dictionary.Fields.OrderID, order.OrderID);
-                    message.Fields.Set(Fix.Dictionary.Fields.ExecID, Session.NextExecId.ToString());
-                    message.Fields.Set(Fix.Dictionary.Fields.LastQty, 0);
-                    message.Fields.Set(Fix.Dictionary.Fields.LastPx, 0);
-                    message.Fields.Set(Fix.Dictionary.Fields.CumQty, 0);
-                    message.Fields.Set(Fix.Dictionary.Fields.AvgPx, 0);
+                    message.Fields.Set(FIX_5_0SP2.Fields.OrderID, order.OrderID);
+                    message.Fields.Set(FIX_5_0SP2.Fields.ExecID, Session.NextExecId.ToString());
+                    message.Fields.Set(FIX_5_0SP2.Fields.LastQty, 0);
+                    message.Fields.Set(FIX_5_0SP2.Fields.LastPx, 0);
+                    message.Fields.Set(FIX_5_0SP2.Fields.CumQty, 0);
+                    message.Fields.Set(FIX_5_0SP2.Fields.AvgPx, 0);
 
-                    if (Session.Version.BeginString != Fix.Dictionary.Versions.FIX_4_0.BeginString)
+                    if (Session.Version.BeginString != "FIX.4.0")
                     {
-                        message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.ExecType.Rejected);
-                        message.Fields.Set(Fix.Dictionary.Fields.LeavesQty, 0);
+                        message.Fields.Set(FIX_5_0SP2.ExecType.Rejected);
+                        message.Fields.Set(FIX_5_0SP2.Fields.LeavesQty, 0);
                     }
 
                     if (Session.Version.BeginString.StartsWith("FIX.4."))
                     {
-                        message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.ExecTransType, Fix.Dictionary.FIX_4_0.ExecTransType.New);
+                        message.Fields.Set(FIX_4_2.ExecTransType.New);
                     }
 
                     Session.Send(message);
@@ -461,8 +501,13 @@ namespace FixClient
             }
         }
 
-        void CancelAllButtonClick(object sender, EventArgs e)
+        void CancelAllButtonClick(object? sender, EventArgs e)
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             DialogResult result = MessageBox.Show(this,
                 "This will cancel all open orders, are you sure?",
                 Application.ProductName,
@@ -484,50 +529,65 @@ namespace FixClient
 
         void UnsolicitedCancelAllOpenOrders()
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             foreach (DataGridViewRow row in _orderGrid.Rows)
             {
                 try
                 {
                     var view = row.DataBoundItem as DataRowView;
-                    var orderRow = view.Row as OrderDataRow;
-                    Fix.Order order = orderRow.Order;
+                    var orderRow = view?.Row as OrderDataRow;
+                    Fix.Order? order = orderRow?.Order;
 
-                    if (order.OrdStatus == Fix.OrdStatus.Canceled ||
-                        order.OrdStatus == Fix.OrdStatus.Rejected ||
-                        order.OrdStatus == Fix.OrdStatus.DoneForDay)
+                    if (order is null)
                     {
                         continue;
                     }
 
-                    var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.ExecutionReport.MsgType };
+                    if (order.OrdStatus == FIX_5_0SP2.OrdStatus.Canceled ||
+                        order.OrdStatus == FIX_5_0SP2.OrdStatus.Rejected ||
+                        order.OrdStatus == FIX_5_0SP2.OrdStatus.DoneForDay)
+                    {
+                        continue;
+                    }
 
-                    message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, order.ClOrdID);
-                    message.Fields.Set(Fix.Dictionary.Fields.Side, (Fix.Side)order.Side);
-                    message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
-                    message.Fields.Set(Fix.Dictionary.Fields.OrderQty, order.OrderQty);
-                    message.Fields.Set(Fix.Dictionary.Fields.OrdStatus, Fix.OrdStatus.Canceled);
+                    var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.ExecutionReport.MsgType };
+
+                    message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, order.ClOrdID);
+
+                    if (order.Side is FieldValue side)
+                    {
+                        message.Fields.Set(side);
+                    }
+
+                    message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
+                    message.Fields.Set(FIX_5_0SP2.Fields.OrderQty, order.OrderQty);
+                    message.Fields.Set(FIX_5_0SP2.OrdStatus.Canceled);
 
                     if (order.OrderID == null)
                     {
                         order.OrderID = Session.NextOrderId.ToString();
                     }
 
-                    message.Fields.Set(Fix.Dictionary.Fields.OrderID, order.OrderID);
-                    message.Fields.Set(Fix.Dictionary.Fields.ExecID, Session.NextExecId.ToString());
-                    message.Fields.Set(Fix.Dictionary.Fields.LastQty, 0);
-                    message.Fields.Set(Fix.Dictionary.Fields.LastPx, 0);
-                    message.Fields.Set(Fix.Dictionary.Fields.CumQty, order.OrderQty);
-                    message.Fields.Set(Fix.Dictionary.Fields.AvgPx, order.Price ?? 0);
+                    message.Fields.Set(FIX_5_0SP2.Fields.OrderID, order.OrderID);
+                    message.Fields.Set(FIX_5_0SP2.Fields.ExecID, Session.NextExecId.ToString());
+                    message.Fields.Set(FIX_5_0SP2.Fields.LastQty, 0);
+                    message.Fields.Set(FIX_5_0SP2.Fields.LastPx, 0);
+                    message.Fields.Set(FIX_5_0SP2.Fields.CumQty, order.OrderQty);
+                    message.Fields.Set(FIX_5_0SP2.Fields.AvgPx, order.Price ?? 0);
 
-                    if (Session.Version.BeginString != Fix.Dictionary.Versions.FIX_4_0.BeginString)
+                    if (Session.Version.BeginString != "FIX.4.0")
                     {
-                        message.Fields.Set(Fix.Dictionary.Fields.ExecType, Fix.Dictionary.FIX_4_2.ExecType.Canceled);
-                        message.Fields.Set(Fix.Dictionary.Fields.LeavesQty, 0);
+                        message.Fields.Set(FIX_4_2.ExecType.Canceled);
+                        message.Fields.Set(FIX_5_0SP2.Fields.LeavesQty, 0);
                     }
 
                     if (Session.Version.BeginString.StartsWith("FIX.4."))
                     {
-                        message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.ExecTransType, Fix.Dictionary.FIX_4_0.ExecTransType.New);
+                        message.Fields.Set(FIX_4_2.ExecTransType.New);
                     }
 
                     Session.Send(message);
@@ -545,38 +605,53 @@ namespace FixClient
 
         void CancelAllOpenOrders()
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             foreach (DataGridViewRow row in _orderGrid.Rows)
             {
                 try
                 {
                     var view = row.DataBoundItem as DataRowView;
-                    var orderRow = view.Row as OrderDataRow;
-                    Fix.Order order = orderRow.Order;
+                    var orderRow = view?.Row as OrderDataRow;
+                    Fix.Order? order = orderRow?.Order;
 
-                    if (order.OrdStatus == Fix.OrdStatus.Canceled ||
-                        order.OrdStatus == Fix.OrdStatus.Rejected ||
-                        order.OrdStatus == Fix.OrdStatus.DoneForDay)
+                    if (order is null)
+                    {
+                        return;
+                    }
+
+                    if (order.OrdStatus == FIX_5_0SP2.OrdStatus.Canceled ||
+                        order.OrdStatus == FIX_5_0SP2.OrdStatus.Rejected ||
+                        order.OrdStatus == FIX_5_0SP2.OrdStatus.DoneForDay)
                     {
                         continue;
                     }
 
-                    var message = new Fix.Message { MsgType = Fix.Dictionary.Messages.OrderCancelRequest.MsgType };
+                    var message = new Fix.Message { MsgType = FIX_5_0SP2.Messages.OrderCancelRequest.MsgType };
 
                     MessagesPanel.UpdateMessage(message, order);
 
-                    message.Fields.Set(Fix.Dictionary.Fields.TransactTime, Fix.Field.TimeString(_session.MillisecondTimestamps));
-                    message.Fields.Set(Fix.Dictionary.Fields.Side, order.Side.Value);
-                    message.Fields.Set(Fix.Dictionary.Fields.Symbol, order.Symbol);
-                    message.Fields.Set(Fix.Dictionary.Fields.OrigClOrdID, order.ClOrdID);
-                    message.Fields.Set(Fix.Dictionary.Fields.ClOrdID, Session.FormatClOrdId(Session.NextClOrdId++));
+                    message.Fields.Set(FIX_5_0SP2.Fields.TransactTime, Fix.Field.TimeString(Session.MillisecondTimestamps));
+
+                    if (order.Side is FieldValue side)
+                    {
+                        message.Fields.Set(FIX_5_0SP2.Fields.Side, side.Value);
+                    }
+
+                    message.Fields.Set(FIX_5_0SP2.Fields.Symbol, order.Symbol);
+                    message.Fields.Set(FIX_5_0SP2.Fields.OrigClOrdID, order.ClOrdID);
+                    message.Fields.Set(FIX_5_0SP2.Fields.ClOrdID, Session.FormatClOrdId(Session.NextClOrdId++));
                     //
                     // This field was removed from later versions.
                     //
-                    Fix.Field beginString = message.Fields.Find(Fix.Dictionary.Fields.BeginString);
+                    Fix.Field? beginString = message.Fields.Find(FIX_5_0SP2.Fields.BeginString);
 
-                    if (beginString != null && beginString.Value == Fix.Dictionary.Versions.FIX_4_0.BeginString)
+                    if (beginString is not null && beginString.Value == "FIX.4.0")
                     {
-                        message.Fields.Set(Fix.Dictionary.FIX_4_0.Fields.CxlType, "F");
+                        message.Fields.Set(FIX_4_2.Fields.CxlType, "F");
                     }
 
                     Session.Send(message);
@@ -592,12 +667,12 @@ namespace FixClient
             }
         }
 
-        void ListCancelButtonClick(object sender, EventArgs e)
+        void ListCancelButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             if (order.ListID == null)
             {
@@ -613,12 +688,12 @@ namespace FixClient
             _messageDefaults.ListCancel(order.ListID);
         }
 
-        void ListStatusButtonClick(object sender, EventArgs e)
+        void ListStatusButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             if (order.ListID == null)
             {
@@ -634,12 +709,12 @@ namespace FixClient
             _messageDefaults.ListStatus(order.ListID);
         }
 
-        void ListExecuteButtonClick(object sender, EventArgs e)
+        void ListExecuteButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             if (order.ListID == null)
             {
@@ -655,42 +730,42 @@ namespace FixClient
             _messageDefaults.ListExecute(order.ListID);
         }
 
-        void ReportButtonClick(object sender, EventArgs e)
+        void ReportButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             _defaultsButton.PerformClick();
             _messageDefaults.ReportOrder(order);
         }
 
-        void RejectButtonClick(object sender, EventArgs e)
+        void RejectButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             _defaultsButton.PerformClick();
             _messageDefaults.RejectOrder(order);
         }
 
-        void AckButtonClick(object sender, EventArgs e)
+        void AckButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             _defaultsButton.PerformClick();
 
-            if (order.OrdStatus == Fix.OrdStatus.PendingCancel)
+            if (order.OrdStatus == FIX_5_0SP2.OrdStatus.PendingCancel)
             {
                 _messageDefaults.AcknowledgeCancel(order);
             }
-            else if (order.OrdStatus == Fix.OrdStatus.PendingReplace)
+            else if (order.OrdStatus == FIX_5_0SP2.OrdStatus.PendingReplace)
             {
                 _messageDefaults.AcknowledgeAmend(order);
             }
@@ -700,34 +775,39 @@ namespace FixClient
             }
         }
 
-        void StatusButtonClick(object sender, EventArgs e)
+        void StatusButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             _defaultsButton.PerformClick();
             _messageDefaults.OrderStatus(order);
         }
 
-        void AmendButtonClick(object sender, EventArgs e)
+        void AmendButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
 
             _defaultsButton.PerformClick();
             _messageDefaults.AmendOrder(order);
         }
 
-        void CancelButtonClick(object sender, EventArgs e)
+        void CancelButtonClick(object? sender, EventArgs e)
         {
-            Fix.Order order = SelectedOrder;
-
-            if (order == null)
+            if (SelectedOrder is not Fix.Order order)
+            {
                 return;
+            }
+
+            if (Session is null)
+            {
+                return;
+            }
 
             _defaultsButton.PerformClick();
 
@@ -741,15 +821,18 @@ namespace FixClient
             }
         }
 
-        Fix.Order SelectedOrder
+        Fix.Order? SelectedOrder
         {
             get
             {
                 if (_orderGrid.SelectedRows.Count == 0)
+                {
                     return null;
+                }
+
                 var row = _orderGrid.SelectedRows[0].DataBoundItem as DataRowView;
-                var orderRow = row.Row as OrderDataRow;
-                return orderRow.Order;
+                var orderRow = row?.Row as OrderDataRow;
+                return orderRow?.Order;
             }
         }
 
@@ -762,11 +845,12 @@ namespace FixClient
             {
                 enabled = true;
 
-                Fix.Order order = SelectedOrder;
-
-                if (order.ListID != null)
+                if (SelectedOrder is Fix.Order order)
                 {
-                    listEnabled = true;
+                    if (order.ListID != null)
+                    {
+                        listEnabled = true;
+                    }
                 }
             }
 
@@ -793,7 +877,7 @@ namespace FixClient
             _reportMenuItem.Enabled = enabled;
         }
 
-        public Session Session
+        public Session? Session
         {
             get
             {
@@ -822,7 +906,7 @@ namespace FixClient
                     _session.StateChanged += SessionStateChanged;
                 }
 
-                if (value.OrderBehaviour == Fix.Behaviour.Initiator)
+                if (value?.OrderBehaviour == Fix.Behaviour.Initiator)
                 {
                     TopToolStripPanel.Controls.Clear();
                     TopToolStripPanel.Join(_clientToolStrip);
@@ -837,7 +921,7 @@ namespace FixClient
             }
         }
 
-        void SessionSessionReset(object sender, EventArgs ev)
+        void SessionSessionReset(object? sender, EventArgs ev)
         {
             if (InvokeRequired)
             {
@@ -848,18 +932,18 @@ namespace FixClient
             Reload();
         }
 
-        void MessagesReset(object sender, Fix.MessageCollection.MessageEvent ev)
+        void MessagesReset(object? sender)
         {
             if (InvokeRequired)
             {
-                BeginInvoke(new MethodInvoker(() => MessagesReset(sender, ev)));
+                BeginInvoke(new MethodInvoker(() => MessagesReset(sender)));
                 return;
             }
 
             Reload();
         }
 
-        void SessionStateChanged(object sender, Fix.Session.StateEvent ev)
+        void SessionStateChanged(object? sender, Fix.Session.StateEvent ev)
         {
             if (InvokeRequired)
             {
@@ -870,7 +954,7 @@ namespace FixClient
             UpdateUiState();
         }
 
-        void OrderBookOrderUpdated(object sender, Fix.OrderBookEventArgs ev)
+        void OrderBookOrderUpdated(object? sender, Fix.OrderBookEventArgs ev)
         {
             if (InvokeRequired)
             {
@@ -890,7 +974,7 @@ namespace FixClient
             _orderGrid.RefreshEdit();
         }
 
-        void OrderBookOrderInserted(object sender, Fix.OrderBookEventArgs ev)
+        void OrderBookOrderInserted(object? sender, Fix.OrderBookEventArgs ev)
         {
             if (InvokeRequired)
             {
@@ -923,7 +1007,10 @@ namespace FixClient
 
         static void UpdateRow(OrderDataRow row)
         {
-            Fix.Order order = row.Order;
+            if (row.Order is not Fix.Order order)
+            {
+                return;
+            }
 
             row[OrderDataTable.ColumnQuantity] = order.OrderQty;
             row[OrderDataTable.ColumnPendingQuantity] = order.PendingOrderQty;
@@ -931,18 +1018,18 @@ namespace FixClient
 
             if (order.TimeInForce != null)
             {
-                row[OrderDataTable.ColumnTimeInForce] = (Fix.TimeInForce)order.TimeInForce;
-                row[OrderDataTable.ColumnTimeInForceString] = OrderDataGridView.ShortTimeInForceDescription(order.TimeInForce.Value);
+                row[OrderDataTable.ColumnTimeInForce] = order.TimeInForce;
+                row[OrderDataTable.ColumnTimeInForceString] = OrderDataGridView.ShortTimeInForceDescription(order.TimeInForce);
             }
 
             if (order.OrdStatus != null)
             {
-                row[OrderDataTable.ColumnOrdStatus] = (Fix.OrdStatus)order.OrdStatus;
-                row[OrderDataTable.ColumnOrdStatusString] = ((Fix.OrdStatus)order.OrdStatus).ToString();
+                row[OrderDataTable.ColumnOrdStatus] = order.OrdStatus;
+                row[OrderDataTable.ColumnOrdStatusString] = order.OrdStatus.Name;
             }
             else
             {
-                row[OrderDataTable.ColumnOrdStatusString] = Fix.OrdStatus.PendingNew.ToString();
+                row[OrderDataTable.ColumnOrdStatusString] = FIX_5_0SP2.OrdStatus.PendingNew.Name;
             }
 
             if (order.OrigClOrdID != null)
@@ -950,8 +1037,8 @@ namespace FixClient
 
             if (order.Side != null)
             {
-                row[OrderDataTable.ColumnSide] = (Fix.Side)order.Side;
-                row[OrderDataTable.ColumnSideString] = ((Fix.Side)order.Side).ToString();
+                row[OrderDataTable.ColumnSide] = order.Side;
+                row[OrderDataTable.ColumnSideString] = order.Side.Name;
             }
 
             long leavesQty = 0;
@@ -989,12 +1076,17 @@ namespace FixClient
 
         void Reload()
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             try
             {
                 _orderTable.BeginLoadData();
                 _orderTable.Clear();
 
-                foreach (Fix.Order order in Session.OrderBook.Orders.Values)
+                foreach (Fix.Order order in Session.OrderBook.Orders)
                 {
                     AddOrder(order);
                 }

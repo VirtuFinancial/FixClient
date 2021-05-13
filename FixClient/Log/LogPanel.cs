@@ -25,7 +25,7 @@ namespace FixClient
         readonly DataView _messageView;
         readonly ToolStripButton _clearButton;
         readonly SearchTextBox _searchTextBox;
-        Session _session;
+        Session? _session;
 
         public LogPanel()
         {
@@ -154,13 +154,13 @@ namespace FixClient
             }
         }
 
-        void SearchTextBoxTextChanged(object sender, EventArgs e)
+        void SearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             _messageView.RowFilter = string.IsNullOrEmpty(_searchTextBox.Text) ? null : string.Format("Message LIKE '*{0}*'", _searchTextBox.Text);
             _searchTextBox.Focus();
         }
 
-        void ClearButtonClick(object sender, EventArgs e)
+        void ClearButtonClick(object? sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show(this,
                                                   "This will delete all log messages, are you sure?",

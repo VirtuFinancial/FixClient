@@ -9,13 +9,13 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
+using static Fix.Dictionary;
 
 namespace FixTests
 {
@@ -23,27 +23,31 @@ namespace FixTests
     {
         const string Host = "127.0.0.1";
         int Port = 20101;
-        TcpListener _listener;
-        TcpClient _client;
-        Socket _socket;
-        BlockingCollection<Fix.Message> _initiatorIncomingMessages;
-        BlockingCollection<Fix.Message> _acceptorIncomingMessages;
-        BlockingCollection<Fix.Message> _acceptorOutgoingMessages;
-        protected TSession Initiator;
-        protected TSession Acceptor;
-        BlockingCollection<Fix.State> _initatorStates;
-        BlockingCollection<Fix.State> _acceptorStates;
-        ManualResetEventSlim _connectionEstablished;
+        TcpListener? _listener;
+        TcpClient? _client;
+        Socket? _socket;
+        BlockingCollection<Fix.Message>? _initiatorIncomingMessages;
+        BlockingCollection<Fix.Message>? _acceptorIncomingMessages;
+        BlockingCollection<Fix.Message>? _acceptorOutgoingMessages;
+        protected TSession Initiator = new();
+        protected TSession Acceptor = new();
+        BlockingCollection<Fix.State>? _initatorStates;
+        BlockingCollection<Fix.State>? _acceptorStates;
+        ManualResetEventSlim? _connectionEstablished;
 
 #if DEBUG
-        protected const int Timeout = 500000;
+        protected const int Timeout = int.MaxValue;
 #else
         protected const int Timeout = 5000;
 #endif
 
         void AcceptTcpClientCallback(IAsyncResult ar)
         {
-            var listener = (TcpListener)ar.AsyncState;
+            if (ar.AsyncState is not TcpListener listener)
+            {
+                Assert.Fail("AcceptTcpClientCallback AsyncState is not the expected TcpListener");
+                return;
+            }
             _socket = listener.EndAcceptSocket(ar);
             _socket.NoDelay = true;
             Acceptor = new TSession
@@ -55,15 +59,15 @@ namespace FixTests
             Acceptor.MessageReceived += (sender, ev) =>
             {
                 Acceptor.Messages.Add(ev.Message);
-                _acceptorIncomingMessages.Add(ev.Message);
+                _acceptorIncomingMessages?.Add(ev.Message);
             };
             Acceptor.MessageSent += (sender, ev) =>
             {
                 Acceptor.Messages.Add(ev.Message);
-                _acceptorOutgoingMessages.Add(ev.Message);
+                _acceptorOutgoingMessages?.Add(ev.Message);
             };
-            Acceptor.StateChanged += (sender, ev) => _acceptorStates.Add(ev.State);
-            _connectionEstablished.Set();
+            Acceptor.StateChanged += (sender, ev) => _acceptorStates?.Add(ev.State);
+            _connectionEstablished?.Set();
         }
 
         protected void Initialize()
@@ -76,7 +80,14 @@ namespace FixTests
             _acceptorOutgoingMessages = new BlockingCollection<Fix.Message>();
             _initatorStates = new BlockingCollection<Fix.State>();
             _acceptorStates = new BlockingCollection<Fix.State>();
-            _listener = new TcpListener(Fix.Network.GetLocalAddress(Host), Port);
+
+            if (Fix.Network.GetLocalAddress(Host) is not System.Net.IPAddress address)
+            {
+                Assert.Fail("Could not resolve address for {Host}");
+                return;
+            }
+
+            _listener = new TcpListener(address, Port);
             _listener.Start();
             _listener.BeginAcceptSocket(AcceptTcpClientCallback, _listener);
             _client = new TcpClient { NoDelay = true };
@@ -109,13 +120,16 @@ namespace FixTests
 
         protected void Reconnect()
         {
-            Acceptor = null;
-            _connectionEstablished.Reset();
-            _listener.BeginAcceptSocket(AcceptTcpClientCallback, _listener);
+            Acceptor = new TSession();
+            _connectionEstablished?.Reset();
+            _listener?.BeginAcceptSocket(AcceptTcpClientCallback, _listener);
             _client = new TcpClient { NoDelay = true };
             _client.Connect(Fix.Network.GetAddress(Host), Port);
-            Assert.IsTrue(_connectionEstablished.Wait(Timeout));
-            Initiator.Stream = _client.GetStream();
+            Assert.IsTrue(_connectionEstablished?.Wait(Timeout) ?? false);
+            if (Initiator is TSession)
+            {
+                Initiator.Stream = _client.GetStream();
+            }
         }
 
         protected void Cleanup()
@@ -128,99 +142,126 @@ namespace FixTests
 
         protected void StandardLogonSequence()
         {
+            if (Initiator is null)
+            {
+                return;
+            }
+
             // Always specify the comp id's using the initiator values because we have tests that
             // don't set them in the acceptor.
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.SenderCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.TargetCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.SenderCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.TargetCompId)
             });
 
-            SentFromAcceptor(Fix.Dictionary.Messages.Logon, new[]
+            SentFromAcceptor(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.TargetCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.SenderCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.TargetCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.SenderCompId)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Logon, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Logon, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.TargetCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.SenderCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.TargetCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.SenderCompId)
             });
 
             AcceptorStateChange(Fix.State.LoggingOn);
             InitiatorStateChange(Fix.State.LoggingOn);
 
-            SentFromAcceptor(Fix.Dictionary.Messages.TestRequest, new[]
+            SentFromAcceptor(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.TargetCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.SenderCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.TargetCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.SenderCompId)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.TestRequest, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.TargetCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.SenderCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.TargetCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.SenderCompId)
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.TestRequest, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.TestRequest, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.SenderCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.TargetCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.SenderCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.TargetCompId)
             });
 
-            SentFromAcceptor(Fix.Dictionary.Messages.Heartbeat, new[]
+            SentFromAcceptor(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.TargetCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.SenderCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.TargetCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.SenderCompId)
             });
 
-            ReceiveAtInitiator(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtInitiator(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.TargetCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.SenderCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.TargetCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.SenderCompId)
             });
 
-            ReceiveAtAcceptor(Fix.Dictionary.Messages.Heartbeat, new[]
+            ReceiveAtAcceptor(FIX_5_0SP2.Messages.Heartbeat, new[]
             {
-                new Fix.Field(Fix.Dictionary.Fields.SenderCompID, Initiator.SenderCompId),
-                new Fix.Field(Fix.Dictionary.Fields.TargetCompID, Initiator.TargetCompId)
+                new Fix.Field(FIX_5_0SP2.Fields.SenderCompID, Initiator.SenderCompId),
+                new Fix.Field(FIX_5_0SP2.Fields.TargetCompID, Initiator.TargetCompId)
             });
         }
 
         protected void AcceptorStateChange(Fix.State expected)
         {
+            if (_acceptorStates is null)
+            {
+                return;
+            }
             Assert.IsTrue(_acceptorStates.TryTake(out Fix.State actual, Timeout), $"Timeout waiting for acceptor state change {expected}");
             Assert.AreEqual(expected, actual);
         }
 
         protected void InitiatorStateChange(Fix.State expected)
         {
+            if (_initatorStates is null)
+            {
+                return;
+            }
             Assert.IsTrue(_initatorStates.TryTake(out Fix.State actual, Timeout), $"Timeout waiting for initiator state change {expected}");
             Assert.AreEqual(expected, actual);
         }
 
-        protected Fix.Message ReceiveAtInitiator(Fix.Dictionary.Message definition, IEnumerable<Fix.Field> expectedFields = null)
+        protected Fix.Message ReceiveAtInitiator(Fix.Dictionary.Message definition, IEnumerable<Fix.Field>? expectedFields = null)
         {
             return Expect(_initiatorIncomingMessages, definition, expectedFields);
         }
 
-        protected Fix.Message ReceiveAtAcceptor(Fix.Dictionary.Message definition, IEnumerable<Fix.Field> expectedFields = null)
+        protected Fix.Message ReceiveAtAcceptor(Fix.Dictionary.Message definition, IEnumerable<Fix.Field>? expectedFields = null)
         {
             return Expect(_acceptorIncomingMessages, definition, expectedFields);
         }
 
         static string MsgTypeName(string msgType)
         {
-            Fix.Dictionary.Message definition = Fix.Dictionary.Messages[msgType];
+            var definition = FIX_5_0SP2.Messages[msgType];
             if (definition == null)
+            {
                 return msgType;
+            }
             return definition.Name;
         }
 
-        static Fix.Message Expect(BlockingCollection<Fix.Message> messages, Fix.Dictionary.Message definition, IEnumerable<Fix.Field> expectedFields)
+        static Fix.Message Expect(BlockingCollection<Fix.Message>? messages, Fix.Dictionary.Message definition, IEnumerable<Fix.Field>? expectedFields)
         {
-            Assert.IsTrue(messages.TryTake(out Fix.Message message, Timeout), $"Timed out waiting for MsgType={definition.Name}");
+            if (messages is not BlockingCollection<Fix.Message>)
+            {
+                throw new Exception("messages is not the expected type")
+;
+            }
+
+            Assert.IsTrue(messages.TryTake(out Fix.Message? message, Timeout), $"Timed out waiting for MsgType={definition.Name}");
+
+            if (message is null)
+            {
+                throw new Exception("message is null");                
+            }
+
             Assert.AreEqual(definition.MsgType, message.MsgType, $"Found MsgType={MsgTypeName(message.MsgType)} when we expected MsgType={definition.Name}\n{message}");
 
             if (expectedFields == null)
@@ -245,12 +286,12 @@ namespace FixTests
             return message;
         }
 
-        protected void SentFromAcceptor(Fix.Dictionary.Message definition, IEnumerable<Fix.Field> fields = null)
+        protected void SentFromAcceptor(Fix.Dictionary.Message definition, IEnumerable<Fix.Field>? fields = null)
         {
             Expect(_acceptorOutgoingMessages, definition, fields);
         }
 
-        protected void SendFromAcceptor(Fix.Dictionary.Message definition, IEnumerable<Fix.Field> fields = null)
+        protected void SendFromAcceptor(Fix.Dictionary.Message definition, IEnumerable<Fix.Field>? fields = null)
         {
             var message = new Fix.Message { MsgType = definition.MsgType };
 
@@ -262,10 +303,10 @@ namespace FixTests
                 }
             }
 
-            Acceptor.Send(message);
+            Acceptor?.Send(message);
         }
 
-        protected void SendFromInitiator(Fix.Dictionary.Message definition, IEnumerable<Fix.Field> fields = null)
+        protected void SendFromInitiator(Fix.Dictionary.Message definition, IEnumerable<Fix.Field>? fields = null)
         {
             var message = new Fix.Message { MsgType = definition.MsgType };
 
@@ -273,7 +314,7 @@ namespace FixTests
             {
                 foreach (Fix.Field field in fields)
                 {
-                    if (field.Tag == Fix.Dictionary.Fields.MsgSeqNum.Tag)
+                    if (field.Tag == FIX_5_0SP2.Fields.MsgSeqNum.Tag)
                     {
                         message.Fields.Set(field.Tag, field.Value);
                     }
@@ -284,7 +325,7 @@ namespace FixTests
                 }
             }
 
-            Initiator.Send(message);
+            Initiator?.Send(message);
         }
     }
 }

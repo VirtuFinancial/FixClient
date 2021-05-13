@@ -9,12 +9,12 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using static Fix.Dictionary;
 
 namespace FixClient
 {
@@ -220,34 +220,39 @@ namespace FixClient
 
             ContentPanel.Controls.Add(splitter);
 
-            ShowAdminMessageCheckBoxCheckChanged(this, null);
+            ShowAdminMessageCheckBoxCheckChanged(this, EventArgs.Empty);
         }
 
-        void MessageGridViewCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        void MessageGridViewCellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
             DataRowView view = _messageView[e.RowIndex];
+        
             if (view.Row is MessageDataRow dataRow)
             {
-                e.CellStyle.ForeColor = dataRow.Message.Incoming
+                e.CellStyle.ForeColor = (dataRow.Message?.Incoming ?? false)
                     ? LookAndFeel.Color.Incoming
                     : LookAndFeel.Color.Outgoing;
                 e.FormattingApplied = true;
             }
         }
 
-        void MessageGridViewCellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        void MessageGridViewCellValueNeeded(object? sender, DataGridViewCellValueEventArgs e)
         {
             e.Value = _messageView[e.RowIndex][e.ColumnIndex];
         }
 
-        void StatusMenuItemClick(object sender, EventArgs e)
+        void StatusMenuItemClick(object? sender, EventArgs e)
         {
             UpdateMessageFilter();
         }
 
-        void OrderSearchTextBoxTextChanged(object sender, EventArgs e)
+        void OrderSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
-            var textBox = (TextBox)sender;
+            if (sender is not TextBox textBox)
+            {
+                return;
+            }
+
             if (string.IsNullOrEmpty(textBox.Text))
             {
                 _orderView.RowFilter = null;
@@ -256,28 +261,40 @@ namespace FixClient
             else
             {
                 var buffer = new StringBuilder();
-                foreach (DataColumn column in _orderView.Table.Columns)
+
+                if (_orderView.Table is DataTable table)
                 {
-                    if (column.DataType.IsEnum)
+                    foreach (DataColumn column in table.Columns)
                     {
-                        buffer.AppendFormat("{0} LIKE '%{1}%' OR ", column.ColumnName + "String", textBox.Text);
-                    }
-                    else
-                    {
-                        buffer.AppendFormat("CONVERT({0}, System.String) LIKE '%{1}%' OR ", column.ColumnName, textBox.Text);
+                        if (column.DataType.IsEnum)
+                        {
+                            buffer.AppendFormat("{0} LIKE '%{1}%' OR ", column.ColumnName + "String", textBox.Text);
+                        }
+                        else
+                        {
+                            buffer.AppendFormat("CONVERT({0}, System.String) LIKE '%{1}%' OR ", column.ColumnName, textBox.Text);
+                        }
                     }
                 }
+
                 buffer.Remove(buffer.Length - 3, 3);
                 _orderView.RowFilter = buffer.ToString();
             }
             textBox.Focus();
         }
 
-        void FieldSearchTextBoxTextChanged(object sender, EventArgs e)
+        void FieldSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             if (_fieldView == null)
+            {
                 return;
-            var textBox = (TextBox)sender;
+            }
+            
+            if (sender is not TextBox textBox)
+            {
+                return;
+            }
+
             if (string.IsNullOrEmpty(textBox.Text))
             {
                 _fieldView.RowFilter = null;
@@ -294,7 +311,7 @@ namespace FixClient
             textBox.Focus();
         }
 
-        void MessageSearchTextBoxTextChanged(object sender, EventArgs e)
+        void MessageSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             UpdateMessageFilter();
         }
@@ -357,7 +374,7 @@ namespace FixClient
             _messageSearchTextBox.Focus();
         }
 
-        void OrderBookOrderUpdated(object sender, Fix.OrderBookEventArgs e)
+        void OrderBookOrderUpdated(object? sender, Fix.OrderBookEventArgs e)
         {
             Fix.Order order = e.Order;
 
@@ -370,7 +387,7 @@ namespace FixClient
             UpdateRow(row);
         }
 
-        void OrderBookOrderInserted(object sender, Fix.OrderBookEventArgs e)
+        void OrderBookOrderInserted(object? sender, Fix.OrderBookEventArgs e)
         {
             Fix.Order order = e.Order;
             if (_orderTable.Rows.Find(order.ClOrdID) is OrderDataRow)
@@ -393,7 +410,10 @@ namespace FixClient
 
         static void UpdateRow(OrderDataRow row)
         {
-            Fix.Order order = row.Order;
+            if (row.Order is not Fix.Order order)
+            {
+                return;
+            }
 
             row[OrderDataTable.ColumnQuantity] = order.OrderQty;
             row[OrderDataTable.ColumnSymbol] = order.Symbol;
@@ -401,18 +421,18 @@ namespace FixClient
 
             if (order.TimeInForce != null)
             {
-                row[OrderDataTable.ColumnTimeInForce] = (Fix.TimeInForce)order.TimeInForce;
-                row[OrderDataTable.ColumnTimeInForceString] = OrderDataGridView.ShortTimeInForceDescription(order.TimeInForce.Value);
+                row[OrderDataTable.ColumnTimeInForce] = order.TimeInForce;
+                row[OrderDataTable.ColumnTimeInForceString] = OrderDataGridView.ShortTimeInForceDescription(order.TimeInForce);
             }
 
             if (order.OrdStatus != null)
             {
-                row[OrderDataTable.ColumnOrdStatus] = (Fix.OrdStatus)order.OrdStatus;
-                row[OrderDataTable.ColumnOrdStatusString] = ((Fix.OrdStatus)order.OrdStatus).ToString();
+                row[OrderDataTable.ColumnOrdStatus] = order.OrdStatus;
+                row[OrderDataTable.ColumnOrdStatusString] = order.OrdStatus.Name;
             }
             else
             {
-                row[OrderDataTable.ColumnOrdStatusString] = Fix.OrdStatus.PendingNew.ToString();
+                row[OrderDataTable.ColumnOrdStatusString] = FIX_5_0SP2.OrdStatus.PendingNew.Name;
             }
 
             if (order.OrigClOrdID != null)
@@ -420,8 +440,8 @@ namespace FixClient
 
             if (order.Side != null)
             {
-                row[OrderDataTable.ColumnSide] = (Fix.Side)order.Side;
-                row[OrderDataTable.ColumnSideString] = ((Fix.Side)order.Side).ToString();
+                row[OrderDataTable.ColumnSide] = order.Side;
+                row[OrderDataTable.ColumnSideString] = order.Side.Name;
             }
 
             long cumQty = order.CumQty ?? 0;
@@ -451,18 +471,21 @@ namespace FixClient
                 row[OrderDataTable.ColumnText] = order.Text;
         }
 
-        void ShowAdminMessageCheckBoxCheckChanged(object sender, EventArgs e)
+        void ShowAdminMessageCheckBoxCheckChanged(object? sender, EventArgs e)
         {
             UpdateMessageFilter();
         }
 
-        void LoadClientMessagesButtonClick(object sender, EventArgs e)
+        void LoadClientMessagesButtonClick(object? sender, EventArgs e)
         {
             using OpenFileDialog dlg = new();
-            if (dlg.ShowDialog() != DialogResult.OK)
-                return;
 
-            Cursor original = Cursor.Current;
+            if (dlg.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            Cursor? original = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
 
             try
@@ -495,7 +518,7 @@ namespace FixClient
             }
         }
 
-        Fix.Message SelectedMessage
+        Fix.Message? SelectedMessage
         {
             get
             {
@@ -515,37 +538,48 @@ namespace FixClient
             }
         }
 
-        public static Fix.Dictionary.Message MessageDefinition(Fix.Message message)
+        public static Fix.Dictionary.Message? MessageDefinition(Fix.Message message)
         {
-            Fix.Field beginString = message.Fields.Find(Fix.Dictionary.Fields.BeginString);
-            Fix.Dictionary.Version version = null;
-            if (beginString != null && !beginString.Value.StartsWith("FIXT."))
-                version = Fix.Dictionary.Versions[beginString.Value];
-            if (version == null)
-                version = Fix.Dictionary.Versions.Default;
-            Fix.Dictionary.Message exemplar = version.Messages[message.MsgType];
+            Fix.Field? beginString = message.Fields.Find(FIX_5_0SP2.Fields.BeginString);
+            Fix.Dictionary.Version? version = null;
+
+            if (beginString is not null && !beginString.Value.StartsWith("FIXT."))
+            {
+                version = Versions[beginString.Value];
+            }
+
+            if (version is null)
+            {
+                version = Versions.Default;
+            }
+
+            Fix.Dictionary.Message? exemplar = version.Messages[message.MsgType];
+
             if (exemplar == null)
-                return Fix.Dictionary.Messages[message.MsgType];
+            {
+                return FIX_5_0SP2.Messages[message.MsgType];
+            }
+
             return exemplar;
         }
 
-        public static Fix.Dictionary.Field FieldDefinition(Fix.Dictionary.Message message, Fix.Field field)
+        public static MessageField? FieldDefinition(Fix.Dictionary.Message message, Fix.Field field)
         {
-            message.Fields.TryGetValue(field.Tag, out Fix.Dictionary.Field definition);
+            message.Fields.TryGetValue(field.Tag, out var definition);
             return definition;
         }
 
-        void ClientMessageGridGridSelectionChanged(object sender, EventArgs e)
+        void ClientMessageGridGridSelectionChanged(object? sender, EventArgs e)
         {
             try
             {
                 _fieldTable.BeginLoadData();
                 _fieldTable.Clear();
 
-                Fix.Message message = SelectedMessage;
-
-                if (message == null)
+                if (SelectedMessage is not Fix.Message message)
+                {
                     return;
+                }
 
                 switch (message.Status)
                 {
@@ -570,6 +604,8 @@ namespace FixClient
 
                 _statusMessage.Text = message.StatusMessage;
 
+                var messageDefinition = FIX_5_0SP2.Messages[message.MsgType];
+
                 foreach (Fix.Field field in message.Fields)
                 {
                     if (_fieldTable.NewRow() is not FieldDataRow dataRow)
@@ -577,20 +613,17 @@ namespace FixClient
                         continue;
                     }
 
-                    if (field.Definition == null && message.Definition != null)
-                    {
-                        field.Definition = FieldDefinition(message.Definition, field);
-                    }
+                    var description = field.Describe(messageDefinition);
 
                     dataRow.Field = field;
 
-                    if (field.Definition != null)
+                    if (description != null)
                     {
-                        dataRow[FieldDataTable.ColumnIndent] = field.Definition.Indent;
-                        dataRow[FieldDataTable.ColumnName] = field.Definition.Name;
+                        dataRow[FieldDataTable.ColumnIndent] = description.Indent;
+                        dataRow[FieldDataTable.ColumnName] = description.Name;
                         dataRow[FieldDataTable.ColumnCustom] = false;
-                        dataRow[FieldDataTable.ColumnRequired] = field.Definition.Required;
-                        dataRow[FieldDataTable.ColumnDescription] = field.ValueDescription;
+                        dataRow[FieldDataTable.ColumnRequired] = description.Required;
+                        dataRow[FieldDataTable.ColumnDescription] = description.Description;
                     }
                     else
                     {
@@ -621,14 +654,14 @@ namespace FixClient
             };
         }
 
-        void MessagesMessageAdded(object sender, Fix.MessageCollection.MessageEvent ev)
+        void MessagesMessageAdded(object? sender, Fix.MessageCollection.MessageEvent ev)
         {
             Fix.Message message = ev.Message;
 
-            Fix.Field field = message.Fields.Find(Fix.Dictionary.Fields.MsgType);
-
-            if (field == null)
+            if (message.Fields.Find(FIX_5_0SP2.Fields.MsgType) is not Fix.Field)
+            {
                 return;
+            }
 
             if (message.Definition == null)
             {
@@ -646,7 +679,7 @@ namespace FixClient
             row[ParserMessageDataTable.ColumnMsgTypeDescription] = message.Definition == null ? string.Empty : message.Definition.Name;
             row[ParserMessageDataTable.ColumnAdministrative] = message.Administrative;
 
-            field = message.Fields.Find(Fix.Dictionary.Fields.MsgSeqNum);
+            var field = message.Fields.Find(FIX_5_0SP2.Fields.MsgSeqNum);
 
             row[ParserMessageDataTable.ColumnMsgSeqNum] = field?.Value;
 

@@ -49,12 +49,12 @@ namespace FixClient
             _errorProvider.SetIconPadding(nameTextBox, 3);
         }
 
-        void NameTextBoxValidated(object sender, EventArgs e)
+        void NameTextBoxValidated(object? sender, EventArgs e)
         {
             ClearErrors();
         }
 
-        void NameTextBoxValidating(object sender, CancelEventArgs e)
+        void NameTextBoxValidating(object? sender, CancelEventArgs e)
         {
             if (cancelButton.Focused)
                 return;
@@ -69,12 +69,12 @@ namespace FixClient
             Field.Name = nameTextBox.Text.Trim();
         }
 
-        void ValueTextBoxValidated(object sender, EventArgs e)
+        void ValueTextBoxValidated(object? sender, EventArgs e)
         {
             ClearErrors();
         }
 
-        void ValueTextBoxValidating(object sender, CancelEventArgs e)
+        void ValueTextBoxValidating(object? sender, CancelEventArgs e)
         {
             if (cancelButton.Focused)
                 return;
@@ -88,7 +88,7 @@ namespace FixClient
 
             int tag = Convert.ToInt32(valueTextBox.Text);
 
-            if (Version.Fields.TryGetValue(tag, out Fix.Dictionary.Field existing) && existing != null)
+            if (Version.Fields.TryGetValue(tag, out var existing) && existing != null)
             {
                 //
                 // This is a standard field, we allow the user so set these as custom fields so they can be
@@ -110,11 +110,11 @@ namespace FixClient
             deleteEnumButton.Enabled = enumGrid.Rows.Count != 0;
         }
 
-        void NewEnumButtonClick(object sender, EventArgs e)
+        void NewEnumButtonClick(object? sender, EventArgs e)
         {
         }
 
-        void DeleteEnumButtonClick(object sender, EventArgs e)
+        void DeleteEnumButtonClick(object? sender, EventArgs e)
         {
         }
 

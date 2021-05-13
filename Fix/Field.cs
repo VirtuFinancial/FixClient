@@ -9,14 +9,11 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Text;
+using static Fix.Dictionary;
 
 namespace Fix
 {
@@ -33,6 +30,8 @@ namespace Fix
         {
             return DateTime.UtcNow.ToString(fractionalSeconds ? TimestampFormatLong : TimestampFormatShort);
         }
+
+        public static readonly Field Invalid = new(0, string.Empty);
 
         public Field(int tag, string value)
         {
@@ -75,311 +74,43 @@ namespace Fix
             Value = value;
         }
 
-        public Field(Dictionary.Field definition)
+        public Field(MessageField definition)
         {
-            Definition = definition;
             Tag = definition.Tag;
         }
 
-        public Field(Dictionary.Field definition, string value)
+        public Field(VersionField definition)
+        {
+            Tag = definition.Tag;
+        }
+
+        public Field(VersionField definition, string value)
         : this(definition.Tag, value)
         {
-            Definition = definition;
         }
 
-        public Field(Dictionary.Field definition, bool value)
+        public Field(VersionField definition, bool value)
             : this(definition.Tag, value)
         {
-            Definition = definition;
         }
 
-        public Field(Dictionary.Field definition, int value)
+        public Field(VersionField definition, int value)
         : this(definition.Tag, value.ToString())
         {
-            Definition = definition;
         }
 
-        public Field(Dictionary.Field definition, decimal value)
+        public Field(VersionField definition, decimal value)
         : this(definition.Tag, value.ToString())
         {
-            Definition = definition;
         }
 
-        public Field(Dictionary.Field definition, Side value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, OrdType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, SecurityIDSource value)
-            : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, TimeInForce value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, OrdStatus value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, ExecType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, HandlInst value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, TradeHandlingInstr value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, TradeReportTransType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, TradeReportType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, TradeReportRejectReason value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, NoSides value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, PartyIDSource value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, PartyRole value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, ClearingInstruction value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, OrderCategory value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, ExchangeTradeType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, CxlRejResponseTo value)
-            : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, SessionStatus value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, Dictionary.FIX_4_2.ExecType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, Dictionary.FIX_5_0.ExecType value)
-            : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(Dictionary.Field definition, Dictionary.FIX_4_2.ExecTransType value)
-        : this(definition.Tag, value)
-        {
-            Definition = definition;
-        }
-
-        public Field(int tag, EncryptMethod value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, ExecType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, SessionStatus value)
-        : this(tag, ((int)value).ToString())
-        {
-        }
-
-        public Field(int tag, TrdType value)
-        : this(tag, ((int)value).ToString())
-        {
-        }
-
-        public Field(int tag, TrdRptStatus value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, TradeHandlingInstr value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, TradeReportTransType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, TradeReportType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, TradeReportRejectReason value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, NoSides value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, PartyIDSource value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, PartyRole value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, ClearingInstruction value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, OrderCategory value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, ExchangeTradeType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, Dictionary.FIX_4_2.ExecType value)
-            : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, Dictionary.FIX_5_0.ExecType value)
-            : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, Dictionary.FIX_4_0.ExecTransType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, Dictionary.FIX_4_0.CxlType value)
-            : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, Side value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, SecurityIDSource value)
-            : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, OrdStatus value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, EmailType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, CxlRejResponseTo value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, OrdType value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, TimeInForce value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, HandlInst value)
-        : this(tag, ((char)value).ToString())
-        {
-        }
-
-        public Field(int tag, Dictionary.FIX_4_2.ExecTransType value)
-            : this(tag, ((char)value).ToString())
+        public Field(FieldValue value)
+        : this(value.Tag, value.Value)
         {
         }
 
         public int Tag { get; }
-        public string Value { get; set; }
-        public Dictionary.Field Definition { get; set; }
+        public string Value { get; set; } = string.Empty;
         public bool Data { get; set; }
 
         public static explicit operator bool(Field field)
@@ -393,19 +124,22 @@ namespace Fix
 
         public static explicit operator long?(Field field)
         {
-            if (field == null || !long.TryParse(field.Value, out var result))
+            if (!long.TryParse(field.Value, out var result))
+            {
                 return null;
+            }
+
             return result;
         }
 
         public static explicit operator string(Field field)
         {
-            return field?.Value;
+            return field.Value;
         }
 
         public static explicit operator decimal?(Field field)
         {
-            if (field == null || !decimal.TryParse(field.Value, out decimal result))
+            if (!decimal.TryParse(field.Value, out decimal result))
             {
                 return null;
             }
@@ -429,197 +163,52 @@ namespace Fix
             return result;
         }
 
-        public static explicit operator Side?(Field field)
+        public static explicit operator FieldValue(Field field)
         {
-            if (string.IsNullOrEmpty(field?.Value))
-                return null;
-            int value = Convert.ToInt32(Convert.ToChar(field.Value));
-            if (!Enum.IsDefined(typeof(Fix.Side), value))
-                throw new ApplicationException($"{value} is not a valid value for Side");
-            return (Fix.Side)Enum.ToObject(typeof(Fix.Side), value);
+            return new FieldValue(field.Tag, "", field.Value, "");
         }
 
-        public static explicit operator OrdStatus?(Field field)
+        public static bool operator ==(Field left, FieldValue? right)
         {
-            if (string.IsNullOrEmpty(field?.Value))
-                return null;
-            int value = Convert.ToInt32(Convert.ToChar(field.Value));
-            if (!Enum.IsDefined(typeof(Fix.OrdStatus), value))
-                throw new ApplicationException($"{value} is not a valid value for OrdStatus");
-            return (Fix.OrdStatus)Enum.ToObject(typeof(Fix.OrdStatus), value);
-        }
-
-        public static explicit operator TimeInForce?(Field field)
-        {
-            if (string.IsNullOrEmpty(field?.Value))
-                return null;
-            int value = Convert.ToInt32(Convert.ToChar(field.Value));
-            if (!Enum.IsDefined(typeof(Fix.TimeInForce), value))
-                throw new ApplicationException($"{value} is not a valid value for TimeInForce");
-            return (Fix.TimeInForce)Enum.ToObject(typeof(Fix.TimeInForce), value);
-        }
-
-        public static explicit operator ExecType?(Field field)
-        {
-            if (string.IsNullOrEmpty(field?.Value))
-                return null;
-            int value = Convert.ToInt32(Convert.ToChar(field.Value));
-            if (!Enum.IsDefined(typeof(Fix.ExecType), value))
-                throw new ApplicationException($"{value} is not a valid value for ExecType");
-            return (Fix.ExecType)Enum.ToObject(typeof(Fix.ExecType), value);
-        }
-
-        public static explicit operator OrdType?(Field field)
-        {
-            if (string.IsNullOrEmpty(field?.Value))
-                return null;
-            int value = Convert.ToInt32(Convert.ToChar(field.Value));
-            if (!Enum.IsDefined(typeof(Fix.OrdType), value))
-                throw new ApplicationException($"{value} is not a valid value for OrdType");
-            return (Fix.OrdType)Enum.ToObject(typeof(Fix.OrdType), value);
-        }
-
-        public static explicit operator SecurityIDSource?(Field field)
-        {
-            if (string.IsNullOrEmpty(field?.Value))
-                return null;
-            int value = Convert.ToInt32(Convert.ToChar(field.Value));
-            if (!Enum.IsDefined(typeof(Fix.SecurityIDSource), value))
-                throw new ApplicationException($"{value} is not a valid value for SecurityIDSource");
-            return (Fix.SecurityIDSource)Enum.ToObject(typeof(Fix.SecurityIDSource), value);
-        }
-
-        public static explicit operator ExecInst[](Field field)
-        {
-            if (string.IsNullOrEmpty(field?.Value))
-                return null;
-
-            var values = new List<ExecInst>();
-
-            foreach (string value in from item in field.Value.Split(' ') select item.Trim())
+            return (left, right) switch
             {
-                if (string.IsNullOrEmpty(value))
-                    continue;
+                (null, null) => true,
+                (Field, null) => false,
+                (null, FieldValue) => false,
+                (Field field, FieldValue value) => field.Tag == value.Tag && field.Value == value.Value
+            };
+        }
 
-                try
-                {
-                    int intValue = Convert.ToInt32(Convert.ToChar(value));
-                    if (!Enum.IsDefined(typeof(Fix.ExecInst), intValue))
-                        throw new ApplicationException();
-                    values.Add((Fix.ExecInst)Enum.ToObject(typeof(Fix.ExecInst), intValue));
-                }
-                catch (Exception)
-                {
-                    throw new ApplicationException($"{value} is not a valid value for ExecInst");
-                }
+        public static bool operator !=(Field left, FieldValue? right) => !(left == right);
+     
+        public override bool Equals(object? other)
+        {
+            if (other is null)
+            {
+                return false;
             }
 
-            if (values.Count == 0)
-                return null;
-
-            return values.ToArray();
-        }
-
-        public static explicit operator Dictionary.FIX_4_2.ExecType?(Field field)
-        {
-            if (string.IsNullOrEmpty(field?.Value))
-                return null;
-            int value = Convert.ToInt32(Convert.ToChar(field.Value));
-            if (!Enum.IsDefined(typeof(Dictionary.FIX_4_2.ExecType), value))
-                throw new ApplicationException($"{value} is not a valid value for ExecType");
-            return (Dictionary.FIX_4_2.ExecType)Enum.ToObject(typeof(Dictionary.FIX_4_2.ExecType), value);
-        }
-
-        public static explicit operator Dictionary.FIX_4_0.ExecTransType?(Field field)
-        {
-            if (string.IsNullOrEmpty(field?.Value))
-                return null;
-            int value = Convert.ToInt32(Convert.ToChar(field.Value));
-            if (!Enum.IsDefined(typeof(Dictionary.FIX_4_0.ExecTransType), value))
-                throw new ApplicationException($"{value} is not a valid value for ExecTransType");
-            return (Dictionary.FIX_4_0.ExecTransType)Enum.ToObject(typeof(Dictionary.FIX_4_0.ExecTransType), value);
-        }
-
-        public static explicit operator CxlRejResponseTo?(Field field)
-        {
-            if (string.IsNullOrEmpty(field?.Value))
-                return null;
-            int value = Convert.ToInt32(Convert.ToChar(field.Value));
-            if (!Enum.IsDefined(typeof(Fix.CxlRejResponseTo), value))
-                throw new ApplicationException($"{value} is not a valid value for CxlRejResponseTo");
-            return (Fix.CxlRejResponseTo)Enum.ToObject(typeof(Fix.CxlRejResponseTo), value);
-        }
-
-        public static explicit operator TrdType?(Field field)
-        {
-            if (string.IsNullOrEmpty(field?.Value))
-                return null;
-            int value = Convert.ToInt32(field.Value);
-            if (!Enum.IsDefined(typeof(Fix.TrdType), value))
-                throw new ApplicationException($"{value} is not a valid value for TrdType");
-            return (Fix.TrdType)Enum.ToObject(typeof(Fix.TrdType), value);
-        }
-
-        public static explicit operator SessionStatus?(Field field)
-        {
-            if (string.IsNullOrEmpty(field?.Value))
-                return null;
-            int value = Convert.ToInt32(field.Value);
-            if (!Enum.IsDefined(typeof(Fix.SessionStatus), value))
-                throw new ApplicationException($"{value} is not a valid value for SessionStatus");
-            return (Fix.SessionStatus)Enum.ToObject(typeof(Fix.SessionStatus), value);
-        }
-
-        string EnumDescription(Type enumeratedTye, object value)
-        {
-            string name = Enum.GetName(Definition.EnumeratedType, value);
-            if (string.IsNullOrEmpty(name))
-                return null;
-            MemberInfo[] info = Definition.EnumeratedType.GetMember(name);
-            if (info.Length == 0)
-                return null;
-            var attributes = info[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-            return ((DescriptionAttribute)attributes[0]).Description;
-        }
-
-        public string ValueDescription
-        {
-            get
+            if (ReferenceEquals(other, this))
             {
-                if (Definition?.EnumeratedType == null)
-                    return null;
-                var buffer = new StringBuilder();
-                bool first = true;
-                foreach (string value in from item in Value.Split(' ') select item.Trim())
-                {
-                    if (string.IsNullOrEmpty(value))
-                        continue;
-
-                    if (!char.TryParse(value, out char charValue))
-                    {
-                        return null;
-                    }
-
-                    string description = EnumDescription(Definition.EnumeratedType, charValue);
-                    if (string.IsNullOrEmpty(description))
-                    {
-                        if (!int.TryParse(value, out int intValue))
-                        {
-                            return null;
-                        }
-
-                        description = EnumDescription(Definition.EnumeratedType, intValue);
-                        if (string.IsNullOrEmpty(description))
-                            break;
-                    }
-
-                    if (first) first = false;
-                    else buffer.Append(", ");
-
-                    buffer.Append(description);
-                }
-                return buffer.ToString();
+                return true;
             }
+
+            if (other is Field field)
+            {
+                return Tag == field.Tag && Value == field.Value;
+            }
+
+            if (other is FieldValue fieldValue)
+            {
+                return Tag == fieldValue.Tag && Value == fieldValue.Value;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         public int ComputeCheckSum()
@@ -666,6 +255,66 @@ namespace Fix
             return bodyLength;
         }
 
+        public FieldDescription Describe(Dictionary.Message? messageDefinition)
+        {
+            return Describe(messageDefinition, Tag, Value);
+        }
+
+        public static FieldDescription Describe(Dictionary.Message? messageDefinition, int tag, string value)
+        {
+            var definition = messageDefinition?.Fields.Where(f => f.Tag == tag).FirstOrDefault();
+
+            if (definition == null)
+            {
+                // This field is not defined in this message so just fall back to the global field definitions.
+                // This means we won't have values for required and indent which are message specific. We could
+                // iterator through each version and lookup the message definition and see if older versions
+                // contain the field but not worth the effort now.
+                string description = string.Empty;
+
+                if (FIX_5_0SP2.Fields.TryGetValue(tag, out var globalDefinition))
+                {
+                    if (value is string fieldValue)
+                    {
+                        description = DescribeVersionFieldValue(globalDefinition, fieldValue);
+                    }
+                }
+
+                return new FieldDescription(tag, value, globalDefinition.Name, description, false, -1);
+            }
+
+            if (definition is MessageField fieldDefinition)
+            {
+                // TODO
+                // result.Indent = fieldDefinition?.Indent ?? 0;
+                return new FieldDescription(tag, value, fieldDefinition.Name, DescribeMessageFieldValue(fieldDefinition, value), fieldDefinition.Required, -1);
+            }
+
+            static string DescribeMessageFieldValue(MessageField fieldDefinition, string fieldValue)
+            {
+                // TODO
+                // if (fieldDefinition?.EnumeratedType is Type type) {
+                //      return DescribeFieldValue(type, fieldValue);          
+                // }
+
+
+                return string.Empty;
+            }
+
+            static string DescribeVersionFieldValue(VersionField fieldDefinition, string fieldValue)
+            {
+                if (fieldDefinition.Values.TryGetValue(fieldValue, out var valueDefinition))
+                {
+                    return valueDefinition.Name;
+                }
+
+                return string.Empty;
+            }
+
+            // TODO
+            return new FieldDescription(tag, value, string.Empty, string.Empty, false, -1);
+        }
+
         #region Object
 
         public override string ToString() => $"{Tag}={Value}";
@@ -674,7 +323,7 @@ namespace Fix
 
         public object Clone()
         {
-            return new Field(Tag, Value) { Definition = Definition };
+            return new Field(Tag, Value);
         }
     }
 }

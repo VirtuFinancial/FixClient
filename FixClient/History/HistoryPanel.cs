@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +16,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using static Fix.Dictionary;
 
 namespace FixClient
 {
@@ -46,12 +46,12 @@ namespace FixClient
         readonly ToolStripMenuItem _resendMenuItem;
         readonly ToolStripMenuItem _exportMenuItem;
 
-        Session _session;
+        Session? _session;
         //
         // This event is used by the mainform to updated the context of the dictionary view
         //
         public delegate void MessageDelegate(Fix.Message message);
-        public event MessageDelegate MessageSelected;
+        public event MessageDelegate? MessageSelected;
 
         public HistoryPanel()
         {
@@ -202,21 +202,30 @@ namespace FixClient
             UpdateUiState();
         }
 
-        void MessageGridCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        void MessageGridCellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
             DataRowView view = _messageView[e.RowIndex];
 
             if (view == null)
+            {
                 return;
+            }
 
             if (view.Row is not MessageDataRow dataRow)
+            {
                 return;
+            }
 
-            e.CellStyle.ForeColor = dataRow.Message.Incoming ? LookAndFeel.Color.Incoming : LookAndFeel.Color.Outgoing;
+            if (dataRow.Message is not Fix.Message message)
+            {
+                return;
+            }
+           
+            e.CellStyle.ForeColor = message.Incoming ? LookAndFeel.Color.Incoming : LookAndFeel.Color.Outgoing;
             e.FormattingApplied = true;
         }
 
-        void MessageGridCellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        void MessageGridCellValueNeeded(object? sender, DataGridViewCellValueEventArgs e)
         {
             e.Value = _messageView[e.RowIndex][e.ColumnIndex];
         }
@@ -230,17 +239,27 @@ namespace FixClient
             }
         }
 
-        void TailMessagesCheckBoxCheckChanged(object sender, EventArgs e)
+        void TailMessagesCheckBoxCheckChanged(object? sender, EventArgs e)
         {
+            if (_session is null)
+            {
+                return;
+            }
+
             _session.AutoScrollMessages = _tailMessagesCheckBox.Checked;
+
             if (!string.IsNullOrEmpty(_session.FileName))
+            {
                 _session.Write();
+            }
+
             ScrollToBottom();
         }
 
         void ApplyFieldSearch()
         {
-            string search = null;
+            string? search = null;
+            
             if (string.IsNullOrEmpty(_fieldSearchTextBox.Text))
             {
                 _fieldView.Sort = string.Empty;
@@ -253,10 +272,11 @@ namespace FixClient
                                        FieldDataTable.ColumnValue,
                                        _fieldSearchTextBox.Text);
             }
+
             _fieldView.RowFilter = search;
         }
 
-        void FieldSearchTextBoxTextChanged(object sender, EventArgs e)
+        void FieldSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             if (_fieldView == null || SelectedMessage == null)
                 return;
@@ -266,7 +286,8 @@ namespace FixClient
 
         void ApplyMessageSearch()
         {
-            string search = null;
+            string? search = null;
+            
             if (string.IsNullOrEmpty(_messageSearchTextBox.Text))
             {
                 _messageView.Sort = string.Empty;
@@ -279,12 +300,18 @@ namespace FixClient
                                        MessageDataTable.ColumnMsgTypeDescription,
                                        MessageDataTable.ColumnMsgSeqNum);
             }
+
+            if (_session is null)
+            {
+                return;
+            }
+
             _messageGrid.RowCount = 0;
             _messageView.RowFilter = _session.MessageRowFilter(search);
             _messageGrid.RowCount = _messageView.Count;
         }
 
-        void MessageSearchTextBoxTextChanged(object sender, EventArgs e)
+        void MessageSearchTextBoxTextChanged(object? sender, EventArgs e)
         {
             ApplyMessageSearch();
             if (_messageView.Sort == string.Empty)
@@ -294,21 +321,33 @@ namespace FixClient
             _messageSearchTextBox.Focus();
         }
 
-        Fix.Message SelectedMessage
+        Fix.Message? SelectedMessage
         {
             get
             {
                 if (_messageGrid.SelectedRows.Count == 0)
+                {
                     return null;
+                }
+
                 DataRowView view = _messageView[_messageGrid.SelectedRows[0].Index];
+
                 if (view.Row as MessageDataRow == null)
+                {
                     return null;
-                return (view.Row as MessageDataRow).Message;
+                }
+
+                return (view.Row as MessageDataRow)?.Message;
             }
         }
 
-        void ExportButtonClick(object sender, EventArgs e)
+        void ExportButtonClick(object? sender, EventArgs e)
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             string filename = Session.SenderCompId + "-" + Session.TargetCompId + ".txt";
 
             using SaveFileDialog dlg = new();
@@ -320,33 +359,38 @@ namespace FixClient
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                Cursor original = Cursor.Current;
+                Cursor? original = Cursor.Current;
                 Cursor.Current = Cursors.WaitCursor;
 
                 try
                 {
                     using FileStream stream = new(dlg.FileName, FileMode.Create);
                     using StreamWriter writer = new(stream);
+                    
                     foreach (Fix.Message message in Session.Messages)
                     {
                         string timestamp = "Unknown";
-                        Fix.Field field = message.Fields.Find(Fix.Dictionary.Fields.SendingTime.Tag);
-                        if (field != null)
+                        
+                        Fix.Field? field = message.Fields.Find(FIX_5_0SP2.Fields.SendingTime.Tag);
+                
+                        if (field is not null)
                         {
                             timestamp = field.Value;
                         }
+
                         string direction = message.Incoming ? "received" : "sent";
 
-                        Fix.Dictionary.Message definition = Session.Version.Messages[message.MsgType];
+                        if (Session.Version.Messages[message.MsgType] is Fix.Dictionary.Message definition)
+                        {
+                            writer.WriteLine("{0} ({1}) ({2})",
+                                             timestamp,
+                                             direction,
+                                             definition.Name);
 
-                        writer.WriteLine("{0} ({1}) ({2})",
-                                         timestamp,
-                                         direction,
-                                         definition.Name);
-
-                        writer.WriteLine("{");
-                        writer.WriteLine(message.ToString());
-                        writer.WriteLine("}");
+                            writer.WriteLine("{");
+                            writer.WriteLine(message.ToString());
+                            writer.WriteLine("}");
+                        }
                     }
                 }
                 finally
@@ -378,7 +422,7 @@ namespace FixClient
             _tailMessagesCheckBox.Enabled = true;
             _messageSearchTextBox.Enabled = true;
 
-            Fix.Message message = SelectedMessage;
+            Fix.Message? message = SelectedMessage;
 
             if (message != null)
             {
@@ -392,12 +436,18 @@ namespace FixClient
             }
         }
 
-        void ResendButtonClick(object sender, EventArgs e)
+        void ResendButtonClick(object? sender, EventArgs e)
         {
-            Fix.Message source = SelectedMessage;
-
-            if (source == null)
+            if (SelectedMessage is not Fix.Message source)
+            {
                 return;
+            }
+
+            if (Session is null)
+            {
+                return;
+            }
+
             //
             // Create a new copy of the message.
             //
@@ -407,15 +457,15 @@ namespace FixClient
 
             foreach (Fix.Field field in source.Fields)
             {
-                if (field.Tag == Fix.Dictionary.Fields.ClOrdID.Tag)
+                if (field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag)
                 {
                     message.Fields.Add(new Fix.Field(field.Tag, Session.FormatClOrdId(Session.NextClOrdId++)));
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.OrderID.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.OrderID.Tag)
                 {
                     message.Fields.Add(new Fix.Field(field.Tag, Session.NextOrderId++));
                 }
-                else if (field.Tag == Fix.Dictionary.Fields.ExecID.Tag)
+                else if (field.Tag == FIX_5_0SP2.Fields.ExecID.Tag)
                 {
                     message.Fields.Add(new Fix.Field(field.Tag, Session.NextExecId++));
                 }
@@ -428,7 +478,7 @@ namespace FixClient
             Session.Send(message);
         }
 
-        void ClearButtonClick(object sender, EventArgs e)
+        void ClearButtonClick(object? sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show(this,
                                                   "This will clear the order history as well, are you sure",
@@ -445,17 +495,19 @@ namespace FixClient
             }
         }
 
-        void MessageGridSelectionChanged(object sender, EventArgs e)
+        void MessageGridSelectionChanged(object? sender, EventArgs e)
         {
             try
             {
                 _fieldTable.BeginLoadData();
                 _fieldTable.Rows.Clear();
 
-                Fix.Message message = SelectedMessage;
-
-                if (message == null)
+                if (SelectedMessage is not Fix.Message message)
+                {
                     return;
+                }
+
+                var messageDefinition = FIX_5_0SP2.Messages[message.MsgType];
 
                 foreach (Fix.Field field in message.Fields)
                 {
@@ -464,20 +516,15 @@ namespace FixClient
                         continue;
                     }
 
-                    if (field.Definition == null)
-                    {
-                        field.Definition = Session.FieldDefinition(message, field);
-                    }
-
                     dataRow.Field = field;
 
-                    if (field.Definition != null)
+                    if (field.Describe(messageDefinition) is Fix.FieldDescription description)
                     {
-                        dataRow[FieldDataTable.ColumnIndent] = field.Definition.Indent;
-                        dataRow[FieldDataTable.ColumnName] = field.Definition.Name;
+                        dataRow[FieldDataTable.ColumnIndent] = description.Indent;
+                        dataRow[FieldDataTable.ColumnName] = description.Name;
                         dataRow[FieldDataTable.ColumnCustom] = false;
-                        dataRow[FieldDataTable.ColumnRequired] = field.Definition.Required;
-                        dataRow[FieldDataTable.ColumnDescription] = field.ValueDescription;
+                        dataRow[FieldDataTable.ColumnRequired] = description.Required;
+                        dataRow[FieldDataTable.ColumnDescription] = description.Description;
                     }
                     else
                     {
@@ -536,7 +583,7 @@ namespace FixClient
             }
         }
 
-        public Session Session
+        public Session? Session
         {
             get
             {
@@ -566,7 +613,7 @@ namespace FixClient
             }
         }
 
-        void MessageAdded(object sender, Fix.MessageCollection.MessageEvent ev)
+        void MessageAdded(object? sender, Fix.MessageCollection.MessageEvent ev)
         {
             if (InvokeRequired)
             {
@@ -589,13 +636,18 @@ namespace FixClient
 
         void ScrollToBottom()
         {
-            if (_messageGrid.Rows.Count > 0 && _session.AutoScrollMessages)
+            if (Session is null)
+            {
+                return;
+            }
+
+            if (_messageGrid.Rows.Count > 0 && Session.AutoScrollMessages)
             {
                 _messageGrid.FirstDisplayedScrollingRowIndex = _messageGrid.Rows.Count - 1;
             }
         }
 
-        void SessionMessageFilterChanged(object sender, EventArgs e)
+        void SessionMessageFilterChanged(object? sender, EventArgs e)
         {
             if (InvokeRequired)
             {
@@ -606,7 +658,7 @@ namespace FixClient
             ApplyMessageSearch();
         }
 
-        void ViewListChanged(object sender, ListChangedEventArgs e)
+        void ViewListChanged(object? sender, ListChangedEventArgs e)
         {
             if (InvokeRequired)
             {
@@ -617,7 +669,7 @@ namespace FixClient
             ScrollToBottom();
         }
 
-        Image ImageForMessageStatus(Fix.MessageStatus status)
+        static Image ImageForMessageStatus(Fix.MessageStatus status)
         {
             return status switch
             {
@@ -630,32 +682,40 @@ namespace FixClient
 
         void AddMesage(Fix.Message message)
         {
-            Fix.Dictionary.Message definition = message.Definition;
-
-            if (definition == null)
+            if (message.Definition is not Fix.Dictionary.Message)
             {
-                definition = Fix.Dictionary.Messages[message.MsgType];
+                message.Definition = FIX_5_0SP2.Messages[message.MsgType];
 
-                if (definition == null)
+                if (message.Definition == null)
                 {
-                    definition = Fix.Dictionary.FIX_4_0.Messages[message.MsgType];
+                    message.Definition = FIX_4_2.Messages[message.MsgType];
                 }
             }
 
-            var row = _messageTable.NewRow() as MessageDataRow;
+            if (_messageTable.NewRow() is not MessageDataRow row)
+            {
+                return;
+            }
+           
             row.Message = message;
-            row[MessageDataTable.ColumnSendingTime] = message.Fields.Find(Fix.Dictionary.Fields.SendingTime).Value;
+            
+            row[MessageDataTable.ColumnSendingTime] = message.Fields.Find(FIX_5_0SP2.Fields.SendingTime)?.Value;
             row[MessageDataTable.ColumnMsgType] = message.MsgType;
             row[MessageDataTable.ColumnStatus] = message.Status;
             row[MessageDataTable.ColumnStatusImage] = ImageForMessageStatus(message.Status);
             row[MessageDataTable.ColumnStatusMessage] = message.StatusMessage;
-            row[MessageDataTable.ColumnMsgTypeDescription] = definition?.Name;
-            row[MessageDataTable.ColumnMsgSeqNum] = message.Fields.Find(Fix.Dictionary.Fields.MsgSeqNum).Value;
+            row[MessageDataTable.ColumnMsgTypeDescription] = message.Definition?.Name;
+            row[MessageDataTable.ColumnMsgSeqNum] = message.Fields.Find(FIX_5_0SP2.Fields.MsgSeqNum)?.Value;
             _messageTable.Rows.Add(row);
         }
 
         void Reload()
         {
+            if (Session is null)
+            {
+                return;
+            }
+
             try
             {
                 _messageTable.BeginLoadData();

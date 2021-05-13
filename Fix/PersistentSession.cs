@@ -24,15 +24,15 @@ namespace Fix
     {
         readonly object _syncObject = new();
 
-        Timer _writeTimer;
-        JsonSerializer _serialiser;
+        Timer? _writeTimer;
+        JsonSerializer? _serialiser;
 
         int _writeRequired;
         const int WRITE_REQUIRED = 1;
         const int WRITE_NON_REQUIRED = 0;
 
-        Writer _historyWriter;
-        string _fileName;
+        Writer? _historyWriter;
+        string? _fileName;
 
         bool _closing;
 
@@ -50,7 +50,7 @@ namespace Fix
         }
 
         [Browsable(false)]
-        public string FileName
+        public string? FileName
         {
             get { return _fileName; }
             set
@@ -68,13 +68,18 @@ namespace Fix
         [Browsable(false)]
         public bool PersistMessages { get; set; }
 
-        protected static string GetFileNamePrefix(string filename)
+        protected static string GetFileNamePrefix(string? filename)
         {
+            if (string.IsNullOrEmpty(filename))
+            {
+                throw new Exception("filename is null or empty");
+            }
+
             return Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar +
                    Path.GetFileNameWithoutExtension(filename);
         }
 
-        string MessagesFileName
+        string? MessagesFileName
         {
             get
             {
@@ -165,7 +170,7 @@ namespace Fix
             WriteSession();
         }
 
-        protected bool Reading;
+        private bool Reading { get; set; }
 
         public virtual void Read()
         {
@@ -197,7 +202,7 @@ namespace Fix
             WriteSession();
         }
 
-        void WriteTimerFired(object context)
+        void WriteTimerFired(object? context)
         {
             if (Interlocked.CompareExchange(ref _writeRequired, WRITE_NON_REQUIRED, WRITE_REQUIRED) == WRITE_REQUIRED)
             {
@@ -234,13 +239,13 @@ namespace Fix
                 {
                     session = (PersistentSession)Clone();
 
-                    if (session.FileName == null)
+                    if (session.FileName is null)
                     {
                         OnError("Ignoring Write request because FileName has not been set");
                         return;
                     }
 
-                    using FileStream stream = new(FileName, FileMode.Create);
+                    using FileStream stream = new(session.FileName, FileMode.Create);
                     using JsonWriter writer = new JsonTextWriter(new StreamWriter(stream));
                     writer.Formatting = Formatting.Indented;
                     JObject environment = JObject.FromObject(session, _serialiser);
@@ -266,13 +271,18 @@ namespace Fix
 
             try
             {
+                if (MessagesFileName is null)
+                {
+                    return;
+                }
+
                 using FileStream stream = new(MessagesFileName, FileMode.OpenOrCreate);
                 using Reader reader = new(stream);
                 for (; ; )
                 {
                     try
                     {
-                        Message message = reader.ReadLine();
+                        Message? message = reader.ReadLine();
                         if (message == null)
                             break;
                         Messages.Add(message);
@@ -305,7 +315,10 @@ namespace Fix
             StopSessionWriter();
             bool historyWriterWasRunning = StopHistoryWriter();
             base.ResetMessages();
-            File.Delete(MessagesFileName);
+            if (MessagesFileName is not null)
+            {
+                File.Delete(MessagesFileName);
+            }
             StartSessionWriter();
             if (historyWriterWasRunning)
             {
@@ -320,7 +333,7 @@ namespace Fix
 
             try
             {
-                _historyWriter.WriteLine(ev.Message);
+                _historyWriter?.WriteLine(ev.Message);
             }
             catch (Exception ex)
             {

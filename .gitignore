@@ -1,6 +1,7 @@
-Dictionary/Generated
+Fix.Dictionary/Generated
 bin
 obj
 packages
 .vs
 *.user
+**/__pycache__
