@@ -602,13 +602,6 @@ namespace Fix
             order.OrdStatus = FIX_5_0SP2.OrdStatus.PendingCancel;
             order.NewClOrdID = ClOrdID.Value;
 
-            // TODO
-            //if (message.MsgType == Dictionary.FIX_4_0.Messages.KodiakWaveOrderCancelRequest.MsgType)
-            //{
-            //    Orders.ReplaceKey(order.ClOrdID, ClOrdID.Value);
-            //    order.ClOrdID = ClOrdID.Value;
-            //}
-
             OnOrderUpdated(order);
 
             return true;
@@ -729,7 +722,6 @@ namespace Fix
                 }
             }
 
-            //Orders.Add(KeyForOrder(order), order);
             order.UpdateKey();
             Orders.Add(order);
 
