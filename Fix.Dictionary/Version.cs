@@ -30,6 +30,8 @@ namespace Fix
                 }
             }
 
+            public override string ToString() => BeginString;
+          
         }
     }
 }
