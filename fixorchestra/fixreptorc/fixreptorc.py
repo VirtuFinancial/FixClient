@@ -50,7 +50,7 @@ def build_references(repository, componentID):
     return references
 
 
-if __name__ == '__main__':
+def main():
     
     parser = argparse.ArgumentParser()
     parser.add_argument('--repository', required=True, metavar='directory', help='A directory containing a repository to load e.g. fix_repository_2010_edition_20200402/FIX.4.4/Base')
@@ -115,3 +115,6 @@ if __name__ == '__main__':
 
     print('<?xml version="1.0" encoding="UTF-8"?>')
     ET.dump(indent(xml))
+
+if __name__ == '__main__':
+    main()

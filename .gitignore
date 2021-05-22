@@ -5,3 +5,7 @@ packages
 .vs
 *.user
 **/__pycache__
+*.pyc
+dist
+build
+*.egg-info

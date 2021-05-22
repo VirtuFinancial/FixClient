@@ -186,10 +186,10 @@ def validate_orchestration(orchestration):
             print(error)
 
 
-if __name__ == '__main__':
+def main():
 
     parser = argparse.ArgumentParser()
-    
+
     parser.add_argument('--orchestration', metavar='file', help='The orchestration to load')
     parser.add_argument('--repository', metavar='directory', help='A directory containing a repository to load e.g. fix_repository_2010_edition_20200402/FIX.4.4/Base')
 
@@ -208,5 +208,5 @@ if __name__ == '__main__':
         orchestration = Orchestration(args.orchestration)
         validate_orchestration(orchestration)
 
-
-    
+if __name__ == '__main__':
+    main()

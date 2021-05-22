@@ -203,7 +203,7 @@ class Orchestration:
                 result = result + self.references_to_fields(group.references, depth + 1)
             elif reference.component_id:
                 component = self.components[reference.component_id]
-                result = result + self.references_to_fields(component.references, depth + 1)
+                result = result + self.references_to_fields(component.references, depth)
         return result
 
 
@@ -462,19 +462,23 @@ class Orchestration:
         ET.SubElement(metadata, '{%s}format' % (dc_namespace)).text = 'Orchestra schema'
         ET.SubElement(metadata, '{%s}source' % (dc_namespace)).text = 'FIX Unified Repository'
 
+    def ep_is_valid(self, ep):
+        if ep is None or ep == '-1':
+            return False
+        return True
 
     def populate_xml_pedigree(self, element, pedigree):
         if pedigree.added:
             element.attrib["added"] = pedigree.added
-        if pedigree.addedEP:
+        if self.ep_is_valid(pedigree.addedEP):
             element.attrib["addedEP"] = pedigree.addedEP
         if pedigree.updated:
             element.attrib["updated"] = pedigree.updated
-        if pedigree.updatedEP:
+        if self.ep_is_valid(pedigree.updatedEP):
             element.attrib["updatedEP"] = pedigree.updatedEP
         if pedigree.deprecated:
             element.attrib["deprecated"] = pedigree.deprecated
-        if pedigree.deprecatedEP:
+        if self.ep_is_valid(pedigree.deprecatedEP):
             element.attrib["deprecatedEP"] = pedigree.deprecatedEP
 
 
@@ -773,7 +777,7 @@ def list_groups(orchestration):
         print('{} (Id={}, Category={}, Pedigree={})'.format(group.name, group.id, group.category, group.pedigree))
 
 
-if __name__ == '__main__':
+def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--orchestration', required=True, metavar='file', help='The orchestration to load')
@@ -806,4 +810,5 @@ if __name__ == '__main__':
     if args.list_groups:
         list_groups(orchestration)
 
-
+if __name__ == '__main__':
+    main()
