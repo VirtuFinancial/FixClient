@@ -165,7 +165,7 @@ namespace Fix
 
         public static explicit operator FieldValue(Field field)
         {
-            return new FieldValue(field.Tag, "", field.Value, "");
+            return new FieldValue(field.Tag, "", field.Value, "", Pedigree.Empty);
         }
 
         public static bool operator ==(Field left, FieldValue? right)
@@ -267,8 +267,8 @@ namespace Fix
             if (definition == null)
             {
                 // This field is not defined in this message so just fall back to the global field definitions.
-                // This means we won't have values for required and indent which are message specific. We could
-                // iterator through each version and lookup the message definition and see if older versions
+                // This means we won't have values for required and depth which are message specific. We could
+                // iterate through each version and lookup the message definition and see if older versions
                 // contain the field but not worth the effort now.
                 string description = string.Empty;
 
@@ -280,33 +280,27 @@ namespace Fix
                     }
                 }
 
-                return new FieldDescription(tag, value, globalDefinition.Name, description, false, -1, globalDefinition.DataType, globalDefinition.Pedigree);
+                globalDefinition.Values.TryGetValue(value, out var valueDefinition);
+
+                return new FieldDescription(tag, value, globalDefinition.Name, description, false, -1, globalDefinition.DataType, globalDefinition.Pedigree, valueDefinition);
             }
 
             if (definition is MessageField fieldDefinition)
             {
                 if (FIX_5_0SP2.Fields.TryGetValue(tag, out var globalDefinition))
                 {
+                    globalDefinition.Values.TryGetValue(value, out var valueDefinition);
+
                     return new FieldDescription(tag,
                                                 value,
                                                 fieldDefinition.Name,
-                                                DescribeMessageFieldValue(fieldDefinition, value),
+                                                fieldDefinition.Description,
                                                 fieldDefinition.Required,
                                                 fieldDefinition.Depth,
                                                 globalDefinition.DataType,
-                                                globalDefinition.Pedigree);
+                                                globalDefinition.Pedigree,
+                                                valueDefinition);
                 }
-            }
-
-            static string DescribeMessageFieldValue(MessageField fieldDefinition, string fieldValue)
-            {
-                // TODO
-                // if (fieldDefinition?.EnumeratedType is Type type) {
-                //      return DescribeFieldValue(type, fieldValue);          
-                // }
-
-
-                return string.Empty;
             }
 
             static string DescribeVersionFieldValue(VersionField fieldDefinition, string fieldValue)
@@ -319,8 +313,7 @@ namespace Fix
                 return string.Empty;
             }
 
-            // TODO
-            return new FieldDescription(tag, value, string.Empty, string.Empty, false, -1, string.Empty, new Pedigree());
+            return new FieldDescription(tag, value, string.Empty, string.Empty, false, -1, string.Empty, Pedigree.Empty, null);
         }
 
         #region Object

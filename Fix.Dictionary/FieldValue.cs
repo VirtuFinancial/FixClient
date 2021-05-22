@@ -4,7 +4,7 @@ namespace Fix
 {
     public partial class Dictionary
     {
-        public sealed record FieldValue(int Tag, string Name, string Value, string Description)
+        public sealed record FieldValue(int Tag, string Name, string Value, string Description, Fix.Dictionary.Pedigree Pedigree)
         {
             public string Name { get; private set; } = Name;
 

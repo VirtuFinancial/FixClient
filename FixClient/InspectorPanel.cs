@@ -73,21 +73,21 @@ namespace FixClient
     {
         const string Category = "Value";
 
-        [Category(Category)]
-        [ReadOnly(true)]
-        public string? Type { get; set; }
+        public ValueProperties(Fix.Dictionary.FieldValue value)
+        {
+            Name = value.Name;
+            Value = value.Value;
+            Pedigree = value.Pedigree;
+        }
 
         [Category(Category)]
-        [ReadOnly(true)]
-        public string? Added { get; set; }
+        public string Name { get; }
 
         [Category(Category)]
-        [ReadOnly(true)]
-        public string? Value { get; set; }
+        public string Value { get; }
 
         [Category(Category)]
-        [ReadOnly(true)]
-        public string? Name { get; set; }
+        public Fix.Dictionary.Pedigree Pedigree { get; }
     }
 
     public partial class InspectorPanel : Panel
@@ -216,8 +216,6 @@ namespace FixClient
             }
         }
 
-        
-
         public Fix.Field? Field
         {
             set
@@ -227,53 +225,16 @@ namespace FixClient
                 _fieldPropertyGrid.SelectedObject = _fieldDefinition is null ? null : new FieldProperties(_fieldDefinition);
                 _fieldDescription.Text = _fieldDefinition?.Description;
 
-                /*
-                if (definition?.EnumeratedType == null)
+                if (_fieldDefinition?.ValueDefinition is Fix.Dictionary.FieldValue fieldValue)
+                {
+                    _valuePropertyGrid.SelectedObject = new ValueProperties(fieldValue);
+                    _valueDescription.Text = fieldValue.Description;
+                }
+                else
                 {
                     _valuePropertyGrid.SelectedObject = null;
                     _valueDescription.Text = null;
-                    return;
                 }
-
-                var valueProperties = new ValueProperties
-                {
-                    Type = definition.EnumeratedType.Name
-                };
-
-                try
-                {
-                    if (!string.IsNullOrEmpty(value.Value) && value.Value.Length == 1)
-                    {
-                        string name = definition.EnumeratedType.GetEnumName(Convert.ToChar(value.Value));
-
-                        if (string.IsNullOrEmpty(name))
-                            return;
-
-                        MemberInfo[] info = definition.EnumeratedType.GetMember(name);
-
-                        if (info.Length < 1)
-                            return;
-
-                        var attributes = info[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-                        _valueDescription.Text = ((DescriptionAttribute)attributes[0]).Description;
-
-                        string added = null;
-                        attributes = info[0].GetCustomAttributes(typeof(Fix.AddedAttribute), false);
-                        if (attributes.Length > 0)
-                        {
-                            added = ((Fix.AddedAttribute)attributes[0]).Added;
-                        }
-
-                        valueProperties.Value = value.Value;
-                        valueProperties.Name = name;
-                        valueProperties.Added = added;
-                    }
-                }
-                finally
-                {
-                    _valuePropertyGrid.SelectedObject = valueProperties;
-                }
-                */
             }
         }
     }

@@ -15,6 +15,8 @@ namespace Fix
             public string? Deprecated { get; init; }
             public string? DeprecatedEP { get; init; }
 
+            public static Pedigree Empty { get; } = new Pedigree();
+
             public override string ToString()
             {
                 var items = new List<String>();

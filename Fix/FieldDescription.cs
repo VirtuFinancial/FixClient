@@ -7,5 +7,6 @@ namespace Fix
                                    bool Required, 
                                    int Depth,
                                    string DataType,
-                                   Dictionary.Pedigree Pedigree);
+                                   Dictionary.Pedigree Pedigree,
+                                   Dictionary.FieldValue? ValueDefinition);
 }

@@ -47,7 +47,7 @@ def generate_orchestration_fields(namespace, prefix, orchestration):
             file.write('                    }\n')
 
             for (name, value, synopsis) in values:
-                file.write('                    public static readonly FieldValue {} = new FieldValue({}, "{}", "{}", "{}");\n'.format(name, field.id, name, value, sanitise(synopsis)))
+                file.write('                    public static readonly FieldValue {} = new FieldValue({}, "{}", "{}", "{}", {});\n'.format(name, field.id, name, value, sanitise(synopsis), format_pedigree(field.pedigree)))
             
             file.write('                }\n')
 

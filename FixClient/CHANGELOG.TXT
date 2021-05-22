@@ -6,6 +6,7 @@
 	- FIX.4.2, FIX.4.4, and FIX.5.0SP2 (FixLatest) are now the only included orchestrations.
 	   - Others can be added but these are the versions now supported by fixtrading.org.
 	- Data dictionary customisation for HKEX and ITG message and field types has been removed.
+•	The messages view data dictionary panel now displays the complete pedigree for each message, field, and value.
 
 --------------------------------------------------------------------------------
 4.0.0		2021/04/17
