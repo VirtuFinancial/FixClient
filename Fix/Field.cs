@@ -280,14 +280,22 @@ namespace Fix
                     }
                 }
 
-                return new FieldDescription(tag, value, globalDefinition.Name, description, false, -1);
+                return new FieldDescription(tag, value, globalDefinition.Name, description, false, -1, globalDefinition.DataType, globalDefinition.Pedigree);
             }
 
             if (definition is MessageField fieldDefinition)
             {
-                // TODO
-                // result.Indent = fieldDefinition?.Indent ?? 0;
-                return new FieldDescription(tag, value, fieldDefinition.Name, DescribeMessageFieldValue(fieldDefinition, value), fieldDefinition.Required, -1);
+                if (FIX_5_0SP2.Fields.TryGetValue(tag, out var globalDefinition))
+                {
+                    return new FieldDescription(tag,
+                                                value,
+                                                fieldDefinition.Name,
+                                                DescribeMessageFieldValue(fieldDefinition, value),
+                                                fieldDefinition.Required,
+                                                fieldDefinition.Depth,
+                                                globalDefinition.DataType,
+                                                globalDefinition.Pedigree);
+                }
             }
 
             static string DescribeMessageFieldValue(MessageField fieldDefinition, string fieldValue)
@@ -312,7 +320,7 @@ namespace Fix
             }
 
             // TODO
-            return new FieldDescription(tag, value, string.Empty, string.Empty, false, -1);
+            return new FieldDescription(tag, value, string.Empty, string.Empty, false, -1, string.Empty, new Pedigree());
         }
 
         #region Object

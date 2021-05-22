@@ -1651,11 +1651,11 @@ namespace FixClient
 
                     if (description != null)
                     {
-                        dataRow[FieldDataTable.ColumnIndent] = description.Indent;
+                        dataRow[FieldDataTable.ColumnIndent] = description.Depth;
                         dataRow[FieldDataTable.ColumnName] = description.Name;
                         dataRow[FieldDataTable.ColumnRequired] = description.Required;
                         dataRow[FieldDataTable.ColumnCustom] = false;
-                        previousIndent = description.Indent;
+                        previousIndent = description.Depth;
                     }
                     else
                     {

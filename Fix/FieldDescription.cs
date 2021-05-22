@@ -5,5 +5,7 @@ namespace Fix
                                    string Name, 
                                    string Description, 
                                    bool Required, 
-                                   int Indent);
+                                   int Depth,
+                                   string DataType,
+                                   Dictionary.Pedigree Pedigree);
 }

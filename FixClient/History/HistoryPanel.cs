@@ -520,7 +520,7 @@ namespace FixClient
 
                     if (field.Describe(messageDefinition) is Fix.FieldDescription description)
                     {
-                        dataRow[FieldDataTable.ColumnIndent] = description.Indent;
+                        dataRow[FieldDataTable.ColumnIndent] = description.Depth;
                         dataRow[FieldDataTable.ColumnName] = description.Name;
                         dataRow[FieldDataTable.ColumnCustom] = false;
                         dataRow[FieldDataTable.ColumnRequired] = description.Required;

@@ -31,7 +31,7 @@ def generate_orchestration_messages(namespace, prefix, orchestration):
                 required = 'false'
                 if field.presence.lower() == 'required':
                     required = 'true'
-                initialiser = '                            new MessageField(new {}.{}(), {}),\n'.format(namespace, field.field.name, required)
+                initialiser = '                            new MessageField(new {}.{}(), {}, {}),\n'.format(namespace, field.field.name, required, field.depth)
                 initialisers.append(initialiser)
             last = initialisers[len(initialisers) - 1]
             initialisers = initialisers[:-1]

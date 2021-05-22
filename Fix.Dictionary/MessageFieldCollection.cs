@@ -31,6 +31,9 @@ namespace Fix
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
             readonly OrderedDictionary<int, MessageField> _fields = new OrderedDictionary<int, MessageField>();
+
+            public override string ToString() => Count.ToString();
+
         }
     }
 }
