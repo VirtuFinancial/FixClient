@@ -20,7 +20,6 @@ namespace FixClient
         public PasteMessageForm()
         {
             InitializeComponent();
-            SmartPasteCheckGroupBoxCheckedChanged(this, EventArgs.Empty);
         }
 
         public bool FilterEmptyFields
@@ -35,28 +34,10 @@ namespace FixClient
             set { defineUnknownAsCustomCheckBox.Checked = value; }
         }
 
-        public bool SmartPaste
-        {
-            get { return smartPasteCheckGroupBox.Checked; }
-            set { smartPasteCheckGroupBox.Checked = value; }
-        }
-
         public bool ResetExistingMessage
         {
             get { return resetMessageCheckBox.Checked; }
             set { resetMessageCheckBox.Checked = value; }
-        }
-
-        public bool ProcessRepeatingGroups
-        {
-            get { return processGroupsCheckBox.Checked; }
-            set { processGroupsCheckBox.Checked = value; }
-        }
-
-        void SmartPasteCheckGroupBoxCheckedChanged(object sender, EventArgs e)
-        {
-            resetMessageCheckBox.Enabled = smartPasteCheckGroupBox.Checked;
-            processGroupsCheckBox.Enabled = smartPasteCheckGroupBox.Checked;
         }
     }
 }

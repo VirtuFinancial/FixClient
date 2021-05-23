@@ -7,6 +7,7 @@
 	   - Others can be added but these are the versions now supported by fixtrading.org.
 	- Data dictionary customisation for HKEX and ITG message and field types has been removed.
 •	The messages view data dictionary panel now displays the complete pedigree for each message, field, and value.
+•	Removed the smart paste options from the messages view paste form.
 
 --------------------------------------------------------------------------------
 4.0.0		2021/04/17

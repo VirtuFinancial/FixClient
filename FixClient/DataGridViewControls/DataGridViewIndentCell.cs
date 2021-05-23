@@ -27,6 +27,7 @@ namespace FixClient
             new SolidBrush(Color.FromArgb(204, 204, 204)),
             new SolidBrush(Color.FromArgb(152, 152, 152)),
             new SolidBrush(Color.FromArgb(120, 120, 120)),
+            new SolidBrush(Color.Black)
         };
 
         protected override void Paint(Graphics graphics, Rectangle clipBounds, Rectangle cellBounds, int rowIndex,
@@ -41,7 +42,7 @@ namespace FixClient
 
             var indent = (int)value;
 
-            if (indent > Brushes.Length - 1)
+            if (indent > Brushes.Length - 1 || indent < 0)
             {
                 indent = 0;
             }

@@ -859,18 +859,14 @@ namespace FixClient
             using PasteMessageForm form = new();
             form.DefineUnknownAsCustom = Session.PasteDefineCustomFields;
             form.FilterEmptyFields = Session.PasteFilterEmptyFields;
-            form.SmartPaste = Session.PasteSmart;
             form.ResetExistingMessage = Session.PasteResetExisting;
-            form.ProcessRepeatingGroups = Session.PasteProcessRepeatingGroups;
 
             if (form.ShowDialog() != DialogResult.OK)
                 return;
 
             Session.PasteDefineCustomFields = form.DefineUnknownAsCustom;
             Session.PasteFilterEmptyFields = form.FilterEmptyFields;
-            Session.PasteSmart = form.SmartPaste;
             Session.PasteResetExisting = form.ResetExistingMessage;
-            Session.PasteProcessRepeatingGroups = form.ProcessRepeatingGroups;
 
             Session.Write();
 
@@ -879,21 +875,7 @@ namespace FixClient
                 Session.ResetTemplateMessage(message.MsgType);
             }
 
-            if (form.SmartPaste)
-            {
-                if (form.ProcessRepeatingGroups)
-                {
-                    SmartPasteWithGroups(parsedMessage, message, form.DefineUnknownAsCustom);
-                }
-                else
-                {
-                    SmartPasteWithoutGroups(parsedMessage, message, form.DefineUnknownAsCustom);
-                }
-            }
-            else
-            {
-                SimplePaste(parsedMessage, message, form.DefineUnknownAsCustom);
-            }
+            SimplePaste(parsedMessage, message, form.DefineUnknownAsCustom);
 
             SelectMessage(message.MsgType);
             MessageGridSelectionChanged(null, EventArgs.Empty);
@@ -910,163 +892,12 @@ namespace FixClient
             }
         }
 
-        struct IndentIndex
-        {
-            public IndentIndex(int indent, int index)
-            {
-                Indent = indent;
-                Index = index;
-            }
-            public readonly int Indent;
-            public readonly int Index;
-        }
-
-        void SmartPasteWithGroups(Fix.Message parsedMessage, Fix.Message message, bool defineUnknownAsCustom)
-        {
-            if (Session is null)
-            {
-                return;
-            }
-
-            message.Fields.Clear();
-
-            //Fix.Dictionary.Message? exemplar = Session.Version.Messages[message.MsgType];
-
-            //var indents = new Stack<IndentIndex>();
-            //var indexes = new Dictionary<int, int>();
-            //int? groupIndent = null;
-            //int exemplarIndex = 0;
-
-            foreach (var field in parsedMessage.Fields)
-            {
-                if (!Session.Version.Fields.TryGetValue(field.Tag, out var fieldDefinition) || fieldDefinition == null)
-                {
-                    if (!Session.CustomFields.TryGetValue(field.Tag, out var _) && defineUnknownAsCustom)
-                    {
-                        var custom = new CustomField { Tag = field.Tag, Name = field.Tag.ToString() };
-                        Session.AddCustomField(custom);
-                    }
-                    message.Fields.Add(field.Tag, field.Value);
-                    continue;
-                }
-
-                /* TODO
-                for (; exemplarIndex < exemplar.Fields.Count; ++exemplarIndex)
-                {
-                    var definition = exemplar.Fields[exemplarIndex];
-
-                    if (indents.Count == 0 || indents.Peek().Indent < definition.Indent)
-                    {
-                        indents.Push(new IndentIndex(definition.Indent, exemplarIndex));
-                    }
-                    else if (indents.Peek().Indent > definition.Indent)
-                    {
-                        if (groupIndent != null && indents.Peek().Indent == groupIndent)
-                        {
-                            groupIndent = null;
-                        }
-                        indents.Pop();
-                    }
-
-                    if (groupIndent == null)
-                    {
-                        if (indexes.TryGetValue(field.Tag, out int index))
-                        {
-                            // We've seen this tag already so this means we have a repeating group. Move back to
-                            // the start of the group in the definition and continue on.
-                            exemplarIndex = index;
-                            definition = exemplar.Fields[exemplarIndex];
-                            groupIndent = definition.Indent;
-                            message.Fields.Add(definition, field.Value);
-                            ++exemplarIndex;
-                            break;
-                        }
-                    }
-
-                    if (definition.Tag == field.Tag)
-                    {
-                        message.Fields.Add(definition, field.Value);
-                        indexes[field.Tag] = exemplarIndex;
-                        ++exemplarIndex;
-                        break;
-                    }
-
-                    message.Fields.Add(definition, string.Empty);
-                }
-                */
-            }
-
-            /*
-            while (exemplarIndex < exemplar.FieldCount)
-            {
-                Fix.Dictionary.Field definition = exemplar.Fields[exemplarIndex];
-                message.Fields.Add(definition, string.Empty);
-                ++exemplarIndex;
-            }
-            */
-
-        }
-
-        void SmartPasteWithoutGroups(Fix.Message parsedMessage, Fix.Message message, bool defineUnknownAsCustom)
-        {
-            if (Session is null)
-            {
-                return;
-            }
-
-            foreach (Fix.Field field in parsedMessage.Fields)
-            {
-                if (!Session.Version.Fields.TryGetValue(field.Tag, out _))
-                {
-                    CustomField custom;
-                    if (!Session.CustomFields.TryGetValue(field.Tag, out _) && defineUnknownAsCustom)
-                    {
-                        custom = new CustomField { Tag = field.Tag, Name = field.Tag.ToString() };
-                        Session.AddCustomField(custom);
-                    }
-                }
-
-                if (field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag)
-                {
-                    message.Fields.Set(field.Tag, Session.AutoClOrdId ? Session.FormatClOrdId(Session.NextClOrdId) : field.Value);
-                }
-                else if (field.Tag == FIX_5_0SP2.Fields.OrderID.Tag)
-                {
-                    message.Fields.Set(field.Tag, Session.NextOrderId);
-                }
-                else if (field.Tag == FIX_5_0SP2.Fields.ExecID.Tag)
-                {
-                    message.Fields.Set(field.Tag, Session.NextExecId);
-                }
-                else if (field.Tag == FIX_5_0SP2.Fields.ListID.Tag)
-                {
-                    message.Fields.Set(field.Tag, Session.NextListId);
-                }
-                else if (field.Tag == FIX_5_0SP2.Fields.AllocID.Tag)
-                {
-                    message.Fields.Set(field.Tag, Session.NextAllocId);
-                }
-                else if (field.Tag == FIX_5_0SP2.Fields.NextExpectedMsgSeqNum.Tag)
-                {
-                    message.Fields.Set(field.Tag, Session.IncomingSeqNum);
-                }
-                else
-                {
-                    message.Fields.Set(field.Tag, field.Value);
-                }
-            }
-
-            Session.WriteCustomFields();
-        }
-
         void SimplePaste(Fix.Message parsedMessage, Fix.Message message, bool defineUnknownAsCustom)
         {
             if (Session is null)
             {
                 return;
             }
-
-            message.Fields.Clear();
 
             foreach (Fix.Field field in parsedMessage.Fields)
             {

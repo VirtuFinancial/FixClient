@@ -115,9 +115,7 @@ namespace FixClient
             //Reading = false;
             PasteDefineCustomFields = session.PasteDefineCustomFields;
             PasteFilterEmptyFields = session.PasteFilterEmptyFields;
-            PasteSmart = session.PasteSmart;
             PasteResetExisting = session.PasteResetExisting;
-            PasteProcessRepeatingGroups = session.PasteProcessRepeatingGroups;
         }
 
         [Category(CategoryNetwork)]
@@ -238,14 +236,6 @@ namespace FixClient
         [Browsable(false)]
         [JsonProperty]
         public bool PasteFilterEmptyFields { get; set; } = true;
-
-        [Browsable(false)]
-        [JsonProperty]
-        public bool PasteSmart { get; set; } = true;
-
-        [Browsable(false)]
-        [JsonProperty]
-        public bool PasteProcessRepeatingGroups { get; set; } = false;
 
         [Browsable(false)]
         [JsonProperty]

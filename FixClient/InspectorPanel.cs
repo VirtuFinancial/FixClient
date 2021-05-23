@@ -18,7 +18,7 @@ namespace FixClient
 {
     class MessageProperties
     {
-        Fix.Dictionary.Message _message;
+        readonly Fix.Dictionary.Message _message;
 
         public MessageProperties(Fix.Dictionary.Message message)
         {
@@ -39,7 +39,7 @@ namespace FixClient
 
     class FieldProperties
     {
-        Fix.FieldDescription _description;
+        readonly Fix.FieldDescription _description;
 
         public FieldProperties(Fix.FieldDescription description)
         {
