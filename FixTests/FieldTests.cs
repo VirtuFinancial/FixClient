@@ -103,5 +103,74 @@ namespace FixTests
             var field = new Fix.Field(FIX_5_0SP2.Fields.ExpireTime, "blah");
             Assert.IsNull((DateTime?)field);
         }
+
+        [TestMethod]
+        public void TestDescribeCanDescribeAllFIX50SP2Fields()
+        {
+            foreach (var field in FIX_5_0SP2.Fields)
+            {
+                if (field is null)
+                {
+                    continue;
+                }
+
+                var description = Fix.Field.Describe(null, field.Tag, string.Empty);
+
+                if (field.IsValid)
+                {
+                    Assert.IsFalse(string.IsNullOrEmpty(description.Name), $"Failed to describe field with Tag={field.Tag}");
+                }
+                else
+                {
+                    Assert.IsTrue(string.IsNullOrEmpty(description.Name), $"Unexpectedly found valid description for field with Tag={field.Tag}");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestDescribeCanDescribeAllFIX44Fields()
+        {
+            foreach (var field in FIX_4_4.Fields)
+            {
+                if (field is null)
+                {
+                    continue;
+                }
+
+                var description = Fix.Field.Describe(null, field.Tag, string.Empty);
+
+                if (field.IsValid)
+                {
+                    Assert.IsFalse(string.IsNullOrEmpty(description.Name), $"Failed to describe field with Tag={field.Tag}");
+                }
+                else
+                {
+                    Assert.IsTrue(string.IsNullOrEmpty(description.Name), $"Unexpectedly found valid description for field with Tag={field.Tag}");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestDescribeCanDescribeAllFIX42Fields()
+        {
+            foreach (var field in FIX_4_2.Fields)
+            {
+                if (field is null)
+                {
+                    continue;
+                }
+
+                var description = Fix.Field.Describe(null, field.Tag, string.Empty);
+
+                if (field.IsValid)
+                {
+                    Assert.IsFalse(string.IsNullOrEmpty(description.Name), $"Failed to describe field with Tag={field.Tag}");
+                }
+                else
+                {
+                    Assert.IsTrue(string.IsNullOrEmpty(description.Name), $"Unexpectedly found valid description for field with Tag={field.Tag}");
+                }
+            }
+        }
     }
 }

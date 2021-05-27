@@ -262,32 +262,43 @@ namespace Fix
 
         public static FieldDescription Describe(Dictionary.Message? messageDefinition, int tag, string value)
         {
+            VersionField? FindGlobalDefinition(int tag)
+            {
+                foreach (var version in Versions)
+                {
+                    if (version.Fields.TryGetValue(tag, out var definition) && definition.IsValid)
+                    {
+                        return definition;
+                    }
+                }
+
+                return null;
+            }
+
             var definition = messageDefinition?.Fields.Where(f => f.Tag == tag).FirstOrDefault();
 
             if (definition == null)
             {
                 // This field is not defined in this message so just fall back to the global field definitions.
-                // This means we won't have values for required and depth which are message specific. We could
-                // iterate through each version and lookup the message definition and see if older versions
-                // contain the field but not worth the effort now.
+                // This means we won't have values for required and depth which are message specific.
                 string description = string.Empty;
 
-                if (FIX_5_0SP2.Fields.TryGetValue(tag, out var globalDefinition))
+                if (FindGlobalDefinition(tag) is VersionField globalDefinition)
                 {
                     if (value is string fieldValue)
                     {
                         description = DescribeVersionFieldValue(globalDefinition, fieldValue);
                     }
+
+                    globalDefinition.Values.TryGetValue(value, out var valueDefinition);
+
+                    return new FieldDescription(tag, value, globalDefinition.Name, description, false, -1, globalDefinition.DataType, globalDefinition.Pedigree, valueDefinition);
                 }
-
-                globalDefinition.Values.TryGetValue(value, out var valueDefinition);
-
-                return new FieldDescription(tag, value, globalDefinition.Name, description, false, -1, globalDefinition.DataType, globalDefinition.Pedigree, valueDefinition);
             }
 
             if (definition is MessageField fieldDefinition)
             {
-                if (FIX_5_0SP2.Fields.TryGetValue(tag, out var globalDefinition))
+                if (FindGlobalDefinition(tag) is VersionField globalDefinition)
                 {
                     globalDefinition.Values.TryGetValue(value, out var valueDefinition);
 

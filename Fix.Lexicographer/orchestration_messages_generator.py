@@ -29,7 +29,7 @@ def generate_orchestration_messages(namespace, prefix, orchestration):
             initialisers = []
             for field in orchestration.message_fields(message):
                 required = 'false'
-                if field.presence.lower() == 'required':
+                if field.presence and field.presence.lower() == 'required':
                     required = 'true'
                 initialiser = '                            new MessageField(new {}.{}(), {}, {}),\n'.format(namespace, field.field.name, required, field.depth)
                 initialisers.append(initialiser)

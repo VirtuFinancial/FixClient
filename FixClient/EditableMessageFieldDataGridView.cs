@@ -96,6 +96,31 @@ namespace FixClient
             e.DrawFocusRectangle();
         }
 
+        VersionField? FindFieldDefinition(int tag)
+        {
+            // This is the most likley hit for modern users so lets be optimistic which will be faster.
+            if (FIX_5_0SP2.Fields[tag] is VersionField definition && definition.IsValid)
+            {
+                return definition;
+            }
+
+            // Fall back to the rest.
+            foreach (var version in Versions)
+            {
+                if (version.BeginString == Versions.FIX_5_0SP2.BeginString)
+                {
+                    continue;
+                }
+
+                if (version.Fields.TryGetValue(tag, out var fallbackDefinition) && fallbackDefinition.IsValid)
+                {
+                    return fallbackDefinition;
+                }
+            }
+
+            return null;
+        }
+
         protected override void OnCellBeginEdit(DataGridViewCellCancelEventArgs e)
         {
             //
@@ -112,7 +137,7 @@ namespace FixClient
                 return;
             }
 
-            var definition = FIX_5_0SP2.Fields[field.Tag];
+            var definition = FindFieldDefinition(field.Tag);
 
             if (definition == null || definition.Values.Count == 0)
             {
@@ -138,7 +163,7 @@ namespace FixClient
                     continue;
                 }
 
-                var definition = FIX_5_0SP2.Fields[field.Tag];
+                var definition = FindFieldDefinition(field.Tag);
 
                 if (definition == null)
                 {
@@ -231,7 +256,7 @@ namespace FixClient
 
             string value = (cell.Value?.ToString() ?? "").Trim();
 
-            var definition = FIX_5_0SP2.Fields[field.Tag];
+            var definition = FindFieldDefinition(field.Tag);
 
             if (!string.IsNullOrEmpty(value) && definition != null)
             {

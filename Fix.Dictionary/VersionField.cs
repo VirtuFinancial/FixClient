@@ -7,7 +7,7 @@ namespace Fix
         public static bool IsValid(VersionField? field) =>
                 field switch
                 {
-                    VersionField valid => valid.Tag != 0,
+                    VersionField valid => valid.IsValid,
                     null => false
                 };
 
@@ -29,6 +29,8 @@ namespace Fix
             public int Tag { get; }
             public string Name { get; }
             public string Description { get; }
+
+            public bool IsValid => Tag != 0;
 
             // TODO - make this reference the actual type in the dictionary directly
             public string DataType { get; }
