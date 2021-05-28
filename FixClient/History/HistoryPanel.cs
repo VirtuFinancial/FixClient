@@ -524,7 +524,7 @@ namespace FixClient
                         dataRow[FieldDataTable.ColumnName] = description.Name;
                         dataRow[FieldDataTable.ColumnCustom] = false;
                         dataRow[FieldDataTable.ColumnRequired] = description.Required;
-                        dataRow[FieldDataTable.ColumnDescription] = description.Description;
+                        dataRow[FieldDataTable.ColumnDescription] = description.ValueDefinition;
                     }
                     else
                     {
