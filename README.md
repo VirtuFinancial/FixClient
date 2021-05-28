@@ -13,7 +13,7 @@ FIX Client is a Windows desktop program designed for manually testing [FIX proto
 If this is the first time you've run FIX Client follow the installation instructions below.
 
 ### Latest
-This branch is the home of all future development. The initial main difference between this and the legacy 4.x branch is that the data dictionary is now built on the FIX Orchrestra standard.
+This branch is the home of all future development. The initial main difference between this and the legacy 4.x branch is that the data dictionary is now built on the FIX Orchestra standard.
 * Download the latest release [5.0.0-pre-release-1](https://github.com/GaryHughes/FixClient/releases/tag/v5.0.0-pre-release-1)
 
 ### Legacy
