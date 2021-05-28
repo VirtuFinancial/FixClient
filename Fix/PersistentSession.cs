@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -17,6 +16,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading;
+using Fix.Common;
 
 namespace Fix
 {
@@ -24,13 +24,8 @@ namespace Fix
     {
         readonly object _syncObject = new();
 
-        Timer? _writeTimer;
+        DirtyTimer _writeTimer = new(); 
         JsonSerializer? _serialiser;
-
-        int _writeRequired;
-        const int WRITE_REQUIRED = 1;
-        const int WRITE_NON_REQUIRED = 0;
-
         Writer? _historyWriter;
         string? _fileName;
 
@@ -39,6 +34,7 @@ namespace Fix
         public PersistentSession()
         {
             PersistMessages = true;
+            _writeTimer.Dirty += sender => WriteSession();
         }
 
         // This constructor is only used for cloning
@@ -112,7 +108,7 @@ namespace Fix
             {
                 Messages.Add((Message)message.Clone());
             }
-            Interlocked.CompareExchange(ref _writeRequired, WRITE_REQUIRED, WRITE_NON_REQUIRED);
+            _writeTimer.SetDirty();
         }
 
         protected override void OnMessageSending(Message message)
@@ -122,7 +118,7 @@ namespace Fix
             {
                 Messages.Add((Message)message.Clone());
             }
-            Interlocked.CompareExchange(ref _writeRequired, WRITE_REQUIRED, WRITE_NON_REQUIRED);
+            _writeTimer.SetDirty();
         }
 
         void StartHistoryWriter()
@@ -157,16 +153,12 @@ namespace Fix
 
         void StartSessionWriter()
         {
-            if (_writeTimer == null)
-            {
-                _writeTimer = new Timer(WriteTimerFired, null, 1000, 1000);
-            }
+            _writeTimer.Start(1000, 1000);
         }
 
         void StopSessionWriter()
         {
-            _writeTimer?.Dispose();
-            _writeTimer = null;
+            _writeTimer.Stop();
             WriteSession();
         }
 
@@ -200,14 +192,6 @@ namespace Fix
         public virtual void Write()
         {
             WriteSession();
-        }
-
-        void WriteTimerFired(object? context)
-        {
-            if (Interlocked.CompareExchange(ref _writeRequired, WRITE_NON_REQUIRED, WRITE_REQUIRED) == WRITE_REQUIRED)
-            {
-                WriteSession();
-            }
         }
 
         static JsonSerializer CreateSerializer()
@@ -355,6 +339,7 @@ namespace Fix
             {
                 StopSessionWriter();
                 StopHistoryWriter();
+                _writeTimer.Dispose();
                 _disposed = true;
             }
         }
