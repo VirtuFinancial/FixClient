@@ -20,6 +20,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using Fix.Common;
 
 namespace FixClient
 {
@@ -27,6 +28,8 @@ namespace FixClient
     {
         const string CategoryInitiator = "Initiator Message Generation";
         const string CategoryAcceptor = "Acceptor Message Generation";
+
+        DirtyTimer _filterWriteTimer = new();
 
         #region Events
 
@@ -70,10 +73,10 @@ namespace FixClient
             Port = 9810;
             UpdateReadonlyAttributes();
 
+            _filterWriteTimer.Dirty += sender => WriteFilters();
+            _filterWriteTimer.Start(1000, 1000);
+
             _messageFilters = new Dictionary<string, bool>();
-            //Reading = true;
-            //AutoWriteFilters = true;
-            //Reading = false;
 
             Messages.MessageAdded += (sender, ev) =>
             {
@@ -110,9 +113,6 @@ namespace FixClient
             AutoAllocId = session.AutoAllocId;
             AutoScrollMessages = session.AutoScrollMessages;
             OrderBook = new Fix.OrderBook();
-            //Reading = true; // Disable the filter write if AutoWrite == true
-            //AutoWriteFilters = session.AutoWriteFilters;
-            //Reading = false;
             PasteDefineCustomFields = session.PasteDefineCustomFields;
             PasteFilterEmptyFields = session.PasteFilterEmptyFields;
             PasteResetExisting = session.PasteResetExisting;
@@ -240,7 +240,6 @@ namespace FixClient
         [Browsable(false)]
         [JsonProperty]
         public bool PasteResetExisting { get; set; } = true;
-
 
         #endregion
 
@@ -424,19 +423,13 @@ namespace FixClient
         protected void OnMessageFilterChanged()
         {
             MessageFilterChanged?.Invoke(this, EventArgs.Empty);
-            // This cannot happen automatically
-            //WriteFilters();
+            _filterWriteTimer.SetDirty();
         }
 
         protected void OnFieldFilterChanged()
         {
-            //if (!AutoWriteFilters)
-            //    return;
-
             FieldFilterChanged?.Invoke(this, EventArgs.Empty);
-
-            // This cannot happen automatically
-            //WriteFilters();
+            _filterWriteTimer.SetDirty();
         }
 
         public void MessageVisible(string msgType, bool visible, bool raiseEvent = true)
@@ -477,8 +470,7 @@ namespace FixClient
                 _fieldFilters[msgType] = filters;
             }
             _fieldFilters[msgType][tag] = visible;
-            // TODO
-            //OnFieldFilterChanged();
+            _filterWriteTimer.SetDirty();
         }
 
         public bool FieldVisible(string msgType, int tag)
