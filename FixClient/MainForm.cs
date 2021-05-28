@@ -771,8 +771,8 @@ namespace FixClient
             {
                 form.Session = new Session
                 {
-                    SenderCompId = "FIX_CLIENT",
-                    TargetCompId = "SERVER"
+                    SenderCompId = "INITIATOR",
+                    TargetCompId = "ACCEPTOR"
                 };
 
                 for (; ; )
