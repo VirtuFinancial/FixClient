@@ -20,12 +20,12 @@ namespace FixClientTests
         [TestMethod]
         public void TestCopyPropertiesFrom()
         {
-            var one = new FixClient.Session
+            var one = new FixClient.Session(new System.Windows.Forms.Control())
             {
                 OrderBehaviour = Fix.Behaviour.Initiator
             };
 
-            var two = new FixClient.Session
+            var two = new FixClient.Session(new System.Windows.Forms.Control())
             {
                 OrderBehaviour = Fix.Behaviour.Acceptor
             };
@@ -42,7 +42,7 @@ namespace FixClientTests
         [TestMethod]
         public void TestCloneSession()
         {
-            var original = new FixClient.Session
+            var original = new FixClient.Session(new System.Windows.Forms.Control())
             {
                 OrderBehaviour = Fix.Behaviour.Initiator,
                 BeginString = Fix.Dictionary.Versions.FIXT_1_1,
