@@ -110,6 +110,7 @@ namespace FixClient
             _fieldGrid = new EditableMessageFieldDataGridView();
             _fieldGrid.SelectionChanged += FieldGridSelectionChanged;
             _fieldGrid.CellContextMenuStripNeeded += FieldGridCellContextMenuStripNeeded;
+            _fieldGrid.FieldValueChanged += sender => _session?.SetDirty();
 
             _inspectorPanel = new InspectorPanel { Dock = DockStyle.Fill };
             _messageOptionsPanel = new MessageOptionsPanel { Dock = DockStyle.Fill };
@@ -958,8 +959,6 @@ namespace FixClient
 
             try
             {
-                //_session.AutoWriteFilters = false;
-
                 foreach (Fix.Field field in message.Fields)
                 {
                     Session.FieldVisible(message.MsgType, field.Tag, true);
@@ -967,7 +966,6 @@ namespace FixClient
             }
             finally
             {
-                //Session.AutoWriteFilters = true;
                 Session.WriteFilters();
             }
 
@@ -990,13 +988,8 @@ namespace FixClient
 
             try
             {
-                //Session.AutoWriteFilters = false;
-
                 foreach (Fix.Field field in message.Fields)
                 {
-                    //if (message.CustomFields.Contains(field.Id))
-                    //    continue;
-
                     var description = field.Describe(messageDefinition);
 
                     if (description == null)
@@ -1005,7 +998,7 @@ namespace FixClient
                     if (description.Required)
                         continue;
 
-                    if (field.Value != null && !String.IsNullOrEmpty(field.Value.Trim()))
+                    if (field.Value != null && !string.IsNullOrEmpty(field.Value.Trim()))
                         continue;
 
                     Session.FieldVisible(message.MsgType, field.Tag, false);
@@ -1013,10 +1006,6 @@ namespace FixClient
             }
             finally
             {
-                // TODO
-                //Session.Reading = true;
-                //Session.AutoWriteFilters = true;
-                //Session.Reading = false;
                 Session.WriteFilters();
             }
             //
@@ -1356,7 +1345,7 @@ namespace FixClient
 
                 message.Fields.Set(FIX_5_0SP2.Fields.BeginString, Session.BeginString.BeginString);
 
-                if (Session.BeginString.BeginString == "FIXT.1.1" &&
+                if (Session.BeginString.BeginString == Versions.FIXT_1_1.BeginString &&
                     message.MsgType == FIX_5_0SP2.Messages.Logon.MsgType)
                 {
                     message.Fields.Set(FIX_5_0SP2.Fields.DefaultApplVerID, Session.DefaultApplVerId.ApplVerID);
@@ -1550,8 +1539,6 @@ namespace FixClient
                     row[FieldDataTable.ColumnValue] = time;
                 }
             }
-
-            //Session.WriteTemplates();
         }
 
         public static void UpdateMessage(Fix.Message message, Fix.Order order)

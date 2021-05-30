@@ -355,7 +355,6 @@ namespace FixClient
             {
                 _messageTable.EndLoadData();
                 _messageGrid.Refresh();
-                //Session.AutoWriteFilters = true;
                 Session.WriteFilters();
             }
         }
@@ -369,7 +368,6 @@ namespace FixClient
 
             try
             {
-                //Session.AutoWriteFilters = false;
                 _fieldTable.BeginLoadData();
 
                 if (SelectedMessage is not Fix.Dictionary.Message message)
@@ -388,7 +386,6 @@ namespace FixClient
             {
                 _fieldTable.EndLoadData();
                 _fieldGrid.Refresh();
-                //Session.AutoWriteFilters = true;
                 Session.WriteFilters();
             }
         }

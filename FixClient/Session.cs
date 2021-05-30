@@ -20,6 +20,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Windows.Forms;
 using Fix.Common;
 
 namespace FixClient
@@ -30,6 +31,8 @@ namespace FixClient
         const string CategoryAcceptor = "Acceptor Message Generation";
 
         DirtyTimer _filterWriteTimer = new();
+        DirtyTimer _templateWriteTimer = new();
+        Control _syncContext;
 
         #region Events
 
@@ -66,7 +69,7 @@ namespace FixClient
 
         #endregion
 
-        public Session()
+        public Session(Control syncContext)
         {
             BindHost = string.Empty;
             Host = "127.0.0.1";
@@ -75,6 +78,11 @@ namespace FixClient
 
             _filterWriteTimer.Dirty += sender => WriteFilters();
             _filterWriteTimer.Start(1000, 1000);
+
+            _templateWriteTimer.Dirty += sender => WriteTemplates();
+            _templateWriteTimer.Start(1000, 1000);
+
+            _syncContext = syncContext;
 
             _messageFilters = new Dictionary<string, bool>();
 
@@ -89,9 +97,12 @@ namespace FixClient
             };
         }
 
+        public void SetDirty() => _templateWriteTimer.SetDirty();
+
         public Session(Session session)
         : base(session)
         {
+            _syncContext = session._syncContext;
             Behaviour = session.Behaviour;
             BindHost = session.BindHost;
             BindPort = session.BindPort;
@@ -563,11 +574,9 @@ namespace FixClient
         public override void Read()
         {
             base.Read();
-            //Reading = true;
             ReadTemplates();
             ReadFilters();
             ReadCustomFields();
-            //Reading = false;
         }
 
         void ReadCustomFields()
@@ -625,9 +634,6 @@ namespace FixClient
 
         public void WriteCustomFields()
         {
-            //if (Reading)
-            //    return;
-
             using FileStream stream = new(CustomFieldsFileName, FileMode.Create);
             using JsonWriter writer = new JsonTextWriter(new StreamWriter(stream));
             writer.Formatting = Formatting.Indented;
@@ -722,38 +728,13 @@ namespace FixClient
             }
         }
 
-        /*
-        bool _autoWriteFilters;
-
-        [Browsable(false)]
-        public bool AutoWriteFilters
-        {
-            get { return _autoWriteFilters; }
-            set
-            {
-                _autoWriteFilters = value;
-                if (!Reading)
-                {
-                    OnFieldFilterChanged();
-                }
-            }
-        }
-        */
-
         public void WriteFilters()
         {
-            //if (Reading || !AutoWriteFilters)
-            //    return;
-
-            // TODO - This is SLOW
-            // Possible Improvements
-            // 1. If a message has no filters applied either way then don't store it.
-            // 2. Only store feild tags not the names.
-            // 3. Store the fields we are keeping not the fields we are hiding
-            //      - How does this play with the filter view? It's good for the messages view.
-            //      - Maybe provide both as options and have a flag to show which format. 
-            //          - Messages view shows keepers
-            //          - Filters view shows losers
+            if (_syncContext.InvokeRequired)
+            {
+                _syncContext.BeginInvoke(new MethodInvoker(() => WriteFilters()));
+                return;
+            }
 
             using FileStream stream = new(FiltersFileName, FileMode.Create);
        
@@ -799,11 +780,10 @@ namespace FixClient
                 foreach (var field in filter.Value)
                 {
                     if (!field.Value)
+                    {
                         continue;
-                    //if (Version.Fields.TryGetValue(field.Key.ToString(), out var fieldDefinition))
-                    //{
-                    //writer.WriteValue(Version.Fields[field.Key.ToString()].Name);
-                    //}
+                    }
+
                     writer.WriteNumberValue(field.Key);
                 }
                 writer.WriteEndArray();
@@ -856,6 +836,12 @@ namespace FixClient
 
         public void WriteTemplates()
         {
+            if (_syncContext.InvokeRequired)
+            {
+                _syncContext.BeginInvoke(new MethodInvoker(() => WriteTemplates()));
+                return;
+            }
+
             using Fix.Writer writer = new(new FileStream(TemplatesFileName, FileMode.Create), leaveOpen: false);
             foreach (Fix.Message message in _messageTemplates.Values)
             {

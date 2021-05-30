@@ -703,7 +703,7 @@ namespace FixClient
 
             try
             {
-                CurrentSession = new Session();
+                CurrentSession = new Session(this);
                 _logPanel.Session = CurrentSession;
                 CurrentSession.FileName = dlg.FileName;
                 CurrentSession.Read();
@@ -769,7 +769,7 @@ namespace FixClient
         {
             using (SessionForm form = new())
             {
-                form.Session = new Session
+                form.Session = new Session(this)
                 {
                     SenderCompId = "INITIATOR",
                     TargetCompId = "ACCEPTOR"
@@ -980,7 +980,7 @@ namespace FixClient
         {
             try
             {
-                CurrentSession = new Session();
+                CurrentSession = new Session(this);
                 _logPanel.Session = CurrentSession;
                 CurrentSession.FileName = e.ClickedItem.ToolTipText;
                 CurrentSession.Read();

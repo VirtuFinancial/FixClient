@@ -19,6 +19,16 @@ namespace FixClient
 {
     public partial class EditableMessageFieldDataGridView : MessageFieldDataGridView
     {
+        public delegate void FieldValueHandler(object sender);
+
+        public event FieldValueHandler? FieldValueChanged;
+
+        void OnFieldValueChanged()
+        {
+            FieldValueChanged?.Invoke(this);
+        }
+
+
         readonly ToolTip _toolTip = new();
 
         public EditableMessageFieldDataGridView()
@@ -246,6 +256,7 @@ namespace FixClient
                 //
                 dataRow[FieldDataTable.ColumnValue] = (string)CurrentCell.Value;
                 Message.Fields[index].Value = (string)CurrentCell.Value;
+                OnFieldValueChanged();
                 return;
             }
 
@@ -278,6 +289,8 @@ namespace FixClient
             }
 
             Message.Fields[index].Value = value;
+            OnFieldValueChanged();
+
             //
             // The bodylength changes whenever the message fields change so update it.
             //

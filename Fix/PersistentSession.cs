@@ -34,7 +34,7 @@ namespace Fix
         public PersistentSession()
         {
             PersistMessages = true;
-            _writeTimer.Dirty += sender => WriteSession();
+            _writeTimer.Dirty += sender => Write();
         }
 
         // This constructor is only used for cloning
