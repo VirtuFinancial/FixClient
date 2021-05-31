@@ -423,7 +423,7 @@ namespace FixClient
         #region Filters
 
         readonly Dictionary<string, bool> _messageFilters = new();
-        readonly Dictionary<string, Dictionary<int, bool>> _fieldFilters = new();
+        readonly Dictionary<string, HashSet<int>> _fieldFilters = new();
 
         public delegate void MessageFilterDelegate(object sender, EventArgs e);
         public delegate void FieldFilterDelegate(object sender, EventArgs e);
@@ -452,7 +452,7 @@ namespace FixClient
             }
         }
 
-        public bool MessageVisible(string msgType)
+        public bool IsMessageVisible(string msgType)
         {
             if (_messageFilters.TryGetValue(msgType, out bool visible))
             {
@@ -462,56 +462,72 @@ namespace FixClient
             return true;
         }
 
-        public Dictionary<int, bool> FieldFilters(string msgType)
+        public HashSet<int> FieldFilters(string msgType)
         {
-            if (!_fieldFilters.TryGetValue(msgType, out Dictionary<int, bool>? filters))
+            if (!_fieldFilters.TryGetValue(msgType, out HashSet<int>? filters))
             {
-                filters = new Dictionary<int, bool>();
+                filters = new HashSet<int>();
                 _fieldFilters[msgType] = filters;
             }
             return filters;
         }
 
-        public void FieldVisible(string msgType, int tag, bool visible)
+        public void SetAllMessageFieldsVisible(string msgType)
         {
-            Dictionary<int, bool> filters;
-            if (!_fieldFilters.TryGetValue(msgType, out _))
-            {
-                filters = new Dictionary<int, bool>();
-                _fieldFilters[msgType] = filters;
-            }
-            _fieldFilters[msgType][tag] = visible;
-            _filterWriteTimer.SetDirty();
+            _fieldFilters.Remove(msgType);
         }
 
-        public bool FieldVisible(string msgType, int tag)
+        public void SetFieldVisible(string msgType, int tag, bool visible)
         {
             if (!_fieldFilters.TryGetValue(msgType, out var filters))
             {
-                return true;
+                filters = new HashSet<int>();
+                _fieldFilters[msgType] = filters;
             }
 
-            if (!filters.TryGetValue(tag, out bool visible))
+            if (visible)
             {
+                filters.Add(tag);
+            }
+            else
+            {
+                filters.Remove(tag);
+            
+                if (filters.Count == 0)
+                {
+                    _fieldFilters.Remove(msgType);
+                }
+            }
+            
+            _filterWriteTimer.SetDirty();
+        }
+
+        public bool IsFieldVisible(string msgType, int tag)
+        {
+            if (!_fieldFilters.TryGetValue(msgType, out var filters))
+            {
+                // We don't have a record for this message so all fields are visible.
                 return true;
             }
 
-            return visible;
+            return filters.Contains(tag);
         }
 
         public string? FieldRowFilter(string msgType, string? searchString = null)
         {
-            var expression = new StringBuilder(string.Format("{0} NOT IN (", FieldDataTable.ColumnTag));
+            var expression = new StringBuilder(string.Format("{0} IN (", FieldDataTable.ColumnTag));
 
             bool items = false;
-            foreach (KeyValuePair<int, bool> filter in FieldFilters(msgType))
+            foreach (int tag in FieldFilters(msgType))
             {
-                if (filter.Value)
-                    continue;
                 if (items)
+                {
                     expression.Append(',');
+                }
+
                 items = true;
-                expression.Append(string.Format("{0}", Convert.ToInt32(filter.Key)));
+                
+                expression.AppendFormat("{0}", tag);
             }
 
             if (!items)
@@ -704,21 +720,21 @@ namespace FixClient
                         continue;
                     }
 
-                    foreach (string? fieldEntry in (JArray)property.Value)
+                    foreach (int? fieldEntry in (JArray)property.Value)
                     {
                         if (fieldEntry is null)
                         {
                             continue;
                         }
 
-                        var field = message.Fields.FirstOrDefault(item => item.Name == fieldEntry);
+                        var field = message.Fields.FirstOrDefault(item => item.Tag == fieldEntry);
 
                         if (field == null)
                         {
                             continue;
                         }
 
-                        FieldVisible(message.MsgType, field.Tag, false);
+                        SetFieldVisible(message.MsgType, field.Tag, true);
                     }
                 }
             }
@@ -763,7 +779,7 @@ namespace FixClient
             writer.WriteStartArray();
             foreach (var filter in _fieldFilters)
             {
-                if (filter.Value.Count == 0 || filter.Value.All(field => field.Value))
+                if (filter.Value.Count == 0)
                 {
                     continue;
                 }
@@ -777,14 +793,9 @@ namespace FixClient
                 writer.WritePropertyName(name);
                 writer.WriteStartArray();
                 
-                foreach (var field in filter.Value)
+                foreach (var tag in filter.Value)
                 {
-                    if (!field.Value)
-                    {
-                        continue;
-                    }
-
-                    writer.WriteNumberValue(field.Key);
+                    writer.WriteNumberValue(tag);
                 }
                 writer.WriteEndArray();
                 writer.WriteEndObject();

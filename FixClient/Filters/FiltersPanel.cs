@@ -264,7 +264,7 @@ namespace FixClient
             var visible = (bool)dataRow[FilterFieldDataTable.ColumnVisible];
             var tag = (int)dataRow[FilterFieldDataTable.ColumnTag];
             dataRow[FilterFieldDataTable.ColumnVisible] = !visible;
-            Session.FieldVisible(message.MsgType, tag, !visible);
+            Session.SetFieldVisible(message.MsgType, tag, !visible);
         }
 
         void FieldSearchTextBoxTextChanged(object? sender, EventArgs e)
@@ -379,7 +379,7 @@ namespace FixClient
                 {
                     var tag = (int)row[FilterFieldDataTable.ColumnTag];
                     row[FilterFieldDataTable.ColumnVisible] = visible;
-                    Session.FieldVisible(message.MsgType, tag, visible);
+                    Session.SetFieldVisible(message.MsgType, tag, visible);
                 }
             }
             finally
@@ -430,7 +430,7 @@ namespace FixClient
                 foreach (var field in message.Fields)
                 {
                     DataRow row = _fieldTable.NewRow();
-                    row[FilterFieldDataTable.ColumnVisible] = Session.FieldVisible(message.MsgType, field.Tag);
+                    row[FilterFieldDataTable.ColumnVisible] = Session.IsFieldVisible(message.MsgType, field.Tag);
                     row[FilterFieldDataTable.ColumnTag] = field.Tag;
                     row[FilterFieldDataTable.ColumnName] = field.Name;
                     _fieldTable.Rows.Add(row);
@@ -496,7 +496,7 @@ namespace FixClient
 
                     row[FilterMessageDataTable.ColumnMsgType] = message.MsgType;
                     row[FilterMessageDataTable.ColumnName] = message.Name;
-                    row[FilterMessageDataTable.ColumnVisible] = Session.MessageVisible(message.MsgType);
+                    row[FilterMessageDataTable.ColumnVisible] = Session.IsMessageVisible(message.MsgType);
 
                     _messageTable.Rows.Add(row);
                 }

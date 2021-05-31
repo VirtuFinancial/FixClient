@@ -959,10 +959,7 @@ namespace FixClient
 
             try
             {
-                foreach (Fix.Field field in message.Fields)
-                {
-                    Session.FieldVisible(message.MsgType, field.Tag, true);
-                }
+                Session.SetAllMessageFieldsVisible(message.MsgType);
             }
             finally
             {
@@ -990,18 +987,21 @@ namespace FixClient
             {
                 foreach (Fix.Field field in message.Fields)
                 {
-                    var description = field.Describe(messageDefinition);
+                    bool visible = false;
 
-                    if (description == null)
-                        continue;
+                    if (field.Describe(messageDefinition) is Fix.FieldDescription description)
+                    {
+                        if (description.Required)
+                        {
+                            visible = true;
+                        }
+                        else if (!string.IsNullOrEmpty(field.Value.Trim()))
+                        {
+                            visible = true;
+                        }
+                    }
 
-                    if (description.Required)
-                        continue;
-
-                    if (field.Value != null && !string.IsNullOrEmpty(field.Value.Trim()))
-                        continue;
-
-                    Session.FieldVisible(message.MsgType, field.Tag, false);
+                    Session.SetFieldVisible(message.MsgType, field.Tag, visible);
                 }
             }
             finally
@@ -1044,7 +1044,7 @@ namespace FixClient
                 if (string.IsNullOrEmpty(field.Value))
                     continue;
 
-                if (!Session.FieldVisible(defaults.MsgType, field.Tag))
+                if (!Session.IsFieldVisible(defaults.MsgType, field.Tag))
                     continue;
                 //
                 // Only allocate a ClOrdId if we are actually sending that field.
@@ -1373,10 +1373,6 @@ namespace FixClient
 
                 foreach (Fix.Field field in message.Fields)
                 {
-                    if (field.Value != null && !string.IsNullOrEmpty(field.Value.Trim()))
-                    {
-                        Session.FieldVisible(message.MsgType, field.Tag, true);
-                    }
                     //
                     // Update any time fields as required.
                     //
