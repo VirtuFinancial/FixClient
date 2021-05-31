@@ -6,3 +6,5 @@
 * The messages view data dictionary panel now displays the complete pedigree for each message, field, and value.
 * Removed the smart paste options from the messages view paste form.
 * The default SenderCompID and TargetCompID for a new session is now INITIATOR/ACCEPTOR.
+* The format of the session *.filters file has been changed.
+	* Existing filters will be ignored and the file will be rewritten.
