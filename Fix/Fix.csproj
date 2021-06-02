@@ -1,9 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <Version>4.0.0</Version>
+    <Version>5.0.0</Version>
     <Nullable>enable</Nullable>
+    <PackageProjectUrl>https://github.com/GaryHughes/FixClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/GaryHughes/FixClient</RepositoryUrl>
+    <Authors>Gary Hughes</Authors>
+    <Description>Fix is a FIX protocol implementation.</Description>
+    <Copyright>Copyright © 2021 Gary Hughes</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
   
   <ItemGroup>
