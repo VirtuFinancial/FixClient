@@ -1,0 +1,34 @@
+name: Publish Nuget Packages
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish:
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Package
+      run: dotnet publish -c Release -r win-x64
+    - name: version
+      id: version
+      run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
+      shell: bash
+    - name: Publish Fix.Dictionary
+      uses: brandedoutcast/publish-nuget@v2.5.5
+      with:
+          PROJECT_FILE_PATH: Fix.Dictionary/Fix.Dictionary.csproj
+          NUGET_KEY: ${{ secrets.NUGET_KEY }}
+          TAG_COMMIT: false
+          VERSION_STATIC: ${{ steps.version.outputs.version }}
