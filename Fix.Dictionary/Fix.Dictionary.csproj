@@ -6,6 +6,7 @@
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
     <RunAnalyzers>false</RunAnalyzers>
     <Description>Fix.Dictionary is a FIX protocol data dictionary generated from the FIX Orchestra standard.</Description>
+    <PackageId>Geh.Fix.Dictionary</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

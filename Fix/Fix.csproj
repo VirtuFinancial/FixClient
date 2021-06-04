@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <Description>Fix is a FIX protocol implementation.</Description>
+    <PackageId>Geh.Fix</PackageId>
   </PropertyGroup>
   
   <ItemGroup>

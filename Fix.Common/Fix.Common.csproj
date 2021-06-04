@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <Description>Fix.Common contains common components used by Fix and Fix.Dictionary.</Description>
+    <PackageId>Geh.Fix.Common</PackageId>
   </PropertyGroup>
 
 </Project>
