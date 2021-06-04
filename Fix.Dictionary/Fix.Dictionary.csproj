@@ -55,12 +55,4 @@
     <RemoveDir Directories="Generated" />
   </Target>
 
-  <!-- https://github.com/NuGet/Home/issues/3891 -->
-  <ItemGroup>
-    <_PackageFiles Include="$(OutputPath)\Fix.Common.dll">
-      <BuildAction>None</BuildAction>
-      <PackagePath>lib\net5.0\</PackagePath>
-    </_PackageFiles>
-  </ItemGroup>
-
 </Project>

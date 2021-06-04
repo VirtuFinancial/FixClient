@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Description>Fix.Common contains common components used by Fix and Fix.Dictionary.</Description>
   </PropertyGroup>
 
 </Project>
