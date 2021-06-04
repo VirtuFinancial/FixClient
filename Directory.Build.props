@@ -3,8 +3,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <VersionPrefix>5.0.0</VersionPrefix>
-    <VersionSuffix>pre-release-6</VersionSuffix>
+    <Version>5.0.0-pre-release-6</Version>
     <Authors>Gary Hughes</Authors>
     <Copyright>Copyright © 2021 Gary Hughes</Copyright>
     <RepositoryUrl>https://github.com/GaryHughes/FixClient</RepositoryUrl>
