@@ -17,6 +17,9 @@ namespace Fix.Examples
             LookupFieldByTag();
             EnumerateVersionDataTypes();
             EnumerateMessageFields();
+            EnumerateFieldValues();
+            LookupFieldValue();
+            ReferenceFieldValue();
         }
 
         static void EnumerateFixVersions()
@@ -101,5 +104,35 @@ namespace Fix.Examples
             }
         }
 
+        static void EnumerateFieldValues()
+        {
+            Console.WriteLine("\nEnumerate field values");
+            if (Versions.FIX_5_0SP2.Fields[54] is VersionField side)
+            {
+                foreach (var value in side.Values.Values)
+                {
+                    Console.WriteLine($"Value = {value.Value}, Name = {value.Name}, Pedigree = ({value.Pedigree}), Description = ({value.Description})");
+                }
+            }
+        }
+
+        static void LookupFieldValue()
+        {
+            Console.WriteLine("\nLookup field value");
+            if (Versions.FIX_5_0SP2.Fields[54] is VersionField side)
+            {
+                if (side.Values.TryGetValue("2", out var sell))
+                {
+                    Console.WriteLine($"Value = {sell.Value}, Name = {sell.Name}, Pedigree = ({sell.Pedigree}), Description = ({sell.Description})");
+                }
+            }
+        }
+
+        static void ReferenceFieldValue()
+        {
+            Console.WriteLine("\nReference field value");
+            var sell = FIX_5_0SP2.Side.Sell;
+            Console.WriteLine($"Value = {sell.Value}, Name = {sell.Name}, Pedigree = ({sell.Pedigree}), Description = ({sell.Description})");
+        }
     }
 }

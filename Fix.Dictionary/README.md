@@ -100,3 +100,37 @@ if (Versions.FIX_5_0SP2.Messages["D"] is Message message)
     }
 }
 ```
+```csharp 
+// Enumerate The Values Of A Field
+if (Versions.FIX_5_0SP2.Fields[54] is VersionField side)
+{
+    foreach (var value in side.Values.Values)
+    {
+        Console.WriteLine($"Value = {value.Value}");
+        Console.WriteLine($"Name = {value.Name}");
+        Console.WriteLine($"Pedigree = ({value.Pedigree})");
+        Console.WriteLine($"Description = ({value.Description})");
+    }
+}
+```
+```csharp
+// Lookup A Field Value
+if (Versions.FIX_5_0SP2.Fields[54] is VersionField side)
+{
+    if (side.Values.TryGetValue("2", out var sell))
+    {
+        Console.WriteLine($"Value = {sell.Value}");
+        Console.WriteLine($"Name = {sell.Name}");
+        Console.WriteLine($"Pedigree = ({sell.Pedigree})");
+        Console.WriteLine($"Description = ({sell.Description})");
+    }
+}
+```
+```csharp
+// Directly Reference A Field Value
+var sell = FIX_5_0SP2.Side.Sell;
+Console.WriteLine($"Value = {sell.Value}");
+Console.WriteLine($"Name = {sell.Name}");
+Console.WriteLine($"Pedigree = ({sell.Pedigree})");
+Console.WriteLine($"Description = ({sell.Description})");
+```
