@@ -16,11 +16,13 @@ namespace Fix
         // 
         // eg. var OrderQty = Fix.Dictionary.FIX_4_0.Fields[38];
         //
-        public abstract class VersionFieldCollection : IEnumerable<VersionField?>
+        public abstract class VersionFieldCollection : IEnumerable<VersionField>
         {
-            public int Length => Fields.Length;
+            // There are gaps in the sequence of tags and we populate those with dummy values so
+            // don't call this property Count or Length as that is misleading.
+            public int MaxTag => Fields.Length - 1;
 
-            public VersionField? this[int tag]
+            public VersionField this[int tag]
             {
                 get
                 {
@@ -80,7 +82,7 @@ namespace Fix
                 return true;
             }
 
-            public IEnumerator<VersionField?> GetEnumerator()
+            public IEnumerator<VersionField> GetEnumerator()
             {
                 foreach (var field in Fields)
                 {
