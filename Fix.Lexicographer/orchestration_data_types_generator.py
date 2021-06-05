@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from sanitise import *
+from pedigree import *
 
 def generate_orchestration_data_types(namespace, prefix, orchestration):
     sane_prefix = sanitise_for_include_guard(prefix)
@@ -17,15 +18,15 @@ def generate_orchestration_data_types(namespace, prefix, orchestration):
             name = data_type.name
             if name in ('char', 'int', 'float', 'double'):
                 name = name[0].upper() + name[1:]
-            data_types.append((name, sanitise(data_type.synopsis)))
+            data_types.append((name, sanitise(data_type.synopsis), data_type.pedigree))
         
         file.write('            public DataTypeCollection()\n')
         file.write('            {\n')
-        file.write('                    DataTypes = new Dictionary.DataType[] {{{}}};\n'.format(', '.join([name for (name, _) in data_types])))
+        file.write('                    DataTypes = new Dictionary.DataType[] {{{}}};\n'.format(', '.join([name for (name, _, _) in data_types])))
         file.write('            }\n')
 
-        for (name, synopsis) in data_types:
-            file.write('                public readonly DataType {} = new DataType("{}", "{}");\n'.format(name, name, synopsis))
+        for (name, synopsis, pedigree) in data_types:
+            file.write('                public readonly DataType {} = new DataType("{}", "{}", {});\n'.format(name, name, synopsis, format_pedigree(pedigree)))
         
         file.write('            }\n')
 

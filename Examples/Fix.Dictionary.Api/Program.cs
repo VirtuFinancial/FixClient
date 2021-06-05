@@ -85,7 +85,7 @@ namespace Fix.Examples
             Console.WriteLine("\nEnumerate version data types");
             foreach (var dataType in Versions.FIX_5_0SP2.DataTypes)
             {
-                Console.WriteLine($"Name = {dataType.Name}, Description = {dataType.Description}");
+                Console.WriteLine($"Name = {dataType.Name}, Pedigree = ({dataType.Pedigree}), Description = {dataType.Description}");
             }
         }
 

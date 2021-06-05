@@ -82,6 +82,7 @@ if (Versions.FIX_5_0SP2.Fields[38] is VersionField field && field.IsValid)
 foreach (var dataType in Versions.FIX_5_0SP2.DataTypes)
 {
     Console.WriteLine($"Name = {dataType.Name}");
+    Console.WriteLine($"Pedigree = {dataType.Pedigree}");
     Console.WriteLine($"Description = {dataType.Description}");
 }
 ```
