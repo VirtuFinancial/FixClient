@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,11 +23,9 @@ namespace Fix
         // define the interface
         //
         readonly List<Field> _fields = new();
-        //readonly Dictionary.Message? _messageDefinition;
 
-        public FieldCollection(Dictionary.Message? messageDefinition = null)
+        public FieldCollection()
         {
-            //_messageDefinition = messageDefinition;
         }
 
         public FieldCollection(string[,] data)
@@ -44,20 +41,6 @@ namespace Fix
             }
         }
 
-        //void UpdateDefinition(Field field)
-        //{
-            //throw new NotImplementedException();
-            /*
-            if (field.Definition == null && _messageDefinition != null)
-            {
-                if (_messageDefinition.Fields.TryGetValue(field.Tag, out var definition))
-                {
-                    field.Definition = definition;
-                }
-            }
-            */
-        //}
-
         public void Set(Field value)
         {
             foreach (Field field in _fields)
@@ -65,7 +48,6 @@ namespace Fix
                 if (field.Tag == value.Tag)
                 {
                     field.Value = value.Value;
-                    //UpdateDefinition(field);
                     return;
                 }
             }
@@ -97,7 +79,6 @@ namespace Fix
 
         public void Add(Field field)
         {
-            //UpdateDefinition(field);
             _fields.Add(field);
         }
 

@@ -48,7 +48,7 @@ namespace Fix
 
         public Message(Dictionary.Message definition)
         {
-            Fields = new FieldCollection(definition);
+            Fields = new FieldCollection();
             Definition = definition;
         }
 

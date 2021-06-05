@@ -262,7 +262,7 @@ namespace Fix
 
         public static FieldDescription Describe(Dictionary.Message? messageDefinition, int tag, string value)
         {
-            VersionField? FindGlobalDefinition(int tag)
+            static VersionField? FindGlobalDefinition(int tag)
             {
                 foreach (var version in Versions)
                 {

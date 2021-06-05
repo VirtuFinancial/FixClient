@@ -30,9 +30,9 @@ namespace FixClient
         const string CategoryInitiator = "Initiator Message Generation";
         const string CategoryAcceptor = "Acceptor Message Generation";
 
-        DirtyTimer _filterWriteTimer = new();
-        DirtyTimer _templateWriteTimer = new();
-        Control _syncContext;
+        readonly DirtyTimer _filterWriteTimer = new();
+        readonly DirtyTimer _templateWriteTimer = new();
+        readonly Control _syncContext;
 
         #region Events
 

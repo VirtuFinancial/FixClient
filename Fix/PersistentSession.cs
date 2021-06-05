@@ -24,7 +24,7 @@ namespace Fix
     {
         readonly object _syncObject = new();
 
-        DirtyTimer _writeTimer = new(); 
+        readonly DirtyTimer _writeTimer = new(); 
         JsonSerializer? _serialiser;
         Writer? _historyWriter;
         string? _fileName;
