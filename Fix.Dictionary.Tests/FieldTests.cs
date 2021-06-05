@@ -17,7 +17,7 @@ namespace FixDictionary.Tests
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestIndexGreaterThanLength()
         {
-            Assert.IsNull(Dictionary.FIX_4_2.Fields[Dictionary.FIX_4_2.Fields.MaxTag]);
+            Assert.IsNull(Dictionary.FIX_4_2.Fields[Dictionary.FIX_4_2.Fields.MaxTag + 1]);
         }
         
         [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
@@ -128,9 +128,9 @@ namespace FixDictionary.Tests
         [TestMethod]
         public void TestFieldCollections()
         {
-            Assert.AreEqual(447, Fix.Dictionary.FIX_4_2.Fields.MaxTag);
-            Assert.AreEqual(957, Fix.Dictionary.FIX_4_4.Fields.MaxTag);
-            Assert.AreEqual(50003, Fix.Dictionary.FIX_5_0SP2.Fields.MaxTag);
+            Assert.AreEqual(446, Fix.Dictionary.FIX_4_2.Fields.MaxTag);
+            Assert.AreEqual(956, Fix.Dictionary.FIX_4_4.Fields.MaxTag);
+            Assert.AreEqual(50002, Fix.Dictionary.FIX_5_0SP2.Fields.MaxTag);
         }
         
         [TestMethod]
