@@ -46,6 +46,8 @@ namespace FixClient
         readonly ToolStripMenuItem _resendMenuItem;
         readonly ToolStripMenuItem _exportMenuItem;
 
+        readonly InspectorPanel _inspectorPanel;
+
         Session? _session;
         //
         // This event is used by the mainform to updated the context of the dictionary view
@@ -161,8 +163,18 @@ namespace FixClient
                 Dock = DockStyle.Fill,
                 DataSource = _fieldView
             };
+            _fieldGrid.SelectionChanged += FieldGridSelectionChanged;
+
+            _inspectorPanel = new InspectorPanel { Dock = DockStyle.Fill };
 
             var rightSplitter = new SplitContainer
+            {
+                Dock = DockStyle.Fill,
+                Orientation = Orientation.Vertical,
+                SplitterDistance = 110
+            };
+
+            var messageSplitter = new SplitContainer
             {
                 Dock = DockStyle.Fill,
                 Orientation = Orientation.Horizontal,
@@ -186,10 +198,13 @@ namespace FixClient
                 ReadOnly = true
             };
 
-            rightSplitter.Panel1.Controls.Add(_fieldGrid);
-            rightSplitter.Panel1.Controls.Add(_fieldSearchTextBox);
-            rightSplitter.Panel2.Controls.Add(_rawMessage);
-            rightSplitter.Panel2.Controls.Add(_statusMessage);
+            messageSplitter.Panel1.Controls.Add(_fieldGrid);
+            messageSplitter.Panel1.Controls.Add(_fieldSearchTextBox);
+            messageSplitter.Panel2.Controls.Add(_rawMessage);
+            messageSplitter.Panel2.Controls.Add(_statusMessage);
+
+            rightSplitter.Panel1.Controls.Add(messageSplitter);
+            rightSplitter.Panel2.Controls.Add(_inspectorPanel);
 
             container.Panel1.Controls.Add(_messageGrid);
             container.Panel1.Controls.Add(_messageSearchTextBox);
@@ -200,6 +215,28 @@ namespace FixClient
             IntPtr h = Handle;
 
             UpdateUiState();
+        }
+
+        Fix.Field? SelectedField
+        {
+            get
+            {
+                if (_fieldGrid.SelectedRows.Count == 0)
+                    return null;
+
+                if (_fieldGrid.SelectedRows[0].DataBoundItem is not DataRowView rowView)
+                    return null;
+
+                if (rowView.Row is not FieldDataRow fieldRow)
+                    return null;
+
+                return fieldRow.Field;
+            }
+        }
+
+        private void FieldGridSelectionChanged(object? sender, EventArgs e)
+        {
+            _inspectorPanel.Field = SelectedField;
         }
 
         void MessageGridCellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
@@ -504,7 +541,13 @@ namespace FixClient
 
                 if (SelectedMessage is not Fix.Message message)
                 {
+                    _inspectorPanel.Message = null;
                     return;
+                }
+
+                if (Session is not null)
+                {
+                    _inspectorPanel.Message = Session.Version.Messages[message.MsgType];
                 }
 
                 var messageDefinition = FIX_5_0SP2.Messages[message.MsgType];

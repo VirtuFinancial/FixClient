@@ -10,3 +10,4 @@
 	* Existing filters will be ignored and the file will be rewritten.
 *	The libraries FIX Client is built upon Fix, Fix.Dictionary, and Fix.Common are now available from nuget.
 	* The nuget packages are named Geh.Fix, Geh.Fix.Dictionary, and Geh.Fix.Common to make then unique in the repository.
+* The history view now has a data dictionary inspector like the messages view.

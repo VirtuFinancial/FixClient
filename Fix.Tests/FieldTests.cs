@@ -179,8 +179,8 @@ namespace FixTests
             var field = new Fix.Field(FIX_5_0SP2.TimeInForce.Day);
             var description = field.Describe(null).ValueDefinition;
             Assert.IsNotNull(description);
-            Assert.AreEqual("Day", description.Name);
-            Assert.AreEqual("A buy or sell order that, if not executed expires at the end of the trading day on which it was entered.", description.Description);
+            Assert.AreEqual("Day", description?.Name);
+            Assert.AreEqual("A buy or sell order that, if not executed expires at the end of the trading day on which it was entered.", description?.Description);
         }
     }
 }
