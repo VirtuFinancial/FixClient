@@ -148,13 +148,11 @@ namespace FixDictionary.Tests
             Assert.AreEqual("2", Dictionary.FIX_5_0SP2.Side.Sell.Value);
         }
 
-        /*
         [TestMethod]
-        public void TestVersionAdded()
+        public void TestFieldValueDescription()
         {
-            Assert.AreEqual("FIX.2.7", Fix.Dictionary.FIX_4_0.Side.Sell.GetVersionAdded());
-            Assert.AreEqual("FIX.5.0SP2", Fix.Dictionary.FIX_5_0SP2.LockType.ThreeTickLocked.GetVersionAdded());
+            var day = Dictionary.FIX_5_0SP2.TimeInForce.Day;
+            Assert.AreEqual("A buy or sell order that, if not executed expires at the end of the trading day on which it was entered.", day.Description);
         }
-        */
     }    
 }

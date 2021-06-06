@@ -264,7 +264,7 @@ namespace Fix
         {
             static VersionField? FindGlobalDefinition(int tag)
             {
-                foreach (var version in Versions)
+                foreach (var version in Versions.Reverse())
                 {
                     if (version.Fields.TryGetValue(tag, out var definition) && definition.IsValid)
                     {
