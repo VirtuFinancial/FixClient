@@ -26,6 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <OutputFiles Include="Generated\FIX_4_0_DataTypes.cs" />
+    <OutputFiles Include="Generated\FIX_4_0_Fields.cs" />
+    <OutputFiles Include="Generated\FIX_4_0_Messages.cs" />
     <OutputFiles Include="Generated\FIX_4_2_DataTypes.cs" />
     <OutputFiles Include="Generated\FIX_4_2_Fields.cs" />
     <OutputFiles Include="Generated\FIX_4_2_Messages.cs" />
@@ -43,6 +46,7 @@
 
   <Target Name="RunLexicographer" BeforeTargets="BeforeBuild" Inputs="@(OrchestrationFiles)" Outputs="@(OutputFiles)">
     <MakeDir Directories="$(MSBuildProjectDirectory)/Generated" />
+    <Exec Command="python ../../Fix.Lexicographer/lexicographer.py --namespace FIX_4_0 --prefix FIX_4_0_ --orchestration ../../orchestrations/fix_repository_4_0.xml" WorkingDirectory="$(MSBuildProjectDirectory)/Generated" />
     <Exec Command="python ../../Fix.Lexicographer/lexicographer.py --namespace FIX_4_2 --prefix FIX_4_2_ --orchestration ../../orchestrations/fix_repository_4_2.xml" WorkingDirectory="$(MSBuildProjectDirectory)/Generated" />
     <Exec Command="python ../../Fix.Lexicographer/lexicographer.py --namespace FIX_4_4 --prefix FIX_4_4_ --orchestration ../../orchestrations/fix_repository_4_4.xml" WorkingDirectory="$(MSBuildProjectDirectory)/Generated" />
     <Exec Command="python ../../Fix.Lexicographer/lexicographer.py --namespace FIX_5_0SP2 --prefix FIX_5_0SP2_ --orchestration ../../orchestrations/fix_repository_5_0SP2_EP258.xml" WorkingDirectory="$(MSBuildProjectDirectory)/Generated" />

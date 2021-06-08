@@ -9,6 +9,7 @@ namespace Fix
     {
         public class VersionCollection : IEnumerable<Version>
         {
+            public readonly Version FIX_4_0 = new Version("FIX.4.0", Fix.Dictionary.FIX_4_0.DataTypes, Fix.Dictionary.FIX_4_0.Fields, Fix.Dictionary.FIX_4_0.Messages);
             public readonly Version FIX_4_2 = new Version("FIX.4.2", Fix.Dictionary.FIX_4_2.DataTypes, Fix.Dictionary.FIX_4_2.Fields, Fix.Dictionary.FIX_4_2.Messages);
             public readonly Version FIX_4_4 = new Version("FIX.4.4", Fix.Dictionary.FIX_4_4.DataTypes, Fix.Dictionary.FIX_4_4.Fields, Fix.Dictionary.FIX_4_4.Messages);
             public readonly Version FIX_5_0SP2 = new Version("FIX.5.0SP2", Fix.Dictionary.FIX_5_0SP2.DataTypes, Fix.Dictionary.FIX_5_0SP2.Fields, Fix.Dictionary.FIX_5_0SP2.Messages);
@@ -22,6 +23,7 @@ namespace Fix
                 Default = FIX_5_0SP2;
 
                 _versions = new[] {
+                    FIX_4_0,
                     FIX_4_2,
                     FIX_4_4,
                     FIX_5_0SP2,

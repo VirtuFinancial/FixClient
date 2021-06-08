@@ -1,0 +1,3544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fixr:repository xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:fixr="http://fixprotocol.io/2020/orchestra/repository" version="FIX.4.0" name="FIX.4.0">
+  <fixr:metadata>
+    <dc:title>Orchestra</dc:title>
+  <dc:creator>https://github.com/GaryHughes/fixorchestra</dc:creator>
+  <dc:publisher>Gary Hughes</dc:publisher>
+  <dc:date>2021-06-06T06:45:51.875688 UTC</dc:date>
+  <dc:format>Orchestra schema</dc:format>
+  <dc:source>FIX Unified Repository</dc:source>
+  </fixr:metadata>
+<fixr:datatypes>
+    <fixr:datatype name="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Sequence of digits without commas or decimals and optional sign character (ASCII characters "-" and "0" - "9" ). The sign character utilizes one byte (i.e. positive int is "99999" while negative int is "-99999"). Note that int values may contain leading zeros (e.g. "00023" = "23").
+Examples:
+723 in field 21 would be mapped int as |21=723|.
+-723 in field 12 would be mapped int as |12=-723|
+The following data types are based on int.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:datatype>
+  <fixr:datatype name="float" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Sequence of digits with optional decimal point and sign character (ASCII characters "-", "0" - "9" and "."); the absence of the decimal point within the string will be interpreted as the float representation of an integer value. All float fields must accommodate up to fifteen significant digits.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:datatype>
+  <fixr:datatype name="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Alpha-numeric free format strings, can include any character or punctuation except the delimiter. All char fields are case sensitive.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:datatype>
+  <fixr:datatype name="time" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Time/date combination in YYYYMMDD-HH:MM:SS format, colons and dash required. Valid values: YYYY = 0000-9999, MM = 01-12, DD = 01-31, HH = 00-23, MM = 00-59, SS = 00-59.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:datatype>
+  <fixr:datatype name="date" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Date in YYYYMMDD format. Valid values: YYYY = 0000-9999, MM = 01-12, DD = 01-31.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:datatype>
+  <fixr:datatype name="data" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Raw data with no format or content restrictions. Data fields are always immediately preceded by a length field. Caution: may contain the delimiter (SOH) character.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:datatype>
+  <fixr:datatype name="Length" added="FIX.4.3" addedEP="" updatedEP="" deprecatedEP="" baseType="int">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">int field representing the length in bytes. Value must be positive.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:datatype>
+  </fixr:datatypes>
+<fixr:codeSets>
+    <fixr:codeSet name="AdvSideCodeSet" id="4" type="char">
+      <fixr:code name="Buy" id="4001" value="B" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Buy</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Sell" id="4002" value="S" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Sell</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Trade" id="4003" value="T" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Trade</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Cross" id="4004" value="X" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Cross</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Broker's side of advertised trade</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="AdvTransTypeCodeSet" id="5" type="char">
+      <fixr:code name="Cancel" id="5001" value="C" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Cancel</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="New" id="5002" value="N" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">New</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Replace" id="5003" value="R" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Replace</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies advertisement message transaction type</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="CommTypeCodeSet" id="13" type="char">
+      <fixr:code name="PerUnit" id="13001" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">per share</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Percent" id="13002" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">percentage</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Absolute" id="13003" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">absolute</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Commission type</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="ExecInstCodeSet" id="18" type="char">
+      <fixr:code name="StayOnOfferSide" id="18001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Stay on offerside</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="NotHeld" id="18002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Not held</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Work" id="18003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Work</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="GoAlong" id="18004" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Go along</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="OverTheDay" id="18005" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Over the day</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Held" id="18006" value="5" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Held</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ParticipateDoNotInitiate" id="18007" value="6" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Participate don't initiate</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="StrictScale" id="18008" value="7" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Strict scale</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="TryToScale" id="18009" value="8" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Try to scale</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="StayOnBidSide" id="18010" value="9" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Stay on bidside</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="NoCross" id="18011" value="A" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">No cross</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="OKToCross" id="18012" value="B" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">OK to cross</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="CallFirst" id="18013" value="C" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Call first</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PercentOfVolume" id="18014" value="D" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Percent of volume</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="DoNotIncrease" id="18015" value="E" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Do not increase - DNI</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="DoNotReduce" id="18016" value="F" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Do not reduce - DNR</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AllOrNone" id="18017" value="G" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">All or none - AON</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="InstitutionsOnly" id="18018" value="I" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Institutions only</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="LastPeg" id="18019" value="L" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Last peg (last sale)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="MidPricePeg" id="18020" value="M" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Mid-price peg (midprice of inside quote)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="NonNegotiable" id="18021" value="N" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Non-negotiable</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="OpeningPeg" id="18022" value="O" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Opening peg</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="MarketPeg" id="18023" value="P" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Market peg</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PrimaryPeg" id="18024" value="R" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Primary peg (primary market - buy at bid/sell at offer)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Suspend" id="18025" value="S" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Suspend</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Instructions for order handling on exchange trading floor. If more than one instruction is applicable to an order, this field can contain multiple instructions separated by space.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="ExecTransTypeCodeSet" id="20" type="char">
+      <fixr:code name="New" id="20001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">New</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Cancel" id="20002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Cancel</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Correct" id="20003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Correct</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Status" id="20004" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Status</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies transaction type</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="HandlInstCodeSet" id="21" type="char">
+      <fixr:code name="AutomatedExecutionNoIntervention" id="21001" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Automated execution order, private, no Broker intervention</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AutomatedExecutionInterventionOK" id="21002" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Automated execution order, public, Broker intervention OK</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ManualOrder" id="21003" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Manual order, best execution</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Instructions for order handling on Broker trading floor</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="IDSourceCodeSet" id="22" type="char">
+      <fixr:code name="CUSIP" id="22001" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">CUSIP</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="SEDOL" id="22002" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">SEDOL</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="QUIK" id="22003" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">QUIK</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ISINNumber" id="22004" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">ISIN number</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="RICCode" id="22005" value="5" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">RIC code</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies class of alternative SecurityID
+100+ are reserved for private security identifications</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="IOIOthSvcCodeSet" id="24" type="char">
+      <fixr:code name="Autex" id="24001" value="A" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Autex</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Bridge" id="24002" value="B" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Bridge</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates if, and on which other services, the indication has been advertised. Each character represents an additional service (e.g. if on Bridge and Autex, field = BA, if only on Autex, field = A)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="IOIQltyIndCodeSet" id="25" type="char">
+      <fixr:code name="High" id="25001" value="H" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">High</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Low" id="25002" value="L" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Low</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Medium" id="25003" value="M" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Medium</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Relative quality of indication</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="IOISharesCodeSet" id="27" type="char">
+      <fixr:code name="Large" id="27001" value="L" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Large</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Medium" id="27002" value="M" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Medium</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Small" id="27003" value="S" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Small</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Number of shares in numeric or relative size.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="IOITransTypeCodeSet" id="28" type="char">
+      <fixr:code name="Cancel" id="28001" value="C" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Cancel</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="New" id="28002" value="N" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">New</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Replace" id="28003" value="R" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Replace</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies IOI message transaction type</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="LastCapacityCodeSet" id="29" type="char">
+      <fixr:code name="Agent" id="29001" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Agent</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="CrossAsAgent" id="29002" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Cross as agent</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="CrossAsPrincipal" id="29003" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Cross as principal</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Principal" id="29004" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Principal</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Broker capacity in order execution</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="MsgTypeCodeSet" id="35" type="char">
+      <fixr:code name="Heartbeat" id="35001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Heartbeat</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="TestRequest" id="35002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Test Request</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ResendRequest" id="35003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Resend Request</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Reject" id="35004" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Reject</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="SequenceReset" id="35005" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Sequence Reset</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Logout" id="35006" value="5" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Logout</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="IOI" id="35007" value="6" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Indication of Interest</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Advertisement" id="35008" value="7" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Advertisement</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ExecutionReport" id="35009" value="8" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Execution Report</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="OrderCancelReject" id="35010" value="9" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Order Cancel Reject</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Logon" id="35011" value="A" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Logon</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="News" id="35012" value="B" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">News</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Email" id="35013" value="C" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Email</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="NewOrderSingle" id="35014" value="D" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Order - Single</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="NewOrderList" id="35015" value="E" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Order - List</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="OrderCancelRequest" id="35016" value="F" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Order Cancel Request</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="OrderCancelReplaceRequest" id="35017" value="G" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Order Cancel/Replace Request</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="OrderStatusRequest" id="35018" value="H" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Order Status Request</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AllocationInstruction" id="35019" value="J" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Allocation</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ListCancelRequest" id="35020" value="K" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">List Cancel Request</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ListExecute" id="35021" value="L" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">List Execute</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ListStatusRequest" id="35022" value="M" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">List Status Request</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ListStatus" id="35023" value="N" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">List Status</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AllocationInstructionAck" id="35024" value="P" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Allocation ACK</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="DontKnowTrade" id="35025" value="Q" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Dont Know Trade (DK)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="QuoteRequest" id="35026" value="R" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Quote Request</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Quote" id="35027" value="S" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Quote</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Defines message type. ALWAYS THIRD FIELD IN MESSAGE. (Always unencrypted)
+Note: A "U" as the first character in the MsgType field indicates that the message format is privately defined between the sender and receiver.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="OrdStatusCodeSet" id="39" type="char">
+      <fixr:code name="New" id="39001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">New</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PartiallyFilled" id="39002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Partially filled</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Filled" id="39003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Filled</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="DoneForDay" id="39004" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Done for day</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Canceled" id="39005" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Canceled</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Replaced" id="39006" value="5" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Replaced</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PendingCancel" id="39007" value="6" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Pending Cancel/Replace</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Stopped" id="39008" value="7" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Stopped</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Rejected" id="39009" value="8" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Rejected</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Suspended" id="39010" value="9" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Suspended</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PendingNew" id="39011" value="A" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Pending New</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Calculated" id="39012" value="B" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Calculated</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Expired" id="39013" value="C" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Expired</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies current status of order.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="OrdTypeCodeSet" id="40" type="char">
+      <fixr:code name="Market" id="40001" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Market</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Limit" id="40002" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Limit</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Stop" id="40003" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Stop</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="StopLimit" id="40004" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Stop limit</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="MarketOnClose" id="40005" value="5" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Market on close</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="WithOrWithout" id="40006" value="6" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">With or without</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="LimitOrBetter" id="40007" value="7" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Limit or better</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="LimitWithOrWithout" id="40008" value="8" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Limit with or without</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="OnBasis" id="40009" value="9" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">On basis</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="OnClose" id="40010" value="A" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">On close</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="LimitOnClose" id="40011" value="B" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Limit on close</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ForexMarket" id="40012" value="C" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Forex</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PreviouslyQuoted" id="40013" value="D" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Previously quoted</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PreviouslyIndicated" id="40014" value="E" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Previously indicated</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Pegged" id="40015" value="P" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Pegged (requires ExecInst = L, R, M, P or O)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Order type.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="PossDupFlagCodeSet" id="43" type="char">
+      <fixr:code name="OriginalTransmission" id="43001" value="N" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Original transmission</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PossibleDuplicate" id="43002" value="Y" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Possible duplicate</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates possible retransmission of message with this sequence number</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="Rule80ACodeSet" id="47" type="char">
+      <fixr:code name="AgencySingleOrder" id="47001" value="A" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Agency single order</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ProprietaryNonAlgo" id="47002" value="C" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Program Order, non-index arb, for Member firm/org</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ProgramOrderMember" id="47003" value="D" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Program Order, index arb, for Member firm/org</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="IndividualInvestor" id="47004" value="I" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Individual Investor, single order</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ProprietaryAlgo" id="47005" value="J" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Program Order, index arb, for individual customer</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AgencyAlgo" id="47006" value="K" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Program Order, non-index arb, for individual customer</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ProgramOrderOtherMember" id="47007" value="M" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Program Order, index arb, for other member</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AgentForOtherMember" id="47008" value="N" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Program Order, non-index arb, for other member</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AgencyIndexArb" id="47009" value="U" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Program Order, index arb, for other agency</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AllOtherOrdersAsAgentForOtherMember" id="47010" value="W" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">All other orders as agent for other member</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AgencyNonAlgo" id="47011" value="Y" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Program Order, non-index arb, for other agency</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates order type upon which exchange Rule 80A is applied.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="SideCodeSet" id="54" type="char">
+      <fixr:code name="Buy" id="54001" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Buy</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Sell" id="54002" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Sell</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="BuyMinus" id="54003" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Buy minus</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="SellPlus" id="54004" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Sell plus</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="SellShort" id="54005" value="5" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Sell short</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="SellShortExempt" id="54006" value="6" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Sell short exempt</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Side of order</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="TimeInForceCodeSet" id="59" type="char">
+      <fixr:code name="Day" id="59001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Day</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="GoodTillCancel" id="59002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Good Till Cancel (GTC)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AtTheOpening" id="59003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">At the Opening (OPG)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ImmediateOrCancel" id="59004" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Immediate or Cancel (OC)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="FillOrKill" id="59005" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Fill or Kill (FOK)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="GoodTillCrossing" id="59006" value="5" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Good Till Crossing (GTX)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="GoodTillDate" id="59007" value="6" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Good Till Date</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Specifies how long the order remains in effect. Absence of this field is interpreted as DAY.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="UrgencyCodeSet" id="61" type="char">
+      <fixr:code name="Normal" id="61001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Normal</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Flash" id="61002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Flash</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Background" id="61003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Background</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Urgency flag</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="SettlmntTypCodeSet" id="63" type="char">
+      <fixr:code name="Regular" id="63001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Regular</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Cash" id="63002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Cash</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="NextDay" id="63003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Next Day</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="TPlus2" id="63004" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">T+2</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="TPlus3" id="63005" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">T+3</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="TPlus4" id="63006" value="5" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">T+4</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Future" id="63007" value="6" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Future</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="WhenAndIfIssued" id="63008" value="7" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">When Issued</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="SellersOption" id="63009" value="8" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Sellers Option</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="TPlus5" id="63010" value="9" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">T+ 5</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates order settlement period. Absence of this field is interpreted as Regular. Regular is defined as the default settlement period for the particular security on the exchange of execution.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="AllocTransTypeCodeSet" id="71" type="char">
+      <fixr:code name="New" id="71001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">New</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Replace" id="71002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Replace</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Cancel" id="71003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Cancel</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies allocation transaction type</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="ProcessCodeCodeSet" id="81" type="char">
+      <fixr:code name="Regular" id="81001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">regular</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="SoftDollar" id="81002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">soft dollar</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="StepIn" id="81003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">step-in</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="StepOut" id="81004" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">step-out</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="SoftDollarStepIn" id="81005" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">soft-dollar step-in</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="SoftDollarStepOut" id="81006" value="5" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">soft-dollar step-out</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PlanSponsor" id="81007" value="6" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">plan sponsor</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Processing code for sub-account. Absence of this field in AllocAccount / AllocShares / ProcessCode instance indicates regular trade.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="AllocStatusCodeSet" id="87" type="int">
+      <fixr:code name="Accepted" id="87001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">accepted (successfully processed)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="BlockLevelReject" id="87002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">rejected</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AccountLevelReject" id="87003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">partial accept</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Received" id="87004" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">received (received, not yet processed)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies status of allocation.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="AllocRejCodeCodeSet" id="88" type="int">
+      <fixr:code name="UnknownAccount" id="88001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">unknown account(s)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="IncorrectQuantity" id="88002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">incorrect quantity</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="IncorrectAveragegPrice" id="88003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">incorrect average price</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="UnknownExecutingBrokerMnemonic" id="88004" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">unknown executing broker mnemonic</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="CommissionDifference" id="88005" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">commission difference</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="UnknownOrderID" id="88006" value="5" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">unknown OrderID</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="UnknownListID" id="88007" value="6" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">unknown ListID</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="OtherSeeText" id="88008" value="7" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">other</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies reason for rejection.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="EmailTypeCodeSet" id="94" type="char">
+      <fixr:code name="New" id="94001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">New</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Reply" id="94002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Reply</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AdminReply" id="94003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Admin Reply</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Email message type.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="EncryptMethodCodeSet" id="98" type="int">
+      <fixr:code name="None" id="98001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">None / other</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PKCS" id="98002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">PKCS (proprietary)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="DES" id="98003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">DES (EBC mode)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PKCSDES" id="98004" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">PKCS/DES (proprietary)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PGPDES" id="98005" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">PGP/DES (defunct)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PGPDESMD5" id="98006" value="5" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">PGP/DES-MD5 (see app note on FIX home page)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PEM" id="98007" value="6" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">PEM/DES-MD5 (see app note on FIX home page)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Method of encryption.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="ExDestinationCodeSet" id="100" type="char">
+      <fixr:code name="None" id="100001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">none</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="POSIT" id="100002" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">POSIT</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Execution destination as defined by institution when order is entered.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="CxlRejReasonCodeSet" id="102" type="int">
+      <fixr:code name="TooLateToCancel" id="102001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Too late to cancel</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="UnknownOrder" id="102002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Unknown order</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Code to identify reason for cancel rejection.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="OrdRejReasonCodeSet" id="103" type="int">
+      <fixr:code name="BrokerCredit" id="103001" value="0" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Broker option</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="UnknownSymbol" id="103002" value="1" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Unknown symbol</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ExchangeClosed" id="103003" value="2" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Exchange closed</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="OrderExceedsLimit" id="103004" value="3" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Order exceeds limit</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="TooLateToEnter" id="103005" value="4" added="FIX.2.7">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Too late to enter</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Code to identify reason for order rejection.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="IOIQualifierCodeSet" id="104" type="char">
+      <fixr:code name="AllOrNone" id="104001" value="A" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">All or none</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AtTheClose" id="104002" value="C" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">At the close</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="InTouchWith" id="104003" value="I" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">In touch with</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Limit" id="104004" value="L" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Limit</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="MoreBehind" id="104005" value="M" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">More behind</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AtTheOpen" id="104006" value="O" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">At the open</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="TakingAPosition" id="104007" value="P" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Taking a position</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="AtTheMarket" id="104008" value="Q" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Current quote</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PortfolioShown" id="104009" value="S" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Portfolio show-n</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ThroughTheDay" id="104010" value="T" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Through the day</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Versus" id="104011" value="V" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Versus</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Indication" id="104012" value="W" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Indication - Working away</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="CrossingOpportunity" id="104013" value="X" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Crossing opportunity</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Code to qualify IOI use.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="ReportToExchCodeSet" id="113" type="char">
+      <fixr:code name="SenderReports" id="113001" value="N" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Indicates that party sending message will report trade</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ReceiverReports" id="113002" value="Y" added="FIX.3.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Indicates that party receiving message must report trade</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies party of trade responsible for exchange reporting.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="LocateReqdCodeSet" id="114" type="char">
+      <fixr:code name="No" id="114001" value="N" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Indicates the broker is not required to locate</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Yes" id="114002" value="Y" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Indicates the broker is responsible for locating the stock</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates whether the broker is to locate the stock in conjuction with a short sell order.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="ForexReqCodeSet" id="121" type="char">
+      <fixr:code name="DoNotExecuteForexAfterSecurityTrade" id="121001" value="N" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Do not execute Forex after security trade</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ExecuteForexAfterSecurityTrade" id="121002" value="Y" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Execute Forex after security trade</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates request for forex accommodation trade to be executed along with security transaction.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="GapFillFlagCodeSet" id="123" type="char">
+      <fixr:code name="SequenceReset" id="123001" value="N" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Sequence Reset, ignore MsgSeqNum</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="GapFillMessage" id="123002" value="Y" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Gap Fill message, MsgSeqNum field valid</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates that the Sequence Reset message is replacing administrative or application messages which will not be resent.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="CxlTypeCodeSet" id="125" type="char">
+      <fixr:code name="FullRemainingQuantity" id="125001" value="F" added="FIX.4.0" deprecated="FIX.4.1">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">full remaining quantity</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PartialCancel" id="125002" value="P" added="FIX.4.0" deprecated="FIX.4.1">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">partial cancel (reduce quantity)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Defines if cancel is for part or all of the remaining quantity of an order.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="DKReasonCodeSet" id="127" type="char">
+      <fixr:code name="UnknownSymbol" id="127001" value="A" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Unknown symbol</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="WrongSide" id="127002" value="B" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Wrong side</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="QuantityExceedsOrder" id="127003" value="C" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Quantity exceeds order</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="NoMatchingOrder" id="127004" value="D" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">No matching order</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="PriceExceedsLimit" id="127005" value="E" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Price exceeds limit</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Other" id="127006" value="Z" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Other</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Reason for execution rejection.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="IOINaturalFlagCodeSet" id="130" type="char">
+      <fixr:code name="NotNatural" id="130001" value="N" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Not natural</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Natural" id="130002" value="Y" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Natural</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates that IOI is the result of an existing agency order or a facilitation position resulting from an agency order, not from principal trading or order solicitation activity.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  <fixr:codeSet name="MiscFeeTypeCodeSet" id="139" type="char">
+      <fixr:code name="Regulatory" id="139001" value="1" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Regulatory (e.g. SEC)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Tax" id="139002" value="2" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Tax</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="LocalCommission" id="139003" value="3" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Local Commission</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="ExchangeFees" id="139004" value="4" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Exchange Fees</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Stamp" id="139005" value="5" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Stamp</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Levy" id="139006" value="6" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Levy</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:code name="Other" id="139007" value="7" added="FIX.4.0">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Other</fixr:documentation>
+        </fixr:annotation>
+      </fixr:code>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates type of miscellaneous fee.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:codeSet>
+  </fixr:codeSets>
+<fixr:fields>
+    <fixr:field id="1" name="Account" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Account mnemonic as agreed between broker and institution.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="2" name="AdvId" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Unique identifier of advertisement message</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="3" name="AdvRefID" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Reference identifier used with CANCEL and REPLACE transaction types.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="4" name="AdvSide" type="AdvSideCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Broker's side of advertised trade</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="5" name="AdvTransType" type="AdvTransTypeCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies advertisement message transaction type</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="6" name="AvgPx" type="float" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Calculated average price of all fills on this order.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="7" name="BeginSeqNo" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Message sequence number of first record in range to be resent</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="8" name="BeginString" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies beginning of new message and protocol version. ALWAYS FIRST FIELD IN MESSAGE. (Always unencrypted)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="9" name="BodyLength" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Message length, in bytes, forward to the CheckSum field. ALWAYS SECOND FIELD IN MESSAGE. (Always unencrypted)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="10" name="CheckSum" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Three byte, simple checksum (see Appendix B for description). ALWAYS LAST FIELD IN RECORD; i.e. serves, with the trailing &lt;SOH&gt;, as the end-of-record delimiter. Always defined as three characters. (Always unencrypted)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="11" name="ClOrdID" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Unique identifier for Order as assigned by institution. Uniqueness must be guaranteed within a single trading day. Firms which electronically submit multi-day orders should consider embedding a date within the ClOrderID field to assure uniqueness across days.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="12" name="Commission" type="float" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Commission</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="13" name="CommType" type="CommTypeCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Commission type</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="14" name="CumQty" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Total number of shares filled.
+Valid values:
+(0 - 1000000000)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="15" name="Currency" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies currency used for price, Absence of this field in a message is interpreted as US dollars. See Appendix A for information on obtaining valid values.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="16" name="EndSeqNo" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Message sequence number of last record in range to be resent. If request is for a single record BeginSeqNo = EndSeqNo. If request is for all messages subsequent to a particular message, EndSeqNo = "999999"</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="17" name="ExecID" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Unique identifier of execution message as assigned by broker (will be 0 (zero) for ExecTransType=3 (Status)).
+Uniqueness must be guaranteed within a single trading day. Firms which accept multi-day orders should consider embedding a date within the ExecID field to assure uniqueness across days.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="18" name="ExecInst" type="ExecInstCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Instructions for order handling on exchange trading floor. If more than one instruction is applicable to an order, this field can contain multiple instructions separated by space.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="19" name="ExecRefID" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Reference identifier used with Cancel and Correct transaction types.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="20" name="ExecTransType" type="ExecTransTypeCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies transaction type</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="21" name="HandlInst" type="HandlInstCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Instructions for order handling on Broker trading floor</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="22" name="IDSource" type="IDSourceCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies class of alternative SecurityID
+100+ are reserved for private security identifications</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="23" name="IOIid" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Unique identifier of IOI message.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="24" name="IOIOthSvc" type="IOIOthSvcCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates if, and on which other services, the indication has been advertised. Each character represents an additional service (e.g. if on Bridge and Autex, field = BA, if only on Autex, field = A)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="25" name="IOIQltyInd" type="IOIQltyIndCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Relative quality of indication</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="26" name="IOIRefID" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Reference identifier used with CANCEL and REPLACE, transaction types.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="27" name="IOIShares" type="IOISharesCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Number of shares in numeric or relative size.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="28" name="IOITransType" type="IOITransTypeCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies IOI message transaction type</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="29" name="LastCapacity" type="LastCapacityCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Broker capacity in order execution</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="30" name="LastMkt" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Market of execution for last fill
+Valid values:
+See Appendix C</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="31" name="LastPx" type="float" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Price of last fill. Field not required for ExecTransType = 3 (Status)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="32" name="LastShares" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Quantity of shares bought/sold on this fill. Field not required for ExecTransType = 3 (Status)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="33" name="LinesOfText" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies number of lines of text body</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="34" name="MsgSeqNum" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Integer message sequence number.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="35" name="MsgType" type="MsgTypeCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Defines message type. ALWAYS THIRD FIELD IN MESSAGE. (Always unencrypted)
+Note: A "U" as the first character in the MsgType field indicates that the message format is privately defined between the sender and receiver.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="36" name="NewSeqNo" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">New sequence number
+Valid values:
+0 - 999999</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="37" name="OrderID" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Unique identifier for Order as assigned by broker. Uniqueness must be guaranteed within a single trading day. Firms which accept multi-day orders should consider embedding a date within the OrderID field to assure uniqueness across days.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="38" name="OrderQty" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Number of shares ordered</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="39" name="OrdStatus" type="OrdStatusCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies current status of order.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="40" name="OrdType" type="OrdTypeCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Order type.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="41" name="OrigClOrdID" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Original order id as assigned by the institution, used to identify original order in cancel and cancel/replace requests.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="42" name="OrigTime" type="time" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Time of message origination (always expressed in GMT)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="43" name="PossDupFlag" type="PossDupFlagCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates possible retransmission of message with this sequence number</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="44" name="Price" type="float" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Price per share</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="45" name="RefSeqNum" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Reference message sequence number</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="46" name="RelatdSym" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Symbol of issue related to story. Can be repeated within message to identify multiple companies.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="47" name="Rule80A" type="Rule80ACodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates order type upon which exchange Rule 80A is applied.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="48" name="SecurityID" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">CUSIP or other alternate security identifier</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="49" name="SenderCompID" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Assigned value used to identify firm sending message.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="50" name="SenderSubID" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Assigned value used to identify specific message originator (desk, trader, etc.)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="52" name="SendingTime" type="time" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Time of message transmission (always expressed in GMT)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="53" name="Shares" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Number of shares</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="54" name="Side" type="SideCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Side of order</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="55" name="Symbol" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Ticker symbol</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="56" name="TargetCompID" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Assigned value used to identify receiving firm.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="57" name="TargetSubID" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Assigned value used to identify specific individual or unit intended to receive message. "ADMIN" reserved for administrative messages not intended for a specific user.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="58" name="Text" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Free format text string</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="59" name="TimeInForce" type="TimeInForceCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Specifies how long the order remains in effect. Absence of this field is interpreted as DAY.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="60" name="TransactTime" type="time" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Time of execution/order creation (expressed in GMT)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="61" name="Urgency" type="UrgencyCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Urgency flag</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="62" name="ValidUntilTime" type="time" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates expiration time of indication message (always expressed in GMT)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="63" name="SettlmntTyp" type="SettlmntTypCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates order settlement period. Absence of this field is interpreted as Regular. Regular is defined as the default settlement period for the particular security on the exchange of execution.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="64" name="FutSettDate" type="date" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Specific date of trade settlement in YYYYMMDD format. Required when SettlmntTyp = 6 (Future) or SettlmntTyp = 8 (Sellers Option). (expressed in local time at place of settlement)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="65" name="SymbolSfx" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Additional information about the security (e.g. preferred, warrants, etc.). Absence of this field indicates common.
+Valid values:
+As defined in the NYSE Stock and bond Symbol Directory and in the AMEX Fitch Directory</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="66" name="ListID" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Customer assigned listUnique identifier for list as assigned by institution, used to associate multiple individual orders. Uniqueness must be guaranteed within a single trading day. Firms which generate multi-day orders should consider embedding a date within the ListID field to assure uniqueness across days.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="67" name="ListSeqNo" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Sequence of individual order within list (i.e. ListSeqNo of ListNoOrds, 2 of 25, 3 of 25, . . . )</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="68" name="ListNoOrds" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Total number of orders within list (i.e. ListSeqNo of ListNoOrds, e.g. 2 of 25, 3 of 25, . . . )</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="69" name="ListExecInst" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Free format text message containing list handling and execution instructions.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="70" name="AllocID" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Unique identifier for allocation record.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="71" name="AllocTransType" type="AllocTransTypeCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies allocation transaction type</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="72" name="RefAllocID" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Reference identifier to be used with Replace and Cancel AllocTransType records.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="73" name="NoOrders" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates number of orders to be combined for average pricing and allocation.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="74" name="AvgPrxPrecision" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates number of decimal places to be used for average pricing. Absence of this field indicates that default precision arranged by the broker/institution is to be used.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="75" name="TradeDate" type="date" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates date of trade referenced in this record in YYYYMMDD format. Absence of this field indicates current day (expressed in local time at place of trade).</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="76" name="ExecBroker" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies executing / give-up broker. Standard NASD market-maker mnemonic is preferred.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="77" name="OpenClose" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">For options only.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="78" name="NoAllocs" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Number of AllocAccount/AllocShares/ProcessCode instances included in allocation record.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="79" name="AllocAccount" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Sub-account mnemonic</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="80" name="AllocShares" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Number of shares to be allocated to specific sub-account</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="81" name="ProcessCode" type="ProcessCodeCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Processing code for sub-account. Absence of this field in AllocAccount / AllocShares / ProcessCode instance indicates regular trade.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="82" name="NoRpts" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Total number of reports within series.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="83" name="RptSeq" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Sequence number of message within report series.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="84" name="CxlQty" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Total number of shares canceled for this order.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="85" name="NoDlvyInst" type="int" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Number of delivery instruction fields to follow</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="86" name="DlvyInst" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Free format text field to indicate delivery instructions</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="87" name="AllocStatus" type="AllocStatusCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies status of allocation.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="88" name="AllocRejCode" type="AllocRejCodeCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies reason for rejection.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="89" name="Signature" type="data" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Electronic signature</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="90" name="SecureDataLen" type="Length" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Length of encrypted message</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="91" name="SecureData" type="data" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Actual encrypted data stream</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="92" name="BrokerOfCredit" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Broker to receive trade credit</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="93" name="SignatureLength" type="Length" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Number of bytes in signature field.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="94" name="EmailType" type="EmailTypeCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Email message type.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="95" name="RawDataLength" type="Length" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Number of bytes in raw data field.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="96" name="RawData" type="data" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Unformatted raw data, can include bitmaps, word processor documents, etc.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="97" name="PossResend" type="char" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates that message may contain information that has been sent under another sequence number.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="98" name="EncryptMethod" type="EncryptMethodCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Method of encryption.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="99" name="StopPx" type="float" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Price per share
+Valid values:
+0 - 99999999.9999</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="100" name="ExDestination" type="ExDestinationCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Execution destination as defined by institution when order is entered.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="102" name="CxlRejReason" type="CxlRejReasonCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Code to identify reason for cancel rejection.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="103" name="OrdRejReason" type="OrdRejReasonCodeSet" added="FIX.2.7">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Code to identify reason for order rejection.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="104" name="IOIQualifier" type="IOIQualifierCodeSet" added="FIX.3.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Code to qualify IOI use.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="105" name="WaveNo" type="char" added="FIX.3.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifier to aid in the management of multiple lists derived from a single, master list.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="106" name="Issuer" type="char" added="FIX.3.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Company name of security issuer (e.g. International Business Machines)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="107" name="SecurityDesc" type="char" added="FIX.3.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Security description.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="108" name="HeartBtInt" type="int" added="FIX.3.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Heartbeat interval (seconds)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="109" name="ClientID" type="char" added="FIX.3.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Firm identifier used in third party-transactions.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="110" name="MinQty" type="int" added="FIX.3.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Minimum quantity of an order to be executed.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="111" name="MaxFloor" type="int" added="FIX.3.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Maximum number of shares within an order to be shown on the exchange floor at any given time.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="112" name="TestReqID" type="char" added="FIX.3.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifier included in Test Request message to be returned in resulting Heartbeat</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="113" name="ReportToExch" type="ReportToExchCodeSet" added="FIX.3.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Identifies party of trade responsible for exchange reporting.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="114" name="LocateReqd" type="LocateReqdCodeSet" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates whether the broker is to locate the stock in conjuction with a short sell order.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="115" name="OnBehalfOfCompID" type="char" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Assigned value used to identify firm originating message
+if the message was delivered by a third party i.e. the third party firm identifier would be delivered in the SenderCompID field and the firm originating the message in this field.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="116" name="OnBehalfOfSubID" type="char" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Assigned value used to identify specific message originator (desk, trader, etc.) if the message was delivered by a third party</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="117" name="QuoteID" type="char" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Unique identifier for quote</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="118" name="NetMoney" type="float" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Total amount due as the result of the transaction (e.g. for Buy order - principal + commission + fees) reported in currency of execution.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="119" name="SettlCurrAmt" type="float" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Total amount due expressed in settlement currency (includes the effect of the forex transaction)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="120" name="SettlCurrency" type="char" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Currency code of settlement denomination.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="121" name="ForexReq" type="ForexReqCodeSet" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates request for forex accommodation trade to be executed along with security transaction.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="122" name="OrigSendingTime" type="time" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Original time of message transmission (always expressed in GMT) when transmitting orders as the result of a resend request.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="123" name="GapFillFlag" type="GapFillFlagCodeSet" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates that the Sequence Reset message is replacing administrative or application messages which will not be resent.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="124" name="NoExecs" type="int" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">No of execution record groups to follow.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="125" name="CxlType" type="CxlTypeCodeSet" added="FIX.4.0" deprecated="FIX.4.1">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Defines if cancel is for part or all of the remaining quantity of an order.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="126" name="ExpireTime" type="time" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Time/Date of order expiration (always expressed in GMT)</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="127" name="DKReason" type="DKReasonCodeSet" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Reason for execution rejection.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="128" name="DeliverToCompID" type="char" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Assigned value used to identify the firm targeted to receive the message if the message is delivered by a third party i.e. the third party firm identifier would be delivered in the TargetCompID field and the ultimate receiver firm ID in this field.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="129" name="DeliverToSubID" type="char" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Assigned value used to identify specific message recipient (desk, trader, etc.) if the message is delivered by a third party</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="130" name="IOINaturalFlag" type="IOINaturalFlagCodeSet" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates that IOI is the result of an existing agency order or a facilitation position resulting from an agency order, not from principal trading or order solicitation activity.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="131" name="QuoteReqID" type="char" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Unique identifier for quote request</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="132" name="BidPx" type="float" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Bid price/rate</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="133" name="OfferPx" type="float" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Offer price/rate</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="134" name="BidSize" type="int" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Quantity of bid</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="135" name="OfferSize" type="int" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Quantity of offer</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="136" name="NoMiscFees" type="int" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Number of repeating groups of miscellaneous fees</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="137" name="MiscFeeAmt" type="float" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Miscellaneous fee value</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="138" name="MiscFeeCurr" type="char" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Currency of miscellaneous fee</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="139" name="MiscFeeType" type="MiscFeeTypeCodeSet" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indicates type of miscellaneous fee.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  <fixr:field id="140" name="PrevClosePx" type="float" added="FIX.4.0">
+      <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Previous closing price of security.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:field>
+  </fixr:fields>
+<fixr:components>
+    <fixr:component name="StandardHeader" id="1001" category="Session" added="FIX.4.0">
+      <fixr:fieldRef id="8" added="FIX.4.0" presence="required">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">FIX.4.0 (Always unencrypted, must be first field in message)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="9" added="FIX.4.0" presence="required">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">(Always unencrypted, must be second field in message)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="35" added="FIX.4.0" presence="required">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">(Always unencrypted, must be third field in message)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="49" added="FIX.4.0" presence="required">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">(Always unencrypted)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="56" added="FIX.4.0" presence="required">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">(Always unencrypted)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="115" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Trading partner company ID used when sending messages via a third party (Can be embedded within encrypted data section.)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="128" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Trading partner company ID used when sending messages via a third party (Can be embedded within encrypted data section.)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="90" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Required to identify length of encrypted section of message. (Always unencrypted)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="91" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Required when message body is encrypted. Always immediately follows SecureDataLen field.</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="34" added="FIX.4.0" presence="required">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">(Can be embedded within encrypted data section.)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="50" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">(Can be embedded within encrypted data section.)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="57" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">"ADMIN" reserved for administrative messages not intended for a specific user. (Can be embedded within encrypted data section.)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="116" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Trading partner SubID used when delivering messages via a third party. (Can be embedded within encrypted data section.)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="129" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Trading partner SubID used when delivering messages via a third party. (Can be embedded within encrypted data section.)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="43" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Always required for retransmissions, whether prompted by the sending system or as the result of a resend request. (Can be embedded within encrypted data section.)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="97" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Required when message may be duplicate of another message sent under a different sequence number. (Can be embedded within encrypted data section.)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="52" added="FIX.4.0" presence="required">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">(Can be embedded within encrypted data section.)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="122" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Required for message resends. If data is not available set to same value as SendingTime (Can be embedded within encrypted data section.)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    </fixr:component>
+  <fixr:component name="StandardTrailer" id="1002" category="Session" added="FIX.4.0">
+      <fixr:fieldRef id="93" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Required when trailer contains signature. Note: Not to be included within SecureData field</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="89" added="FIX.4.0" presence="optional">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">Note: Not to be included within SecureData field</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    <fixr:fieldRef id="10" added="FIX.4.0" presence="required">
+        <fixr:annotation>
+          <fixr:documentation purpose="SYNOPSIS">(Always unencrypted, always last field in message)</fixr:documentation>
+        </fixr:annotation>
+      </fixr:fieldRef>
+    </fixr:component>
+  </fixr:components>
+<fixr:groups />
+<fixr:messages>
+    <fixr:message name="Heartbeat" id="1" msgType="0" category="Session" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = 0</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="112" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required when the heartbeat is the result of a Test Request message.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The Heartbeat monitors the status of the communication link and identifies when the last of a string of messages was not received.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="TestRequest" id="2" msgType="1" category="Session" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = 1</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="112" added="FIX.4.0" presence="required" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The test request message forces a heartbeat from the opposing application. The test request message checks sequence numbers or verifies communication line status. The opposite application responds to the Test Request with a Heartbeat containing the TestReqID.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="ResendRequest" id="3" msgType="2" category="Session" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = 2</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="7" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="16" added="FIX.2.7" presence="required" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The resend request is sent by the receiving application to initiate the retransmission of messages. This function is utilized if a sequence number gap is detected, if the receiving application lost a message, or as a function of the initialization process.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="Reject" id="4" msgType="3" category="Session" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = 3</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="45" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgSeqNum of rejected message</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Where possible, message to explain reason for rejection</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The reject message should be issued when a message is received but cannot be properly processed due to a session-level rule violation. An example of when a reject may be appropriate would be the receipt of a message with invalid basic data which successfully passes de-encryption, CheckSum and BodyLength checks.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="SequenceReset" id="5" msgType="4" category="Session" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = 4</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="123" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="36" added="FIX.2.7" presence="required" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The sequence reset message is used by the sending application to reset the incoming sequence number on the opposing side.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="Logout" id="6" msgType="5" category="Session" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = 5</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The logout message initiates or confirms the termination of a FIX session. Disconnection without the exchange of logout messages should be interpreted as an abnormal condition.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="IOI" id="7" msgType="6" category="Indication" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = 6</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="23" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="28" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="26" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for Cancel and Replace IOITransType messages</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="55" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="65" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="48" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="22" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="106" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="107" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="54" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Side of Indication
+Valid values:
+1 = Buy
+2 = Sell</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="27" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="44" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="15" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Indication without currency field is interpreted as US dollars.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="62" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="25" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="24" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Applicable only if advertised on public IOI service.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="130" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="104" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Indication of interest messages are used to market merchandise which the broker is buying or selling in either a proprietary or agency capacity.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="Advertisement" id="8" msgType="7" category="Indication" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = 7</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="2" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="5" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="3" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for Cancel and Replace AdvTransType messages</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="55" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="65" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="48" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="22" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="106" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="107" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="4" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="53" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="44" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="15" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Indication without currency field is interpreted as US dollars.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="60" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Advertisement messages are used to announce completed transactions.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="ExecutionReport" id="9" msgType="8" category="SingleGeneralOrderHandling" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = 8</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="37" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="11" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for executions against electronically submitted orders which were assigned an ID by the institution. Not required for orders manually entered by the broker.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="109" added="FIX.3.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="76" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="66" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for executions against orders which were submitted as part of a list.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="17" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="20" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="19" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for Cancel and Correct ExecTransType messages</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="39" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="103" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">For optional use with OrdStatus = 8 (Rejected)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="1" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for executions against electronically submitted orders which were assigned an account by the institution</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="63" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Absence of this field is interpreted as Regular.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="64" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required when SettlmntTyp = 6 (Future) or SettlmntTyp = 8 (Sellers Option)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="55" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="65" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="48" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="22" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="106" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="107" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="54" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="38" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="40" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="44" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="99" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for OrdType = 4 (Stop Limit).</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="15" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Message without currency field is interpreted as US dollars</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="59" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Absence of this field indicates Day order</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="126" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if TimeInForce = GTD</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="18" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Can contain multiple instructions, space delimited.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="47" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="32" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Not required ExecTransType = 3 (Status)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="31" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Not required for ExecTransType = 3 (Status)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="30" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="29" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="14" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="6" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="75" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used when reporting other than current day trades.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="60" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="113" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="12" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="13" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="136" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if any miscellaneous fees are reported. Indicates number of repeating entries.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="137" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if NoMiscFees &gt; 0</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="138" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if NoMiscFees &gt; 0</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="139" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if NoMiscFees &gt; 0</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="118" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if miscellaneous fees are reported, in currency of execution</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="119" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used to report results of forex accommodation trade</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="120" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used to report results of forex accommodation trade</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The execution report message is used to:
+1. Confirm the receipt of an order
+2. Confirm changes to an existing order (i.e. accept cancel and replace requests)
+3. Relay order status information
+4. Relay fill information as orders are worked
+5. Reject orders
+6. Report miscellaneous fees calculations associated with a trade</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="OrderCancelReject" id="10" msgType="9" category="SingleGeneralOrderHandling" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = 9</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="37" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="11" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Unique order id assigned by institution to the cancel request or to the replacement order.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="109" added="FIX.3.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="76" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="66" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for rejects against orders which were submitted as part of a list.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="102" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The order cancel reject message is issued by the broker upon receipt of a cancel request or cancel/replace request message which cannot be honored.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="Logon" id="11" msgType="A" category="Session" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = A</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="98" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">(Always unencrypted)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="108" added="FIX.3.0" presence="required" />
+      <fixr:fieldRef id="95" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for some authentication methods</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="96" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for some authentication methods</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The logon message authenticates a user establishing a connection to a remote system. The logon message must be the first message sent by the application requesting to initiate a FIX session.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="News" id="12" msgType="B" category="EventCommunication" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = B</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="42" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="61" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="46" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Can be repeated multiple times if message is related to multiple symbols.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="33" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Repeating field, number of instances defined in LinesOfText</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="95" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="96" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The news message is intended for use as a general free format message between the broker and institution.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="Email" id="13" msgType="C" category="EventCommunication" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = C</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="94" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="42" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="46" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Can be repeated multiple times if message is related to multiple symbols..</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="37" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="11" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="33" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Repeating field, number of instances defined in LinesOfText</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="95" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="96" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">Format and purpose similar to News message, however, intended for private use between two parties.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="OrderSingle" id="14" msgType="D" category="SingleGeneralOrderHandling" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = D</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="11" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="109" added="FIX.3.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="76" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="1" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="63" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Absence of this field is interpreted as Regular.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="64" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required when SettlmntTyp = 6 (Future) or SettlmntTyp = 8 (Sellers Option)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="21" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="18" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Can contain multiple instructions, space delimited.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="110" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="111" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="100" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="81" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used to identify soft trades at order entry.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="55" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="65" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="48" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="22" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="106" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="107" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="140" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Useful for verifying security identification</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="54" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="114" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for short sell orders</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="38" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="40" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="44" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for limit OrdTypes</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="99" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for stop OrdTypes</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="15" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Message without currency field is interpreted as US dollars</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="23" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for Previously Indicated Orders (OrdType=E)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="117" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for Previously Quoted Orders (OrdType=D)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="59" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Absence of this field indicates Day order</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="126" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if TimeInForce = GTD</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="12" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="13" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="47" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="121" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Indicates that broker is requested to execute a Forex accommodation trade in conjunction with the security trade.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="120" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if ForexReq = Y.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The new order message type is used by institutions wishing to electronically submit securities and forex orders to a broker for execution.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="OrderList" id="15" msgType="E" category="ProgramTrading" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = E</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="66" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Must be unique, by customer, for the day</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="105" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="67" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="68" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="69" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Include only in ListSeqNo = 1 message</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="11" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="109" added="FIX.3.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for third-party transactions</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="76" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for third-party transactions</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="1" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="63" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Absence of this field is interpreted as Regular.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="64" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required when SettlmntTyp = 6 (Future) or SettlmntTyp = 8 (Sellers Option)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="21" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="18" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Can contain multiple instructions, space delimited.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="110" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="111" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="100" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="81" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="55" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="65" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="48" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="22" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="106" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="107" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="140" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Useful for verifying security identification</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="54" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="114" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for short sell orders</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="38" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="40" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="44" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for limit OrdTypes</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="99" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for stop OrdTypes</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="15" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Message without currency field is interpreted as US dollars</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="59" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Absence of this field indicates Day order</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="126" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required in TimeInForce = GTD</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="12" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="13" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="47" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="121" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Indicates that broker is requested to execute a Forex accommodation trade in conjunction with the security trade.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="120" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if ForexReq = Y.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The new order list message type is used by institutions wishing to electronically submit lists of related orders to a broker for execution.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="OrderCancelRequest" id="16" msgType="F" category="SingleGeneralOrderHandling" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = F</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="41" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Unique ID of original order as assigned by institution</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="37" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Broker ID of original order</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="11" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Unique ID of cancel request as assigned by the institution.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="66" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for List Orders</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="125" added="FIX.4.0" presence="required" />
+      <fixr:fieldRef id="109" added="FIX.3.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="76" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="55" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="65" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="48" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="22" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="106" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="107" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="54" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="38" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Original OrderQty for CxlType=F or new OrderQty for CxlType=P.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The order cancel request message is used to request the cancellation of all or part of the remaining quantity of an existing order.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="OrderCancelReplaceRequest" id="17" msgType="G" category="SingleGeneralOrderHandling" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = G</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="37" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Unique identifier of original order as assigned by broker</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="109" added="FIX.3.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="76" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="41" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Unique identifier of original order as assigned by institution.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="11" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Unique identifier of replacement order as assigned by institution. Note that this identifier will be used in ClOrdID field of the Cancel Reject Message if the replacement request is rejected.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="66" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for List Orders</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="1" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="63" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Absence of this field is interpreted as Regular.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="64" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required when SettlmntTyp = 6 (Future) or SettlmntTyp = 8 (Sellers Option)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="21" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Must match original order</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="18" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Can contain multiple instructions, space delimited. Replacement order must be created with new parameters (i.e. original order values will not be brought forward to replacement order unless redefined within this message).</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="110" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="111" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="100" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="55" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Must match original order</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="65" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="48" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Must match original order</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="22" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Must match original order</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="106" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="107" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="54" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Must match original side, however, Buy and Buy Minus can be interchanged as well as Sell and Sell Plus</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="38" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="40" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="44" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for limit OrdTypes</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="99" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for stop OrdTypes</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="15" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Message without currency field is interpreted as US dollars. Must match original order.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="59" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Absence of this field indicates Day order</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="126" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if TimeInForce = GTD</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="12" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="13" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="47" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Must match original order</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="121" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Indicates that broker is requested to execute a Forex accommodation trade in conjunction with the security trade.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="120" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if ForexReq = Y.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The order cancel/replace request is used to change the parameters of an existing order.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="OrderStatusRequest" id="18" msgType="H" category="SingleGeneralOrderHandling" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = H</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="37" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="11" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="109" added="FIX.3.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="76" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="55" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="65" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="106" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="107" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="54" added="FIX.2.7" presence="required" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The order status request message is used by the institution to generate an order status message back from the broker.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="Allocation" id="19" msgType="J" category="Allocation" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = J</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="70" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="71" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="72" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for AllocTransType = R (Replace) or C (Cancel)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="73" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Indicates number of orders to be combined for allocation. If order(s) were manually delivered set to 1 (one).</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="11" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Order ID assigned by client if order(s) were electronically delivered and executed. If order(s) were manually delivered this field should contain string "MANUAL".</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="37" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="66" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for List Orders.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="105" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="124" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Indicates number of individual execution record groups to follow. Absence of this field indicates that no individual execution records are included.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="17" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="32" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Number of shares in individual execution. Required if NoExecs &gt; 0</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="31" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Price of individual execution. Required if NoExecs &gt; 0</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="30" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Market of individual execution.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="54" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="55" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="65" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="48" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="22" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="106" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="107" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="53" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Total number of shares allocated to all accounts</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="6" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="15" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Currency of AvgPx, absence of this field indicates US dollars</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="74" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Absence of this field indicates that default precision arranged by the broker/institution is to be used</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="75" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="60" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Date/time when allocation is generated</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="63" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Absence of this field is interpreted as Regular</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="64" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required with SettlmntTyp other than regular</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="118" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Expressed in same currency as AvgPx</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="136" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if any miscellaneous fees are reported. Indicates number of repeating entries</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="137" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if NoMiscFees &gt; 0</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="138" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if NoMiscFees &gt; 0</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="139" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if NoMiscFees &gt; 0</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="119" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="120" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="77" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="78" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Indicates number of allocation groups to follow.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="79" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="80" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="81" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="76" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for step-in and step-out trades</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="109" added="FIX.3.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="12" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="13" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="85" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Repeating group within allocation group</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="92" added="FIX.2.7" presence="optional" />
+      <fixr:fieldRef id="86" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required if NoDlvyInst &gt; 0</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The allocation record is used to instruct a broker on how to allocate executed shares to sub-accounts. The allocation record can also be used as a confirmation message through which third parties can communicate execution and settlement instructions between trading partners.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="ListCancelRequest" id="20" msgType="K" category="ProgramTrading" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = K</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="66" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="105" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The list cancel request message type is used by institutions wishing to cancel previously submitted lists either before or during execution.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="ListExecute" id="21" msgType="L" category="ProgramTrading" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = L</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="66" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Must be unique, by customer, for the day</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="105" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The list execute message type is used by institutions to instruct the broker to begin execution of a previously submitted list.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="ListStatusRequest" id="22" msgType="M" category="ProgramTrading" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = M</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="66" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="105" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The list status request message type is used by institutions to instruct the broker to generate status messages for a list.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="ListStatus" id="23" msgType="N" category="ProgramTrading" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = N</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="66" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="105" added="FIX.3.0" presence="optional" />
+      <fixr:fieldRef id="82" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Total number of messages required to status complete list.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="83" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Sequence number of this report message.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="73" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Number of orders statused in this message, i.e. number of repeating groups to follow.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="11" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="14" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="84" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="6" added="FIX.2.7" presence="required" />
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The list status message is issued as the response to a List Status Request message and indicates the current state of the orders within the list as they exists at the broker's site.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="AllocationInstructionAck" id="24" msgType="P" category="Allocation" added="FIX.2.7">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.2.7" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = P</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="109" added="FIX.3.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="76" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Used for firm identification in third-party transactions.</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="70" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="75" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="60" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Date/Time allocation Ack generated</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="87" added="FIX.2.7" presence="required" />
+      <fixr:fieldRef id="88" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required for AllocStatus = 1 (rejected)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="58" added="FIX.2.7" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Can include explanation for AllocRejCode = 7 (other)</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:componentRef id="1002" added="FIX.2.7" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The allocation ACK record is used by the broker to acknowledge the receipt and status of an allocation record received from the institution.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="DontKnowTrade" id="25" msgType="Q" category="SingleGeneralOrderHandling" added="FIX.4.0">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.4.0" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = Q</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="37" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Broker Order Id as identified on problem execution</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="17" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Execution Id of problem execution</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="127" added="FIX.4.0" presence="required" />
+      <fixr:fieldRef id="55" added="FIX.4.0" presence="required" />
+      <fixr:fieldRef id="54" added="FIX.4.0" presence="required" />
+      <fixr:fieldRef id="38" added="FIX.4.0" presence="required" />
+      <fixr:fieldRef id="32" added="FIX.4.0" presence="required" />
+      <fixr:fieldRef id="31" added="FIX.4.0" presence="required" />
+      <fixr:fieldRef id="58" added="FIX.4.0" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.4.0" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The Don’t Know Trade (DK) message is used to notify a trading partner that an electronically received execution has been rejected. This message can be thought of as an execution reject message.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="QuoteRequest" id="26" msgType="R" category="QuotationNegotiation" added="FIX.4.0">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.4.0" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = R</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="131" added="FIX.4.0" presence="required" />
+      <fixr:fieldRef id="55" added="FIX.4.0" presence="required" />
+      <fixr:fieldRef id="65" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="48" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="22" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="106" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="107" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="140" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Useful for verifying security identification</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="54" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="38" added="FIX.4.0" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.4.0" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">In some markets it is the practice to request quotes from brokers prior to placement of an order. The quote request message is used for this purpose.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  <fixr:message name="Quote" id="27" msgType="S" category="QuotationNegotiation" added="FIX.4.0">
+      <fixr:structure>
+        <fixr:componentRef id="1001" added="FIX.4.0" presence="required">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">MsgType = S</fixr:documentation>
+          </fixr:annotation>
+        </fixr:componentRef>
+      <fixr:fieldRef id="131" added="FIX.4.0" presence="optional">
+          <fixr:annotation>
+            <fixr:documentation purpose="SYNOPSIS">Required when quote is in response to a Quote Request message</fixr:documentation>
+          </fixr:annotation>
+        </fixr:fieldRef>
+      <fixr:fieldRef id="117" added="FIX.4.0" presence="required" />
+      <fixr:fieldRef id="55" added="FIX.4.0" presence="required" />
+      <fixr:fieldRef id="65" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="48" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="22" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="106" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="107" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="132" added="FIX.4.0" presence="required" />
+      <fixr:fieldRef id="133" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="134" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="135" added="FIX.4.0" presence="optional" />
+      <fixr:fieldRef id="62" added="FIX.4.0" presence="optional" />
+      <fixr:componentRef id="1002" added="FIX.4.0" presence="required" />
+      </fixr:structure>
+    <fixr:annotation>
+        <fixr:documentation purpose="SYNOPSIS">The quote message is used as the response to a quote request message and can be used to publish unsolicited quotes.</fixr:documentation>
+      </fixr:annotation>
+    </fixr:message>
+  </fixr:messages>
+</fixr:repository>
