@@ -21,7 +21,7 @@ This branch is the home of all future development. The initial main difference b
     * Sample code can be found in the [Examples.](https://github.com/GaryHughes/FixClient/tree/master/Examples)
 
 ### Legacy
-This branch maintains historic functionality including ITG/Virtu specific data dictionary customisation.
+This branch maintains historic functionality and is built on a FIX Repository based data dictionary.
 * Download the latest stable release [4.0.0](https://github.com/GaryHughes/FixClient/releases/tag/v4.0.0)
 
 ## Installation
