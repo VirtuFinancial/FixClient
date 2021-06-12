@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fix
 {
@@ -44,7 +45,23 @@ namespace Fix
             // TODO - sendingTimeIndex
         }
 
-        public bool TryGetValue(string key, out Order? result)
+        public void ReplaceKey(string existing, string replacement)
+        {
+            if (_keyIndex.ContainsKey(replacement))
+            {
+                throw new ArgumentException($"replacement key {replacement} is already in use", nameof(replacement));
+            }
+
+            if (!TryGetValue(existing, out var result))
+            {
+                throw new ArgumentException($"existing key {existing} can not be found", nameof(existing));
+            }
+
+            Remove(existing);
+            Add(result);
+        }
+
+        public bool TryGetValue(string key, [MaybeNullWhen(false)] out Order? result)
         {
             return _keyIndex.TryGetValue(key, out result);
         }

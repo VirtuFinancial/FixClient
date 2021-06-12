@@ -681,7 +681,7 @@ namespace FixClient
             //
             // Update some fields automatically to make life easier for the user.
             //
-            if (message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType)
+            if (message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType || message.MsgType == FIX_4_0.Messages.KodiakWaveOrder.MsgType)
             {
                 //
                 // In the OrderList message the ClOrdID is the delimiter for a repeating group
@@ -783,7 +783,7 @@ namespace FixClient
             //
             // Update some fields automatically to make life easier for the user.
             //
-            if (message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType)
+            if (message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType || message.MsgType == FIX_4_0.Messages.KodiakWaveOrder.MsgType)
             {
                 //
                 // In the OrderList message the ClOrdID is the delimiter for a repeating group
@@ -1098,7 +1098,10 @@ namespace FixClient
                 message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType ||
                 message.MsgType == FIX_5_0SP2.Messages.OrderCancelRequest.MsgType ||
                 message.MsgType == FIX_5_0SP2.Messages.OrderCancelReplaceRequest.MsgType ||
-                message.MsgType == FIX_5_0SP2.Messages.AllocationInstruction.MsgType)
+                message.MsgType == FIX_5_0SP2.Messages.AllocationInstruction.MsgType ||
+                message.MsgType == FIX_4_0.Messages.KodiakWaveOrder.MsgType ||
+                message.MsgType == FIX_4_0.Messages.KodiakWaveOrderCancelRequest.MsgType ||
+                message.MsgType == FIX_4_0.Messages.KodiakWaveOrderCorrectionRequest.MsgType)
             {
                 //
                 // Allocate any ClOrdIds that were used.
@@ -1392,7 +1395,8 @@ namespace FixClient
                     // Update any of the various ID's as required
                     //
                     if (message.MsgType == FIX_5_0SP2.Messages.NewOrderSingle.MsgType ||
-                        message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType)
+                        message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType ||
+                        message.MsgType == FIX_4_0.Messages.KodiakWaveOrder.MsgType)
                     {
 
                         if (field.Tag == FIX_5_0SP2.Fields.ClOrdID.Tag)
@@ -1412,7 +1416,7 @@ namespace FixClient
                         {
                             message.Fields[index].Value = Session.NextListId.ToString();
                         }
-                        else if (field.Tag == FIX_5_0SP2.Fields.ListSeqNo.Tag)
+                        else if (field.Tag == FIX_5_0SP2.Fields.ListSeqNo.Tag && message.MsgType != FIX_4_0.Messages.KodiakWaveOrder.MsgType)
                         {
                             if (Session.AutoListSeqNo)
                             {

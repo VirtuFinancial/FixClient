@@ -146,15 +146,18 @@ namespace Fix
                 {
                     result = ProcessOrderCancelReject(message);
                 }
-                else if (message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType)
+                else if (message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType ||
+                         message.MsgType == FIX_4_0.Messages.KodiakWaveOrder.MsgType)
                 {
                     result = ProcessOrderList(message);
                 }
-                else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelReplaceRequest.MsgType)
+                else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelReplaceRequest.MsgType ||
+                         message.MsgType == FIX_4_0.Messages.KodiakWaveOrderCorrectionRequest.MsgType)
                 {
                     result = ProcessOrderCancelReplaceRequest(message);
                 }
-                else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelRequest.MsgType)
+                else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelRequest.MsgType ||
+                         message.MsgType == FIX_4_0.Messages.KodiakWaveOrderCancelRequest.MsgType)
                 {
                     result = ProcessOrderCancelRequest(message);
                 }
@@ -601,6 +604,12 @@ namespace Fix
             order.PreviousOrdStatus = order.OrdStatus;
             order.OrdStatus = FIX_5_0SP2.OrdStatus.PendingCancel;
             order.NewClOrdID = ClOrdID.Value;
+
+            if (message.MsgType == FIX_4_0.Messages.KodiakWaveOrderCancelRequest.MsgType)
+            {
+                Orders.ReplaceKey(order.ClOrdID, ClOrdID.Value);
+                order.ClOrdID = ClOrdID.Value;
+            }
 
             OnOrderUpdated(order);
 
