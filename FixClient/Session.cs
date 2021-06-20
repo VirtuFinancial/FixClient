@@ -462,13 +462,13 @@ namespace FixClient
             return true;
         }
 
-        public HashSet<int> FieldFilters(string msgType)
+        public HashSet<int>? FieldFilters(string msgType)
         {
             if (!_fieldFilters.TryGetValue(msgType, out HashSet<int>? filters))
             {
-                filters = new HashSet<int>();
-                _fieldFilters[msgType] = filters;
+                return null;
             }
+
             return filters;
         }
 
@@ -518,16 +518,20 @@ namespace FixClient
             var expression = new StringBuilder(string.Format("{0} IN (", FieldDataTable.ColumnTag));
 
             bool items = false;
-            foreach (int tag in FieldFilters(msgType))
-            {
-                if (items)
-                {
-                    expression.Append(',');
-                }
 
-                items = true;
-                
-                expression.AppendFormat("{0}", tag);
+            if (FieldFilters(msgType) is HashSet<int> filters)
+            {
+                foreach (int tag in filters)
+                {
+                    if (items)
+                    {
+                        expression.Append(',');
+                    }
+
+                    items = true;
+
+                    expression.AppendFormat("{0}", tag);
+                }
             }
 
             if (!items)
