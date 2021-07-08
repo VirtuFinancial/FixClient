@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -22,6 +21,7 @@ using System.Text;
 using System.Text.Json;
 using System.Windows.Forms;
 using Fix.Common;
+using static Fix.Dictionary;
 
 namespace FixClient
 {
@@ -76,6 +76,8 @@ namespace FixClient
             Port = 9810;
             UpdateReadonlyAttributes();
 
+            AddDefaultFilters();
+
             _filterWriteTimer.Dirty += sender => WriteFilters();
             _filterWriteTimer.Start(1000, 1000);
 
@@ -83,8 +85,6 @@ namespace FixClient
             _templateWriteTimer.Start(1000, 1000);
 
             _syncContext = syncContext;
-
-            _messageFilters = new Dictionary<string, bool>();
 
             Messages.MessageAdded += (sender, ev) =>
             {
@@ -441,6 +441,12 @@ namespace FixClient
         {
             FieldFilterChanged?.Invoke(this, EventArgs.Empty);
             _filterWriteTimer.SetDirty();
+        }
+
+        void AddDefaultFilters()
+        {
+            _messageFilters.Add(FIX_5_0SP2.Messages.Heartbeat.MsgType, false);
+            _messageFilters.Add(FIX_5_0SP2.Messages.TestRequest.MsgType, false);
         }
 
         public void MessageVisible(string msgType, bool visible, bool raiseEvent = true)
