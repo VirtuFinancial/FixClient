@@ -313,11 +313,14 @@ namespace Fix
         void MessagesMessageAdded(object sender, MessageCollection.MessageEvent ev)
         {
             if (Reading)
+            {
                 return;
+            }
 
             try
             {
-                _historyWriter?.WriteLine(ev.Message);
+                var clone = (Message)ev.Message.Clone();
+                _historyWriter?.WriteLine(clone);
             }
             catch (Exception ex)
             {

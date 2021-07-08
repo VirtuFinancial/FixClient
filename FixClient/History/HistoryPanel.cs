@@ -666,8 +666,9 @@ namespace FixClient
 
             try
             {
+                var clone = (Fix.Message)ev.Message.Clone();
                 _messageTable.BeginLoadData();
-                AddMesage(ev.Message);
+                AddMesage(clone);
                 _messageGrid.RowCount = _messageView.Count;
             }
             finally

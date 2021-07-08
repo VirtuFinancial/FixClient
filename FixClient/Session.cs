@@ -88,7 +88,8 @@ namespace FixClient
 
             Messages.MessageAdded += (sender, ev) =>
             {
-                OrderBook.Process(ev.Message);
+                var clone = (Fix.Message)ev.Message.Clone();
+                OrderBook.Process(clone);
             };
 
             Messages.Reset += sender =>
