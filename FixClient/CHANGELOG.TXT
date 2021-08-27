@@ -1,4 +1,8 @@
 ﻿--------------------------------------------------------------------------------
+UNRELEASED
+•	Fix the value description column in the parser view.
+
+--------------------------------------------------------------------------------
 5.0.0
 
 •	Replaced the FIX Repository based dictionary with one generated from the FIX Orchestra.
