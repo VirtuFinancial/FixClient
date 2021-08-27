@@ -251,7 +251,7 @@ namespace Fix
                                  (field.Name ?? "").PadLeft(widestName),
                                  string.Format("({0})", field.Tag).PadLeft(6),
                                  field.Value,
-                                 string.IsNullOrEmpty(field.Description) ? string.Empty : " - " + field.Description);
+                                 field.ValueDefinition?.Description ?? string.Empty);
             }
 
             writer.WriteLine("}");
