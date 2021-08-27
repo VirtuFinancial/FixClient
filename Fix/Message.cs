@@ -251,7 +251,11 @@ namespace Fix
                                  (field.Name ?? "").PadLeft(widestName),
                                  string.Format("({0})", field.Tag).PadLeft(6),
                                  field.Value,
-                                 field.ValueDefinition?.Description ?? string.Empty);
+                                 field.ValueDefinition switch
+                                 {
+                                     FieldValue value => " - " + value.Name,
+                                     _ => string.Empty
+                                 });
             }
 
             writer.WriteLine("}");
