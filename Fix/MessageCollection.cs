@@ -1,18 +1,7 @@
-/////////////////////////////////////////////////
-//
-// FIX Client
-//
-// Copyright @ 2021 VIRTU Financial Inc.
-// All rights reserved.
-//
-// Filename: MessageCollection.cs
-// Author:   Gary Hughes
-//
-/////////////////////////////////////////////////
-
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Fix
 {
@@ -66,10 +55,19 @@ namespace Fix
             OnReset();
         }
 
-        public static MessageCollection Parse(string path)
+        public static async Task<MessageCollection> Parse(string path)
         {
-            var parser = new Parser();
-            return parser.Parse(new Uri($"file://{Path.GetFullPath(path)}"));
+            var result = new MessageCollection();
+            var url = new Uri($"file://{Path.GetFullPath(path)}");
+            await foreach (var message in Parser.Parse(url))
+            {
+                if (message is null)
+                {
+                    break;
+                }
+                result.Add(message);
+            }
+            return result;
         }
 
         #region IEnumerable<Message>

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using static Fix.Dictionary;
 
 namespace Fix
@@ -93,15 +94,15 @@ namespace Fix
             return message;
         }
 
-        public static Message? Parse(string text)
+        public static async Task<Message?> Parse(string text)
         {
-            var parser = new Parser { Strict = false };
-            using (MemoryStream stream = new(Encoding.ASCII.GetBytes(text)))
+            using var stream = new MemoryStream(Encoding.ASCII.GetBytes(text));
+            
+            await foreach (var message in Parser.Parse(stream))
             {
-                MessageCollection messages = parser.Parse(stream);
-                if (messages != null && messages.Count > 0)
-                    return messages[0];
+                return message;
             }
+
             return null;
         }
 

@@ -1,100 +1,64 @@
-/////////////////////////////////////////////////
-//
-// FIX Client
-//
-// Copyright @ 2021 VIRTU Financial Inc.
-// All rights reserved.
-//
-// Filename: Parser.cs
-// Author:   Gary Hughes
-//
-/////////////////////////////////////////////////
-
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Fix
 {
-    public class Parser
+    public static class Parser
     {
-        public bool Strict { get; set; }
+        static IEnumerable<LogParser> parsers = new LogParser[]
+        {
+            new Parsers.GenericLogParser(),
+            new Parsers.FormattedLogParser(),
+            new Parsers.KlsLogParser()
+        };
 
-        public MessageCollection Parse(Stream stream)
+        public static async IAsyncEnumerable<Message> Parse(Stream stream)
         {
             long position = stream.Position;
+            
+            using var decorator = new NonClosingStreamDecorator(stream);
 
-            using (NonClosingStreamDecorator decorator = new(stream))
+            foreach (var parser in parsers)
             {
-                LogParser parser = new Parsers.RawGateCiLogParser { Strict = Strict };
-                MessageCollection result = parser.Parse(decorator);
-                if (result.Count > 0)
-                    return result;
+                bool foundMessages = false;
 
-                stream.Seek(position, SeekOrigin.Begin);
-
-                parser = new Parsers.RawGateDriverLogParser { Strict = Strict };
-                result = parser.Parse(decorator);
-                if (result.Count > 0)
-                    return result;
-
-                stream.Seek(position, SeekOrigin.Begin);
-
-                parser = new Parsers.FormattedLogParser { Strict = Strict };
-                result = parser.Parse(decorator);
-                if (result.Count > 0)
-                    return result;
-
-                stream.Seek(position, SeekOrigin.Begin);
-
-                parser = new Parsers.KlsLogParser { Strict = Strict };
-                result = parser.Parse(decorator);
-                if (result.Count > 0)
-                    return result;
-
-                stream.Seek(position, SeekOrigin.Begin);
-
-                parser = new Parsers.AtlasLogParser { Strict = Strict };
-                result = parser.Parse(decorator);
-                if (result.Count > 0)
-                    return result;
-            }
-
-            stream.Seek(position, SeekOrigin.Begin);
-
-            var messages = new MessageCollection();
-
-            using (Reader reader = new(stream))
-            {
-                reader.ValidateDataFields = false;
-
-                for (; ; )
+                await foreach (var message in parser.Parse(decorator).ConfigureAwait(false))
                 {
-                    try
+                    if (message is null)
                     {
-                        Message? message = reader.ReadLine();
-                        if (message == null)
-                            break;
-                        messages.Add(message);
+                        yield break;
                     }
-                    catch (Exception)
-                    {
-                        // TODO - report errors
-                        reader.DiscardLine();
-                        continue;
-                    }
-                }
-            }
 
-            return messages;
+                    foundMessages = true;
+                
+                    yield return message;
+                }
+
+                if (foundMessages)
+                {
+                    yield break;
+                }
+
+                stream.Seek(position, SeekOrigin.Begin);
+            }
         }
 
-        public MessageCollection Parse(Uri uri)
+        public static async IAsyncEnumerable<Message> Parse(Uri uri)
         {
             if (uri.Scheme != "file")
+            {
                 throw new ArgumentException("Exepected a URI with a 'file' scheme and got '{0}'", uri.Scheme);
+            }
 
-            using FileStream stream = new(uri.LocalPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            return Parse(stream);
+            using FileStream stream = new(uri.LocalPath, FileMode.Open);
+            
+            await foreach (var message in Parse(stream).ConfigureAwait(false))
+            {
+                yield return message;
+            }
         }
     }
 }

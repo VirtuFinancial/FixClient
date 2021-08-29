@@ -25,6 +25,13 @@ namespace Fix
         public Order Order { get; }
     }
 
+    public enum OrderBookMessageEffect
+    {
+        Ignored,
+        Rejected,
+        Modified,
+    }
+
     public class OrderBook
     {
         #region Events
@@ -108,112 +115,86 @@ namespace Fix
             }
         }
 
-        public bool Process(Message message)
+        public OrderBookMessageEffect Process(Message message)
         {
-            if (message == null)
-                return false;
-
-            bool result = true;
-
             try
             {
                 if (message.Fields.Find(FIX_5_0SP2.Fields.MsgType) is not Field)
                 {
                     message.Status = MessageStatus.Error;
                     message.StatusMessage = " because it does not contain a MsgType";
-                    return false;
+                    return OrderBookMessageEffect.Rejected;
                 }
 
                 if (message.Administrative)
-                    return true;
+                {
+                    return OrderBookMessageEffect.Ignored;
+                }
 
                 if (message.Fields.Find(FIX_5_0SP2.Fields.PossDupFlag) is Field field && (bool)field)
                 {
                     message.Status = MessageStatus.Warn;
                     message.StatusMessage = StatusMessageHeader + " because it is a possible duplicate";
-                    return false;
+                    return OrderBookMessageEffect.Rejected;
                 }
 
                 if (message.MsgType == FIX_5_0SP2.Messages.NewOrderSingle.MsgType)
                 {
-                    result = ProcessNewOrderSingle(message);
+                    return ProcessNewOrderSingle(message);
                 }
                 else if (message.MsgType == FIX_5_0SP2.Messages.ExecutionReport.MsgType)
                 {
-                    result = ProcessExecutionReport(message);
+                    return ProcessExecutionReport(message);
                 }
                 else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelReject.MsgType)
                 {
-                    result = ProcessOrderCancelReject(message);
+                    return ProcessOrderCancelReject(message);
                 }
                 else if (message.MsgType == FIX_5_0SP2.Messages.NewOrderList.MsgType ||
                          message.MsgType == FIX_4_0.Messages.KodiakWaveOrder.MsgType)
                 {
-                    result = ProcessOrderList(message);
+                    return ProcessOrderList(message);
                 }
                 else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelReplaceRequest.MsgType ||
                          message.MsgType == FIX_4_0.Messages.KodiakWaveOrderCorrectionRequest.MsgType)
                 {
-                    result = ProcessOrderCancelReplaceRequest(message);
+                    return ProcessOrderCancelReplaceRequest(message);
                 }
                 else if (message.MsgType == FIX_5_0SP2.Messages.OrderCancelRequest.MsgType ||
                          message.MsgType == FIX_4_0.Messages.KodiakWaveOrderCancelRequest.MsgType)
                 {
-                    result = ProcessOrderCancelRequest(message);
+                    return ProcessOrderCancelRequest(message);
                 }
             }
             catch (Exception ex)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = ex.Message;
+                return OrderBookMessageEffect.Rejected;
             }
             finally
             {
-                if (!result)
-                {
-                    if (message.Status == MessageStatus.None)
-                    {
-                        message.Status = MessageStatus.Warn;
-                    }
-
-                    if (string.IsNullOrEmpty(message.StatusMessage))
-                    {
-                        message.StatusMessage = StatusMessageHeader + " - please create an issue here https://github.com/GaryHughes/FixClient/issues and attach your session files";
-                    }
-                }
-
                 Messages.Add(message);
             }
 
-            return result;
+            message.Status = MessageStatus.Warn;
+            message.StatusMessage = StatusMessageHeader + " - please create an issue here https://github.com/GaryHughes/FixClient/issues and attach your session files";
+            return OrderBookMessageEffect.Rejected;
         }
 
-        bool ProcessNewOrderSingle(Message message)
+        OrderBookMessageEffect ProcessNewOrderSingle(Message message)
         {
             if (message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID) is null)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the ClOrdID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
-            bool result;
-
-            try
-            {
-                result = AddOrder(new Order(message));
-            }
-            catch (Exception ex)
-            {
-                message.Status = MessageStatus.Error;
-                message.StatusMessage = ex.Message;
-                result = false;
-            }
-
-            return result;
+            return AddOrder(new Order(message));
         }
 
-        bool ProcessExecutionReport(Message message)
+        OrderBookMessageEffect ProcessExecutionReport(Message message)
         {
             /*
              This was removed in 4.3
@@ -235,7 +216,7 @@ namespace Fix
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the OrdStatus field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             var ordStatus = (FieldValue)ordStatusField;
@@ -244,16 +225,16 @@ namespace Fix
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the ClOrdID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             var OrigClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID);
 
             if (ordStatus == FIX_5_0SP2.OrdStatus.Canceled  && OrigClOrdID is not Field)
             {
-                if (ProcessOrdStatusUpdate(message, ClOrdID.Value, ordStatus))
+                if (ProcessOrdStatusUpdate(message, ClOrdID.Value, ordStatus) == OrderBookMessageEffect.Modified)
                 {
-                    return true;
+                    return OrderBookMessageEffect.Modified;
                 }
             }
 
@@ -317,7 +298,7 @@ namespace Fix
                     {
                         message.Status = MessageStatus.Error;
                         message.StatusMessage = StatusMessageHeader + string.Format(" because a matching order with ClOrdID = {0} could not be found", OrigClOrdID.Value);
-                        return false;
+                        return OrderBookMessageEffect.Rejected;
                     }
                     //
                     // Use hardcoded values for ExecType because values were removed in later releases and we don't want the
@@ -341,7 +322,8 @@ namespace Fix
 
                         if (pending == null)
                         {
-                            return false;
+                            // TODO - reject?
+                            return OrderBookMessageEffect.Ignored;
                         }
 
                         var replacement = (Order)order.Clone();
@@ -373,34 +355,34 @@ namespace Fix
                         AddOrder(replacement);
                     }
 
-                    return true;
+                    return OrderBookMessageEffect.Modified;
                 }
             }
 
             return ProcessOrdStatusUpdate(message, ClOrdID.Value, ordStatus);
         }
 
-        bool ProcessOrderCancelReject(Message message)
+        OrderBookMessageEffect ProcessOrderCancelReject(Message message)
         {
             if (message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID) is not Field OrigClOrdID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the OrigClOrdID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             if (message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID) is not Field SenderCompID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the SenderCompID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             if (message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID) is not Field TargetCompID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the TargetCompID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
             //
             // When we first store the order we set the comp id's relative to the order source so we
@@ -414,7 +396,7 @@ namespace Fix
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + $" because a matching order with ClOrdID = {OrigClOrdID.Value} could not be found";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
             order.OrdStatus = order.PreviousOrdStatus ?? FIX_5_0SP2.OrdStatus.New;
 
@@ -432,10 +414,10 @@ namespace Fix
                 OnOrderDeleted(order);
             }
 
-            return true;
+            return OrderBookMessageEffect.Modified;
         }
 
-        bool ProcessOrderList(Message message)
+        OrderBookMessageEffect ProcessOrderList(Message message)
         {
             Field? SenderCompID = message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID);
             Field? TargetCompID = message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID);
@@ -443,7 +425,9 @@ namespace Fix
 
             if (ListID is null)
             {
-                return false;
+                message.Status = MessageStatus.Error;
+                message.StatusMessage = StatusMessageHeader + " because the ListID field is missing";
+                return OrderBookMessageEffect.Rejected;
             }
 
             Message? orderSingle = null;
@@ -489,37 +473,37 @@ namespace Fix
                 ProcessNewOrderSingle(orderSingle);
             }
 
-            return true;
+            return OrderBookMessageEffect.Modified;
         }
 
-        bool ProcessOrderCancelReplaceRequest(Message message)
+        OrderBookMessageEffect ProcessOrderCancelReplaceRequest(Message message)
         {
             if (message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID) is not Field ClOrdID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the ClOrdID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             if (message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID) is not Field OrigClOrdID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the OrigClOrdID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             if (message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID) is not Field SenderCompID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the SenderCompID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             if (message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID) is not Field TargetCompID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the TargetCompID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             Order? order = FindOrder(SenderCompID.Value,
@@ -530,7 +514,7 @@ namespace Fix
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + $" because a matching order with ClOrdID = {OrigClOrdID.Value} could not be found";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             order.PreviousOrdStatus = order.OrdStatus;
@@ -556,37 +540,37 @@ namespace Fix
 
             OnOrderUpdated(order);
 
-            return true;
+            return OrderBookMessageEffect.Modified;
         }
 
-        bool ProcessOrderCancelRequest(Message message)
+        OrderBookMessageEffect ProcessOrderCancelRequest(Message message)
         {
             if (message.Fields.Find(FIX_5_0SP2.Fields.ClOrdID) is not Field ClOrdID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the ClOrdID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             if (message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID) is not Field OrigClOrdID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the OrigClOrdID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             if (message.Fields.Find(FIX_5_0SP2.Fields.SenderCompID) is not Field SenderCompID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the SenderCompID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             if (message.Fields.Find(FIX_5_0SP2.Fields.TargetCompID) is not Field TargetCompID)
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + " because the TargetCompID field is missing";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             Order? order = FindOrder(SenderCompID.Value,
@@ -597,7 +581,7 @@ namespace Fix
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + $" because a matching order with ClOrdID = {OrigClOrdID.Value} could not be found";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             order.Messages.Add(message);
@@ -613,11 +597,11 @@ namespace Fix
 
             OnOrderUpdated(order);
 
-            return true;
+            return OrderBookMessageEffect.Modified;
         }
 
 
-        bool ProcessOrdStatusUpdate(Message message, string ClOrdID, FieldValue status)
+        OrderBookMessageEffect ProcessOrdStatusUpdate(Message message, string ClOrdID, FieldValue status)
         {
             //
             // When we first store the order we set the comp id's relative to the order source so we
@@ -630,12 +614,12 @@ namespace Fix
             {
                 message.Status = MessageStatus.Error;
                 message.StatusMessage = StatusMessageHeader + $" because a matching order with ClOrdID = {ClOrdID} could not be found";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             ProcessOrdStatusUpdate(message, order, status);
 
-            return true;
+            return OrderBookMessageEffect.Modified;
         }
 
         void ProcessOrdStatusUpdate(Message message, Order order, FieldValue status)
@@ -710,7 +694,7 @@ namespace Fix
             Orders.Remove(KeyForOrder(order.SenderCompID, order.TargetCompID, order.ClOrdID));
         }
 
-        bool AddOrder(Order order)
+        OrderBookMessageEffect AddOrder(Order order)
         {
             Order? existing = FindOrder(order.SenderCompID, order.TargetCompID, order.ClOrdID);
 
@@ -718,7 +702,7 @@ namespace Fix
             {
                 order.Messages[0].Status = MessageStatus.Error;
                 order.Messages[0].StatusMessage = StatusMessageHeader + $" because an order with ClOrdID = {order.ClOrdID} already exists";
-                return false;
+                return OrderBookMessageEffect.Rejected;
             }
 
             if (MaximumOrders > 0 && Orders.Count >= MaximumOrders)
@@ -736,7 +720,7 @@ namespace Fix
 
             OnOrderInserted(order);
 
-            return true;
+            return OrderBookMessageEffect.Modified;
         }
 
         static void UpdateOrder(Order order, Message message, bool replacement = false)

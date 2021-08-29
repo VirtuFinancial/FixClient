@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Fix.Dictionary;
 
@@ -208,7 +209,7 @@ namespace FixClient
                 Image = Properties.Resources.Paste,
                 ImageTransparentColor = Color.White
             };
-            _pasteButton.Click += PasteButtonClick;
+            _pasteButton.Click += async (sender, ev) => await PasteButtonClick(sender, ev);
             fieldToolStrip.Items.Add(_pasteButton);
 
             _editGoaButton = new ToolStripButton
@@ -261,7 +262,7 @@ namespace FixClient
 
             _pasteMenuItem = new ToolStripMenuItem("Paste",
                                                   _pasteButton.Image,
-                                                  PasteButtonClick,
+                                                  async (sender, ev) => await PasteButtonClick(sender, ev),
                                                   Keys.Control | Keys.V);
             menu.DropDownItems.Add(_pasteMenuItem);
 
@@ -827,7 +828,7 @@ namespace FixClient
             MessageGridSelectionChanged(this, EventArgs.Empty);
         }
 
-        void PasteButtonClick(object? sender, EventArgs e)
+        async Task PasteButtonClick(object? sender, EventArgs e)
         {
             if (Session is null)
             {
@@ -839,7 +840,7 @@ namespace FixClient
                 return;
             }
 
-            Fix.Message? parsedMessage = Fix.Message.Parse(Clipboard.GetText(TextDataFormat.Text));
+            Fix.Message? parsedMessage = await Fix.Message.Parse(Clipboard.GetText(TextDataFormat.Text));
 
             if (parsedMessage is null || parsedMessage.Fields.Count == 0)
             {

@@ -12,6 +12,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Fix.Parsers
 {
@@ -32,13 +33,13 @@ namespace Fix.Parsers
         //	<Sender:KODIAK,Target:server> CLoggingMessageHandler::processIncoming() message=
         //	8=FIX.4.09=6335=A49=server56=KODIAK34=152=20091224-00:04:3098=0108=3010=114
         //
-        protected override Message? ParseMessage(TextReader reader)
+        protected override async Task<Message?> ParseMessage(TextReader reader)
         {
             Message message;
 
             for (; ; )
             {
-                var line = reader.ReadLine();
+                var line = await reader.ReadLineAsync();
 
                 if (line == null)
                     return null;

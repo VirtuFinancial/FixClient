@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using static Fix.Dictionary;
 
 namespace FixTests
@@ -30,7 +31,7 @@ namespace FixTests
             var book = new Fix.OrderBook();
 
             Assert.AreEqual(0, book.Orders.Count);
-            Assert.IsTrue(book.Process(orderSingle));
+            Assert.AreEqual(book.Process(orderSingle), Fix.OrderBookMessageEffect.Modified);
             Assert.AreEqual(1, book.Orders.Count);
 
             Fix.Order order = book.Orders[0];
@@ -39,7 +40,7 @@ namespace FixTests
             Assert.AreEqual(40m, order.Price);
             Assert.AreEqual(FIX_5_0SP2.Side.Buy, order.Side);
 
-            Assert.IsTrue(book.Process(ack));
+            Assert.AreEqual(book.Process(ack), Fix.OrderBookMessageEffect.Modified);
             Assert.AreEqual(1, book.Orders.Count);
 
             order = book.Orders[0];
@@ -59,7 +60,7 @@ namespace FixTests
             var book = new Fix.OrderBook();
 
             Assert.AreEqual(0, book.Orders.Count);
-            Assert.IsTrue(book.Process(orderSingle));
+            Assert.AreEqual(book.Process(orderSingle), Fix.OrderBookMessageEffect.Modified);
             Assert.AreEqual(1, book.Orders.Count);
 
             Fix.Order order = book.Orders[0];
@@ -69,7 +70,7 @@ namespace FixTests
             Assert.AreEqual(FIX_5_0SP2.Side.Buy, order.Side);
             Assert.IsNull(order.OrderID);
 
-            Assert.IsTrue(book.Process(ack));
+            Assert.AreEqual(book.Process(ack), Fix.OrderBookMessageEffect.Modified);
             Assert.AreEqual(1, book.Orders.Count);
 
             order = book.Orders[0];
@@ -90,7 +91,7 @@ namespace FixTests
             var book = new Fix.OrderBook();
 
             Assert.AreEqual(0, book.Orders.Count);
-            Assert.IsTrue(book.Process(orderSingle));
+            Assert.AreEqual(book.Process(orderSingle), Fix.OrderBookMessageEffect.Modified);
             Assert.AreEqual(1, book.Orders.Count);
 
             Fix.Order order = book.Orders[0];
@@ -100,7 +101,7 @@ namespace FixTests
             Assert.AreEqual(FIX_5_0SP2.Side.Buy, order.Side);
             Assert.IsNull(order.OrderID);
 
-            Assert.IsFalse(book.Process(ack));
+            Assert.AreEqual(book.Process(ack), Fix.OrderBookMessageEffect.Rejected);
             Assert.AreEqual(1, book.Orders.Count);
 
             order = book.Orders[0];
@@ -121,7 +122,7 @@ namespace FixTests
             var book = new Fix.OrderBook();
 
             Assert.AreEqual(0, book.Orders.Count);
-            Assert.IsTrue(book.Process(orderSingle));
+            Assert.AreEqual(book.Process(orderSingle), Fix.OrderBookMessageEffect.Modified);
             Assert.AreEqual(1, book.Orders.Count);
 
             Fix.Order order = book.Orders[0];
@@ -131,7 +132,7 @@ namespace FixTests
             Assert.AreEqual(FIX_5_0SP2.Side.Buy, order.Side);
             Assert.IsNull(order.OrderID);
 
-            Assert.IsTrue(book.Process(ack));
+            Assert.AreEqual(book.Process(ack), Fix.OrderBookMessageEffect.Modified);
             Assert.AreEqual(1, book.Orders.Count);
 
             order = book.Orders[0];
@@ -144,7 +145,7 @@ namespace FixTests
             Assert.AreEqual(0, order.CumQty);
             Assert.AreEqual(0, order.AvgPx);
 
-            Assert.IsTrue(book.Process(report));
+            Assert.AreEqual(book.Process(report), Fix.OrderBookMessageEffect.Modified);
             Assert.AreEqual(1, book.Orders.Count);
 
             order = book.Orders[0];
@@ -176,7 +177,7 @@ namespace FixTests
             for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
 
                 Fix.Order? order = null;
                 Fix.Order? replacement = null;
@@ -264,7 +265,7 @@ namespace FixTests
             for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
 
                 Fix.Order? order = null;
                 Fix.Order? replacement = null;
@@ -324,9 +325,9 @@ namespace FixTests
 
         [TestMethod]
         [DeploymentItem("Logs/t_qj.log")]
-        public void TestQuoteJockeyLog()
+        public async Task TestQuoteJockeyLog()
         {
-            Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_qj.log");
+            Fix.MessageCollection messages = await Fix.MessageCollection.Parse("t_qj.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(20, messages.Count);
 
@@ -334,7 +335,7 @@ namespace FixTests
 
             for (int index = 0; index < book.Orders.Count; ++index)
             {
-                Assert.IsTrue(book.Process(messages[index]));
+                Assert.AreEqual(book.Process(messages[index]), Fix.OrderBookMessageEffect.Modified);
 
                 switch (index)
                 {
@@ -446,10 +447,9 @@ namespace FixTests
         }
 
         [TestMethod]
-        public void TestCancel()
+        public async Task TestCancel()
         {
-            var parser = new Fix.Parser();
-            Fix.MessageCollection messages = parser.Parse(new MemoryStream(Encoding.ASCII.GetBytes(
+            var text =            
                 "{\n" +
                 "BeginString    (8) - FIX.4.2\n" +
                 "BodyLength    (9) - 216\n" +
@@ -570,7 +570,14 @@ namespace FixTests
                 "LastShares   (32) - 0\n" +
                 "LastPx   (31) - 0\n" +
                 "CheckSum   (10) - 016"
-            )));
+            ;
+
+            Fix.MessageCollection messages = new();
+
+            await foreach (var message in Fix.Parser.Parse(new MemoryStream(Encoding.ASCII.GetBytes(text))))
+            {
+                messages.Add(message);
+            }
 
             Assert.AreEqual(5, messages.Count);
 
@@ -579,7 +586,7 @@ namespace FixTests
             foreach (Fix.Message message in messages)
             {
                 Assert.IsNotNull(message);
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
             }
 
             Fix.Order order = book.Orders[0];
@@ -605,7 +612,7 @@ namespace FixTests
             for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
 
                 switch (index)
                 {
@@ -682,7 +689,7 @@ namespace FixTests
             for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
                 Assert.AreEqual(1, book.Orders.Count);
                 Fix.Order order = book.Orders[0];
 
@@ -730,7 +737,7 @@ namespace FixTests
             for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
                 Assert.AreEqual(1, book.Orders.Count);
                 Fix.Order order = book.Orders[0];
 
@@ -781,7 +788,7 @@ namespace FixTests
             for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
                 Assert.AreEqual(1, book.Orders.Count);
                 Fix.Order order = book.Orders[0];
 
@@ -812,9 +819,9 @@ namespace FixTests
 
         [TestMethod]
         [DeploymentItem("Logs/t_fix_4_0_amend.log")]
-        public void TestFix40Amend()
+        public async Task TestFix40Amend()
         {
-            Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_fix_4_0_amend.log");
+            Fix.MessageCollection messages = await Fix.MessageCollection.Parse("t_fix_4_0_amend.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(6, messages.Count);
 
@@ -822,7 +829,7 @@ namespace FixTests
 
             foreach (Fix.Message message in messages)
             {
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
             }
 
             Assert.AreEqual(2, book.Orders.Count);
@@ -835,9 +842,9 @@ namespace FixTests
 
         [TestMethod]
         [DeploymentItem("Logs/t_cancel_leavesqty.log")]
-        public void TestCancelLeavesQty()
+        public async Task TestCancelLeavesQty()
         {
-            Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_cancel_leavesqty.log");
+            Fix.MessageCollection messages = await Fix.MessageCollection.Parse("t_cancel_leavesqty.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(5, messages.Count);
 
@@ -845,7 +852,7 @@ namespace FixTests
 
             foreach (Fix.Message message in messages)
             {
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
             }
 
             Assert.AreEqual(1, book.Orders.Count);
@@ -857,9 +864,9 @@ namespace FixTests
 
         [TestMethod]
         [DeploymentItem("Logs/t_new_amend.log")]
-        public void TestAmend()
+        public async Task TestAmend()
         {
-            Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_new_amend.log");
+            Fix.MessageCollection messages = await Fix.MessageCollection.Parse("t_new_amend.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(5, messages.Count);
 
@@ -867,7 +874,7 @@ namespace FixTests
 
             foreach (Fix.Message message in messages)
             {
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
             }
 
             Assert.AreEqual(2, book.Orders.Count);
@@ -882,9 +889,9 @@ namespace FixTests
 
         [TestMethod]
         [DeploymentItem("Logs/t_upward_amend_filled.log")]
-        public void TestAmendUp()
+        public async Task TestAmendUp()
         {
-            Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_upward_amend_filled.log");
+            Fix.MessageCollection messages = await Fix.MessageCollection.Parse("t_upward_amend_filled.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(7, messages.Count);
 
@@ -893,7 +900,7 @@ namespace FixTests
             for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
                 Fix.Order original = book.Orders[0];
                 Fix.Order? replacement = null;
 
@@ -948,9 +955,9 @@ namespace FixTests
 
         [TestMethod]
         [DeploymentItem("Logs/t_upward_amend_filled_to_partial.log")]
-        public void TestUpwardAmendFilledToPartial()
+        public async Task TestUpwardAmendFilledToPartial()
         {
-            Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_upward_amend_filled_to_partial.log");
+            Fix.MessageCollection messages = await Fix.MessageCollection.Parse("t_upward_amend_filled_to_partial.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(7, messages.Count);
 
@@ -959,7 +966,7 @@ namespace FixTests
             for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
                 Fix.Order original = book.Orders[0];
                 Fix.Order? replacement = null;
 
@@ -1012,9 +1019,9 @@ namespace FixTests
 
         [TestMethod]
         [DeploymentItem("Logs/t_fill_while_cancel_pending.log")]
-        public void TestFillWhileCancelPending()
+        public async Task TestFillWhileCancelPending()
         {
-            Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_fill_while_cancel_pending.log");
+            Fix.MessageCollection messages = await Fix .MessageCollection.Parse("t_fill_while_cancel_pending.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(6, messages.Count);
 
@@ -1023,7 +1030,7 @@ namespace FixTests
             for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
                 Fix.Order order = book.Orders[0];
 
                 switch (index)
@@ -1061,9 +1068,9 @@ namespace FixTests
 
         [TestMethod]
         [DeploymentItem("Logs/t_fill_while_amend_pending.log")]
-        public void TestFillWhileAmendPending()
+        public async Task TestFillWhileAmendPending()
         {
-            Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_fill_while_amend_pending.log");
+            Fix.MessageCollection messages = await Fix .MessageCollection.Parse("t_fill_while_amend_pending.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(6, messages.Count);
 
@@ -1072,7 +1079,7 @@ namespace FixTests
             for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
                 Fix.Order original = book.Orders[0];
                 Fix.Order? replacement = null;
 
@@ -1126,9 +1133,9 @@ namespace FixTests
 
         [TestMethod]
         [DeploymentItem("Logs/t_amend_cancel.log")]
-        public void TestAmendCancel()
+        public async Task TestAmendCancel()
         {
-            Fix.MessageCollection messages = Fix.MessageCollection.Parse("t_amend_cancel.log");
+            Fix.MessageCollection messages = await Fix.MessageCollection.Parse("t_amend_cancel.log");
             Assert.IsNotNull(messages);
             Assert.AreEqual(8, messages.Count);
 
@@ -1137,7 +1144,7 @@ namespace FixTests
             for (int index = 0; index < messages.Count; ++index)
             {
                 Fix.Message message = messages[index];
-                Assert.IsTrue(book.Process(message));
+                Assert.AreEqual(book.Process(message), Fix.OrderBookMessageEffect.Modified);
                 Fix.Order original = book.Orders[0];
                 Fix.Order? replacement = null;
 

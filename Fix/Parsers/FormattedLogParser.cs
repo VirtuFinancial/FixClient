@@ -12,6 +12,7 @@
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using static Fix.Dictionary;
 
 namespace Fix.Parsers
@@ -34,11 +35,11 @@ namespace Fix.Parsers
         string? _leftOvers;
         Dictionary.Version? _version;
 
-        protected bool ParseBody(TextReader reader, Message message)
+        protected async Task<bool> ParseBody(TextReader reader, Message message)
         {
             while (true)
             {
-                var line = string.IsNullOrEmpty(_leftOvers) ? reader.ReadLine() : _leftOvers;
+                var line = string.IsNullOrEmpty(_leftOvers) ? await reader.ReadLineAsync() : _leftOvers;
                 _leftOvers = null;
 
                 if (line == null)
@@ -84,7 +85,7 @@ namespace Fix.Parsers
 
                     }
                 }
-                
+
                 if (field != null && (field.Values.Count > 0 || field.Tag == FIX_5_0SP2.Fields.MsgType.Tag))
                 {
                     match = Regex.Match(value, @"\s*([a-zA-Z0-9]+)\s*-");
@@ -122,18 +123,15 @@ namespace Fix.Parsers
             return message.Fields.Count > 0;
         }
 
-        protected override Message? ParseMessage(TextReader reader)
+        protected override async Task<Message?> ParseMessage(TextReader reader)
         {
             var message = new Message();
 
             message.Fields.Clear();
 
-            bool foundStart = FindStart(reader, message);
+            await FindStart(reader, message);
 
-            if (Strict && !foundStart)
-                return null;
-
-            if (!ParseBody(reader, message))
+            if (!await ParseBody(reader, message))
                 return null;
 
             return message;
@@ -148,13 +146,13 @@ namespace Fix.Parsers
                     string.IsNullOrEmpty(trimmed.Trim());
         }
 
-        bool FindStart(TextReader reader, Message message)
+        async Task<bool> FindStart(TextReader reader, Message message)
         {
             string previousLine = string.Empty;
 
             while (true)
             {
-                string? line = reader.ReadLine();
+                string? line = await reader.ReadLineAsync();
 
                 if (line == null)
                     return false;

@@ -12,6 +12,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using static Fix.Dictionary;
 
 namespace FixTests
@@ -19,66 +20,71 @@ namespace FixTests
     [TestClass]
     public class ParserTests
     {
+        public async Task<Fix.MessageCollection> ParseMessageCollection<Parser>(string filename) where Parser: Fix.LogParser, new()
+        {
+            var result = new Fix.MessageCollection();
+            var url = new Uri($"file://{Path.GetFullPath(filename)}");
+            using var stream = new FileStream(url.LocalPath, FileMode.Open);
+            var parser = new Parser();
+            await foreach (var message in parser.Parse(stream))
+            {
+                if (message is null)
+                {
+                    break;
+                }
+                result.Add(message);
+            }
+            return result;
+        }
+
         [TestMethod]
         [DeploymentItem("Logs/t_kls.log")]
-        public void TestKlsParser()
+        public async Task TestKlsParser()
         {
-            var uri = new Uri(string.Format("file://{0}", Path.GetFullPath("t_kls.log")));
-            var parser = new Fix.Parsers.KlsLogParser();
-            Fix.MessageCollection messages = parser.Parse(uri);
+            var messages = await ParseMessageCollection<Fix.Parsers.KlsLogParser>("t_kls.log");
             Assert.AreEqual(95, messages.Count);
         }
-
+        
         [TestMethod]
         [DeploymentItem("Logs/t_atlas.log")]
-        public void TestAtlasParser()
+        public async Task TestAtlasParser()
         {
-            var uri = new Uri(string.Format("file://{0}", Path.GetFullPath("t_atlas.log")));
-            var parser = new Fix.Parsers.AtlasLogParser();
-            Fix.MessageCollection messages = parser.Parse(uri);
+            var messages = await ParseMessageCollection<Fix.Parsers.GenericLogParser>("t_atlas.log");
             Assert.AreEqual(473, messages.Count);
         }
-
+        
         [TestMethod]
         [DeploymentItem("Logs/t_gate_driver.log")]
-        public void TestGateDriverParser()
+        public async Task TestGateDriverParser()
         {
-            var uri = new Uri(string.Format("file://{0}", Path.GetFullPath("t_gate_driver.log")));
-            var parser = new Fix.Parsers.FormattedLogParser();
-            Fix.MessageCollection messages = parser.Parse(uri);
+            var messages = await ParseMessageCollection<Fix.Parsers.FormattedLogParser>("t_gate_driver.log");
             Assert.AreEqual(43, messages.Count);
         }
-
+        
         [TestMethod]
         [DeploymentItem("Logs/t_gate_ci.log")]
-        public void TestGateCiParser()
+        public async Task TestGateCiParser()
         {
-            var uri = new Uri(string.Format("file://{0}", Path.GetFullPath("t_gate_ci.log")));
-            var parser = new Fix.Parsers.FormattedLogParser();
-            Fix.MessageCollection messages = parser.Parse(uri);
+            var messages = await ParseMessageCollection<Fix.Parsers.FormattedLogParser>("t_gate_ci.log");
             Assert.AreEqual(58, messages.Count);
         }
 
         [TestMethod]
         [DeploymentItem("Logs/t_gate_raw_driver.log")]
-        public void TestGateRawDriverParser()
+        public async Task TestParseGateRawDriverLog()
         {
-            var uri = new Uri(string.Format("file://{0}", Path.GetFullPath("t_gate_raw_driver.log")));
-            var parser = new Fix.Parsers.RawGateDriverLogParser();
-            Fix.MessageCollection messages = parser.Parse(uri);
+            var messages = await ParseMessageCollection<Fix.Parsers.GenericLogParser>("t_gate_raw_driver.log");
             Assert.AreEqual(1466, messages.Count);
         }
-
+        
         [TestMethod]
         [DeploymentItem("Logs/t_gate_raw_ci.log")]
-        public void TestGateRawCiParser()
+        public async Task TestParseGateRawCiLog()
         {
-            var uri = new Uri(string.Format("file://{0}", Path.GetFullPath("t_gate_raw_ci.log")));
-            var parser = new Fix.Parsers.RawGateCiLogParser();
-            Fix.MessageCollection messages = parser.Parse(uri);
+            var messages = await ParseMessageCollection<Fix.Parsers.GenericLogParser>("t_gate_raw_ci.log");
             Assert.AreEqual(4909, messages.Count);
         }
-
+        /*
         [TestMethod]
         public void TestMessageParserStripsValueDescription()
         {
@@ -115,5 +121,6 @@ namespace FixTests
             Assert.AreEqual(FIX_5_0SP2.Messages.ExecutionReport.MsgType, msgType?.Value);
 
         }
+        */
     }
 }

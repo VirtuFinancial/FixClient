@@ -1,54 +1,33 @@
 /////////////////////////////////////////////////
 //
 // FIX Client
-//
-// Copyright @ 2021 VIRTU Financial Inc.
-// All rights reserved.
-//
-// Filename: LogParser.cs
-// Author:   Gary Hughes
-//
-/////////////////////////////////////////////////
-
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Fix
 {
     public abstract class LogParser
     {
-        public bool Strict { get; set; }
-
-        public MessageCollection Parse(Stream stream)
+        public async IAsyncEnumerable<Message> Parse(Stream stream)
         {
-            var messages = new MessageCollection();
+            using var reader = new StreamReader(stream);
 
-            using (TextReader reader = new StreamReader(stream))
+            while (true)
             {
-                while (true)
+                var message = await ParseMessage(reader).ConfigureAwait(false);
+
+                if (message is null)
                 {
-                    Message? message = ParseMessage(reader);
-
-                    if (message == null)
-                        break;
-
-                    messages.Add(message);
+                    yield break;
                 }
+
+                yield return message;
             }
-
-            return messages;
         }
 
-        public MessageCollection Parse(Uri uri)
-        {
-            if (uri.Scheme != "file")
-                throw new ArgumentException("Exepected a URI with a 'file' scheme and got '{0}'", uri.Scheme);
-
-            using FileStream stream = new(uri.LocalPath, FileMode.Open);
-            return Parse(stream);
-        }
-
-        protected abstract Message? ParseMessage(TextReader reader);
+        protected abstract Task<Message?> ParseMessage(TextReader reader);
 
     }
 }
