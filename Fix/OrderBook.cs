@@ -15,16 +15,6 @@ using static Fix.Dictionary;
 
 namespace Fix
 {
-    public class OrderBookEventArgs : EventArgs
-    {
-        public OrderBookEventArgs(Order order)
-        {
-            Order = order;
-        }
-
-        public Order Order { get; }
-    }
-
     public enum OrderBookMessageEffect
     {
         Ignored,
@@ -36,25 +26,23 @@ namespace Fix
     {
         #region Events
 
-        public delegate void OrderDelegate(object sender, OrderBookEventArgs e);
-
-        public event OrderDelegate? OrderInserted;
-        public event OrderDelegate? OrderUpdated;
-        public event OrderDelegate? OrderDeleted;
+        public event EventHandler<Order>? OrderInserted;
+        public event EventHandler<Order>? OrderUpdated;
+        public event EventHandler<Order>? OrderDeleted;
 
         protected void OnOrderInserted(Order order)
         {
-            OrderInserted?.Invoke(this, new OrderBookEventArgs(order));
+            OrderInserted?.Invoke(this, order);
         }
 
         protected void OnOrderUpdated(Order order)
         {
-            OrderUpdated?.Invoke(this, new OrderBookEventArgs(order));
+            OrderUpdated?.Invoke(this, order);
         }
 
         protected void OnOrderDeleted(Order order)
         {
-            OrderDeleted?.Invoke(this, new OrderBookEventArgs(order));
+            OrderDeleted?.Invoke(this, order);
         }
 
         #endregion

@@ -954,15 +954,13 @@ namespace FixClient
             UpdateUiState();
         }
 
-        void OrderBookOrderUpdated(object? sender, Fix.OrderBookEventArgs ev)
+        void OrderBookOrderUpdated(object? sender, Fix.Order order)
         {
             if (InvokeRequired)
             {
-                BeginInvoke(new MethodInvoker(() => OrderBookOrderUpdated(sender, ev)));
+                BeginInvoke(new MethodInvoker(() => OrderBookOrderUpdated(sender, order)));
                 return;
             }
-
-            Fix.Order order = ev.Order;
 
             if (_orderTable.Rows.Find(order.ClOrdID) is not OrderDataRow row)
             {
@@ -974,15 +972,15 @@ namespace FixClient
             _orderGrid.RefreshEdit();
         }
 
-        void OrderBookOrderInserted(object? sender, Fix.OrderBookEventArgs ev)
+        void OrderBookOrderInserted(object? sender, Fix.Order order)
         {
             if (InvokeRequired)
             {
-                BeginInvoke(new MethodInvoker(() => OrderBookOrderInserted(sender, ev)));
+                BeginInvoke(new MethodInvoker(() => OrderBookOrderInserted(sender, order)));
                 return;
             }
 
-            AddOrder(ev.Order);
+            AddOrder(order);
         }
 
         void AddOrder(Fix.Order order)
