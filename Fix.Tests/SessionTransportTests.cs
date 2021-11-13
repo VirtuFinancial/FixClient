@@ -9,28 +9,27 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FixTests
+namespace FixTests;
+
+[TestClass]
+public class SessionTransportTests : SessionTestsBase<Fix.Session>
 {
-    [TestClass]
-    public class SessionTransportTests : SessionTestsBase<Fix.Session>
+    #region Setup
+    [TestInitialize]
+    public void TestInitialize()
     {
-        #region Setup
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            Initialize();
-        }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            Cleanup();
-        }
-        #endregion
-
-
+        Initialize();
     }
+
+    [TestCleanup]
+    public void TestCleanup()
+    {
+        Cleanup();
+    }
+    #endregion
+
+
 }
+
