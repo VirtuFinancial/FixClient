@@ -15,7 +15,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -28,5 +28,5 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: FixClient
-        path: FixClient/bin/Release/net5.0-windows/win-x64/publish/FixClient.exe
+        path: FixClient/bin/Release/net6.0-windows/win-x64/publish/FixClient.exe
     
