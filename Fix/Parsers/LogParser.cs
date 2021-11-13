@@ -1,33 +1,29 @@
-/////////////////////////////////////////////////
-//
-// FIX Client
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Fix
+namespace Fix;
+
+public abstract class LogParser
 {
-    public abstract class LogParser
+    public async IAsyncEnumerable<Message> Parse(Stream stream)
     {
-        public async IAsyncEnumerable<Message> Parse(Stream stream)
+        using var reader = new StreamReader(stream);
+
+        while (true)
         {
-            using var reader = new StreamReader(stream);
+            var message = await ParseMessage(reader).ConfigureAwait(false);
 
-            while (true)
+            if (message is null)
             {
-                var message = await ParseMessage(reader).ConfigureAwait(false);
-
-                if (message is null)
-                {
-                    yield break;
-                }
-
-                yield return message;
+                yield break;
             }
+
+            yield return message;
         }
-
-        protected abstract Task<Message?> ParseMessage(TextReader reader);
-
     }
+
+    protected abstract Task<Message?> ParseMessage(TextReader reader);
+
 }
+

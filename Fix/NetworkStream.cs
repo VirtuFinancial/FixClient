@@ -9,17 +9,15 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
+namespace Fix;
 
-
-namespace Fix
+public class NetworkStream : System.Net.Sockets.NetworkStream
 {
-    public class NetworkStream : System.Net.Sockets.NetworkStream
+    public NetworkStream(System.Net.Sockets.Socket socket, bool ownsSocket)
+    : base(socket, ownsSocket)
     {
-        public NetworkStream(System.Net.Sockets.Socket socket, bool ownsSocket)
-        : base(socket, ownsSocket)
-        {
-        }
-
-        public new System.Net.Sockets.Socket Socket { get { return base.Socket; } }
     }
+
+    public new System.Net.Sockets.Socket Socket { get { return base.Socket; } }
 }
+
