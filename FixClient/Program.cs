@@ -1,43 +1,21 @@
-/////////////////////////////////////////////////
-//
-// FIX Client
-//
-// Copyright @ 2021 VIRTU Financial Inc.
-// All rights reserved.
-//
-// Filename: Program.cs
-// Author:   Gary Hughes
-//
-/////////////////////////////////////////////////
-
-#region Using directives
-
 using System;
 using System.Windows.Forms;
 
-#endregion
+namespace FixClient;
 
-namespace FixClient
+static class Program
 {
-    static class Program
+    [STAThread]
+    static void Main()
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
+        try
         {
-            try
-            {
-                Application.SetHighDpiMode(HighDpiMode.SystemAware);
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new MainForm());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            ApplicationConfiguration.Initialize();
+            Application.Run(new MainForm());
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
         }
     }
 }
