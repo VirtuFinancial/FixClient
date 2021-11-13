@@ -82,7 +82,10 @@ namespace FixClient
 
             using (SolidBrush br = new(e.ForeColor))
             {
-                e.Graphics.DrawString(text, e.Font, br, e.Bounds);
+                if (e.Font is Font font)
+                {
+                    e.Graphics.DrawString(text, font, br, e.Bounds);
+                }
             }
 
             if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
@@ -161,7 +164,11 @@ namespace FixClient
             // We can never actually delete rows, just use this as a shortcut to clear the value.
             //
             e.Cancel = true;
-            e.Row.Cells[FieldDataTable.ColumnValue].Value = string.Empty;
+
+            if (e.Row is DataGridViewRow row)
+            {
+                row.Cells[FieldDataTable.ColumnValue].Value = string.Empty;
+            }
         }
 
         protected override void OnRowsAdded(DataGridViewRowsAddedEventArgs e)

@@ -58,7 +58,11 @@ namespace Fix
             }
 
             Remove(existing);
-            Add(result);
+
+            if (result is Order order)
+            {
+                Add(order);
+            }
         }
 
         public bool TryGetValue(string key, [MaybeNullWhen(false)] out Order? result)

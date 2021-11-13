@@ -1231,14 +1231,15 @@ namespace Fix
 
         protected void SetReadOnly(string name, bool value)
         {
-            PropertyDescriptor descriptor = TypeDescriptor.GetProperties(GetType())[name];
-            var attribute = (ReadOnlyAttribute)descriptor.Attributes[typeof(ReadOnlyAttribute)];
-
-            FieldInfo? field = attribute.GetType().GetField("isReadOnly", BindingFlags.NonPublic | BindingFlags.Instance);
-            
-            if (field != null)
+            if (TypeDescriptor.GetProperties(GetType())[name] is PropertyDescriptor descriptor)
             {
-                field.SetValue(attribute, value);
+                if (descriptor.Attributes[typeof(ReadOnlyAttribute)] is ReadOnlyAttribute attribute)
+                {
+                    if (attribute.GetType().GetField("isReadOnly", BindingFlags.NonPublic | BindingFlags.Instance) is FieldInfo field)
+                    {
+                        field.SetValue(attribute, value);
+                    }
+                }
             }
         }
 

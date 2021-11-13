@@ -64,7 +64,7 @@ namespace FixPersistentSessionPerformanceTest
             _timer.Start();
         }
 
-        static void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        static void Timer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if (Acceptor is null)
             {

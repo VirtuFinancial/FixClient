@@ -32,24 +32,24 @@ namespace Fix
                 }
             }
 
-            public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+            public override bool GetStandardValuesSupported(ITypeDescriptorContext? context)
             {
                 return true;
             }
 
-            public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+            public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext? context)
             {
                 return new StandardValuesCollection(_versions);
             }
 
-            public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+            public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
             {
                 if (sourceType == typeof(string))
                     return true;
                 return base.CanConvertFrom(context, sourceType);
             }
 
-            public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+            public override object? ConvertFrom(ITypeDescriptorContext? context, System.Globalization.CultureInfo? culture, object value)
             {
                 if (value as string != null)
                 {

@@ -131,7 +131,7 @@ namespace FixClient
             }
         }
 
-        void HistoryFieldDataGridViewColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        void HistoryFieldDataGridViewColumnHeaderMouseClick(object? sender, DataGridViewCellMouseEventArgs e)
         {
             DataGridViewColumn column = Columns[e.ColumnIndex];
             DataGridViewColumnHeaderCell header = column.HeaderCell;

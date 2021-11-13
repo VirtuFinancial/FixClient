@@ -109,16 +109,16 @@ namespace FixClient
             */
         //}
 
-        void PropertyGridPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        void PropertyGridPropertyValueChanged(object? s, PropertyValueChangedEventArgs e)
         {
             if (_session is null)
             {
                 return;
             }
 
-            var value = (bool)e.ChangedItem.Value;
+            var value = (bool)(e.ChangedItem?.Value ?? false);
             
-            switch (e.ChangedItem.Label)
+            switch (e.ChangedItem?.Label)
             {
                 case "MsgSeqNum":
                     _session.AutoSetMsgSeqNum = value;
