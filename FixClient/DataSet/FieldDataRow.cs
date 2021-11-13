@@ -9,18 +9,17 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System.Data;
 
-namespace FixClient
-{
-    public class FieldDataRow : DataRow
-    {
-        public FieldDataRow(DataRowBuilder builder)
-        : base(builder)
-        {
-        }
+namespace FixClient;
 
-        public Fix.Field? Field { get; set; }
+public class FieldDataRow : DataRow
+{
+    public FieldDataRow(DataRowBuilder builder)
+    : base(builder)
+    {
     }
+
+    public Fix.Field? Field { get; set; }
 }
+

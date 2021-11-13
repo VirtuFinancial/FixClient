@@ -9,33 +9,32 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Windows.Forms;
 
-namespace FixClient
-{
-    public class DataGridViewIndentColumn : DataGridViewColumn
-    {
-        public DataGridViewIndentColumn()
-        : base(new DataGridViewIndentCell())
-        {
-        }
+namespace FixClient;
 
-        public override DataGridViewCell CellTemplate
+public class DataGridViewIndentColumn : DataGridViewColumn
+{
+    public DataGridViewIndentColumn()
+    : base(new DataGridViewIndentCell())
+    {
+    }
+
+    public override DataGridViewCell CellTemplate
+    {
+        get
         {
-            get
+            return base.CellTemplate;
+        }
+        set
+        {
+            if (value != null && !value.GetType().IsAssignableFrom(typeof(DataGridViewIndentCell)))
             {
-                return base.CellTemplate;
+                throw new InvalidCastException("Must be a DataGridViewIndentCell");
             }
-            set
-            {
-                if (value != null && !value.GetType().IsAssignableFrom(typeof(DataGridViewIndentCell)))
-                {
-                    throw new InvalidCastException("Must be a DataGridViewIndentCell");
-                }
-                base.CellTemplate = value;
-            }
+            base.CellTemplate = value;
         }
     }
 }
+

@@ -9,19 +9,18 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using Fix;
 using System.Data;
 
-namespace FixClient
-{
-    class FilterMessageDataRow : DataRow
-    {
-        public FilterMessageDataRow(DataRowBuilder builder)
-        : base(builder)
-        {
-        }
+namespace FixClient;
 
-        public Dictionary.Message? Message { get; set; }
+class FilterMessageDataRow : DataRow
+{
+    public FilterMessageDataRow(DataRowBuilder builder)
+    : base(builder)
+    {
     }
+
+    public Dictionary.Message? Message { get; set; }
 }
+

@@ -9,47 +9,43 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace FixClient
+namespace FixClient;
+
+class NativeTabControl : NativeWindow
 {
-    class NativeTabControl : NativeWindow
+    public NativeTabControl(Padding adjustPadding)
     {
-        public NativeTabControl(Padding adjustPadding)
-        {
-            AdjustPadding = adjustPadding;
-        }
-
-        protected override void WndProc(ref Message m)
-        {
-            if ((m.Msg == TCM_ADJUSTRECT))
-            {
-                if (m.GetLParam(typeof(RECT)) is RECT rc)
-                {
-                    //Adjust these values to suit, dependant upon Appearance 
-                    rc.Left += AdjustPadding.Left;
-                    rc.Right += AdjustPadding.Right;
-                    rc.Top += AdjustPadding.Top;
-                    rc.Bottom += AdjustPadding.Bottom;
-                    Marshal.StructureToPtr(rc, m.LParam, true);
-                }
-            }
-            base.WndProc(ref m);
-        }
-
-        Padding AdjustPadding { get; set; }
-        const int TCM_FIRST = 0x1300;
-        const int TCM_ADJUSTRECT = (TCM_FIRST + 40);
-        struct RECT
-        {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
-        }
-
+        AdjustPadding = adjustPadding;
     }
 
+    protected override void WndProc(ref Message m)
+    {
+        if ((m.Msg == TCM_ADJUSTRECT))
+        {
+            if (m.GetLParam(typeof(RECT)) is RECT rc)
+            {
+                //Adjust these values to suit, dependant upon Appearance 
+                rc.Left += AdjustPadding.Left;
+                rc.Right += AdjustPadding.Right;
+                rc.Top += AdjustPadding.Top;
+                rc.Bottom += AdjustPadding.Bottom;
+                Marshal.StructureToPtr(rc, m.LParam, true);
+            }
+        }
+        base.WndProc(ref m);
+    }
+
+    Padding AdjustPadding { get; set; }
+    const int TCM_FIRST = 0x1300;
+    const int TCM_ADJUSTRECT = (TCM_FIRST + 40);
+    struct RECT
+    {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
+    }
 }

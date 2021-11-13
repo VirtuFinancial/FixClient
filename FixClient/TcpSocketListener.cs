@@ -9,22 +9,21 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System.Net;
 using System.Net.Sockets;
 
-namespace FixClient
-{
-    class TcpSocketListener : TcpListener
-    {
-        public TcpSocketListener(IPEndPoint endPoint)
-            : base(endPoint)
-        {
-        }
+namespace FixClient;
 
-        public new bool Active
-        {
-            get { return base.Active; }
-        }
+class TcpSocketListener : TcpListener
+{
+    public TcpSocketListener(IPEndPoint endPoint)
+        : base(endPoint)
+    {
+    }
+
+    public new bool Active
+    {
+        get { return base.Active; }
     }
 }
+

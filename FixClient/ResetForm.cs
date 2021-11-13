@@ -9,44 +9,42 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace FixClient
+namespace FixClient;
+
+public partial class ResetForm : Form
 {
-    public partial class ResetForm : Form
+    public ResetForm()
     {
-        public ResetForm()
-        {
-            InitializeComponent();
-            iconPictureBox.Image = SystemIcons.Question.ToBitmap();
-        }
+        InitializeComponent();
+        iconPictureBox.Image = SystemIcons.Question.ToBitmap();
+    }
 
-        public Fix.OrderBook.Retain Retain
+    public Fix.OrderBook.Retain Retain
+    {
+        get
         {
-            get
+            Fix.OrderBook.Retain retain = Fix.OrderBook.Retain.None;
+
+            if (retainActiveGtcOrdersCheckBox.Checked)
             {
-                Fix.OrderBook.Retain retain = Fix.OrderBook.Retain.None;
-
-                if (retainActiveGtcOrdersCheckBox.Checked)
-                {
-                    retain |= Fix.OrderBook.Retain.ActiveGTC;
-                }
-
-                if (retainActiveGtdOrdersCheckBox.Checked)
-                {
-                    retain |= Fix.OrderBook.Retain.ActiveGTD;
-                }
-
-                return retain;
+                retain |= Fix.OrderBook.Retain.ActiveGTC;
             }
-        }
 
-        public bool ResetGeneratedIds
-        {
-            get { return resetGeneratedIdsCheckBox.Checked; }
-        }
+            if (retainActiveGtdOrdersCheckBox.Checked)
+            {
+                retain |= Fix.OrderBook.Retain.ActiveGTD;
+            }
 
+            return retain;
+        }
+    }
+
+    public bool ResetGeneratedIds
+    {
+        get { return resetGeneratedIdsCheckBox.Checked; }
     }
 }
+

@@ -9,35 +9,34 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System.Windows.Forms;
 
-namespace FixClient
+namespace FixClient;
+
+class SearchTextBox : CueTextBox
 {
-    class SearchTextBox : CueTextBox
+    public SearchTextBox()
     {
-        public SearchTextBox()
+        Cue = "Search...";
+        BackColor = LookAndFeel.Color.GridCellBackground;
+        Button.FlatStyle = FlatStyle.Flat;
+        Button.FlatAppearance.MouseOverBackColor = BackColor;
+        Button.FlatAppearance.MouseDownBackColor = BackColor;
+        Button.FlatAppearance.BorderSize = 0;
+        Button.ForeColor = System.Drawing.Color.Gray;
+        Button.Text = "X";
+        Button.Size = new System.Drawing.Size(16, 16);
+        Button.Click += (sender, ev) =>
         {
-            Cue = "Search...";
-            BackColor = LookAndFeel.Color.GridCellBackground;
-            Button.FlatStyle = FlatStyle.Flat;
-            Button.FlatAppearance.MouseOverBackColor = BackColor;
-            Button.FlatAppearance.MouseDownBackColor = BackColor;
-            Button.FlatAppearance.BorderSize = 0;
-            Button.ForeColor = System.Drawing.Color.Gray;
-            Button.Text = "X";
-            Button.Size = new System.Drawing.Size(16, 16);
-            Button.Click += (sender, ev) =>
+            if (string.IsNullOrEmpty(Text))
             {
-                if (string.IsNullOrEmpty(Text))
-                {
-                    OnTextChanged(null);
-                }
-                else
-                {
-                    Text = null;
-                }
-            };
-        }
+                OnTextChanged(null);
+            }
+            else
+            {
+                Text = null;
+            }
+        };
     }
 }
+

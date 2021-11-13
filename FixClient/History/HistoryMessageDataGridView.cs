@@ -9,87 +9,85 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace FixClient
+namespace FixClient;
+
+public sealed partial class HistoryMessageDataGridView : DataGridView
 {
-    public sealed partial class HistoryMessageDataGridView : DataGridView
+    public HistoryMessageDataGridView()
     {
-        public HistoryMessageDataGridView()
+        InitializeComponent();
+
+        EnableHeadersVisualStyles = false;
+        ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 8, FontStyle.Bold);
+        ColumnHeadersDefaultCellStyle.BackColor = LookAndFeel.Color.GridColumnHeader;
+        ColumnHeadersDefaultCellStyle.ForeColor = Color.WhiteSmoke;
+        ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+        ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+        ColumnHeadersHeight -= 3;
+        BackgroundColor = LookAndFeel.Color.GridCellBackground;
+        BorderStyle = BorderStyle.None;
+        SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        MultiSelect = false;
+        RowHeadersVisible = false;
+        DefaultCellStyle.WrapMode = DataGridViewTriState.False;
+        RowTemplate.Resizable = DataGridViewTriState.False;
+        GridColor = LookAndFeel.Color.Grid;
+        AllowUserToAddRows = false;
+        AllowUserToDeleteRows = false;
+        DefaultCellStyle.Font = new Font("Arial", 8);
+        ReadOnly = true;
+        CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+        DefaultCellStyle.BackColor = LookAndFeel.Color.GridCellBackground;
+        DefaultCellStyle.Padding = new Padding(3, 0, 3, 0);
+        DefaultCellStyle.SelectionBackColor = LookAndFeel.Color.GridCellSelectedBackground;
+        DefaultCellStyle.SelectionForeColor = LookAndFeel.Color.GridCellSelectedForeground;
+        DoubleBuffered = true;
+        RowTemplate.Height -= 3;
+        ShowCellToolTips = false;
+        AutoGenerateColumns = false;
+
+        DataGridViewColumn column = new DataGridViewTextBoxColumn
         {
-            InitializeComponent();
+            Name = MessageDataTable.ColumnSendingTime,
+            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
+        };
 
-            EnableHeadersVisualStyles = false;
-            ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            ColumnHeadersDefaultCellStyle.Font = new Font("Arial", 8, FontStyle.Bold);
-            ColumnHeadersDefaultCellStyle.BackColor = LookAndFeel.Color.GridColumnHeader;
-            ColumnHeadersDefaultCellStyle.ForeColor = Color.WhiteSmoke;
-            ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            ColumnHeadersHeight -= 3;
-            BackgroundColor = LookAndFeel.Color.GridCellBackground;
-            BorderStyle = BorderStyle.None;
-            SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            MultiSelect = false;
-            RowHeadersVisible = false;
-            DefaultCellStyle.WrapMode = DataGridViewTriState.False;
-            RowTemplate.Resizable = DataGridViewTriState.False;
-            GridColor = LookAndFeel.Color.Grid;
-            AllowUserToAddRows = false;
-            AllowUserToDeleteRows = false;
-            DefaultCellStyle.Font = new Font("Arial", 8);
-            ReadOnly = true;
-            CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            DefaultCellStyle.BackColor = LookAndFeel.Color.GridCellBackground;
-            DefaultCellStyle.Padding = new Padding(3, 0, 3, 0);
-            DefaultCellStyle.SelectionBackColor = LookAndFeel.Color.GridCellSelectedBackground;
-            DefaultCellStyle.SelectionForeColor = LookAndFeel.Color.GridCellSelectedForeground;
-            DoubleBuffered = true;
-            RowTemplate.Height -= 3;
-            ShowCellToolTips = false;
-            AutoGenerateColumns = false;
+        Columns.Add(column);
 
-            DataGridViewColumn column = new DataGridViewTextBoxColumn
+        column = new DataGridViewTextBoxColumn
+        {
+            Name = MessageDataTable.ColumnMsgSeqNum,
+            AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
+        };
+
+        Columns.Add(column);
+
+        column = new DataGridViewImageColumn
+        {
+            Name = MessageDataTable.ColumnStatusImage,
+            AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            DefaultCellStyle = { NullValue = null },
+            HeaderCell = new DataGridViewImageColumnHeaderCell
             {
-                Name = MessageDataTable.ColumnSendingTime,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
-            };
+                Image = Properties.Resources.MessageStatusInfo,
+                Value = null
+            },
+            //DefaultHeaderCellType = { HeaderCell.GetType() }
+        };
 
-            Columns.Add(column);
+        Columns.Add(column);
 
-            column = new DataGridViewTextBoxColumn
-            {
-                Name = MessageDataTable.ColumnMsgSeqNum,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
-            };
+        column = new DataGridViewTextBoxColumn
+        {
+            Name = MessageDataTable.ColumnMsgTypeDescription,
+            AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        };
 
-            Columns.Add(column);
-
-            column = new DataGridViewImageColumn
-            {
-                Name = MessageDataTable.ColumnStatusImage,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                DefaultCellStyle = { NullValue = null },
-                HeaderCell = new DataGridViewImageColumnHeaderCell
-                {
-                    Image = Properties.Resources.MessageStatusInfo,
-                    Value = null
-                },
-                //DefaultHeaderCellType = { HeaderCell.GetType() }
-            };
-
-            Columns.Add(column);
-
-            column = new DataGridViewTextBoxColumn
-            {
-                Name = MessageDataTable.ColumnMsgTypeDescription,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-            };
-
-            Columns.Add(column);
-        }
+        Columns.Add(column);
     }
 }

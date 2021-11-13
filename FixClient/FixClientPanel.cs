@@ -11,37 +11,37 @@
 /////////////////////////////////////////////////
 using System.Windows.Forms;
 
-namespace FixClient
+namespace FixClient;
+
+public partial class FixClientPanel : ToolStripContainer
 {
-    public partial class FixClientPanel : ToolStripContainer
+    ToolStripMenuItem? _menuStrip;
+
+    public FixClientPanel()
     {
-        ToolStripMenuItem? _menuStrip;
-
-        public FixClientPanel()
-        {
-            InitializeComponent();
-            TopToolStripPanel.BackColor = LookAndFeel.Color.ToolStrip;
-        }
-
-        public ToolStripMenuItem? ToolStripMenuItem
-        {
-            get
-            {
-                return _menuStrip;
-            }
-        }
-
-        /*
-        protected void SetToolStrip(ToolStrip value)
-        {
-            TopToolStripPanel.Join(value);            
-        }
-        */
-
-        protected void SetMenuStrip(ToolStripMenuItem value)
-        {
-            _menuStrip = value;
-        }
-
+        InitializeComponent();
+        TopToolStripPanel.BackColor = LookAndFeel.Color.ToolStrip;
     }
+
+    public ToolStripMenuItem? ToolStripMenuItem
+    {
+        get
+        {
+            return _menuStrip;
+        }
+    }
+
+    /*
+    protected void SetToolStrip(ToolStrip value)
+    {
+        TopToolStripPanel.Join(value);            
+    }
+    */
+
+    protected void SetMenuStrip(ToolStripMenuItem value)
+    {
+        _menuStrip = value;
+    }
+
 }
+

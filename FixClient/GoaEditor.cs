@@ -9,45 +9,41 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System.Windows.Forms;
 
-namespace FixClient
+namespace FixClient;
+
+public partial class GoaEditor : Form
 {
-    public partial class GoaEditor : Form
+    public GoaEditor()
     {
-        public GoaEditor()
+        InitializeComponent();
+        goaTextBox.KeyPress += GoaTextBoxKeyPress;
+    }
+
+    void GoaTextBoxKeyPress(object? sender, KeyPressEventArgs e)
+    {
+        if (e.KeyChar == '\x02')
         {
-            InitializeComponent();
-            goaTextBox.KeyPress += GoaTextBoxKeyPress;
+            goaTextBox.Paste("\x02");
+            e.Handled = true;
         }
+    }
 
-        void GoaTextBoxKeyPress(object? sender, KeyPressEventArgs e)
+    public string Goa
+    {
+        get
         {
-            if (e.KeyChar == '\x02')
+            string goa_value = goaTextBox.Text;
+            if (ctrlBcheckbox.Checked)
             {
-                goaTextBox.Paste("\x02");
-                e.Handled = true;
+                goa_value = goa_value.Replace("^B", "\x02");
             }
+            return goa_value;
         }
-
-        public string Goa
+        set
         {
-            get
-            {
-                string goa_value = goaTextBox.Text;
-                if (ctrlBcheckbox.Checked)
-                {
-                    goa_value = goa_value.Replace("^B", "\x02");
-                }
-                return goa_value;
-            }
-            set
-            {
-                goaTextBox.Text = value;
-            }
+            goaTextBox.Text = value;
         }
-
-
     }
 }

@@ -9,34 +9,33 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace FixClient
+namespace FixClient;
+
+public partial class BorderHidingPanel : Panel
 {
-    public partial class BorderHidingPanel : Panel
+    readonly Control _control;
+
+    public BorderHidingPanel(Control control)
     {
-        readonly Control _control;
+        InitializeComponent();
+        _control = control;
+        _control.Dock = DockStyle.None;
+        Controls.Add(control);
+        BorderStyle = BorderStyle.None;
+        SizeChanged += BorderHidingPanelSizeChanged;
+    }
 
-        public BorderHidingPanel(Control control)
+    void BorderHidingPanelSizeChanged(object? sender, EventArgs e)
+    {
+        if (_control != null)
         {
-            InitializeComponent();
-            _control = control;
-            _control.Dock = DockStyle.None;
-            Controls.Add(control);
-            BorderStyle = BorderStyle.None;
-            SizeChanged += BorderHidingPanelSizeChanged;
-        }
-
-        void BorderHidingPanelSizeChanged(object? sender, EventArgs e)
-        {
-            if (_control != null)
-            {
-                _control.Location = new Point(-1, -1);
-                _control.Size = new Size(Size.Width + 2, Size.Height + 2);
-            }
+            _control.Location = new Point(-1, -1);
+            _control.Size = new Size(Size.Width + 2, Size.Height + 2);
         }
     }
 }
+

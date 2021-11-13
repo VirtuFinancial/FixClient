@@ -9,106 +9,104 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
 
-namespace FixClient
+namespace FixClient;
+
+public partial class ConnectForm : Form
 {
-    public partial class ConnectForm : Form
+    Timer? _timer;
+    readonly IPEndPoint _endPoint;
+    readonly IPEndPoint _bindEndPoint;
+    readonly Fix.Behaviour _behaviour;
+    TcpClient? _tcpClient;
+    TcpSocketListener? _tcpListener;
+
+    public ConnectForm(IPEndPoint bindEndPoint, IPEndPoint endPoint, Fix.Behaviour behaviour)
     {
-        Timer? _timer;
-        readonly IPEndPoint _endPoint;
-        readonly IPEndPoint _bindEndPoint;
-        readonly Fix.Behaviour _behaviour;
-        TcpClient? _tcpClient;
-        TcpSocketListener? _tcpListener;
+        InitializeComponent();
+        _endPoint = endPoint;
+        _bindEndPoint = bindEndPoint;
+        _behaviour = behaviour;
+        Load += ConnectFormLoad;
+    }
 
-        public ConnectForm(IPEndPoint bindEndPoint, IPEndPoint endPoint, Fix.Behaviour behaviour)
+    public Stream? Stream { get; private set; }
+
+    void ConnectFormLoad(object? sender, EventArgs e)
+    {
+        _timer = new Timer { Interval = 100 };
+        _timer.Tick += TimerTick;
+        _timer.Start();
+        progressBar.Enabled = true;
+
+        if (_behaviour == Fix.Behaviour.Initiator)
         {
-            InitializeComponent();
-            _endPoint = endPoint;
-            _bindEndPoint = bindEndPoint;
-            _behaviour = behaviour;
-            Load += ConnectFormLoad;
-        }
-
-        public Stream? Stream { get; private set; }
-
-        void ConnectFormLoad(object? sender, EventArgs e)
-        {
-            _timer = new Timer { Interval = 100 };
-            _timer.Tick += TimerTick;
-            _timer.Start();
-            progressBar.Enabled = true;
-
-            if (_behaviour == Fix.Behaviour.Initiator)
+            _tcpClient = _bindEndPoint == null ? new TcpClient() : new TcpClient(_bindEndPoint);
+            _tcpClient.BeginConnect(_endPoint.Address, _endPoint.Port, result =>
             {
-                _tcpClient = _bindEndPoint == null ? new TcpClient() : new TcpClient(_bindEndPoint);
-                _tcpClient.BeginConnect(_endPoint.Address, _endPoint.Port, result =>
+                try
                 {
-                    try
-                    {
-                        _tcpClient.EndConnect(result);
-                        Stream = _tcpClient.GetStream();
-                        DialogResult = DialogResult.OK;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(null, ex.Message, "Fix Initiator", MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
-                        DialogResult = DialogResult.Cancel;
-                    }
-                    BeginInvoke(new MethodInvoker(Close), new object[] { this, EventArgs.Empty });
-                }, null);
-            }
-            else
-            {
-                _tcpListener = new TcpSocketListener(_endPoint);
-                _tcpListener.Start();
-                _tcpListener.BeginAcceptSocket(result =>
+                    _tcpClient.EndConnect(result);
+                    Stream = _tcpClient.GetStream();
+                    DialogResult = DialogResult.OK;
+                }
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        Stream = new NetworkStream(_tcpListener.EndAcceptSocket(result), true);
-                        DialogResult = DialogResult.OK;
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                        //
-                        // This is expected if the socket is closed.
-                        //
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(null, ex.Message, "Fix Initiator", MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
-                        DialogResult = DialogResult.Cancel;
-                    }
-                    _tcpListener.Stop();
-                }, null);
-            }
+                    MessageBox.Show(null, ex.Message, "Fix Initiator", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information);
+                    DialogResult = DialogResult.Cancel;
+                }
+                BeginInvoke(new MethodInvoker(Close), new object[] { this, EventArgs.Empty });
+            }, null);
         }
-
-        void TimerTick(object? sender, EventArgs e)
+        else
         {
-            if (progressBar.Value == progressBar.Maximum)
+            _tcpListener = new TcpSocketListener(_endPoint);
+            _tcpListener.Start();
+            _tcpListener.BeginAcceptSocket(result =>
             {
-                progressBar.Value = progressBar.Minimum;
-                return;
-            }
-
-            progressBar.PerformStep();
+                try
+                {
+                    Stream = new NetworkStream(_tcpListener.EndAcceptSocket(result), true);
+                    DialogResult = DialogResult.OK;
+                }
+                catch (ObjectDisposedException)
+                {
+                    //
+                    // This is expected if the socket is closed.
+                    //
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(null, ex.Message, "Fix Initiator", MessageBoxButtons.OK,
+                                    MessageBoxIcon.Information);
+                    DialogResult = DialogResult.Cancel;
+                }
+                _tcpListener.Stop();
+            }, null);
         }
+    }
 
-        void CancelButtonClick(object sender, EventArgs e)
+    void TimerTick(object? sender, EventArgs e)
+    {
+        if (progressBar.Value == progressBar.Maximum)
         {
-            _tcpClient?.Close();
-            _tcpListener?.Stop();
-            Close();
+            progressBar.Value = progressBar.Minimum;
+            return;
         }
+
+        progressBar.PerformStep();
+    }
+
+    void CancelButtonClick(object sender, EventArgs e)
+    {
+        _tcpClient?.Close();
+        _tcpListener?.Stop();
+        Close();
     }
 }

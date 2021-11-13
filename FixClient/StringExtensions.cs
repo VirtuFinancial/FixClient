@@ -9,17 +9,15 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace FixClient
+namespace FixClient;
+
+static class StringExtensions
 {
-    static class StringExtensions
+    public static string SplitInParts(this string stringToSplit, int maximumLineLength)
     {
-        public static string SplitInParts(this string stringToSplit, int maximumLineLength)
-        {
-            return Regex.Replace(stringToSplit, @"(.{1," + maximumLineLength + @"})(?:\s|$)", "$1\n");
-        }
+        return Regex.Replace(stringToSplit, @"(.{1," + maximumLineLength + @"})(?:\s|$)", "$1\n");
     }
 }
+

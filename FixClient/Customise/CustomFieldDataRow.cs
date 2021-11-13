@@ -11,15 +11,14 @@
 /////////////////////////////////////////////////
 using System.Data;
 
-namespace FixClient
-{
-    class CustomFieldDataRow : DataRow
-    {
-        public CustomFieldDataRow(DataRowBuilder builder)
-        : base(builder)
-        {
-        }
+namespace FixClient;
 
-        public CustomField? Field { get; set; }
+class CustomFieldDataRow : DataRow
+{
+    public CustomFieldDataRow(DataRowBuilder builder)
+    : base(builder)
+    {
     }
+
+    public CustomField? Field { get; set; }
 }

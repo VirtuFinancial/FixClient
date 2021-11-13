@@ -11,49 +11,48 @@
 /////////////////////////////////////////////////
 using System.Windows.Forms;
 
-namespace FixClient
+namespace FixClient;
+
+partial class SessionForm : Form
 {
-    partial class SessionForm : Form
+    readonly CustomPropertyGrid _propertyGrid;
+    Session? _session;
+
+    public SessionForm()
     {
-        readonly CustomPropertyGrid _propertyGrid;
-        Session? _session;
-
-        public SessionForm()
+        InitializeComponent();
+        _propertyGrid = new CustomPropertyGrid
         {
-            InitializeComponent();
-            _propertyGrid = new CustomPropertyGrid
-            {
-                Dock = DockStyle.Fill,
-                ToolbarVisible = false,
-                HelpVisible = false,
-                PropertySort = PropertySort.Categorized
-            };
-            _propertyGrid.PropertyValueChanged += (o, args) =>
-            {
-                Session?.UpdateReadonlyAttributes();
-                _propertyGrid.Refresh();
-            };
-            _gridPlaceHolder.Controls.Add(_propertyGrid);
+            Dock = DockStyle.Fill,
+            ToolbarVisible = false,
+            HelpVisible = false,
+            PropertySort = PropertySort.Categorized
+        };
+        _propertyGrid.PropertyValueChanged += (o, args) =>
+        {
+            Session?.UpdateReadonlyAttributes();
+            _propertyGrid.Refresh();
+        };
+        _gridPlaceHolder.Controls.Add(_propertyGrid);
+    }
+
+    public bool Readonly
+    {
+        get { return _propertyGrid.Enabled; }
+        set
+        {
+            _propertyGrid.Enabled = !value;
+            OK.Enabled = !value;
         }
+    }
 
-        public bool Readonly
+    public Session? Session
+    {
+        get { return _session; }
+        set
         {
-            get { return _propertyGrid.Enabled; }
-            set
-            {
-                _propertyGrid.Enabled = !value;
-                OK.Enabled = !value;
-            }
-        }
-
-        public Session? Session
-        {
-            get { return _session; }
-            set
-            {
-                _session = value;
-                _propertyGrid.SelectedObject = value;
-            }
+            _session = value;
+            _propertyGrid.SelectedObject = value;
         }
     }
 }

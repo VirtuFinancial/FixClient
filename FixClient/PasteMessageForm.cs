@@ -9,35 +9,33 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
-using System;
 using System.Windows.Forms;
 
-namespace FixClient
+namespace FixClient;
+
+public partial class PasteMessageForm : Form
 {
-    public partial class PasteMessageForm : Form
+    public PasteMessageForm()
     {
-        public PasteMessageForm()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        public bool FilterEmptyFields
-        {
-            get { return filterEmptyFieldsCheckBox.Checked; }
-            set { filterEmptyFieldsCheckBox.Checked = value; }
-        }
+    public bool FilterEmptyFields
+    {
+        get { return filterEmptyFieldsCheckBox.Checked; }
+        set { filterEmptyFieldsCheckBox.Checked = value; }
+    }
 
-        public bool DefineUnknownAsCustom
-        {
-            get { return defineUnknownAsCustomCheckBox.Checked; }
-            set { defineUnknownAsCustomCheckBox.Checked = value; }
-        }
+    public bool DefineUnknownAsCustom
+    {
+        get { return defineUnknownAsCustomCheckBox.Checked; }
+        set { defineUnknownAsCustomCheckBox.Checked = value; }
+    }
 
-        public bool ResetExistingMessage
-        {
-            get { return resetMessageCheckBox.Checked; }
-            set { resetMessageCheckBox.Checked = value; }
-        }
+    public bool ResetExistingMessage
+    {
+        get { return resetMessageCheckBox.Checked; }
+        set { resetMessageCheckBox.Checked = value; }
     }
 }
+

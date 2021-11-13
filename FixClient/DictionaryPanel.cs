@@ -9,103 +9,101 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System;
 using System.Drawing;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace FixClient
+namespace FixClient;
+
+public partial class DictionaryPanel : FixClientPanel
 {
-    public partial class DictionaryPanel : FixClientPanel
+    readonly WebBrowser _browser;
+
+    readonly ToolStripButton _backButton;
+    readonly ToolStripButton _forwardButton;
+
+    public DictionaryPanel()
     {
-        readonly WebBrowser _browser;
+        InitializeComponent();
 
-        readonly ToolStripButton _backButton;
-        readonly ToolStripButton _forwardButton;
+        _browser = new WebBrowser { Dock = DockStyle.Fill };
+        _browser.ScriptErrorsSuppressed = true;
+        _browser.Navigate("https://www.onixs.biz/fix-dictionary.html");
 
-        public DictionaryPanel()
+        ContentPanel.Controls.Add(_browser);
+
+        #region ToolStrip
+        var toolStrip = new ToolStrip
         {
-            InitializeComponent();
+            GripStyle = ToolStripGripStyle.Hidden,
+            BackColor = LookAndFeel.Color.ToolStrip,
+            Renderer = new ToolStripRenderer()
+        };
+        TopToolStripPanel.Join(toolStrip);
 
-            _browser = new WebBrowser { Dock = DockStyle.Fill };
-            _browser.ScriptErrorsSuppressed = true;
-            _browser.Navigate("https://www.onixs.biz/fix-dictionary.html");
-
-            ContentPanel.Controls.Add(_browser);
-
-            #region ToolStrip
-            var toolStrip = new ToolStrip
-            {
-                GripStyle = ToolStripGripStyle.Hidden,
-                BackColor = LookAndFeel.Color.ToolStrip,
-                Renderer = new ToolStripRenderer()
-            };
-            TopToolStripPanel.Join(toolStrip);
-
-            _backButton = new ToolStripButton
-            {
-                ToolTipText = "Back",
-                Image = Properties.Resources.Back,
-                ImageTransparentColor = Color.Magenta
-            };
-            _backButton.Click += (sender, ev) => _browser.GoBack();
-            toolStrip.Items.Add(_backButton);
-
-            _forwardButton = new ToolStripButton
-            {
-                ToolTipText = "Forward",
-                Image = Properties.Resources.Forward,
-                ImageTransparentColor = Color.Magenta
-            };
-            _forwardButton.Click += (sender, ev) => _browser.GoForward();
-            toolStrip.Items.Add(_forwardButton);
-            #endregion
-        }
-
-        public Fix.Message Message
+        _backButton = new ToolStripButton
         {
-            set
+            ToolTipText = "Back",
+            Image = Properties.Resources.Back,
+            ImageTransparentColor = Color.Magenta
+        };
+        _backButton.Click += (sender, ev) => _browser.GoBack();
+        toolStrip.Items.Add(_backButton);
+
+        _forwardButton = new ToolStripButton
+        {
+            ToolTipText = "Forward",
+            Image = Properties.Resources.Forward,
+            ImageTransparentColor = Color.Magenta
+        };
+        _forwardButton.Click += (sender, ev) => _browser.GoForward();
+        toolStrip.Items.Add(_forwardButton);
+        #endregion
+    }
+
+    public Fix.Message Message
+    {
+        set
+        {
+            //
+            //"http://onixs.biz/fixdictionary/4.2/msgType_D_68.html"
+            //
+            string numeric;
+
+            if (int.TryParse(value.MsgType, out int result))
             {
-                //
-                //"http://onixs.biz/fixdictionary/4.2/msgType_D_68.html"
-                //
-                string numeric;
-
-                if (int.TryParse(value.MsgType, out int result))
-                {
-                    numeric = value.MsgType;
-                }
-                else
-                {
-                    var builder = new StringBuilder();
-
-                    foreach (char c in value.MsgType)
-                    {
-                        builder.Append(Convert.ToInt16(c).ToString());
-                    }
-
-                    numeric = builder.ToString();
-                }
-
-                var uri = new Uri(string.Format("http://onixs.biz/fix-dictionary/{0}/msgType_{1}_{2}.html",
-                                                value.BeginString.Substring(4, 3),
-                                                value.MsgType,
-                                                numeric));
-
-                ThreadPool.QueueUserWorkItem(delegate
-                                                 {
-                                                     try
-                                                     {
-                                                         _browser.Navigate(uri);
-                                                     }
-                                                     catch (Exception)
-                                                     {
-                                                         //DisplayError(this, new ErrorEventArgs { Message = ex.Message });
-                                                     }
-                                                 });
+                numeric = value.MsgType;
             }
+            else
+            {
+                var builder = new StringBuilder();
+
+                foreach (char c in value.MsgType)
+                {
+                    builder.Append(Convert.ToInt16(c).ToString());
+                }
+
+                numeric = builder.ToString();
+            }
+
+            var uri = new Uri(string.Format("http://onixs.biz/fix-dictionary/{0}/msgType_{1}_{2}.html",
+                                            value.BeginString.Substring(4, 3),
+                                            value.MsgType,
+                                            numeric));
+
+            ThreadPool.QueueUserWorkItem(delegate
+                                                {
+                                                    try
+                                                    {
+                                                        _browser.Navigate(uri);
+                                                    }
+                                                    catch (Exception)
+                                                    {
+                                                        //DisplayError(this, new ErrorEventArgs { Message = ex.Message });
+                                                    }
+                                                });
         }
     }
 }

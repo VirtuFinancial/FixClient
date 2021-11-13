@@ -9,23 +9,22 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System.Data;
 
-namespace FixClient
-{
-    class FilterFieldDataTable : DataTable
-    {
-        public const string ColumnVisible = "Visible";
-        public const string ColumnTag = "Tag";
-        public const string ColumnName = "Name";
+namespace FixClient;
 
-        public FilterFieldDataTable(string name)
-            : base(name)
-        {
-            Columns.Add(ColumnVisible, typeof(bool));
-            Columns.Add(ColumnTag, typeof(int));
-            Columns.Add(ColumnName);
-        }
+class FilterFieldDataTable : DataTable
+{
+    public const string ColumnVisible = "Visible";
+    public const string ColumnTag = "Tag";
+    public const string ColumnName = "Name";
+
+    public FilterFieldDataTable(string name)
+        : base(name)
+    {
+        Columns.Add(ColumnVisible, typeof(bool));
+        Columns.Add(ColumnTag, typeof(int));
+        Columns.Add(ColumnName);
     }
 }
+
