@@ -9,9 +9,7 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace FixClient;
 
@@ -34,7 +32,7 @@ public class DataGridViewIndentCell : DataGridViewCell
                                     DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle,
                                     DataGridViewPaintParts paintParts)
     {
-        if (!(value is int))
+        if (value is not int)
         {
             throw new ArgumentException("Value is not an Int");
         }

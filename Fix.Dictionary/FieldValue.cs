@@ -1,5 +1,3 @@
-using System;
-
 namespace Fix;
 
 public partial class Dictionary

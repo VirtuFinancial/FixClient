@@ -1,7 +1,5 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 
 namespace Fix.Parsers;
 
@@ -29,10 +27,10 @@ public class GenericLogParser : LogParser
                 {
                     continue;
                 }
-                    
+
                 // This is a hack to support Atlas logs that can be broken over multiple lines.
                 position = line.IndexOf(" IN ");
-                    
+
                 if (position < 0)
                 {
                     position = line.IndexOf(" OUT ");
@@ -45,12 +43,12 @@ public class GenericLogParser : LogParser
             }
 
             var direction = line.Substring(0, position);
-                
+
             if (direction.Contains("IN") || direction.Contains("Incoming") || direction.Contains("Receiving"))
             {
                 incoming = true;
             }
-                
+
             body += line.Substring(position);
 
             if (body.Contains("10="))

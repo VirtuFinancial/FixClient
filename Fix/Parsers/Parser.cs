@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -18,7 +17,7 @@ public static class Parser
     public static async IAsyncEnumerable<Message> Parse(Stream stream)
     {
         long position = stream.Position;
-            
+
         using var decorator = new NonClosingStreamDecorator(stream);
 
         foreach (var parser in parsers)
@@ -33,7 +32,7 @@ public static class Parser
                 }
 
                 foundMessages = true;
-                
+
                 yield return message;
             }
 
@@ -54,7 +53,7 @@ public static class Parser
         }
 
         using FileStream stream = new(uri.LocalPath, FileMode.Open);
-            
+
         await foreach (var message in Parse(stream).ConfigureAwait(false))
         {
             yield return message;

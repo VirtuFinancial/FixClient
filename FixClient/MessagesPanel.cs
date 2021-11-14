@@ -9,13 +9,11 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using static Fix.Dictionary;
 
 namespace FixClient;
@@ -363,7 +361,7 @@ partial class MessagesPanel : FixClientPanel
         }
 
         string? search = null;
-            
+
         if (string.IsNullOrEmpty(_fieldSearchTextBox.Text))
         {
             _fieldView.Sort = string.Empty;
@@ -408,7 +406,7 @@ partial class MessagesPanel : FixClientPanel
         }
 
         string? search = null;
-            
+
         if (string.IsNullOrEmpty(_messageSearchTextBox.Text))
         {
             _messageView.Sort = string.Empty;
@@ -503,7 +501,7 @@ partial class MessagesPanel : FixClientPanel
         var fieldName = (string)dataRow[FieldDataTable.ColumnName];
 
         using GoaEditor editor = new();
-            
+
         editor.Text = string.Format("{0} - {1}", fieldTag, fieldName);
 
         if (row.Cells[FieldDataTable.ColumnValue].Value.ToString() is string goa)
@@ -515,7 +513,7 @@ partial class MessagesPanel : FixClientPanel
         {
             return;
         }
-            
+
         row.Cells[FieldDataTable.ColumnValue].Value = editor.Goa;
     }
 
@@ -661,12 +659,12 @@ partial class MessagesPanel : FixClientPanel
         }
 
         int end = _fieldTable.Rows.IndexOf(endDataRowView.Row);
-            
+
         if (_fieldGrid.SelectedRows[_fieldGrid.SelectedRows.Count - 1].DataBoundItem is not DataRowView beginDataRowView)
         {
             return;
         }
-            
+
         int begin = _fieldTable.Rows.IndexOf(beginDataRowView.Row);
 
         if (end < begin)
@@ -1177,7 +1175,7 @@ partial class MessagesPanel : FixClientPanel
                 }
             }
         }
-        
+
         foreach (KeyValuePair<int, string> field in updatedFields)
         {
             _fieldTable.Rows[field.Key][FieldDataTable.ColumnValue] = field.Value;
@@ -1271,7 +1269,7 @@ partial class MessagesPanel : FixClientPanel
             return;
         }
 
-        if (SelectedMessage is not Fix.Message)
+        if (SelectedMessage is null)
         {
             return;
         }
@@ -1697,7 +1695,7 @@ partial class MessagesPanel : FixClientPanel
         if (Session is null)
         {
             return;
-        }    
+        }
 
         if (FindMessage(FIX_5_0SP2.Messages.ExecutionReport.MsgType) is not Fix.Message message)
         {

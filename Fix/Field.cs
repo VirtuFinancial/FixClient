@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -180,7 +179,7 @@ public class Field : ICloneable
     }
 
     public static bool operator !=(Field left, FieldValue? right) => !(left == right);
-     
+
     public override bool Equals(object? other)
     {
         if (other is null)

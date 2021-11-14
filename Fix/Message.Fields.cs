@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using static Fix.Dictionary;
 
 namespace Fix;
@@ -124,7 +123,7 @@ public partial class Message
                 {
                     throw new Exception($"Message contains an invalid {field}");
                 }
-                    
+
                 return value;
             }
 

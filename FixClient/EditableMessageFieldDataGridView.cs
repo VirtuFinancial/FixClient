@@ -9,10 +9,8 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms;
 using static Fix.Dictionary;
 
 namespace FixClient;
@@ -109,7 +107,7 @@ public partial class EditableMessageFieldDataGridView : MessageFieldDataGridView
         e.DrawFocusRectangle();
     }
 
-    VersionField? FindFieldDefinition(int tag)
+    static VersionField? FindFieldDefinition(int tag)
     {
         // This is the most likley hit for modern users so lets be optimistic which will be faster.
         if (FIX_5_0SP2.Fields[tag] is VersionField definition && definition.IsValid)
@@ -242,7 +240,7 @@ public partial class EditableMessageFieldDataGridView : MessageFieldDataGridView
         // may have been filtered.
         //
         var view = DataSource as DataView;
-            
+
         if (view?.Table is not DataTable table)
         {
             return;

@@ -9,10 +9,8 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.Data;
 using System.Text;
-using System.Windows.Forms;
 using static Fix.Dictionary;
 
 namespace FixClient;

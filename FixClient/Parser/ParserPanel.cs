@@ -1,9 +1,7 @@
-using System;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace FixClient;
 
@@ -95,7 +93,7 @@ public partial class ParserPanel : FixClientPanel
             return;
         }
 
-        Cursor? original = Cursor.Current; 
+        Cursor? original = Cursor.Current;
         Cursor.Current = Cursors.WaitCursor;
 
         try

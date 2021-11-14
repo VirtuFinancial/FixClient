@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.Linq;
 using static Fix.Dictionary;
 
@@ -218,7 +217,7 @@ public class OrderBook
 
         var OrigClOrdID = message.Fields.Find(FIX_5_0SP2.Fields.OrigClOrdID);
 
-        if (ordStatus == FIX_5_0SP2.OrdStatus.Canceled  && OrigClOrdID is not Field)
+        if (ordStatus == FIX_5_0SP2.OrdStatus.Canceled && OrigClOrdID is not Field)
         {
             if (ProcessOrdStatusUpdate(message, ClOrdID.Value, ordStatus) == OrderBookMessageEffect.Modified)
             {
@@ -319,7 +318,7 @@ public class OrderBook
 
                     replacement.ClOrdID = ClOrdID.Value;
                     replacement.OrigClOrdID = OrigClOrdID.Value;
-                        
+
 
                     if (ordStatus != FIX_5_0SP2.OrdStatus.Replaced)
                     {
@@ -510,8 +509,8 @@ public class OrderBook
         order.PendingMessage = message;
         order.NewClOrdID = ClOrdID.Value;
 
-        if (message.Fields.Find(FIX_5_0SP2.Fields.OrderQty) is Field OrderQtyField && 
-            (long?)OrderQtyField is long OrderQty && 
+        if (message.Fields.Find(FIX_5_0SP2.Fields.OrderQty) is Field OrderQtyField &&
+            (long?)OrderQtyField is long OrderQty &&
             OrderQty != order.OrderQty)
         {
             order.PendingOrderQty = (long)OrderQty;

@@ -9,13 +9,11 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
 using static Fix.Dictionary;
 
 namespace FixClient;
@@ -257,7 +255,7 @@ partial class HistoryPanel : FixClientPanel
         {
             return;
         }
-           
+
         e.CellStyle.ForeColor = message.Incoming ? LookAndFeel.Color.Incoming : LookAndFeel.Color.Outgoing;
         e.FormattingApplied = true;
     }
@@ -296,7 +294,7 @@ partial class HistoryPanel : FixClientPanel
     void ApplyFieldSearch()
     {
         string? search = null;
-            
+
         if (string.IsNullOrEmpty(_fieldSearchTextBox.Text))
         {
             _fieldView.Sort = string.Empty;
@@ -324,7 +322,7 @@ partial class HistoryPanel : FixClientPanel
     void ApplyMessageSearch()
     {
         string? search = null;
-            
+
         if (string.IsNullOrEmpty(_messageSearchTextBox.Text))
         {
             _messageView.Sort = string.Empty;
@@ -403,13 +401,13 @@ partial class HistoryPanel : FixClientPanel
             {
                 using FileStream stream = new(dlg.FileName, FileMode.Create);
                 using StreamWriter writer = new(stream);
-                    
+
                 foreach (Fix.Message message in Session.Messages)
                 {
                     string timestamp = "Unknown";
-                        
+
                     Fix.Field? field = message.Fields.Find(FIX_5_0SP2.Fields.SendingTime.Tag);
-                
+
                     if (field is not null)
                     {
                         timestamp = field.Value;
@@ -726,7 +724,7 @@ partial class HistoryPanel : FixClientPanel
 
     void AddMesage(Fix.Message message)
     {
-        if (message.Definition is not Fix.Dictionary.Message)
+        if (message.Definition is null)
         {
             message.Definition = FIX_5_0SP2.Messages[message.MsgType];
 
@@ -740,9 +738,9 @@ partial class HistoryPanel : FixClientPanel
         {
             return;
         }
-           
+
         row.Message = message;
-            
+
         row[MessageDataTable.ColumnSendingTime] = message.Fields.Find(FIX_5_0SP2.Fields.SendingTime)?.Value;
         row[MessageDataTable.ColumnMsgType] = message.MsgType;
         row[MessageDataTable.ColumnStatus] = message.Status;

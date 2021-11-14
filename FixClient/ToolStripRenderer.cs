@@ -9,8 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System.Windows.Forms;
-
 namespace FixClient;
 
 class ToolStripRenderer : ToolStripProfessionalRenderer

@@ -9,12 +9,10 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Net;
-using System.Windows.Forms;
 using System.Xml.Serialization;
 
 namespace FixClient;
@@ -631,7 +629,7 @@ partial class MainForm : Form
             try
             {
                 var ser = new XmlSerializer(typeof(List<string>));
-                    
+
                 if (ser.Deserialize(stream) is not List<string> deserialisedList)
                 {
                     return;

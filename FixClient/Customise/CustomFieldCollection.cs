@@ -9,8 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -31,7 +29,7 @@ class CustomFieldCollection
     {
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
         using var reader = new XmlTextReader(stream);
-            
+
         while (!reader.EOF)
         {
             reader.MoveToContent();
@@ -46,14 +44,14 @@ class CustomFieldCollection
             {
                 continue;
             }
-                
+
             int id = Convert.ToInt32(reader.GetAttribute("id"));
-                
+
             if (reader.GetAttribute("categories") is not string categoryAttribute)
             {
                 continue;
             }
-                
+
             string[] categories = categoryAttribute.Split(',');
 
             foreach (string c in categories)

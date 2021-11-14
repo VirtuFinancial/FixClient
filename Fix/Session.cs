@@ -9,11 +9,11 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using Newtonsoft.Json;
-using System;
+global using System;
 using System.ComponentModel;
 using System.Reflection;
 using System.Timers;
+using Newtonsoft.Json;
 using static Fix.Dictionary;
 
 namespace Fix;
@@ -390,7 +390,7 @@ public partial class Session : ICloneable
         }
 
         if (definition.Fields.TryGetValue(FIX_5_0SP2.Fields.MsgSeqNum.Tag, out field))
-        { 
+        {
             message.Fields.Add(new Field(field.Tag, string.Empty));
         }
 
@@ -917,7 +917,7 @@ public partial class Session : ICloneable
                 }
 
                 var duplicate = (Message)message.Clone();
-                    
+
                 if (message.SendingTime is string sendingTime)
                 {
                     // TODO - throw?

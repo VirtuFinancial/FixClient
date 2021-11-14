@@ -10,7 +10,6 @@
 //
 /////////////////////////////////////////////////
 using System.Reflection;
-using System.Windows.Forms;
 
 namespace FixClient;
 

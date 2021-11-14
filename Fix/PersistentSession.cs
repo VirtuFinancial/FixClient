@@ -9,14 +9,12 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
+using Fix.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using System;
 using System.ComponentModel;
 using System.IO;
-using System.Threading;
-using Fix.Common;
 
 namespace Fix;
 
@@ -24,7 +22,7 @@ public class PersistentSession : Session, IDisposable
 {
     readonly object _syncObject = new();
 
-    readonly DirtyTimer _writeTimer = new(); 
+    readonly DirtyTimer _writeTimer = new();
     JsonSerializer? _serialiser;
     Writer? _historyWriter;
     string? _fileName;

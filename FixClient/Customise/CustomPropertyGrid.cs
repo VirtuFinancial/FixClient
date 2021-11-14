@@ -9,9 +9,7 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
 using System.Collections;
-using System.Windows.Forms;
 
 namespace FixClient;
 

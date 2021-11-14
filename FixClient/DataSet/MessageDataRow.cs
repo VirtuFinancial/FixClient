@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using Fix;
 using System.Data;
 
 namespace FixClient;
@@ -21,6 +20,6 @@ class MessageDataRow : DataRow
     {
     }
 
-    public Message? Message { get; set; }
+    public Fix.Message? Message { get; set; }
 }
 

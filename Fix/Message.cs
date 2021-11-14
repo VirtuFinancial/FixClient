@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -97,7 +96,7 @@ public partial class Message : ICloneable
     public static async Task<Message?> Parse(string text)
     {
         using var stream = new MemoryStream(Encoding.ASCII.GetBytes(text));
-            
+
         await foreach (var message in Parser.Parse(stream))
         {
             return message;
@@ -263,7 +262,7 @@ public partial class Message : ICloneable
     }
 
     public override string ToString() => PrettyPrint();
-       
+
 
     #endregion
 

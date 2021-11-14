@@ -9,10 +9,8 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace FixClient;
 
@@ -256,7 +254,7 @@ partial class FiltersPanel : FixClientPanel
         }
 
         if (SelectedMessage is not Fix.Dictionary.Message message)
-        { 
+        {
             return;
         }
 
@@ -269,7 +267,7 @@ partial class FiltersPanel : FixClientPanel
     void FieldSearchTextBoxTextChanged(object? sender, EventArgs e)
     {
         string? search = null;
-            
+
         if (string.IsNullOrEmpty(_fieldSearchTextBox.Text))
         {
             _fieldView.Sort = string.Empty;
@@ -295,7 +293,7 @@ partial class FiltersPanel : FixClientPanel
         }
 
         string? search = null;
-            
+
         if (string.IsNullOrEmpty(_messageSearchTextBox.Text))
         {
             _messageView.Sort = string.Empty;

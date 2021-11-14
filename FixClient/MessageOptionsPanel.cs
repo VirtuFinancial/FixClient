@@ -10,7 +10,6 @@
 //
 /////////////////////////////////////////////////
 using System.ComponentModel;
-using System.Windows.Forms;
 
 namespace FixClient;
 
@@ -82,7 +81,7 @@ public partial class MessageOptionsPanel : Panel
             SelectedObject = _options
         };
         _propertyGrid.PropertyValueChanged += PropertyGridPropertyValueChanged;
-            
+
         //_propertyGrid.Layout += (sender, ev) => MoveSplitter(_propertyGrid, 190);
 
         var panel1 = new BorderHidingPanel(_propertyGrid) { Dock = DockStyle.Fill };
@@ -94,18 +93,18 @@ public partial class MessageOptionsPanel : Panel
 
     //static void MoveSplitter(PropertyGrid propertyGrid, int x)
     //{
-        /* TODO
-        object propertyGridView = typeof(PropertyGrid).InvokeMember("gridView", 
-                                                                    BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance, 
-                                                                    null, 
-                                                                    propertyGrid, 
-                                                                    null);
-        propertyGridView.GetType().InvokeMember("MoveSplitterTo",
-                                                BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Instance,
-                                                null, 
-                                                propertyGridView, 
-                                                new object[] { x });
-        */
+    /* TODO
+    object propertyGridView = typeof(PropertyGrid).InvokeMember("gridView", 
+                                                                BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance, 
+                                                                null, 
+                                                                propertyGrid, 
+                                                                null);
+    propertyGridView.GetType().InvokeMember("MoveSplitterTo",
+                                            BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Instance,
+                                            null, 
+                                            propertyGridView, 
+                                            new object[] { x });
+    */
     //}
 
     void PropertyGridPropertyValueChanged(object? s, PropertyValueChangedEventArgs e)
@@ -116,7 +115,7 @@ public partial class MessageOptionsPanel : Panel
         }
 
         var value = (bool)(e.ChangedItem?.Value ?? false);
-            
+
         switch (e.ChangedItem?.Label)
         {
             case "MsgSeqNum":

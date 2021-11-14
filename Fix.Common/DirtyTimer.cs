@@ -17,7 +17,7 @@ public class DirtyTimer : IDisposable
     int _dirty;
     const int CLEAN = 0;
     const int DIRTY = 1;
-    
+
     public void SetDirty()
     {
         Interlocked.CompareExchange(ref _dirty, DIRTY, CLEAN);

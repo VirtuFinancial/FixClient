@@ -20,11 +20,8 @@
 // In addition, you may not:
 //        * Publicly release modified versions of the code or publicly release works derived from
 //          the code without express written authorization.
-
-using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
 

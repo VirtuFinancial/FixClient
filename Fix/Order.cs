@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.Collections.Generic;
 using static Fix.Dictionary;
 
@@ -98,7 +97,7 @@ public class Order : ICloneable
         {
             ListID = listIdField.Value;
         }
-        
+
         if (message.Fields.Find(FIX_5_0SP2.Fields.SendingTime) is Field sendingTimeField && !string.IsNullOrEmpty(sendingTimeField.Value))
         {
             if ((DateTime?)sendingTimeField is DateTime sendingTime)
@@ -174,7 +173,7 @@ public class Order : ICloneable
                 case Fix.OrdStatus.Expired:
                     break;
             */
-              
+
             return false;
         }
     }

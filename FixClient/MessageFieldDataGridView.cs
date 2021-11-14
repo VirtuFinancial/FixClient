@@ -9,13 +9,8 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Reflection;
-using System.Windows.Forms;
-using static Fix.Dictionary;
 
 namespace FixClient;
 
@@ -171,7 +166,7 @@ public partial class MessageFieldDataGridView : DataGridView
         return string.Join("\n", definition.Description.SplitInParts(100));
     }
     */
-       
+
     /*
     protected override void OnCellToolTipTextNeeded(DataGridViewCellToolTipTextNeededEventArgs e)
     {

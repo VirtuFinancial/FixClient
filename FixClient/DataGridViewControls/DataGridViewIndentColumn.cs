@@ -9,9 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
-using System.Windows.Forms;
-
 namespace FixClient;
 
 public class DataGridViewIndentColumn : DataGridViewColumn

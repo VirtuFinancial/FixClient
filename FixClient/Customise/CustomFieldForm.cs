@@ -9,10 +9,7 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-
-using System;
 using System.ComponentModel;
-using System.Windows.Forms;
 
 namespace FixClient;
 

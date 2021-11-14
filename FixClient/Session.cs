@@ -9,9 +9,9 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
+using Fix.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -19,8 +19,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Windows.Forms;
-using Fix.Common;
 using static Fix.Dictionary;
 
 namespace FixClient;
@@ -499,13 +497,13 @@ public partial class Session : Fix.PersistentSession
         else
         {
             filters.Remove(tag);
-            
+
             if (filters.Count == 0)
             {
                 _fieldFilters.Remove(msgType);
             }
         }
-            
+
         _filterWriteTimer.SetDirty();
     }
 
@@ -620,9 +618,9 @@ public partial class Session : Fix.PersistentSession
             using var stream = new FileStream(CustomFieldsFileName, FileMode.Open);
             using var sr = new StreamReader(stream);
             using var reader = new JsonTextReader(sr);
-                
+
             JObject filters = JObject.Load(reader);
-                
+
             if (filters["Fields"] is not JToken fields)
             {
                 return;
@@ -692,9 +690,9 @@ public partial class Session : Fix.PersistentSession
             using var stream = new FileStream(FiltersFileName, FileMode.Open);
             using var sr = new StreamReader(stream);
             using var reader = new JsonTextReader(sr);
-                
+
             JObject filters = JObject.Load(reader);
-                
+
             if (filters["Messages"] is not JToken messages)
             {
                 return;
@@ -711,7 +709,7 @@ public partial class Session : Fix.PersistentSession
                     }
                 }
             }
-                
+
             if (filters["Fields"] is not JToken fields)
             {
                 return;
@@ -764,13 +762,13 @@ public partial class Session : Fix.PersistentSession
         }
 
         using FileStream stream = new(FiltersFileName, FileMode.Create);
-       
+
         var options = new JsonWriterOptions()
         {
             Indented = true,
             SkipValidation = true
         };
-            
+
         using var writer = new Utf8JsonWriter(stream, options);
         writer.WriteStartObject();
         writer.WritePropertyName("Messages");
@@ -803,7 +801,7 @@ public partial class Session : Fix.PersistentSession
             writer.WriteStartObject();
             writer.WritePropertyName(name);
             writer.WriteStartArray();
-                
+
             foreach (var tag in filter.Value)
             {
                 writer.WriteNumberValue(tag);

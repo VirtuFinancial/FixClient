@@ -9,11 +9,9 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.Drawing;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace FixClient;
 
@@ -82,7 +80,7 @@ public partial class DictionaryPanel : FixClientPanel
 
                 foreach (char c in value.MsgType)
                 {
-                    builder.Append(Convert.ToInt16(c).ToString());
+                    builder.Append(Convert.ToInt16(c));
                 }
 
                 numeric = builder.ToString();

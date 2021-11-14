@@ -1,4 +1,3 @@
-using System;
 using Fix.Common;
 
 namespace Fix;

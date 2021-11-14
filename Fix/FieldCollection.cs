@@ -9,7 +9,6 @@
 // Author:   Gary Hughes
 //
 /////////////////////////////////////////////////
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using static Fix.Dictionary;
@@ -68,7 +67,7 @@ public class FieldCollection : IEnumerable<Field>
     public void Set(VersionField field, bool value) => Set(new Field(field, value));
     public void Set(VersionField field, Field value) => Set(new Field(field.Tag, value.Value));
 
-      
+
 
     public void Add(int tag, string value) => Add(new Field(tag, value));
     public void Add(int tag, int value) => Add(new Field(tag, value));
@@ -103,8 +102,8 @@ public class FieldCollection : IEnumerable<Field>
         }
 
         var found = (from field in _fields
-                        where field.Tag == tag
-                        select field).FirstOrDefault();
+                     where field.Tag == tag
+                     select field).FirstOrDefault();
 
         if (found is null)
         {
@@ -151,7 +150,7 @@ public class FieldCollection : IEnumerable<Field>
     }
 
     public Field? Find(VersionField definition) => Find(definition.Tag);
-        
+
     public Field? FindFrom(int tag, int index)
     {
         int temp = index;
